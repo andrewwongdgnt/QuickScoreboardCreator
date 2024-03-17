@@ -2,8 +2,8 @@ package com.dgnt.quickScoreboardCreator.data.model.score
 
 import com.dgnt.quickScoreboardCreator.data.model.BaseData
 
-interface ScoreData<T> : BaseData<T> {
-    val increments: List<T>
-
-    fun update(incrementIndex: Int)
-}
+data class ScoreData(
+    override var current: Int,
+    override val initial: Int,
+    val increments: List<Int>
+) : BaseData<Int>
