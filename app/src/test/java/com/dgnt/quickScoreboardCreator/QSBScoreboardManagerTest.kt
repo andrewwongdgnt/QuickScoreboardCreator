@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator
 
+import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreRule
@@ -31,13 +32,17 @@ class QSBScoreboardManagerTest {
     @Test
     fun testScoreUpdates() {
 
-        sut.scoreInfo = ScoreInfo(
-            true,
-            ScoreRule.NoRule,
-            listOf(
-                ScoreData(0, 0, listOf(2, 3)),
-                ScoreData(0, 0, listOf(2, 3)),
-            )
+        sut.intervalList = listOf(
+            ScoreInfo(
+                ScoreRule.NoRule,
+                listOf(
+                    ScoreData(0, 0, listOf(2, 3)),
+                    ScoreData(0, 0, listOf(2, 3)),
+                )
+            ) to
+                    IntervalData(
+                        0, 0
+                    )
         )
 
         sut.updateScore(0, 0)
@@ -47,7 +52,7 @@ class QSBScoreboardManagerTest {
         every { scoreTransformer.transform(listOf(5, 0)) } returns listOf("5", "0")
         Assert.assertEquals("5", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
 
-        sut.reset(scoreIndex = 0)
+        sut.resetScoreAtCurrentInterval(scoreIndex = 0)
         every { scoreTransformer.transform(listOf(0, 0)) } returns listOf("0", "0")
         Assert.assertEquals("0", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
 
@@ -58,7 +63,7 @@ class QSBScoreboardManagerTest {
         every { scoreTransformer.transform(listOf(0, 6)) } returns listOf("0", "6")
         Assert.assertEquals("6", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
 
-        sut.reset(scoreIndex = 1)
+        sut.resetScoreAtCurrentInterval(scoreIndex = 1)
         every { scoreTransformer.transform(listOf(0, 0)) } returns listOf("0", "0")
         Assert.assertEquals("0", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
     }
@@ -66,14 +71,19 @@ class QSBScoreboardManagerTest {
     @Test
     fun testMaxScoreRule() {
 
-        sut.scoreInfo = ScoreInfo(
-            true,
-            ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
-            listOf(
-                ScoreData(0, 0, listOf(1)),
-                ScoreData(0, 0, listOf(1)),
-            )
+        sut.intervalList = listOf(
+            ScoreInfo(
+                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
+                listOf(
+                    ScoreData(0, 0, listOf(1)),
+                    ScoreData(0, 0, listOf(1)),
+                )
+            ) to
+                    IntervalData(
+                        0, 0
+                    )
         )
+
         every { scoreTransformer.transform(listOf(1, 0)) } returns listOf("1", "0")
         every { scoreTransformer.transform(listOf(2, 0)) } returns listOf("2", "0")
 
@@ -89,14 +99,19 @@ class QSBScoreboardManagerTest {
     @Test
     fun testDeuceAdvantageScoreRule() {
 
-        sut.scoreInfo = ScoreInfo(
-            true,
-            ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
-            listOf(
-                ScoreData(0, 0, listOf(1)),
-                ScoreData(0, 0, listOf(1)),
-            )
+        sut.intervalList = listOf(
+            ScoreInfo(
+                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
+                listOf(
+                    ScoreData(0, 0, listOf(1)),
+                    ScoreData(0, 0, listOf(1)),
+                )
+            ) to
+                    IntervalData(
+                        0, 0
+                    )
         )
+
         every { scoreTransformer.transform(listOf(1, 0)) } returns listOf("1", "0")
         every { scoreTransformer.transform(listOf(2, 0)) } returns listOf("2", "0")
         every { scoreTransformer.transform(listOf(2, 1)) } returns listOf("2", "1")

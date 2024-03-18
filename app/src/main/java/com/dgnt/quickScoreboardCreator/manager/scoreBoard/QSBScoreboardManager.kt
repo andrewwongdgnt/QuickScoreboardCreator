@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.manager.scoreBoard
 
+
 import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalInfo
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreRule
@@ -21,8 +21,9 @@ class QSBScoreboardManager(
             null,
             DateTime.now(),
             null,
-            ScoreInfo(false, ScoreRule.NoRule, listOf()),
-            IntervalInfo(false, listOf()),
+            false,
+            listOf(),
+            0
         )
 
 
@@ -52,21 +53,28 @@ class QSBScoreboardManager(
             scoreboard.lastModifiedDate = value
         }
 
-    override var scoreInfo: ScoreInfo<ScoreData>
-        get() = scoreboard.scoreInfo
+    override var scoreCarriesOver: Boolean
+        get() = scoreboard.scoreCarriesOver
         set(value) {
-            scoreboard.scoreInfo = value
+            scoreboard.scoreCarriesOver = value
         }
 
-    override var intervalInfo: IntervalInfo<IntervalData>
-        get() = scoreboard.intervalInfo
+    override var intervalList: List<Pair<ScoreInfo<ScoreData>, IntervalData>>
+        get() = scoreboard.intervalList
         set(value) {
-            scoreboard.intervalInfo = value
+            scoreboard.intervalList = value
         }
 
+    override var currentIntervalIndex: Int
+        get() = scoreboard.currentIntervalIndex
+        set(value) {
+            scoreboard.currentIntervalIndex = value
+        }
+
+    private val currentScoreInfo get() = scoreboard.intervalList[currentIntervalIndex].first
 
     override fun updateScore(scoreIndex: Int, incrementIndex: Int) {
-        val scoreInfo = scoreboard.scoreInfo
+        val scoreInfo = currentScoreInfo
 
         scoreInfo.dataList[scoreIndex].apply {
             val newScore = current + increments[incrementIndex]
@@ -77,9 +85,9 @@ class QSBScoreboardManager(
     }
 
     override fun getScores(): DisplayedScoreInfo {
-        val scoreInfo = scoreboard.scoreInfo
+        val scoreInfo = currentScoreInfo
 
-        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && scoreboard.teamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger }) {
+        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && scoreboard.currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger }) {
 
             val firstScore = scoreInfo.dataList[0].current
             val secondScore = scoreInfo.dataList[1].current
@@ -94,20 +102,14 @@ class QSBScoreboardManager(
         return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
     }
 
-    override fun reset(scoreIndex: Int?, intervalIndex: Int?) {
-        scoreIndex?.let {
-            scoreboard.scoreInfo.dataList[it].reset()
-        }
-        intervalIndex?.let {
-            scoreboard.intervalInfo.dataList[it].reset()
-        }
+    override fun resetScoreAtCurrentInterval(scoreIndex: Int) {
+        currentScoreInfo.dataList[scoreIndex].reset()
         updateLastModifiedDate()
     }
 
-    override fun resetIntervalAndAllScore(intervalIndex: Int) {
-        reset(intervalIndex = intervalIndex)
-        (0 until scoreboard.teamSize).forEach {
-            reset(scoreIndex = it)
+    override fun resetCurrentScores() {
+        (0 until scoreboard.currentTeamSize).forEach {
+            resetScoreAtCurrentInterval(it)
         }
         updateLastModifiedDate()
     }
