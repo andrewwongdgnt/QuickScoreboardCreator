@@ -52,7 +52,7 @@ class QSBScoreboardManagerTest {
         every { scoreTransformer.transform(listOf(5, 0)) } returns listOf("5", "0")
         Assert.assertEquals("5", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
 
-        sut.resetScoreAtCurrentInterval(scoreIndex = 0)
+        sut.resetCurrentScore(scoreIndex = 0)
         every { scoreTransformer.transform(listOf(0, 0)) } returns listOf("0", "0")
         Assert.assertEquals("0", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
 
@@ -63,7 +63,7 @@ class QSBScoreboardManagerTest {
         every { scoreTransformer.transform(listOf(0, 6)) } returns listOf("0", "6")
         Assert.assertEquals("6", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
 
-        sut.resetScoreAtCurrentInterval(scoreIndex = 1)
+        sut.resetCurrentScore(scoreIndex = 1)
         every { scoreTransformer.transform(listOf(0, 0)) } returns listOf("0", "0")
         Assert.assertEquals("0", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
     }

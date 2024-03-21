@@ -17,41 +17,10 @@ class QSBScoreboardManager(
 ) : ScoreboardManager {
     private val scoreboard: Scoreboard =
         Scoreboard(
-            "",
-            null,
-            DateTime.now(),
-            null,
             false,
             listOf(),
             0
         )
-
-
-    override var name: String
-        get() = scoreboard.name
-        set(value) {
-            scoreboard.name = value
-            updateLastModifiedDate()
-        }
-
-    override var description: String?
-        get() = scoreboard.description
-        set(value) {
-            scoreboard.description = value
-            updateLastModifiedDate()
-        }
-
-    override var createdDate: DateTime
-        get() = scoreboard.createdDate
-        set(value) {
-            scoreboard.createdDate = value
-        }
-
-    override var lastModifiedDate: DateTime?
-        get() = scoreboard.lastModifiedDate
-        set(value) {
-            scoreboard.lastModifiedDate = value
-        }
 
     override var scoreCarriesOver: Boolean
         get() = scoreboard.scoreCarriesOver
@@ -81,7 +50,6 @@ class QSBScoreboardManager(
             if ((scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule && newScore <= scoreInfo.scoreRule.trigger) || scoreInfo.scoreRule !is ScoreRule.ScoreRuleTrigger.MaxScoreRule)
                 current = newScore
         }
-        updateLastModifiedDate()
     }
 
     override fun getScores(): DisplayedScoreInfo {
@@ -102,22 +70,28 @@ class QSBScoreboardManager(
         return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
     }
 
-    override fun resetScoreAtCurrentInterval(scoreIndex: Int) {
+    override fun resetCurrentScore(scoreIndex: Int) {
         currentScoreInfo.dataList[scoreIndex].reset()
-        updateLastModifiedDate()
     }
 
     override fun resetCurrentScores() {
         (0 until scoreboard.currentTeamSize).forEach {
-            resetScoreAtCurrentInterval(it)
+            resetCurrentScore(it)
         }
-        updateLastModifiedDate()
     }
 
     override fun provideTransformMap(map: Map<Int, String>) = scoreTransformer.provideTransformMap(map)
 
-    private fun updateLastModifiedDate() {
-        scoreboard.lastModifiedDate = DateTime.now()
+    override fun proceedToNextInterval() {
+        currentIntervalIndex++
+        if (scoreCarriesOver) {
+            val previousScores = scoreboard.intervalList[currentIntervalIndex - 1].first.dataList
+            val currentScores = currentScoreInfo.dataList
+            currentScores.forEachIndexed { index, scoreData ->
+                scoreData.current = previousScores[index].current
+            }
+        }
     }
+
 
 }
