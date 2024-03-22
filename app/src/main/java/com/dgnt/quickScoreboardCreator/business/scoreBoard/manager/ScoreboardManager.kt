@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.manager.scoreBoard
+package com.dgnt.quickScoreboardCreator.business.scoreBoard.manager
 
 import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData
@@ -17,6 +17,9 @@ interface ScoreboardManager {
     fun resetCurrentScores()
     fun provideTransformMap(map: Map<Int, String>)
     fun proceedToNextInterval()
+    fun restartTime()
+    fun resumeTime()
+    fun pauseTime()
 
 
 }

@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.manager.scoreTransformer
+package com.dgnt.quickScoreboardCreator.business.scoreTransformer
 
 interface ScoreTransformer {
 

@@ -5,8 +5,8 @@ import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.manager.scoreBoard.QSBScoreboardManager
-import com.dgnt.quickScoreboardCreator.manager.scoreTransformer.ScoreTransformer
+import com.dgnt.quickScoreboardCreator.business.scoreBoard.manager.QSBScoreboardManager
+import com.dgnt.quickScoreboardCreator.business.scoreTransformer.ScoreTransformer
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs

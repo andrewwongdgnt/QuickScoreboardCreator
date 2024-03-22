@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.manager.scoreBoard
+package com.dgnt.quickScoreboardCreator.business.scoreBoard.manager
 
 
 import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
@@ -8,8 +8,7 @@ import com.dgnt.quickScoreboardCreator.data.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.data.model.scoreBoard.Scoreboard
 import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScoreInfo
-import com.dgnt.quickScoreboardCreator.manager.scoreTransformer.ScoreTransformer
-import org.joda.time.DateTime
+import com.dgnt.quickScoreboardCreator.business.scoreTransformer.ScoreTransformer
 
 
 class QSBScoreboardManager(
@@ -91,6 +90,18 @@ class QSBScoreboardManager(
                 scoreData.current = previousScores[index].current
             }
         }
+    }
+
+    override fun restartTime() {
+        //TODO
+    }
+
+    override fun resumeTime() {
+        //TODO
+    }
+
+    override fun pauseTime() {
+        //TODO
     }
 
 
