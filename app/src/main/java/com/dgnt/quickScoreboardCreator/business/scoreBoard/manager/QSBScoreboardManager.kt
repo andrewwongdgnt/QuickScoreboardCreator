@@ -8,12 +8,12 @@ import com.dgnt.quickScoreboardCreator.data.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.data.model.scoreBoard.Scoreboard
 import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScoreInfo
-import com.dgnt.quickScoreboardCreator.business.scoreTransformer.ScoreTransformer
 
 
-class QSBScoreboardManager(
-    private val scoreTransformer: ScoreTransformer
-) : ScoreboardManager {
+class QSBScoreboardManager : ScoreboardManager {
+
+    private var scoreToDisplayScoreMap: Map<Int, String> = mapOf()
+
     private val scoreboard: Scoreboard =
         Scoreboard(
             false,
@@ -65,7 +65,7 @@ class QSBScoreboardManager(
             else
                 DisplayedScoreInfo(listOf(DisplayedScore.Blank, DisplayedScore.Advantage), DisplayedScore.Blank)
         }
-        val mappedScores = scoreTransformer.transform(scoreInfo.dataList.map { it.current }).map { DisplayedScore.CustomDisplayedScore(it) }
+        val mappedScores = transform(scoreInfo.dataList.map { it.current }).map { DisplayedScore.CustomDisplayedScore(it) }
         return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
     }
 
@@ -79,7 +79,9 @@ class QSBScoreboardManager(
         }
     }
 
-    override fun provideTransformMap(map: Map<Int, String>) = scoreTransformer.provideTransformMap(map)
+    override fun provideTransformMap(map: Map<Int, String>) {
+        scoreToDisplayScoreMap = map
+    }
 
     override fun proceedToNextInterval() {
         currentIntervalIndex++
@@ -103,6 +105,11 @@ class QSBScoreboardManager(
     override fun pauseTime() {
         //TODO
     }
+
+    private fun transform(list: List<Int>) =
+        list.map {
+            scoreToDisplayScoreMap[it] ?: it.toString()
+        }
 
 
 }
