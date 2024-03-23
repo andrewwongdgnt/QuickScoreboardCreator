@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.business.score.manager
+package com.dgnt.quickScoreboardCreator.business.scoreboard.manager
 
 import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData

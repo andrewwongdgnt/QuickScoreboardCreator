@@ -1,11 +1,11 @@
-package com.dgnt.quickScoreboardCreator.business.score.manager
+package com.dgnt.quickScoreboardCreator.business.scoreboard.manager
 
 
 import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.data.model.score.ScoreRule
-import com.dgnt.quickScoreboardCreator.data.model.scorezboard.Scoreboard
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.scoreboard.Scoreboard
 import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScoreInfo
 

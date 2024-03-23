@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator
 
-import com.dgnt.quickScoreboardCreator.business.score.loader.QSBScoreboardLoader
+import com.dgnt.quickScoreboardCreator.business.scoreboard.loader.QSBScoreboardLoader
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Before

@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.business.score.loader
+package com.dgnt.quickScoreboardCreator.business.scoreboard.loader
 
 import android.content.Context
 
