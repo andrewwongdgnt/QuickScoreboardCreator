@@ -1,9 +1,9 @@
 package com.dgnt.quickScoreboardCreator.business.scoreboard.manager
 
-import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData
-import com.dgnt.quickScoreboardCreator.data.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.data.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.state.DisplayedScoreInfo
 
 interface ScoreboardManager {
 

@@ -5,12 +5,9 @@ import com.google.gson.GsonBuilder
 
 object GsonProvider {
 
-    val gson:Gson
-
-    init{
-       gson = GsonBuilder().apply {
+    val gson:Gson = GsonBuilder().apply {
 //            registerTypeAdapter()
 
-        }.create()
-    }
+     }.create()
+
 }

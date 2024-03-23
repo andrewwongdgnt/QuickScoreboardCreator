@@ -1,8 +1,8 @@
 package com.dgnt.quickScoreboardCreator.business.scoreboard.model.scoreboard
 
-import com.dgnt.quickScoreboardCreator.data.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.data.model.score.ScoreData
-import com.dgnt.quickScoreboardCreator.data.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.score.ScoreInfo
 
 data class Scoreboard(
     var scoreCarriesOver: Boolean,

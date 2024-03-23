@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.data.model.score
+package com.dgnt.quickScoreboardCreator.business.scoreboard.model.score
 
 sealed class ScoreRule {
     sealed class ScoreRuleTrigger(val trigger: Int): ScoreRule() {

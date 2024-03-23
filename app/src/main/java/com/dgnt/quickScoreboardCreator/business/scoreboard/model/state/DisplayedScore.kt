@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.data.model.state
+package com.dgnt.quickScoreboardCreator.business.scoreboard.model.state
 
 sealed class DisplayedScore {
     class CustomDisplayedScore(val display: String): DisplayedScore()

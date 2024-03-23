@@ -1,6 +1,6 @@
-package com.dgnt.quickScoreboardCreator.data.model.interval
+package com.dgnt.quickScoreboardCreator.business.scoreboard.model.interval
 
-import com.dgnt.quickScoreboardCreator.data.model.BaseData
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.BaseData
 
 data class IntervalData(
     override var current: Long,

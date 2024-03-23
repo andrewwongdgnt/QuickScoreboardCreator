@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.data.model
+package com.dgnt.quickScoreboardCreator.business.scoreboard.model
 
 interface BaseData<T> {
     val initial: T

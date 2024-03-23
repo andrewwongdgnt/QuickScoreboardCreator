@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.data.model.state
+package com.dgnt.quickScoreboardCreator.business.scoreboard.model.state
 
 data class DisplayedScoreInfo (
     val displayedScores: List<DisplayedScore>,

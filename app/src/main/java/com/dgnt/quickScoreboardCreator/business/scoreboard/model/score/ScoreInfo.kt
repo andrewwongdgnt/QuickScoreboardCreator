@@ -1,6 +1,6 @@
-package com.dgnt.quickScoreboardCreator.data.model.score
+package com.dgnt.quickScoreboardCreator.business.scoreboard.model.score
 
-import com.dgnt.quickScoreboardCreator.data.model.BaseData
+import com.dgnt.quickScoreboardCreator.business.scoreboard.model.BaseData
 
 data class ScoreInfo<T: BaseData<Int>>(
     val scoreRule: ScoreRule,

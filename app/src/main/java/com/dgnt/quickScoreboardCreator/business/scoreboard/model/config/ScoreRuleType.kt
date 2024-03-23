@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.data.model.config
+package com.dgnt.quickScoreboardCreator.business.scoreboard.model.config
 
 enum class ScoreRuleType {
     NO_RULE,
