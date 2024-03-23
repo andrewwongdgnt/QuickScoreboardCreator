@@ -1,11 +1,9 @@
-package com.dgnt.quickScoreboardCreator.business.scoreBoard.loader
+package com.dgnt.quickScoreboardCreator.business.scorezboard.loader
 
 import android.content.Context
 import android.util.Log
-import com.dgnt.quickScoreboardCreator.R
-import com.google.gson.Gson
 
-class QSBScoreboardLoader(gson: Gson) {
+class QSBScoreboardLoader() {
 
     companion object {
         private const val TAG = "QSBScoreboardLoader"

@@ -1,12 +1,24 @@
 {
   "type": "DEFAULT",
-  "scoreBoardType": "BASKETBALL",
+  "scoreboardType": "BASKETBALL",
   "scoreCarriesOver": true,
   "intervalList": [
     {
       "scoreInfo": {
-        "scoreRule": "NoRule",
+        "scoreRule": {
+          "type": "NO_RULE",
+          "trigger": 0
+        },
         "dataList": [
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1,
+              2,
+              3
+            ]
+          },
           {
             "current": 0,
             "initial": 0,
@@ -18,7 +30,106 @@
           }
         ]
       },
-      "intervalData":{
+      "intervalData": {
+        "current": 0,
+        "initial": 0,
+        "increasing": false
+      }
+    },
+    {
+      "scoreInfo": {
+        "scoreRule": {
+          "type": "NO_RULE",
+          "trigger": 0
+        },
+        "dataList": [
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "intervalData": {
+        "current": 0,
+        "initial": 0,
+        "increasing": false
+      }
+    },
+    {
+      "scoreInfo": {
+        "scoreRule": {
+          "type": "NO_RULE",
+          "trigger": 0
+        },
+        "dataList": [
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "intervalData": {
+        "current": 0,
+        "initial": 0,
+        "increasing": false
+      }
+    },
+    {
+      "scoreInfo": {
+        "scoreRule": {
+          "type": "NO_RULE",
+          "trigger": 0
+        },
+        "dataList": [
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "intervalData": {
         "current": 0,
         "initial": 0,
         "increasing": false
