@@ -10,7 +10,7 @@ import com.dgnt.quickScoreboardCreator.business.scoreboard.model.state.Displayed
 import com.dgnt.quickScoreboardCreator.business.scoreboard.model.state.DisplayedScoreInfo
 
 
-class QSBScoreboardManager : ScoreboardManager {
+class QSCScoreboardManager : ScoreboardManager {
 
     private var scoreToDisplayScoreMap: Map<Int, String> = mapOf()
 

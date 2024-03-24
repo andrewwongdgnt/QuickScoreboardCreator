@@ -5,7 +5,7 @@ import com.dgnt.quickScoreboardCreator.business.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.business.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.business.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.business.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.business.scoreboard.manager.QSBScoreboardManager
+import com.dgnt.quickScoreboardCreator.business.scoreboard.manager.QSCScoreboardManager
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert
@@ -13,10 +13,10 @@ import org.junit.Before
 import org.junit.Test
 
 
-class QSBScoreboardManagerTest {
+class QSCScoreboardManagerTest {
 
     @InjectMockKs
-    lateinit var sut: QSBScoreboardManager
+    lateinit var sut: QSCScoreboardManager
 
     @Before
     fun setup() {

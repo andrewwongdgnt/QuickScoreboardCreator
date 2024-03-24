@@ -1,31 +1,28 @@
 {
-  "type": "TEMPLATE",
-  "scoreboardType": "BASKETBALL",
-  "scoreCarriesOver": true,
+  "type": "CUSTOM",
+  "name": "Spike Ball",
+  "description": "Covid sport",
+  "scoreCarriesOver": false,
   "intervalList": [
     {
       "scoreInfo": {
         "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
+          "type": "DEUCE_ADVANTAGE",
+          "trigger": 20
         },
         "dataList": [
           {
             "current": 0,
             "initial": 0,
             "increments": [
-              1,
-              2,
-              3
+              1
             ]
           },
           {
             "current": 0,
             "initial": 0,
             "increments": [
-              1,
-              2,
-              3
+              1
             ]
           }
         ]
@@ -33,32 +30,28 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false
+        "increasing": true
       }
     },
     {
       "scoreInfo": {
         "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
+          "type": "DEUCE_ADVANTAGE",
+          "trigger": 20
         },
         "dataList": [
           {
             "current": 0,
             "initial": 0,
             "increments": [
-              1,
-              2,
-              3
+              1
             ]
           },
           {
             "current": 0,
             "initial": 0,
             "increments": [
-              1,
-              2,
-              3
+              1
             ]
           }
         ]
@@ -66,32 +59,28 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false
+        "increasing": true
       }
     },
     {
       "scoreInfo": {
         "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
+          "type": "DEUCE_ADVANTAGE",
+          "trigger": 10
         },
         "dataList": [
           {
             "current": 0,
             "initial": 0,
             "increments": [
-              1,
-              2,
-              3
+              1
             ]
           },
           {
             "current": 0,
             "initial": 0,
             "increments": [
-              1,
-              2,
-              3
+              1
             ]
           }
         ]
@@ -99,40 +88,7 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false
-      }
-    },
-    {
-      "scoreInfo": {
-        "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
-        },
-        "dataList": [
-          {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1,
-              2,
-              3
-            ]
-          },
-          {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1,
-              2,
-              3
-            ]
-          }
-        ]
-      },
-      "intervalData": {
-        "current": 0,
-        "initial": 0,
-        "increasing": false
+        "increasing": true
       }
     }
   ]
