@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -56,16 +58,42 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("joda-time:joda-time:2.12.7")
-    implementation("com.google.guava:guava:33.1.0-jre")
-    implementation("org.danilopianini:gson-extras:1.2.0")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("io.mockk:mockk:1.13.10")
-    testImplementation("org.mockito:mockito-core:2.1.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //other third party dependencies
+    implementation("joda-time:joda-time:2.12.7")
+    implementation("com.google.guava:guava:33.1.0-jre")
+    implementation("org.danilopianini:gson-extras:1.2.0")
+
+    //dagger hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.51.1")
+    testImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptTest("com.google.dagger:hilt-compiler:2.51.1")
+
+    //room
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+
+    // Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:2.6.1")
+
+
+    //junit
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+
+    //mockito
+    testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation("org.mockito:mockito-core:2.1.0")
+
+    //espresso
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 }
+

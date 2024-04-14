@@ -1,10 +1,10 @@
 package com.dgnt.quickScoreboardCreator
 
-import com.dgnt.quickScoreboardCreator.business.scoreboard.loader.QSCScoreboardLoader
-import com.dgnt.quickScoreboardCreator.business.scoreboard.model.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.business.scoreboard.model.config.ScoreboardTemplate
-import com.dgnt.quickScoreboardCreator.business.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.util.GsonProvider
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.loader.QSCScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.model.config.CustomScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardTemplate
+import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.dgnt.quickScoreboardCreator.data.ScoreboardModel
 
 @Preview(showBackground = true)
 @Composable
