@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
 
-@Preview(showBackground = true)
+
 @Composable
 fun ScoreboardListContent() {
     var title by remember { mutableStateOf("") }
@@ -60,8 +60,13 @@ fun ScoreboardListContent() {
             items(
                 items = items,
                 itemContent = {
-                    ScoreboardItemContent(it)
+                    ScoreboardItemContent(it,{})
                 })
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun ScoreboardListContentPreview() =
+    ScoreboardListContent()

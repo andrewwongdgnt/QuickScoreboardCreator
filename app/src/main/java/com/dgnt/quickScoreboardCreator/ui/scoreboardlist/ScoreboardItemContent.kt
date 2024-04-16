@@ -55,6 +55,6 @@ fun ScoreboardItemContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun ScoreboardItemContentPreview() {
+private fun ScoreboardItemContentPreview() =
     ScoreboardItemContent(ScoreboardEntity(title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
-}
+
