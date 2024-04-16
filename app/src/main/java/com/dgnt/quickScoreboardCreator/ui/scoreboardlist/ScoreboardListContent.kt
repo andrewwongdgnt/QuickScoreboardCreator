@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(showBackground = true)
 @Composable
 fun ScoreboardListContent() {
-    //test something
     var title by remember { mutableStateOf("") }
     var items by remember { mutableStateOf(listOf(ScoreboardModel("Basketball"), ScoreboardModel("Hockey"), ScoreboardModel("Volleyball"))) }
     Column(

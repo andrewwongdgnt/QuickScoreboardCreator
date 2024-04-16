@@ -16,6 +16,7 @@ abstract class BaseRepository<T>(private val dao: BaseDao<T>) {
     suspend fun upsert(entity: T) = insert(entity).let {
         if (it == -1L) update(entity)
     }
+
     @Transaction
     suspend fun upsert(entities: List<T>) =
         insert(entities).zip(entities).filter { it.first == -1L }.map { it.second }.let { entitiesToBeUpdated ->

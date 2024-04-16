@@ -68,6 +68,10 @@ dependencies {
     implementation("com.google.guava:guava:33.1.0-jre")
     implementation("org.danilopianini:gson-extras:1.2.0")
 
+    // Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation( "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
     //dagger hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
