@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.home
+package com.dgnt.quickScoreboardCreator.ui.scoreboardList
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

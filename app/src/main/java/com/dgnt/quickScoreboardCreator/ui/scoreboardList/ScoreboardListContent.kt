@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.home
+package com.dgnt.quickScoreboardCreator.ui.scoreboardList
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview(showBackground = true)
 @Composable
-fun ScoreboardContent() {
+fun ScoreboardListContent() {
     var title by remember { mutableStateOf("") }
     var items by remember { mutableStateOf(listOf(ScoreboardModel("Basketball"), ScoreboardModel("Hockey"), ScoreboardModel("Volleyball"))) }
     Column(
