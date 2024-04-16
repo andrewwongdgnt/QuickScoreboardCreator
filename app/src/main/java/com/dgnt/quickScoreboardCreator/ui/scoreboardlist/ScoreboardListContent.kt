@@ -19,12 +19,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
 
 @Preview(showBackground = true)
 @Composable
 fun ScoreboardListContent() {
     var title by remember { mutableStateOf("") }
-    var items by remember { mutableStateOf(listOf(ScoreboardModel("Basketball"), ScoreboardModel("Hockey"), ScoreboardModel("Volleyball"))) }
+    var items by remember { mutableStateOf(listOf(
+        ScoreboardEntity(title = "Basketball", description = "Basketball Desc"),
+        ScoreboardEntity(title = "Spike Ball", description = "Spike Ball Desc"),
+        ScoreboardEntity(title = "Hockey", description = "Hockey Desc"),
+    )) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +48,7 @@ fun ScoreboardListContent() {
             )
             Button(onClick = {
                 if (title.isNotBlank())
-                    items = items + ScoreboardModel(title)
+                    items = items + ScoreboardEntity(title = title, description = "")
                 title = ""
             }) {
                 Text(text = "Add")
