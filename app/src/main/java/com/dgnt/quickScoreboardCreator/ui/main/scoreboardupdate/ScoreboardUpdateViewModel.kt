@@ -33,8 +33,8 @@ class ScoreboardUpdateViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        val todoId = savedStateHandle.get<Int>("id")!!
-        if (todoId != -1) {
+        val id = savedStateHandle.get<Int>("id")!!
+        if (id != -1) {
             //TODO figure out how to get these without the ID
             title = "Edited Title"
             description = "Edited Description"
