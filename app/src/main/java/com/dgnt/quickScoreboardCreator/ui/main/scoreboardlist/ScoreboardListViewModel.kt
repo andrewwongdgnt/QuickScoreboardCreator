@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboardlist
+package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScoreboardListViewModel @Inject constructor(
-    private val getScoreboardListUseCase: GetScoreboardListUseCase,
+    getScoreboardListUseCase: GetScoreboardListUseCase,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val deleteScoreboardListUseCase: DeleteScoreboardListUseCase,
 ) : ViewModel() {
@@ -41,7 +41,7 @@ class ScoreboardListViewModel @Inject constructor(
                     deletedScoreboardList = event.scoreboardList
                     deleteScoreboardListUseCase(event.scoreboardList)
                     sendUiEvent(
-                        UiEvent.ShowSnackBar(
+                        UiEvent.ShowSnackbar(
                             message = "${event.scoreboardList.size} scoreboard(s) deleted",
                             action = "Undo"
                         )

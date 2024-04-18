@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboardlist
+package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.typography
@@ -18,7 +19,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 
 
 @Composable
@@ -36,7 +36,7 @@ fun ScoreboardItemContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Text(text = item.title, style = typography.headlineLarge, modifier = Modifier.weight(1f))
+                    Text(text = item.title, style = typography.headlineSmall, modifier = Modifier.weight(1f))
                     IconButton(onClick = {
                         onEvent(ScoreboardListEvent.OnDelete(listOf(item)))
                     }) {
@@ -48,7 +48,7 @@ fun ScoreboardItemContent(
                 }
                 Text(text = item.description, style = typography.labelSmall, fontStyle = FontStyle.Italic, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
-            Divider()
+            HorizontalDivider()
         }
     }
 }

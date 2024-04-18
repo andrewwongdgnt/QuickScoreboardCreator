@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboardlist
+package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.model.scoreboard.Scoreboard
