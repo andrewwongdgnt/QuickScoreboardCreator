@@ -77,7 +77,7 @@ fun ScoreboardListContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            viewModel.onEvent(ScoreboardListEvent.OnEdit(scoreboard))
+                            viewModel.onEvent(ScoreboardListEvent.OnLaunch(scoreboard))
                         }
                 )
             }

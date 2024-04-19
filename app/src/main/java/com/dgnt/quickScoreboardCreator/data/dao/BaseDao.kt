@@ -12,16 +12,18 @@ interface BaseDao<T> {
 
     fun getAll(): Flow<List<T>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun getById(id: Int): T?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: T): Long
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entities: List<T>): List<Long>
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(entity: T): Int
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(entities: List<T>): Int
 
     @Delete

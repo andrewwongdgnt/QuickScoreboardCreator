@@ -7,6 +7,7 @@ import com.dgnt.quickScoreboardCreator.data.repository.QSCScoreboardRepository
 import com.dgnt.quickScoreboardCreator.domain.repository.ScoreboardRepository
 import com.dgnt.quickScoreboardCreator.domain.usecase.DeleteScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.usecase.GetScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.domain.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.usecase.InsertScoreboardListUseCase
 import dagger.Module
 import dagger.Provides
@@ -38,6 +39,12 @@ object AppModule {
     @Singleton
     fun provideGetScoreboardListUseCase(repository: ScoreboardRepository): GetScoreboardListUseCase {
         return GetScoreboardListUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetScoreboardUseCase(repository: ScoreboardRepository): GetScoreboardUseCase {
+        return GetScoreboardUseCase(repository)
     }
 
     @Provides

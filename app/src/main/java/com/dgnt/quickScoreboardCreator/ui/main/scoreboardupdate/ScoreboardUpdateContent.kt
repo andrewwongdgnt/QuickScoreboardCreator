@@ -69,23 +69,15 @@ fun ScoreboardUpdateContent(
         ) {
             TextField(
                 value = viewModel.title,
-                onValueChange = {
-                    viewModel.title = it
-                },
-                placeholder = {
-                    Text(text = "Scoreboard Name")
-                },
+                onValueChange = { viewModel.title = it },
+                placeholder = { Text(text = "Scoreboard Name") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = viewModel.description,
-                onValueChange = {
-                    viewModel.description = it
-                },
-                placeholder = {
-                    Text(text = "Description (optional)")
-                },
+                onValueChange = { viewModel.description = it },
+                placeholder = { Text(text = "Description (optional)") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = false,
                 maxLines = 5

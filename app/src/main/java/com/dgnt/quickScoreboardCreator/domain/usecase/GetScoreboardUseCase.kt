@@ -4,11 +4,11 @@ import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.repository.ScoreboardRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetScoreboardListUseCase(
+class GetScoreboardUseCase(
     private val repository: ScoreboardRepository
 ) {
 
-    operator fun invoke() =
-        repository.getAll()
+    suspend operator fun invoke(id: Int) =
+        repository.getById(id)
 
 }

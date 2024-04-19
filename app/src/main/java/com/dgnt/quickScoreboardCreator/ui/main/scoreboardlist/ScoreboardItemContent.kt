@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -43,6 +44,14 @@ fun ScoreboardItemContent(
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete"
+                        )
+                    }
+                    IconButton(onClick = {
+                        onEvent(ScoreboardListEvent.OnEdit(item))
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit"
                         )
                     }
                 }
