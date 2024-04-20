@@ -10,6 +10,8 @@ import com.dgnt.quickScoreboardCreator.domain.usecase.InsertScoreboardListUseCas
 import com.plcoding.mvvmtodoapp.util.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +22,14 @@ class ScoreboardListViewModel @Inject constructor(
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val deleteScoreboardListUseCase: DeleteScoreboardListUseCase,
 ) : ViewModel() {
-    val scoreboardList = getScoreboardListUseCase()
+    private val scoreboardEntityList = getScoreboardListUseCase()
+    val scoreboardList = scoreboardEntityList.map {
+        it.map { e ->
+            ScoreboardItemData(
+                e.id, e.title, e.description
+            )
+        }
+    }
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -33,13 +42,19 @@ class ScoreboardListViewModel @Inject constructor(
             is ScoreboardListEvent.OnAdd -> {
                 sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_SCOREBOARD))
             }
+
             is ScoreboardListEvent.OnEdit -> {
                 sendUiEvent(UiEvent.Navigate("${Routes.ADD_EDIT_SCOREBOARD}?id=${event.scoreboard.id}"))
             }
+
             is ScoreboardListEvent.OnDelete -> {
                 viewModelScope.launch {
-                    deletedScoreboardList = event.scoreboardList
-                    deleteScoreboardListUseCase(event.scoreboardList)
+                    scoreboardEntityList.first().filter { entity ->
+                        entity.id in event.scoreboardList.map { it.id }
+                    }.let { scoreboardEntityList ->
+                        deletedScoreboardList = scoreboardEntityList
+                        deleteScoreboardListUseCase(scoreboardEntityList)
+                    }
                     sendUiEvent(
                         UiEvent.ShowSnackbar(
                             message = "${event.scoreboardList.size} scoreboard(s) deleted",
@@ -56,6 +71,7 @@ class ScoreboardListViewModel @Inject constructor(
                     }
                 }
             }
+
             is ScoreboardListEvent.OnLaunch -> {
                 // TODO complete this
             }

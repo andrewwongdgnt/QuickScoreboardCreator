@@ -6,8 +6,8 @@ import com.dgnt.quickScoreboardCreator.domain.model.scoreboard.Scoreboard
 
 sealed class ScoreboardListEvent {
     data object OnAdd: ScoreboardListEvent()
-    data class OnEdit(val scoreboard: ScoreboardEntity): ScoreboardListEvent()
-    data class OnDelete(val scoreboardList: List<ScoreboardEntity>): ScoreboardListEvent()
+    data class OnEdit(val scoreboard: ScoreboardItemData): ScoreboardListEvent()
+    data class OnDelete(val scoreboardList: List<ScoreboardItemData>): ScoreboardListEvent()
     data object OnUndoDelete: ScoreboardListEvent()
-    data class OnLaunch(val scoreboard: ScoreboardEntity): ScoreboardListEvent()
+    data class OnLaunch(val scoreboard: ScoreboardItemData): ScoreboardListEvent()
 }

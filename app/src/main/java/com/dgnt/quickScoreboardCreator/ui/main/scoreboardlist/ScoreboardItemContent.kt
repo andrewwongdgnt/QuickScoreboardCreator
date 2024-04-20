@@ -24,19 +24,19 @@ import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
 
 @Composable
 fun ScoreboardItemContent(
-    item: ScoreboardEntity,
+    item: ScoreboardItemData,
     onEvent: (ScoreboardListEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row (
+    Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Column {
             Column(modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     Text(text = item.title, style = typography.headlineSmall, modifier = Modifier.weight(1f))
                     IconButton(onClick = {
                         onEvent(ScoreboardListEvent.OnDelete(listOf(item)))
@@ -65,5 +65,5 @@ fun ScoreboardItemContent(
 @Preview(showBackground = true)
 @Composable
 private fun ScoreboardItemContentPreview() =
-    ScoreboardItemContent(ScoreboardEntity(title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
 
