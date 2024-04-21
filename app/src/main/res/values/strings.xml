@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Quick Scoreboard Creator</string>
+    <string name="blank" translatable="false"/>
+    <!-- Default Scoreboard -->
+    <string name="basketball">Basketball</string>
+    <string name="basketball_description">Basketball description</string>
+    <string name="hockey">Hockey</string>
+    <string name="hockey_description">Hockey description</string>
+    <string name="spikeball">Spikeball</string>
+    <string name="spikeball_description">Spikeball description</string>
+    <!-- Scoreboard Update -->
+    <string name="emptyTitleWarning">The title can\'t be empty</string>
+    <!-- Scoreboard List -->
+    <plurals name="deletedScoreboardMsg">
+        <item quantity="one">%d scoreboard deleted</item>
+        <item quantity="other">%d scoreboards deleted</item>
+    </plurals>
+    <!-- Common -->
+    <string name="scoreboardNamePlaceholder">Scoreboard Name</string>
+    <string name="scoreboardDescriptionPlaceholder">Description (optional)</string>
+    <string name="defaultScoreboardConfig">Default</string>
+    <string name="customScoreboardConfig">Custom</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="done">Done</string>
+    <string name="undo">Undo</string>
 </resources>

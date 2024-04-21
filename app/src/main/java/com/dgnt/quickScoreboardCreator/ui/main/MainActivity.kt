@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardupdate.ScoreboardUpdateContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
@@ -42,11 +43,15 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(
-                            route = Routes.ADD_EDIT_SCOREBOARD + "?id={id}",
+                            route = Routes.ADD_EDIT_SCOREBOARD + "?id={id}&type={type}",
                             arguments = listOf(
                                 navArgument(name = "id") {
                                     type = NavType.IntType
                                     defaultValue = -1
+                                },
+                                navArgument(name = "type") {
+                                    type = NavType.EnumType(ScoreboardType::class.java)
+                                    defaultValue = ScoreboardType.NONE
                                 }
                             )
                         ) {

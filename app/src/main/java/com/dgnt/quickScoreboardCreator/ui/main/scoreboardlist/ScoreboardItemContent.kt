@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,11 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
+import com.dgnt.quickScoreboardCreator.R
 
 
 @Composable
@@ -38,20 +38,21 @@ fun ScoreboardItemContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = item.title, style = typography.headlineSmall, modifier = Modifier.weight(1f))
-                    IconButton(onClick = {
-                        onEvent(ScoreboardListEvent.OnDelete(listOf(item)))
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete"
-                        )
-                    }
+                    if (item.type == null)
+                        IconButton(onClick = {
+                            onEvent(ScoreboardListEvent.OnDelete(listOf(item)))
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = stringResource(R.string.delete)
+                            )
+                        }
                     IconButton(onClick = {
                         onEvent(ScoreboardListEvent.OnEdit(item))
                     }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit"
+                            contentDescription = stringResource(R.string.edit)
                         )
                     }
                 }
@@ -65,5 +66,5 @@ fun ScoreboardItemContent(
 @Preview(showBackground = true)
 @Composable
 private fun ScoreboardItemContentPreview() =
-    ScoreboardItemContent(ScoreboardItemData(0, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, null, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
 

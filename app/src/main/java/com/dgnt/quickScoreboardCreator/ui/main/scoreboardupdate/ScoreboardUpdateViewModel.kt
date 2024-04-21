@@ -6,8 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
+import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.usecase.InsertScoreboardListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +32,8 @@ class ScoreboardUpdateViewModel @Inject constructor(
 
     var description by mutableStateOf("")
 
+    var scoreboardType by mutableStateOf<ScoreboardType?>(null)
+
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -43,6 +47,8 @@ class ScoreboardUpdateViewModel @Inject constructor(
                     scoreboard = it
                 }
             }
+        } ?: savedStateHandle.get<ScoreboardType>("type")?.let {
+            scoreboardType = it
         }
     }
 
@@ -52,8 +58,8 @@ class ScoreboardUpdateViewModel @Inject constructor(
                 viewModelScope.launch {
                     if (title.isBlank()) {
                         sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = "The title can't be empty"
+                            UiEvent.ShowSnackbar.ShowGenericSnackbar(
+                                message = R.string.emptyTitleWarning
                             )
                         )
                         return@launch

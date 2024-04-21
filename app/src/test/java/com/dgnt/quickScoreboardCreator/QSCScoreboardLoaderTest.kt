@@ -2,7 +2,7 @@ package com.dgnt.quickScoreboardCreator
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.loader.QSCScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.model.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardTemplate
+import com.dgnt.quickScoreboardCreator.domain.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
 import org.junit.Assert
@@ -20,14 +20,14 @@ class QSCScoreboardLoaderTest {
     }
 
     @Test
-    fun testLoadTemplate() {
-        val exampleTemplate = javaClass.classLoader?.getResourceAsStream("example_template.json")?.let { ins ->
+    fun testLoadDefault() {
+        val exampleDefault = javaClass.classLoader?.getResourceAsStream("example_default.json")?.let { ins ->
             sut.load(ins)
-        } as ScoreboardTemplate
+        } as DefaultScoreboardConfig
 
-        Assert.assertEquals(ScoreboardType.BASKETBALL, exampleTemplate.scoreboardType)
-        Assert.assertTrue(exampleTemplate.scoreCarriesOver)
-        Assert.assertEquals(4, exampleTemplate.intervalList.size)
+        Assert.assertEquals(ScoreboardType.BASKETBALL, exampleDefault.scoreboardType)
+        Assert.assertTrue(exampleDefault.scoreCarriesOver)
+        Assert.assertEquals(4, exampleDefault.intervalList.size)
     }
 
     @Test

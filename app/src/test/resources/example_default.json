@@ -1,5 +1,5 @@
 {
-  "type": "TEMPLATE",
+  "type": "DEFAULT",
   "scoreboardType": "BASKETBALL",
   "scoreCarriesOver": true,
   "intervalList": [

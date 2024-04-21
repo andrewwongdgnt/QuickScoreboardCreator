@@ -1,5 +1,5 @@
 {
-  "type": "TEMPLATE",
+  "type": "DEFAULT",
   "scoreboardType": "SPIKEBALL",
   "scoreCarriesOver": true,
   "intervalList": [

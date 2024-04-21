@@ -3,17 +3,17 @@ package com.dgnt.quickScoreboardCreator.domain.model.config
 abstract class ScoreboardConfig {
     abstract val type: String
     abstract val scoreCarriesOver: Boolean
-    abstract val intervalList: List<IntervalListItem>
+    abstract val intervalList: List<IntervalListConfig>
 }
 
-data class IntervalListItem(
-    val scoreInfo: ScoreInfoTemplate,
-    val intervalData: IntervalDataTemplate
+data class IntervalListConfig(
+    val scoreInfo: ScoreInfoConfig,
+    val intervalData: IntervalDataConfig
 )
 
-data class ScoreInfoTemplate(
+data class ScoreInfoConfig(
     val scoreRule: ScoreRule,
-    val dataList: List<ScoreDataTemplate>
+    val dataList: List<ScoreDataConfig>
 )
 
 data class ScoreRule(
@@ -21,13 +21,13 @@ data class ScoreRule(
     val trigger: Int
 )
 
-data class ScoreDataTemplate(
+data class ScoreDataConfig(
     val current: Int,
     val initial: Int,
     val increments: List<Int>
 )
 
-data class IntervalDataTemplate(
+data class IntervalDataConfig(
     val current: Int,
     val initial: Int,
     val increasing: Boolean

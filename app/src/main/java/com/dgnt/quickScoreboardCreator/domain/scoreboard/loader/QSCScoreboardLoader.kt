@@ -6,7 +6,7 @@ import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardConfig
 import com.google.gson.Gson
 import java.io.InputStream
 
-class QSCScoreboardLoader(val gson: Gson) : ScoreboardLoader {
+class QSCScoreboardLoader(private val gson: Gson) : ScoreboardLoader {
 
     override fun load(resources: Resources, id: Int) =
         load(resources.openRawResource(id))
