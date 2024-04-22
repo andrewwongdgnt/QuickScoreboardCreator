@@ -9,14 +9,14 @@
     <string name="spikeball">Spikeball</string>
     <string name="spikeball_description">Spikeball description</string>
     <!-- Scoreboard Update -->
-    <string name="emptyTitleWarning">The title can\'t be empty</string>
+    <string name="emptyTitleWarning">The name can\'t be empty</string>
     <!-- Scoreboard List -->
     <plurals name="deletedScoreboardMsg">
         <item quantity="one">%d scoreboard deleted</item>
         <item quantity="other">%d scoreboards deleted</item>
     </plurals>
     <!-- Common -->
-    <string name="scoreboardNamePlaceholder">Scoreboard Name</string>
+    <string name="scoreboardNamePlaceholder">Name</string>
     <string name="scoreboardDescriptionPlaceholder">Description (optional)</string>
     <string name="defaultScoreboardConfig">Default</string>
     <string name="customScoreboardConfig">Custom</string>

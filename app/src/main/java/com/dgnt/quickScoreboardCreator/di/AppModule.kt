@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.di
 
 import android.app.Application
+import android.content.res.Resources
 import androidx.room.Room
 import com.dgnt.quickScoreboardCreator.data.db.QSCDatabase
 import com.dgnt.quickScoreboardCreator.data.repository.QSCScoreboardRepository
@@ -21,41 +22,41 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(app: Application): QSCDatabase {
-        return Room.databaseBuilder(
+    fun provideResources(app: Application): Resources =
+        app.resources
+
+    @Provides
+    @Singleton
+    fun provideDatabase(app: Application) =
+        Room.databaseBuilder(
             app,
             QSCDatabase::class.java,
             "qsc_db"
         ).build()
-    }
 
     @Provides
     @Singleton
-    fun provideScoreboardRepository(db: QSCDatabase): ScoreboardRepository {
-        return QSCScoreboardRepository(db.scoreboardDao)
-    }
+    fun provideScoreboardRepository(db: QSCDatabase): ScoreboardRepository =
+        QSCScoreboardRepository(db.scoreboardDao)
 
     @Provides
     @Singleton
-    fun provideGetScoreboardListUseCase(repository: ScoreboardRepository): GetScoreboardListUseCase {
-        return GetScoreboardListUseCase(repository)
-    }
+    fun provideGetScoreboardListUseCase(repository: ScoreboardRepository) =
+        GetScoreboardListUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetScoreboardUseCase(repository: ScoreboardRepository): GetScoreboardUseCase {
-        return GetScoreboardUseCase(repository)
-    }
+    fun provideGetScoreboardUseCase(repository: ScoreboardRepository) =
+        GetScoreboardUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideInsertScoreboardUseCase(repository: ScoreboardRepository): InsertScoreboardListUseCase {
-        return InsertScoreboardListUseCase(repository)
-    }
+    fun provideInsertScoreboardUseCase(repository: ScoreboardRepository) =
+        InsertScoreboardListUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideDeleteScoreboardListUseCase(repository: ScoreboardRepository): DeleteScoreboardListUseCase {
-        return DeleteScoreboardListUseCase(repository)
-    }
+    fun provideDeleteScoreboardListUseCase(repository: ScoreboardRepository) =
+        DeleteScoreboardListUseCase(repository)
+
 }

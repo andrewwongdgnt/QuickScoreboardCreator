@@ -8,14 +8,6 @@ import java.io.InputStream
 
 class QSCScoreboardLoader(private val gson: Gson) : ScoreboardLoader {
 
-    override fun load(resources: Resources, id: Int) =
-        load(resources.openRawResource(id))
-
-
-    override fun load(context: Context, id: Int) =
-        load(context.resources, id)
-
-
     override fun load(inputStream: InputStream): ScoreboardConfig? {
         return try {
             val data = inputStream.bufferedReader().use {

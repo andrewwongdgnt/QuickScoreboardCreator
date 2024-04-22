@@ -71,35 +71,17 @@ fun ScoreboardUpdateContent(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            val context = LocalContext.current
-            var title by remember {
-                mutableStateOf(viewModel.scoreboardType?.titleRes?.let { context.getString(it) })
-            }
-            title?.let {
-                viewModel.title = it
-            }
+
             TextField(
-                value = title ?: viewModel.title,
-                onValueChange = {
-                    title = it
-                    viewModel.title = it
-                },
+                value = viewModel.title,
+                onValueChange = { viewModel.title = it },
                 placeholder = { Text(text = stringResource(R.string.scoreboardNamePlaceholder)) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
-            var description by remember {
-                mutableStateOf(viewModel.scoreboardType?.descriptionRes?.let { context.getString(it) })
-            }
-            description?.let {
-                viewModel.description = it
-            }
             TextField(
-                value = description ?: viewModel.description,
-                onValueChange = {
-                    description = it
-                    viewModel.description = it
-                },
+                value = viewModel.description,
+                onValueChange = { viewModel.description = it },
                 placeholder = { Text(text = stringResource(R.string.scoreboardDescriptionPlaceholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = false,

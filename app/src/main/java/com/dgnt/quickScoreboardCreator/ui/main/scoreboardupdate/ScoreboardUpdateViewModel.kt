@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardupdate
 
+import android.content.res.Resources
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,6 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScoreboardUpdateViewModel @Inject constructor(
+    private val resources: Resources,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val getScoreboardUseCase: GetScoreboardUseCase,
     savedStateHandle: SavedStateHandle
@@ -31,9 +33,6 @@ class ScoreboardUpdateViewModel @Inject constructor(
     var title by mutableStateOf("")
 
     var description by mutableStateOf("")
-
-    var scoreboardType by mutableStateOf<ScoreboardType?>(null)
-
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -48,7 +47,8 @@ class ScoreboardUpdateViewModel @Inject constructor(
                 }
             }
         } ?: savedStateHandle.get<ScoreboardType>("type")?.let {
-            scoreboardType = it
+            title = resources.getString(it.titleRes)
+            description = resources.getString(it.descriptionRes)
         }
     }
 

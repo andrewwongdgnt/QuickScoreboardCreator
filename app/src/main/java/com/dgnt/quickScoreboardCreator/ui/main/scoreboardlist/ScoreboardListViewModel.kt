@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import android.app.Application
+import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
@@ -23,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScoreboardListViewModel @Inject constructor(
-    private val application: Application,
+    private val resources: Resources,
     getScoreboardListUseCase: GetScoreboardListUseCase,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val deleteScoreboardListUseCase: DeleteScoreboardListUseCase,
@@ -40,7 +41,7 @@ class ScoreboardListViewModel @Inject constructor(
 
     val defaultScoreboardList = flow {
         listOf(R.raw.basketball, R.raw.hockey, R.raw.spikeball).map {
-            application.resources.openRawResource(it).let { ins ->
+            resources.openRawResource(it).let { ins ->
                 scoreboardLoader.load(ins)
             } as DefaultScoreboardConfig
         }.map {
