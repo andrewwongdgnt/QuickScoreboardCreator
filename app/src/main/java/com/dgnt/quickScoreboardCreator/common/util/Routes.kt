@@ -1,6 +1,5 @@
-package com.plcoding.mvvmtodoapp.util
+package com.dgnt.quickScoreboardCreator.common.util
 
 object Routes {
     const val SCOREBOARD_LIST = "scoreboard_list"
-    const val ADD_EDIT_SCOREBOARD = "add_edit_scoreboard"
 }

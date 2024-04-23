@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.main.scoreboardupdate
+package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
 import android.content.res.Resources
 import androidx.compose.runtime.getValue
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ScoreboardUpdateViewModel @Inject constructor(
+class ScoreboardDetailsViewModel @Inject constructor(
     private val resources: Resources,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val getScoreboardUseCase: GetScoreboardUseCase,
@@ -66,9 +66,9 @@ class ScoreboardUpdateViewModel @Inject constructor(
         description = resources.getString(scoreboardType.descriptionRes)
     }
 
-    fun onEvent(event: ScoreboardUpdateEvent) {
+    fun onEvent(event: ScoreboardDetailsEvent) {
         when (event) {
-            is ScoreboardUpdateEvent.OnUpdate -> {
+            is ScoreboardDetailsEvent.OnDone -> {
                 viewModelScope.launch {
                     if (title.isBlank()) {
                         sendUiEvent(
@@ -87,7 +87,7 @@ class ScoreboardUpdateViewModel @Inject constructor(
                             )
                         )
                     )
-                    sendUiEvent(UiEvent.GenericUiEvent)
+                    sendUiEvent(UiEvent.Done)
                 }
             }
         }

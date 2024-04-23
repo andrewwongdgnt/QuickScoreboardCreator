@@ -38,10 +38,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.common.util.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
-import com.dgnt.quickScoreboardCreator.ui.main.scoreboardupdate.ScoreboardUpdateContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
-import com.plcoding.mvvmtodoapp.util.Routes
+import com.dgnt.quickScoreboardCreator.common.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
                                 scoreboardDetails = null
                             }
                         ) {
-                            ScoreboardUpdateContent(
+                            ScoreboardDetailsContent(
                                 details,
                                 onDone = {
                                     scope.launch {

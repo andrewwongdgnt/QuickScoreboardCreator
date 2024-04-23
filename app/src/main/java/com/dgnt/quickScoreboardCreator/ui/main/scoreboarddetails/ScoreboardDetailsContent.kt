@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.main.scoreboardupdate
+package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,10 +27,10 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 
 @Composable
-fun ScoreboardUpdateContent(
+fun ScoreboardDetailsContent(
     details: UiEvent.ScoreboardDetails,
     onDone: () -> Unit,
-    viewModel: ScoreboardUpdateViewModel = hiltViewModel()
+    viewModel: ScoreboardDetailsViewModel = hiltViewModel()
 ) {
     viewModel.init(details.id, details.scoreboardType)
     val context = LocalContext.current
@@ -38,7 +38,7 @@ fun ScoreboardUpdateContent(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.GenericUiEvent -> onDone()
+                is UiEvent.Done -> onDone()
                 is UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = context.getString(event.message),
@@ -55,7 +55,7 @@ fun ScoreboardUpdateContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.onEvent(ScoreboardUpdateEvent.OnUpdate)
+                viewModel.onEvent(ScoreboardDetailsEvent.OnDone)
             }) {
                 Icon(
                     imageVector = Icons.Default.Check,

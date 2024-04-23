@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 
 sealed class UiEvent {
-    data object GenericUiEvent : UiEvent()
+    data object Done : UiEvent()
     data class Navigate(val route: String) : UiEvent()
     data class ScoreboardDetails(val id: Int? = null, val scoreboardType: ScoreboardType? = null) : UiEvent()
     sealed class ShowSnackbar(
