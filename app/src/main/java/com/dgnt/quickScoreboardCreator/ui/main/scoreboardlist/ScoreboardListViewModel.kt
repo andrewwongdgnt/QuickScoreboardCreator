@@ -1,6 +1,5 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
-import android.app.Application
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.loader.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.usecase.DeleteScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.usecase.GetScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.usecase.InsertScoreboardListUseCase
-import com.plcoding.mvvmtodoapp.util.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
@@ -60,11 +58,11 @@ class ScoreboardListViewModel @Inject constructor(
         when (event) {
 
             is ScoreboardListEvent.OnAdd -> {
-                sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_SCOREBOARD))
+                sendUiEvent(UiEvent.ScoreboardDetails())
             }
 
             is ScoreboardListEvent.OnEdit -> {
-                sendUiEvent(UiEvent.Navigate("${Routes.ADD_EDIT_SCOREBOARD}?id=${event.scoreboard.id}&type=${event.scoreboard.type}"))
+                sendUiEvent(UiEvent.ScoreboardDetails(event.scoreboard.id, event.scoreboard.type))
             }
 
             is ScoreboardListEvent.OnDelete -> {

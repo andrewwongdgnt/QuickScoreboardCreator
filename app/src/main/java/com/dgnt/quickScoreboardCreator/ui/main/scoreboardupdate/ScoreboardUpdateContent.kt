@@ -17,10 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -31,17 +28,17 @@ import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 
 @Composable
 fun ScoreboardUpdateContent(
-    onStart:() -> Unit,
-    onPopBackStack: () -> Unit,
+    details: UiEvent.ScoreboardDetails,
+    onDone: () -> Unit,
     viewModel: ScoreboardUpdateViewModel = hiltViewModel()
 ) {
-    onStart()
+    viewModel.init(details.id, details.scoreboardType)
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.PopBackStack -> onPopBackStack()
+                is UiEvent.GenericUiEvent -> onDone()
                 is UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = context.getString(event.message),

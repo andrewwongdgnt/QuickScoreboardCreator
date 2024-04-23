@@ -2,10 +2,12 @@ package com.dgnt.quickScoreboardCreator.common.util
 
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
+import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 
 sealed class UiEvent {
-    data object PopBackStack : UiEvent()
+    data object GenericUiEvent : UiEvent()
     data class Navigate(val route: String) : UiEvent()
+    data class ScoreboardDetails(val id: Int? = null, val scoreboardType: ScoreboardType? = null) : UiEvent()
     sealed class ShowSnackbar(
         open val message: Int,
         open val action: Int? = null

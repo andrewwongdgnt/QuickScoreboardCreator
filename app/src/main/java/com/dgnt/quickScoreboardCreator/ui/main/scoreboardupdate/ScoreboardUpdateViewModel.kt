@@ -39,17 +39,31 @@ class ScoreboardUpdateViewModel @Inject constructor(
 
     init {
         savedStateHandle.get<Int>("id")?.takeUnless { it < 0 }?.let { id ->
-            viewModelScope.launch {
-                getScoreboardUseCase(id)?.let {
-                    title = it.title
-                    description = it.description
-                    scoreboard = it
-                }
-            }
+            initWithId(id)
         } ?: savedStateHandle.get<ScoreboardType>("type")?.let {
-            title = resources.getString(it.titleRes)
-            description = resources.getString(it.descriptionRes)
+            initWithScoreboardType(it)
         }
+    }
+
+    fun init(id: Int?, scoreboardType: ScoreboardType?) {
+        id?.takeUnless { it < 0 }?.let {
+            initWithId(it)
+        } ?: initWithScoreboardType((scoreboardType ?: ScoreboardType.NONE))
+    }
+
+    private fun initWithId(id: Int) {
+        viewModelScope.launch {
+            getScoreboardUseCase(id)?.let {
+                title = it.title
+                description = it.description
+                scoreboard = it
+            }
+        }
+    }
+
+    private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
+        title = resources.getString(scoreboardType.titleRes)
+        description = resources.getString(scoreboardType.descriptionRes)
     }
 
     fun onEvent(event: ScoreboardUpdateEvent) {
@@ -73,7 +87,7 @@ class ScoreboardUpdateViewModel @Inject constructor(
                             )
                         )
                     )
-                    sendUiEvent(UiEvent.PopBackStack)
+                    sendUiEvent(UiEvent.GenericUiEvent)
                 }
             }
         }

@@ -12,12 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,9 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -46,11 +38,9 @@ import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 
 @Composable
 fun ScoreboardListContent(
-    onStart:() -> Unit,
-    onNavigate: (UiEvent.Navigate) -> Unit,
+    toScoreboardDetails: (UiEvent.ScoreboardDetails) -> Unit,
     viewModel: ScoreboardListViewModel = hiltViewModel()
 ) {
-    onStart()
     val context = LocalContext.current
     val defaultScoreboardList = viewModel.defaultScoreboardList.collectAsState(initial = emptyList())
     val scoreboardList = viewModel.scoreboardList.collectAsState(initial = emptyList())
@@ -69,7 +59,7 @@ fun ScoreboardListContent(
                     }
                 }
 
-                is UiEvent.Navigate -> onNavigate(event)
+                is UiEvent.ScoreboardDetails -> toScoreboardDetails(event)
                 else -> Unit
             }
         }
@@ -136,4 +126,4 @@ fun ScoreboardListContent(
 @Preview(showBackground = true)
 @Composable
 private fun ScoreboardListContentPreview() =
-    ScoreboardListContent({},{})
+    ScoreboardListContent({})

@@ -12,37 +12,40 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardupdate.ScoreboardUpdateContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import com.plcoding.mvvmtodoapp.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,16 +69,36 @@ class MainActivity : ComponentActivity() {
                         unselectedIcon = Icons.Outlined.Settings,
                     ),
                 )
-                var showBottomBar by remember { mutableStateOf(true) }
                 var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
+                    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                    var scoreboardDetails by rememberSaveable {
+                        mutableStateOf<UiEvent.ScoreboardDetails?>(null)
+                    }
+                    val scope = rememberCoroutineScope()
+                    scoreboardDetails?.let { details ->
+                        ModalBottomSheet(
+                            sheetState = sheetState,
+                            onDismissRequest = {
+                                scoreboardDetails = null
+                            }
+                        ) {
+                            ScoreboardUpdateContent(
+                                details,
+                                onDone = {
+                                    scope.launch {
+                                        sheetState.hide()
+                                        scoreboardDetails = null
+                                    }
+                                }
+                            )
+                        }
+                    }
                     Scaffold(
                         bottomBar = {
-                            if (!showBottomBar)
-                                return@Scaffold
                             NavigationBar {
                                 items.forEachIndexed { index, item ->
                                     NavigationBarItem(
@@ -101,9 +124,7 @@ class MainActivity : ComponentActivity() {
                         }
                     ) { padding ->
                         NavigationContent(
-                            onBottomBarVisibility = {
-                                showBottomBar = it
-                            },
+                            toScoreboardDetails = { scoreboardDetails = it },
                             navController = navController,
                             modifier = Modifier.padding(padding)
                         )
@@ -115,7 +136,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun NavigationContent(
-        onBottomBarVisibility: (Boolean) -> Unit,
+        toScoreboardDetails: (UiEvent.ScoreboardDetails) -> Unit,
         navController: NavHostController,
         modifier: Modifier = Modifier
     ) {
@@ -126,34 +147,10 @@ class MainActivity : ComponentActivity() {
         ) {
             composable(Routes.SCOREBOARD_LIST) {
                 ScoreboardListContent(
-                    onStart = {
-                        onBottomBarVisibility(true)
-                    },
-                    onNavigate = {
-                        navController.navigate(it.route)
+                    toScoreboardDetails = {
+                        toScoreboardDetails(it)
                     }
                 )
-            }
-            composable(
-                route = Routes.ADD_EDIT_SCOREBOARD + "?id={id}&type={type}",
-                arguments = listOf(
-                    navArgument(name = "id") {
-                        type = NavType.IntType
-                        defaultValue = -1
-                    },
-                    navArgument(name = "type") {
-                        type = NavType.EnumType(ScoreboardType::class.java)
-                        defaultValue = ScoreboardType.NONE
-                    }
-                )
-            ) {
-                ScoreboardUpdateContent(
-                    onStart = {
-                        onBottomBarVisibility(false)
-                    },
-                    onPopBackStack = {
-                        navController.popBackStack()
-                    })
             }
         }
     }
@@ -162,7 +159,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GreetingPreview() {
         QuickScoreboardCreatorTheme {
-            ScoreboardListContent({},{})
+            ScoreboardListContent({})
         }
     }
 }
