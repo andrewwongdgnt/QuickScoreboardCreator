@@ -31,11 +31,12 @@ import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 
 @Composable
 fun ScoreboardUpdateContent(
-    onPopBackStack: () -> Unit = {},
+    onStart:() -> Unit,
+    onPopBackStack: () -> Unit,
     viewModel: ScoreboardUpdateViewModel = hiltViewModel()
 ) {
+    onStart()
     val context = LocalContext.current
-
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->

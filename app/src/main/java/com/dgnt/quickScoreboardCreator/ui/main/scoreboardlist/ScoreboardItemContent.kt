@@ -33,11 +33,11 @@ fun ScoreboardItemContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Column(modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)) {
+            Column(modifier = Modifier.padding(start = 6.dp, top = 12.dp, bottom = 12.dp)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = item.title, style = typography.headlineSmall, modifier = Modifier.weight(1f))
+                    Text(text = item.title, style = typography.titleLarge, modifier = Modifier.weight(1f))
                     if (item.type == null)
                         IconButton(onClick = {
                             onEvent(ScoreboardListEvent.OnDelete(listOf(item)))

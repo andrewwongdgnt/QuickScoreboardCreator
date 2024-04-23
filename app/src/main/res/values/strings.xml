@@ -11,10 +11,15 @@
     <!-- Scoreboard Update -->
     <string name="emptyTitleWarning">The name can\'t be empty</string>
     <!-- Scoreboard List -->
+    <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
         <item quantity="one">%d scoreboard deleted</item>
         <item quantity="other">%d scoreboards deleted</item>
     </plurals>
+    <!-- Team List -->
+    <string name="teamListNavTitle">My teams</string>
+    <!-- Settings -->
+    <string name="settingsNavTitle">Settings</string>
     <!-- Common -->
     <string name="scoreboardNamePlaceholder">Name</string>
     <string name="scoreboardDescriptionPlaceholder">Description (optional)</string>
