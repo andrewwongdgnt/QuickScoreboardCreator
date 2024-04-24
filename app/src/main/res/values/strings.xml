@@ -19,7 +19,7 @@
     <!-- Team List -->
     <string name="teamListNavTitle">My teams</string>
     <!-- Settings -->
-    <string name="settingsNavTitle">Settings</string>
+    <string name="contactNavTitle">Contact</string>
     <!-- Common -->
     <string name="scoreboardNamePlaceholder">Name</string>
     <string name="scoreboardDescriptionPlaceholder">Description (optional)</string>

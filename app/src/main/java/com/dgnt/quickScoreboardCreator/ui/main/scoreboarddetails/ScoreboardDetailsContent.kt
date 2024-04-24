@@ -28,11 +28,9 @@ import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 
 @Composable
 fun ScoreboardDetailsContent(
-    details: UiEvent.ScoreboardDetails,
     onDone: () -> Unit,
     viewModel: ScoreboardDetailsViewModel = hiltViewModel()
 ) {
-    viewModel.init(details.id, details.scoreboardType)
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {

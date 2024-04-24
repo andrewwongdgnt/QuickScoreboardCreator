@@ -6,44 +6,43 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.common.util.UiEvent
+import com.dgnt.quickScoreboardCreator.common.util.Routes
+import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
-import com.dgnt.quickScoreboardCreator.common.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
@@ -64,9 +63,9 @@ class MainActivity : ComponentActivity() {
                         unselectedIcon = Icons.Outlined.Person,
                     ),
                     BottomNavigationItemData(
-                        title = stringResource(id = R.string.settingsNavTitle),
-                        selectedIcon = Icons.Filled.Settings,
-                        unselectedIcon = Icons.Outlined.Settings,
+                        title = stringResource(id = R.string.contactNavTitle),
+                        selectedIcon = Icons.Filled.Email,
+                        unselectedIcon = Icons.Outlined.Email,
                     ),
                 )
                 var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -74,29 +73,6 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-                    var scoreboardDetails by rememberSaveable {
-                        mutableStateOf<UiEvent.ScoreboardDetails?>(null)
-                    }
-                    val scope = rememberCoroutineScope()
-                    scoreboardDetails?.let { details ->
-                        ModalBottomSheet(
-                            sheetState = sheetState,
-                            onDismissRequest = {
-                                scoreboardDetails = null
-                            }
-                        ) {
-                            ScoreboardDetailsContent(
-                                details,
-                                onDone = {
-                                    scope.launch {
-                                        sheetState.hide()
-                                        scoreboardDetails = null
-                                    }
-                                }
-                            )
-                        }
-                    }
                     Scaffold(
                         bottomBar = {
                             NavigationBar {
@@ -124,7 +100,6 @@ class MainActivity : ComponentActivity() {
                         }
                     ) { padding ->
                         NavigationContent(
-                            toScoreboardDetails = { scoreboardDetails = it },
                             navController = navController,
                             modifier = Modifier.padding(padding)
                         )
@@ -136,7 +111,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun NavigationContent(
-        toScoreboardDetails: (UiEvent.ScoreboardDetails) -> Unit,
         navController: NavHostController,
         modifier: Modifier = Modifier
     ) {
@@ -148,9 +122,31 @@ class MainActivity : ComponentActivity() {
             composable(Routes.SCOREBOARD_LIST) {
                 ScoreboardListContent(
                     toScoreboardDetails = {
-                        toScoreboardDetails(it)
+                        navController.navigate("${Routes.SCOREBOARD_DETAILS}?id=${it.id}&type=${it.scoreboardType}")
                     }
                 )
+            }
+            dialog(
+                dialogProperties = DialogProperties(
+                    usePlatformDefaultWidth = false
+                ),
+                route = Routes.SCOREBOARD_DETAILS + "?id={id}&type={type}",
+                arguments = listOf(
+                    navArgument(name = "id") {
+                        type = NavType.IntType
+                        defaultValue = -1
+                    },
+                    navArgument(name = "type") {
+                        type = NavType.EnumType(ScoreboardType::class.java)
+                        defaultValue = ScoreboardType.NONE
+
+                    }
+                )
+            ) {
+                ScoreboardDetailsContent(
+                    onDone = {
+                        navController.popBackStack()
+                    })
             }
         }
     }

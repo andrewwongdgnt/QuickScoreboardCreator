@@ -45,12 +45,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
         }
     }
 
-    fun init(id: Int?, scoreboardType: ScoreboardType?) {
-        id?.takeUnless { it < 0 }?.let {
-            initWithId(it)
-        } ?: initWithScoreboardType((scoreboardType ?: ScoreboardType.NONE))
-    }
-
     private fun initWithId(id: Int) {
         viewModelScope.launch {
             getScoreboardUseCase(id)?.let {
