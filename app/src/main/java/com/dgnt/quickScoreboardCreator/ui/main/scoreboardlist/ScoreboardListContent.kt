@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -42,6 +44,7 @@ fun ScoreboardListContent(
     viewModel: ScoreboardListViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val defaultScoreboardList = viewModel.defaultScoreboardList.collectAsState(initial = emptyList())
     val scoreboardList = viewModel.scoreboardList.collectAsState(initial = emptyList())
     val snackbarHostState = remember { SnackbarHostState() }
@@ -49,17 +52,23 @@ fun ScoreboardListContent(
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar.ShowQuantitySnackbar -> {
-                    val result = snackbarHostState.showSnackbar(
-                        message = context.resources.getQuantityString(event.message, event.quantity, event.quantity),
-                        actionLabel = context.getString(event.action),
-                        withDismissAction = true
-                    )
-                    if (result == SnackbarResult.ActionPerformed) {
-                        viewModel.onEvent(ScoreboardListEvent.OnUndoDelete)
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    scope.launch {
+                        val result = snackbarHostState.showSnackbar(
+                            message = context.resources.getQuantityString(event.message, event.quantity, event.quantity),
+                            actionLabel = context.getString(event.action),
+                            withDismissAction = true
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            viewModel.onEvent(ScoreboardListEvent.OnUndoDelete)
+                        }
                     }
                 }
 
-                is UiEvent.ScoreboardDetails -> toScoreboardDetails(event)
+                is UiEvent.ScoreboardDetails -> {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    toScoreboardDetails(event)
+                }
                 else -> Unit
             }
         }
