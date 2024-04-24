@@ -5,13 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,18 +22,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.ui.common.Routes
 import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.ui.common.Routes
+import com.dgnt.quickScoreboardCreator.ui.common.Routes.CONTACT
+import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_LIST
+import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_LIST
+import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
+import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,46 +52,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             QuickScoreboardCreatorTheme {
-                val items = listOf(
-                    BottomNavigationItemData(
-                        title = stringResource(id = R.string.scoreboardListNavTitle),
-                        selectedIcon = Icons.Filled.Home,
-                        unselectedIcon = Icons.Outlined.Home,
-                    ),
-                    BottomNavigationItemData(
-                        title = stringResource(id = R.string.teamListNavTitle),
-                        selectedIcon = Icons.Filled.Person,
-                        unselectedIcon = Icons.Outlined.Person,
-                    ),
-                    BottomNavigationItemData(
-                        title = stringResource(id = R.string.contactNavTitle),
-                        selectedIcon = Icons.Filled.Email,
-                        unselectedIcon = Icons.Outlined.Email,
-                    ),
-                )
+                val screenList = listOf(Screen.ScoreboardList, Screen.TeamList, Screen.Contact)
+
                 var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+
+                val navController = rememberNavController()
 
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    val navController = rememberNavController()
                     Scaffold(
                         bottomBar = {
                             NavigationBar {
-                                items.forEachIndexed { index, item ->
+                                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                                val currentDestination = navBackStackEntry?.destination
+                                screenList.forEach { screen ->
                                     NavigationBarItem(
-                                        selected = selectedItemIndex == index,
+                                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                                         onClick = {
-                                            selectedItemIndex = index
+                                            navController.commonNavigate(screen.route)
                                         },
                                         label = {
-                                            Text(text = item.title)
+                                            Text(text = stringResource(id = screen.titleRes))
                                         },
                                         icon = {
                                             Icon(
-                                                imageVector = if (index == selectedItemIndex) {
-                                                    item.selectedIcon
-                                                } else item.unselectedIcon,
-                                                contentDescription = item.title
+                                                imageVector = if (currentDestination?.hierarchy?.any { it.route == screen.route } == true) {
+                                                    screen.selectedIcon
+                                                } else screen.unselectedIcon,
+                                                contentDescription = stringResource(id = screen.titleRes)
                                             )
                                         }
                                     )
@@ -116,14 +105,24 @@ class MainActivity : ComponentActivity() {
     ) {
         NavHost(
             navController = navController,
-            startDestination = Routes.SCOREBOARD_LIST,
+            startDestination = SCOREBOARD_LIST,
             modifier = modifier
         ) {
-            composable(Routes.SCOREBOARD_LIST) {
+            composable(SCOREBOARD_LIST) {
                 ScoreboardListContent(
                     toScoreboardDetails = {
-                        navController.navigate("${Routes.SCOREBOARD_DETAILS}?id=${it.id}&type=${it.scoreboardType}")
+                        navController.commonNavigate("${Routes.SCOREBOARD_DETAILS}?id=${it.id}&type=${it.scoreboardType}")
                     }
+                )
+            }
+            composable(TEAM_LIST) {
+                TeamListContent(
+
+                )
+            }
+            composable(CONTACT) {
+                ContactContent(
+
                 )
             }
             dialog(
@@ -149,6 +148,20 @@ class MainActivity : ComponentActivity() {
                     })
             }
         }
+    }
+
+    private fun NavController.commonNavigate(route: String) = navigate(route) {
+        // Pop up to the start destination of the graph to
+        // avoid building up a large stack of destinations
+        // on the back stack as users select items
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        // Avoid multiple copies of the same destination when
+        // reselecting the same item
+        launchSingleTop = true
+        // Restore state when reselecting a previously selected item
+        restoreState = true
     }
 
     @Preview(showBackground = true)
