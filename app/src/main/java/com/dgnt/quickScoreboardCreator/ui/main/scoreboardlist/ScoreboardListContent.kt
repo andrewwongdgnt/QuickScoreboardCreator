@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.common.util.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 
 
 @Composable

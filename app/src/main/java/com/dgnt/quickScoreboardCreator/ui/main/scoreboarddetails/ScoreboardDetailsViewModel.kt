@@ -4,15 +4,15 @@ import android.content.res.Resources
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.common.util.UiEvent
 import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.usecase.InsertScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -43,6 +43,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
         } ?: savedStateHandle.get<ScoreboardType>("type")?.let {
             initWithScoreboardType(it)
         }
+        viewModelScope.launch {
+            snapshotFlow { title }
+                .collect {
+                    sendUiEvent(UiEvent.Validation(validate()))
+                }
+        }
     }
 
     private fun initWithId(id: Int) {
@@ -64,12 +70,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
         when (event) {
             is ScoreboardDetailsEvent.OnDone -> {
                 viewModelScope.launch {
-                    if (title.isBlank()) {
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar.ShowGenericSnackbar(
-                                message = R.string.emptyTitleWarning
-                            )
-                        )
+                    if (!validate()) {
+
                         return@launch
                     }
                     insertScoreboardListUseCase(
@@ -86,6 +88,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    private fun validate() = title.isNotBlank()
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

@@ -37,9 +37,9 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.common.util.Routes
+import com.dgnt.quickScoreboardCreator.ui.common.Routes
 import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsContent
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -143,7 +143,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             ) {
-                ScoreboardDetailsContent(
+                ScoreboardDetailsDialogContent(
                     onDone = {
                         navController.popBackStack()
                     })

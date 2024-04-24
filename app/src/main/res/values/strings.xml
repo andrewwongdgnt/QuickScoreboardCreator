@@ -8,8 +8,8 @@
     <string name="hockey_description">Hockey description</string>
     <string name="spikeball">Spikeball</string>
     <string name="spikeball_description">Spikeball description</string>
-    <!-- Scoreboard Update -->
-    <string name="emptyTitleWarning">The name can\'t be empty</string>
+    <!-- Scoreboard Details -->
+    <string name="scoreboardDetailsTitle">Scoreboard details</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
@@ -21,8 +21,8 @@
     <!-- Settings -->
     <string name="contactNavTitle">Contact</string>
     <!-- Common -->
-    <string name="scoreboardNamePlaceholder">Name</string>
-    <string name="scoreboardDescriptionPlaceholder">Description (optional)</string>
+    <string name="scoreboardNamePlaceholder">Name*</string>
+    <string name="scoreboardDescriptionPlaceholder">Description</string>
     <string name="defaultScoreboardConfig">Default</string>
     <string name="customScoreboardConfig">Custom</string>
     <string name="delete">Delete</string>

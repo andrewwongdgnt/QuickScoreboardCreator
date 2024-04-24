@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.common.util
+package com.dgnt.quickScoreboardCreator.ui.common
 
 object Routes {
     const val SCOREBOARD_LIST = "scoreboard_list"

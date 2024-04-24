@@ -4,7 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.common.util.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.loader.ScoreboardLoader
