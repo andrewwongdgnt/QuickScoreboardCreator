@@ -5,4 +5,5 @@ object Routes {
     const val TEAM_LIST = "team_list"
     const val CONTACT = "contact"
     const val SCOREBOARD_DETAILS = "scoreboard_details"
+    const val TEAM_DETAILS = "team_details"
 }

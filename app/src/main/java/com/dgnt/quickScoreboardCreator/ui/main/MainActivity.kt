@@ -15,9 +15,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,8 +50,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuickScoreboardCreatorTheme {
                 val screenList = listOf(Screen.ScoreboardList, Screen.TeamList, Screen.Contact)
-
-                var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
                 val navController = rememberNavController()
 
@@ -117,7 +112,9 @@ class MainActivity : ComponentActivity() {
             }
             composable(TEAM_LIST) {
                 TeamListContent(
+                    toTeamDetails = {
 
+                    }
                 )
             }
             composable(CONTACT) {

@@ -68,6 +68,7 @@ fun ScoreboardListContent(
                     snackbarHostState.currentSnackbarData?.dismiss()
                     toScoreboardDetails(event)
                 }
+
                 else -> Unit
             }
         }
@@ -87,10 +88,10 @@ fun ScoreboardListContent(
         }
     ) { padding ->
         val categoryList = listOf(
-            Pair(stringResource(R.string.defaultScoreboardConfig), defaultScoreboardList.value.map {
+            stringResource(R.string.defaultScoreboardConfig) to defaultScoreboardList.value.map {
                 ScoreboardItemData(null, it, stringResource(it.titleRes), stringResource(it.descriptionRes))
-            }),
-            Pair(stringResource(R.string.customScoreboardConfig), scoreboardList.value)
+            },
+            stringResource(R.string.customScoreboardConfig) to scoreboardList.value
         )
         LazyColumn(
             modifier = Modifier
