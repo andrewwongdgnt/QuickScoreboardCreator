@@ -1,6 +1,6 @@
 {
   "type": "CUSTOM",
-  "name": "Spike Ball",
+  "title": "Spike Ball",
   "description": "Covid sport",
   "scoreCarriesOver": false,
   "intervalList": [

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
+package com.dgnt.quickScoreboardCreator.ui.main.teamdetails
 
 
 import androidx.compose.foundation.layout.Column
@@ -26,10 +26,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 
+
 @Composable
-fun ScoreboardDetailsDialogContent(
+fun TeamDetailsDialogContent(
     onDone: () -> Unit,
-    viewModel: ScoreboardDetailsViewModel = hiltViewModel()
+    viewModel: TeamDetailsViewModel = hiltViewModel()
 ) {
     var valid by rememberSaveable {
         mutableStateOf(false)
@@ -51,7 +52,7 @@ fun ScoreboardDetailsDialogContent(
         title = {
             Text(
                 style = MaterialTheme.typography.titleSmall,
-                text = stringResource(id = R.string.scoreboardDetailsTitle)
+                text = stringResource(id = R.string.teamDetailsTitle)
             )
         },
         dismissButton = {
@@ -65,7 +66,7 @@ fun ScoreboardDetailsDialogContent(
             Button(
                 enabled = valid,
                 onClick = {
-                    viewModel.onEvent(ScoreboardDetailsEvent.OnDone)
+                    viewModel.onEvent(TeamDetailsEvent.OnDone)
                 }
             ) {
                 Text(stringResource(id = R.string.add))

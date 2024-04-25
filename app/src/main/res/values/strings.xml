@@ -16,6 +16,8 @@
         <item quantity="one">%d scoreboard deleted</item>
         <item quantity="other">%d scoreboards deleted</item>
     </plurals>
+    <string name="defaultScoreboardConfig">Default</string>
+    <string name="customScoreboardConfig">Custom</string>
     <!-- Team List -->
     <string name="teamListNavTitle">My teams</string>
     <plurals name="deletedTeamMsg">
@@ -27,10 +29,8 @@
     <!-- Settings -->
     <string name="contactNavTitle">Contact</string>
     <!-- Common -->
-    <string name="scoreboardNamePlaceholder">Name*</string>
-    <string name="scoreboardDescriptionPlaceholder">Description</string>
-    <string name="defaultScoreboardConfig">Default</string>
-    <string name="customScoreboardConfig">Custom</string>
+    <string name="titlePlaceholder">Name*</string>
+    <string name="descriptionPlaceholder">Description</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="add">Add</string>

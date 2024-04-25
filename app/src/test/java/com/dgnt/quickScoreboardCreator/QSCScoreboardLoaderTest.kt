@@ -1,10 +1,10 @@
 package com.dgnt.quickScoreboardCreator
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
-import com.dgnt.quickScoreboardCreator.domain.model.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -12,11 +12,11 @@ import org.junit.Test
 
 class QSCScoreboardLoaderTest {
 
-    private lateinit var sut: com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
+    private lateinit var sut: QSCScoreboardLoader
 
     @Before
     fun setup() {
-        sut = com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader(GsonProvider.gson)
+        sut = QSCScoreboardLoader(GsonProvider.gson)
     }
 
     @Test
@@ -36,7 +36,7 @@ class QSCScoreboardLoaderTest {
             sut.load(ins)
         } as CustomScoreboardConfig
 
-        Assert.assertEquals("Spike Ball", exampleCustom.name)
+        Assert.assertEquals("Spike Ball", exampleCustom.title)
         Assert.assertEquals("Covid sport", exampleCustom.description)
         Assert.assertFalse(exampleCustom.scoreCarriesOver)
         Assert.assertEquals(3, exampleCustom.intervalList.size)

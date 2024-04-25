@@ -39,7 +39,7 @@ fun TeamItemContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = item.name, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+                    Text(text = item.title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
 
                     IconButton(onClick = {
                         onEvent(TeamListEvent.OnDelete(listOf(item)))
@@ -60,4 +60,4 @@ fun TeamItemContent(
 @Preview(showBackground = true)
 @Composable
 private fun TeamItemContentPreview() =
-    TeamItemContent(TeamItemData(0, name = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+    TeamItemContent(TeamItemData(0, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})

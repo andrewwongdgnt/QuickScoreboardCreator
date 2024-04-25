@@ -1,11 +1,12 @@
 package com.dgnt.quickScoreboardCreator
 
-import com.dgnt.quickScoreboardCreator.domain.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.domain.model.score.ScoreData
-import com.dgnt.quickScoreboardCreator.domain.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.domain.model.score.ScoreRule
-import com.dgnt.quickScoreboardCreator.domain.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.domain.business.manager.QSCScoreboardManager
+
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.QSCScoreboardManager
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert

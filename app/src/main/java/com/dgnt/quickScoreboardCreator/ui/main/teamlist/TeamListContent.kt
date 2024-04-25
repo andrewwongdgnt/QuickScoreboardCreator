@@ -88,7 +88,7 @@ fun TeamListContent(
     ) { padding ->
 
         val categoryList= teamList.value.groupBy {
-            it.name.first()
+            it.title.first()
         }
             .toSortedMap()
             .map {

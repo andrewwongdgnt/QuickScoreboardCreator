@@ -31,13 +31,15 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.ui.common.Routes
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.CONTACT
+import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_DETAILS
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_LIST
+import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_DETAILS
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_LIST
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
+import com.dgnt.quickScoreboardCreator.ui.main.teamdetails.TeamDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,27 +108,15 @@ class MainActivity : ComponentActivity() {
             composable(SCOREBOARD_LIST) {
                 ScoreboardListContent(
                     toScoreboardDetails = {
-                        navController.commonNavigate("${Routes.SCOREBOARD_DETAILS}?id=${it.id}&type=${it.scoreboardType}")
+                        navController.commonNavigate("$SCOREBOARD_DETAILS?id=${it.id}&type=${it.scoreboardType}")
                     }
-                )
-            }
-            composable(TEAM_LIST) {
-                TeamListContent(
-                    toTeamDetails = {
-
-                    }
-                )
-            }
-            composable(CONTACT) {
-                ContactContent(
-
                 )
             }
             dialog(
                 dialogProperties = DialogProperties(
                     usePlatformDefaultWidth = false
                 ),
-                route = Routes.SCOREBOARD_DETAILS + "?id={id}&type={type}",
+                route = "$SCOREBOARD_DETAILS?id={id}&type={type}",
                 arguments = listOf(
                     navArgument(name = "id") {
                         type = NavType.IntType
@@ -143,6 +133,35 @@ class MainActivity : ComponentActivity() {
                     onDone = {
                         navController.popBackStack()
                     })
+            }
+            composable(TEAM_LIST) {
+                TeamListContent(
+                    toTeamDetails = {
+                        navController.commonNavigate("${TEAM_DETAILS}?id=${it.id}")
+                    }
+                )
+            }
+            dialog(
+                dialogProperties = DialogProperties(
+                    usePlatformDefaultWidth = false
+                ),
+                route = "$TEAM_DETAILS?id={id}",
+                arguments = listOf(
+                    navArgument(name = "id") {
+                        type = NavType.IntType
+                        defaultValue = -1
+                    }
+                )
+            ) {
+                TeamDetailsDialogContent(
+                    onDone = {
+                        navController.popBackStack()
+                    })
+            }
+            composable(CONTACT) {
+                ContactContent(
+
+                )
             }
         }
     }

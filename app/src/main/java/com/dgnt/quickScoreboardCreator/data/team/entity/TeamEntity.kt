@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 @Entity
 data class TeamEntity(
     @PrimaryKey val id: Int? = null,
-    val name: String,
+    val title: String,
     val description: String,
     val defaultIcon: TeamIcon
 )

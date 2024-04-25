@@ -28,7 +28,7 @@ class TeamListViewModel @Inject constructor(
     val teamList = teamEntityList.map {
         it.map { e ->
             TeamItemData(
-                e.id, e.name, e.description
+                e.id, e.title, e.description
             )
         }
     }
