@@ -5,7 +5,7 @@ import com.dgnt.quickScoreboardCreator.domain.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.manager.QSCScoreboardManager
+import com.dgnt.quickScoreboardCreator.domain.business.manager.QSCScoreboardManager
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert

@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -29,7 +30,10 @@ fun ScoreboardItemContent(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .clickable {
+                onEvent(ScoreboardListEvent.OnLaunch(item))
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {

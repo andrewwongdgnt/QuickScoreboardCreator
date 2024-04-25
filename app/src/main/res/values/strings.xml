@@ -18,6 +18,12 @@
     </plurals>
     <!-- Team List -->
     <string name="teamListNavTitle">My teams</string>
+    <plurals name="deletedTeamMsg">
+        <item quantity="one">%d team deleted</item>
+        <item quantity="other">%d teams deleted</item>
+    </plurals>
+    <!-- Team Details -->
+    <string name="teamDetailsTitle">Team details</string>
     <!-- Settings -->
     <string name="contactNavTitle">Contact</string>
     <!-- Common -->

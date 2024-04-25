@@ -1,8 +1,8 @@
 package com.dgnt.quickScoreboardCreator.di
 
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.loader.QSCScoreboardLoader
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.loader.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.ScoreboardLoader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

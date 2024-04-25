@@ -8,10 +8,10 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.data.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.domain.usecase.GetScoreboardUseCase
-import com.dgnt.quickScoreboardCreator.domain.usecase.InsertScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

@@ -1,9 +1,10 @@
 package com.dgnt.quickScoreboardCreator.common.util
 
-import com.dgnt.quickScoreboardCreator.domain.model.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardConfigType
+
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfigType
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory

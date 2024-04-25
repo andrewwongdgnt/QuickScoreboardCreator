@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.loader.QSCScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.model.config.CustomScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
@@ -12,11 +12,11 @@ import org.junit.Test
 
 class QSCScoreboardLoaderTest {
 
-    private lateinit var sut: QSCScoreboardLoader
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
 
     @Before
     fun setup() {
-        sut = QSCScoreboardLoader(GsonProvider.gson)
+        sut = com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader(GsonProvider.gson)
     }
 
     @Test

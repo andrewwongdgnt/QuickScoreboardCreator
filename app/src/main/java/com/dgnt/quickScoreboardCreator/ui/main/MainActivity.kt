@@ -33,7 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.Routes
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.CONTACT
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_LIST

@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
-import com.dgnt.quickScoreboardCreator.domain.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 
 data class ScoreboardItemData(
     val id: Int?,

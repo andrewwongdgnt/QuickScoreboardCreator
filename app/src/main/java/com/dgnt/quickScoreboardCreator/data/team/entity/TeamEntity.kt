@@ -1,0 +1,13 @@
+package com.dgnt.quickScoreboardCreator.data.team.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+
+@Entity
+data class TeamEntity(
+    @PrimaryKey val id: Int? = null,
+    val name: String,
+    val description: String,
+    val defaultIcon: TeamIcon
+)
