@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -20,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -44,7 +43,6 @@ import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-@OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +64,7 @@ class MainActivity : ComponentActivity() {
                                     NavigationBarItem(
                                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                                         onClick = {
-                                            navController.commonNavigate(screen.route)
+                                            navController.commonNavigate(currentDestination, screen.route)
                                         },
                                         label = {
                                             Text(text = stringResource(id = screen.titleRes))
@@ -108,7 +106,7 @@ class MainActivity : ComponentActivity() {
             composable(SCOREBOARD_LIST) {
                 ScoreboardListContent(
                     toScoreboardDetails = {
-                        navController.commonNavigate("$SCOREBOARD_DETAILS?id=${it.id}&type=${it.scoreboardType}")
+                        navController.commonNavigate(route = "$SCOREBOARD_DETAILS?id=${it.id}&type=${it.scoreboardType}")
                     }
                 )
             }
@@ -137,7 +135,7 @@ class MainActivity : ComponentActivity() {
             composable(TEAM_LIST) {
                 TeamListContent(
                     toTeamDetails = {
-                        navController.commonNavigate("${TEAM_DETAILS}?id=${it.id}")
+                        navController.commonNavigate(route = "${TEAM_DETAILS}?id=${it.id}")
                     }
                 )
             }
@@ -166,12 +164,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun NavController.commonNavigate(route: String) = navigate(route) {
-        // Pop up to the start destination of the graph to
-        // avoid building up a large stack of destinations
+    private fun NavController.commonNavigate(currentDestination: NavDestination? = null, route: String) = navigate(route) {
+        // Avoid building up a large stack of destinations
         // on the back stack as users select items
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
+        currentDestination?.id?.let {
+            popUpTo(it) {
+                saveState = true
+                inclusive = true
+            }
+        } ?: run {
+            popUpTo(route) {
+                saveState = true
+                inclusive = true
+            }
         }
         // Avoid multiple copies of the same destination when
         // reselecting the same item
