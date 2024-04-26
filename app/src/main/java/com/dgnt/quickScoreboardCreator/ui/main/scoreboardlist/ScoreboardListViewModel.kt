@@ -92,7 +92,7 @@ class ScoreboardListViewModel @Inject constructor(
             }
 
             is ScoreboardListEvent.OnLaunch -> {
-                // TODO complete this
+                sendUiEvent(UiEvent.LaunchScoreboard(event.scoreboard.id, event.scoreboard.type))
             }
         }
     }

@@ -12,6 +12,8 @@ import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -38,9 +40,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        savedStateHandle.get<Int>("id")?.takeUnless { it < 0 }?.let { id ->
+        savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
-        } ?: savedStateHandle.get<ScoreboardType>("type")?.let {
+        } ?: savedStateHandle.get<ScoreboardType>(TYPE)?.let {
             initWithScoreboardType(it)
         }
         viewModelScope.launch {

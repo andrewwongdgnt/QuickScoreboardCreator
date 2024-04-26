@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ScoreboardListContent(
     toScoreboardDetails: (UiEvent.ScoreboardDetails) -> Unit,
+    launchScoreboard: (UiEvent.LaunchScoreboard) -> Unit,
     viewModel: ScoreboardListViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -67,6 +68,10 @@ fun ScoreboardListContent(
                 is UiEvent.ScoreboardDetails -> {
                     snackbarHostState.currentSnackbarData?.dismiss()
                     toScoreboardDetails(event)
+                }
+
+                is UiEvent.LaunchScoreboard -> {
+                    launchScoreboard(event)
                 }
 
                 else -> Unit
@@ -132,4 +137,4 @@ fun ScoreboardListContent(
 @Preview(showBackground = true)
 @Composable
 private fun ScoreboardListContentPreview() =
-    ScoreboardListContent({})
+    ScoreboardListContent({},{})

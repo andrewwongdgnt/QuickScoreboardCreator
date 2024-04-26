@@ -12,6 +12,7 @@ import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +40,7 @@ class TeamDetailsViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        savedStateHandle.get<Int>("id")?.takeUnless { it < 0 }?.let { id ->
+        savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
         }
         viewModelScope.launch {

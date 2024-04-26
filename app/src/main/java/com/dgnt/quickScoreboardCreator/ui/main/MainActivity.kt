@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
@@ -29,7 +31,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dgnt.quickScoreboardCreator.common.util.putExtra
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.CONTACT
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_DETAILS
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_LIST
@@ -40,6 +45,7 @@ import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetai
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamdetails.TeamDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -98,6 +104,7 @@ class MainActivity : ComponentActivity() {
         navController: NavHostController,
         modifier: Modifier = Modifier
     ) {
+        val context = LocalContext.current
         NavHost(
             navController = navController,
             startDestination = SCOREBOARD_LIST,
@@ -106,7 +113,13 @@ class MainActivity : ComponentActivity() {
             composable(SCOREBOARD_LIST) {
                 ScoreboardListContent(
                     toScoreboardDetails = {
-                        navController.commonNavigate(route = "$SCOREBOARD_DETAILS?id=${it.id}&type=${it.scoreboardType}")
+                        navController.commonNavigate(route = "$SCOREBOARD_DETAILS?$ID=${it.id}&$TYPE=${it.scoreboardType}")
+                    },
+                    launchScoreboard = {
+                        context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
+                            intent.putExtra(ID, it.id)
+                            it.scoreboardType?.let { scoreboardType -> intent.putExtra(scoreboardType) }
+                        })
                     }
                 )
             }
@@ -114,13 +127,13 @@ class MainActivity : ComponentActivity() {
                 dialogProperties = DialogProperties(
                     usePlatformDefaultWidth = false
                 ),
-                route = "$SCOREBOARD_DETAILS?id={id}&type={type}",
+                route = "$SCOREBOARD_DETAILS?$ID={$ID}&$TYPE={$TYPE}",
                 arguments = listOf(
-                    navArgument(name = "id") {
+                    navArgument(name = ID) {
                         type = NavType.IntType
                         defaultValue = -1
                     },
-                    navArgument(name = "type") {
+                    navArgument(name = TYPE) {
                         type = NavType.EnumType(ScoreboardType::class.java)
                         defaultValue = ScoreboardType.NONE
 
@@ -135,7 +148,7 @@ class MainActivity : ComponentActivity() {
             composable(TEAM_LIST) {
                 TeamListContent(
                     toTeamDetails = {
-                        navController.commonNavigate(route = "${TEAM_DETAILS}?id=${it.id}")
+                        navController.commonNavigate(route = "$TEAM_DETAILS?$ID=${it.id}")
                     }
                 )
             }
@@ -143,9 +156,9 @@ class MainActivity : ComponentActivity() {
                 dialogProperties = DialogProperties(
                     usePlatformDefaultWidth = false
                 ),
-                route = "$TEAM_DETAILS?id={id}",
+                route = "$TEAM_DETAILS?$ID={$ID}",
                 arguments = listOf(
-                    navArgument(name = "id") {
+                    navArgument(name = ID) {
                         type = NavType.IntType
                         defaultValue = -1
                     }
@@ -189,7 +202,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GreetingPreview() {
         QuickScoreboardCreatorTheme {
-            ScoreboardListContent({})
+            ScoreboardListContent({}, {})
         }
     }
 }
