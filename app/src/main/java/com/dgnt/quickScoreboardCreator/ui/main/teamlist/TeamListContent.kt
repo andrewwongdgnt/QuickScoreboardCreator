@@ -87,12 +87,12 @@ fun TeamListContent(
         }
     ) { padding ->
 
-        val categoryList= teamList.value.groupBy {
-            it.title.first()
+        val categoryList = teamList.value.groupBy {
+            it.title.first().uppercase()
         }
             .toSortedMap()
             .map {
-                it.key.toString() to it.value
+                it.key to it.value
             }
 
         LazyColumn(
