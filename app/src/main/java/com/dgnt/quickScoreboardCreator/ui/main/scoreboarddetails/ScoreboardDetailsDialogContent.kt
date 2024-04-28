@@ -94,7 +94,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 enabled = valid,
                 onClick = onConfirm
             ) {
-                Text(stringResource(id = R.string.add))
+                Text(stringResource(id = android.R.string.ok))
             }
         },
         text = {
@@ -134,9 +134,9 @@ private fun ScoreboardDetailsInnerDialogContent(
 @Composable
 private fun ScoreboardDetailsInnerDialogContentPreview1() {
     ScoreboardDetailsInnerDialogContent(
-        "Basketball",
+        "",
         {},
-        "NBA Sport",
+        "",
         {},
         true,
         {},

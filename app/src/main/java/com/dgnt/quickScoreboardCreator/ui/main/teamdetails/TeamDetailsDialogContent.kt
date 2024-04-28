@@ -21,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
@@ -47,8 +48,32 @@ fun TeamDetailsDialogContent(
             }
         }
     }
+
+    TeamDetailsInnerDialogContent(
+        viewModel.title,
+        { viewModel.title = it },
+        viewModel.description,
+        { viewModel.description = it },
+        valid,
+        { viewModel.onEvent(TeamDetailsEvent.OnDone) },
+        { onDone() }
+    )
+
+}
+
+@Composable
+private fun TeamDetailsInnerDialogContent(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
+    valid: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+
     AlertDialog(
-        onDismissRequest = { onDone() },
+        onDismissRequest = onDismiss,
         title = {
             Text(
                 style = MaterialTheme.typography.titleSmall,
@@ -57,7 +82,7 @@ fun TeamDetailsDialogContent(
         },
         dismissButton = {
             Button(
-                onClick = { onDone() }
+                onClick = onDismiss
             ) {
                 Text(stringResource(id = android.R.string.cancel))
             }
@@ -65,11 +90,9 @@ fun TeamDetailsDialogContent(
         confirmButton = {
             Button(
                 enabled = valid,
-                onClick = {
-                    viewModel.onEvent(TeamDetailsEvent.OnDone)
-                }
+                onClick = onConfirm
             ) {
-                Text(stringResource(id = R.string.add))
+                Text(stringResource(id = android.R.string.ok))
             }
         },
         text = {
@@ -78,15 +101,15 @@ fun TeamDetailsDialogContent(
                     .fillMaxWidth()
             ) {
                 TextField(
-                    value = viewModel.title,
-                    onValueChange = { viewModel.title = it },
+                    value = title,
+                    onValueChange = onTitleChange,
                     placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
-                    value = viewModel.description,
-                    onValueChange = { viewModel.description = it },
+                    value = description,
+                    onValueChange = onDescriptionChange,
                     placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false,
@@ -95,5 +118,18 @@ fun TeamDetailsDialogContent(
             }
         }
     )
+}
 
+@Preview(showBackground = true)
+@Composable
+private fun TeamDetailsInnerDialogContentPreview1() {
+    TeamDetailsInnerDialogContent(
+        "",
+        {},
+        "",
+        {},
+        true,
+        {},
+        {},
+    )
 }
