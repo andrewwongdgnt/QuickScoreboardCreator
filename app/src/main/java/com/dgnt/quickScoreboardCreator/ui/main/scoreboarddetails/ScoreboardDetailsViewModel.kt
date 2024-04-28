@@ -36,6 +36,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     var description by mutableStateOf("")
 
+    var scoreCarriesOver by mutableStateOf(true)
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -81,7 +83,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
                             ScoreboardEntity(
                                 id = scoreboard?.id,
                                 title = title,
-                                description = description
+                                description = description,
+                                scoreCarriesOver = scoreCarriesOver
                             )
                         )
                     )

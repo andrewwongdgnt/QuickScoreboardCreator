@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.composable.LabelSwitch
 
 @Composable
 fun ScoreboardDetailsDialogContent(
@@ -76,13 +77,14 @@ fun ScoreboardDetailsDialogContent(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
+                val spacer: @Composable () -> Unit = { Spacer(modifier = Modifier.height(8.dp)) }
                 TextField(
                     value = viewModel.title,
                     onValueChange = { viewModel.title = it },
                     placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                spacer()
                 TextField(
                     value = viewModel.description,
                     onValueChange = { viewModel.description = it },
@@ -90,6 +92,15 @@ fun ScoreboardDetailsDialogContent(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false,
                     maxLines = 5
+                )
+                spacer()
+                LabelSwitch(
+                    label = stringResource(id = R.string.scoreCarriesOver),
+                    checked = viewModel.scoreCarriesOver,
+                    onCheckedChange = {
+                        viewModel.scoreCarriesOver = it
+                    },
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }

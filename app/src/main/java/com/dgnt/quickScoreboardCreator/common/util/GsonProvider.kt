@@ -7,6 +7,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfigType
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 
 object GsonProvider {
@@ -21,3 +22,6 @@ object GsonProvider {
      }.create()
 
 }
+
+inline fun <reified T> Gson.fromJson(json: String): T =
+    fromJson(json, object : TypeToken<T>() {}.type)

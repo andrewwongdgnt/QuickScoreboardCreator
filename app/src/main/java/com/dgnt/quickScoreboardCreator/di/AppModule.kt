@@ -3,7 +3,7 @@ package com.dgnt.quickScoreboardCreator.di
 import android.app.Application
 import android.content.res.Resources
 import androidx.room.Room
-import com.dgnt.quickScoreboardCreator.data.base.db.QSCDatabase
+import com.dgnt.quickScoreboardCreator.data.db.QSCDatabase
 import com.dgnt.quickScoreboardCreator.data.scoreboard.repository.QSCScoreboardRepository
 import com.dgnt.quickScoreboardCreator.data.team.repository.QSCTeamRepository
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.repository.ScoreboardRepository

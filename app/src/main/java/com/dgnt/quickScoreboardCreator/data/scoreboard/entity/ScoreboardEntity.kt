@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 data class ScoreboardEntity(
     @PrimaryKey val id: Int? = null,
     val title: String,
-    val description: String
+    val description: String,
+    val scoreCarriesOver: Boolean,
+//    val intervalListL: List<Pair<ScoreInfo<ScoreData>, IntervalData>>
 )

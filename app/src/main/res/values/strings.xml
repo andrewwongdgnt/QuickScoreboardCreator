@@ -10,6 +10,7 @@
     <string name="spikeball_description">Spikeball description</string>
     <!-- Scoreboard Details -->
     <string name="scoreboardDetailsTitle">Scoreboard details</string>
+    <string name="scoreCarriesOver">Do the scores carry over to next round</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
