@@ -132,7 +132,7 @@ private fun ScoreboardDetailsInnerDialogContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun ScoreboardDetailsInnerDialogContentPreview1() {
+private fun `Empty data`() =
     ScoreboardDetailsInnerDialogContent(
         "",
         {},
@@ -144,4 +144,3 @@ private fun ScoreboardDetailsInnerDialogContentPreview1() {
         {},
         {},
     )
-}

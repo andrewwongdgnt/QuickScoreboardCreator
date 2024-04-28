@@ -41,7 +41,7 @@ fun ScoreboardItemContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = item.title, style = typography.titleLarge, modifier = Modifier.weight(1f))
+                    Text(text = item.title, style = typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
                     if (item.type == null)
                         IconButton(onClick = {
                             onEvent(ScoreboardListEvent.OnDelete(listOf(item)))
@@ -69,6 +69,16 @@ fun ScoreboardItemContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun ScoreboardItemContentPreview() =
+private fun `Normal`() =
+    ScoreboardItemContent(ScoreboardItemData(0, null, title = "Basketball", description = "NBA Sport"), {})
+
+@Preview(showBackground = true)
+@Composable
+private fun `Long description`() =
     ScoreboardItemContent(ScoreboardItemData(0, null, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+
+@Preview(showBackground = true)
+@Composable
+private fun `Long title and long description`() =
+    ScoreboardItemContent(ScoreboardItemData(0, null, title = "Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
 

@@ -2,6 +2,7 @@
 
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,9 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -33,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import kotlinx.coroutines.launch
 
@@ -79,12 +83,28 @@ fun ScoreboardListContent(
         }
     }
 
+    ScoreboardListInnerContent(
+        snackbarHostState,
+        { viewModel.onEvent(ScoreboardListEvent.OnAdd) },
+        defaultScoreboardList,
+        scoreboardList,
+        viewModel::onEvent
+    )
+
+}
+
+@Composable
+private fun ScoreboardListInnerContent(
+    snackbarHostState: SnackbarHostState,
+    onFABClick: () -> Unit,
+    defaultScoreboardList: State<List<ScoreboardType>>,
+    scoreboardList: State<List<ScoreboardItemData>>,
+    onItemClick: (ScoreboardListEvent) -> Unit
+) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.onEvent(ScoreboardListEvent.OnAdd)
-            }) {
+            FloatingActionButton(onClick = onFABClick) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.add)
@@ -123,7 +143,7 @@ fun ScoreboardListContent(
                     items(itemList) { scoreboard ->
                         ScoreboardItemContent(
                             item = scoreboard,
-                            onEvent = viewModel::onEvent,
+                            onEvent = onItemClick,
                             modifier = Modifier
                                 .fillMaxWidth()
                         )
@@ -131,10 +151,32 @@ fun ScoreboardListContent(
                 }
         }
     }
-
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
-private fun ScoreboardListContentPreview() =
-    ScoreboardListContent({},{})
+private fun `Only defaults`() =
+    ScoreboardListInnerContent(
+        SnackbarHostState(),
+        {},
+        derivedStateOf { listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL) },
+        derivedStateOf { emptyList() },
+        {}
+    )
+
+@SuppressLint("UnrememberedMutableState")
+@Preview(showBackground = true)
+@Composable
+private fun `Defaults and customs`() =
+    ScoreboardListInnerContent(
+        SnackbarHostState(),
+        {},
+        derivedStateOf { listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL) },
+        derivedStateOf { listOf(
+            ScoreboardItemData(0, null, "My Scoreboard 1", "My Description 1"),
+            ScoreboardItemData(0, null, "My Scoreboard 2", "My Description 2"),
+            ScoreboardItemData(0, null, "My Scoreboard 3", "My Description 3 "),
+        ) },
+        {}
+    )

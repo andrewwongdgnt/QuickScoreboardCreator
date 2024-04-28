@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +38,7 @@ fun TeamItemContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = item.title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+                    Text(text = item.title, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
 
                     IconButton(onClick = {
                         onEvent(TeamListEvent.OnDelete(listOf(item)))
@@ -59,5 +58,25 @@ fun TeamItemContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun TeamItemContentPreview() =
-    TeamItemContent(TeamItemData(0, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+private fun `Normal`() =
+    TeamItemContent(TeamItemData(0, title = "Dragons", description = "Legendary creatures"), {})
+
+@Preview(showBackground = true)
+@Composable
+private fun `Long description`() =
+    TeamItemContent(
+        TeamItemData(
+            0,
+            title = "Dragons",
+            description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures"
+        ), {})
+
+@Preview(showBackground = true)
+@Composable
+private fun `Long description and long description`() =
+    TeamItemContent(
+        TeamItemData(
+            0,
+            title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
+            description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures"
+        ), {})

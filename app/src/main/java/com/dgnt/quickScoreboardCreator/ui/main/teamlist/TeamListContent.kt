@@ -3,6 +3,7 @@
 package com.dgnt.quickScoreboardCreator.ui.main.teamlist
 
 import TeamItemContent
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +23,9 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -73,12 +76,29 @@ fun TeamListContent(
         }
     }
 
+    TeamListInnerContent(
+snackbarHostState,
+        {
+            viewModel.onEvent(TeamListEvent.OnAdd)
+        },
+        teamList,
+        viewModel::onEvent
+    )
+
+}
+
+@Composable
+private fun TeamListInnerContent(
+    snackbarHostState: SnackbarHostState,
+    onFABClick: () -> Unit,
+    teamList: State<List<TeamItemData>>,
+    onItemClick: (TeamListEvent) -> Unit,
+) {
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.onEvent(TeamListEvent.OnAdd)
-            }) {
+            FloatingActionButton(onClick = onFABClick) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.add)
@@ -120,7 +140,7 @@ fun TeamListContent(
                     items(itemList) { team ->
                         TeamItemContent(
                             item = team,
-                            onEvent = viewModel::onEvent,
+                            onEvent = onItemClick,
                             modifier = Modifier
                                 .fillMaxWidth()
                         )
@@ -128,11 +148,31 @@ fun TeamListContent(
                 }
         }
     }
-
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
-private fun TeamListContentPreview() {
-    TeamListContent({})
-}
+private fun `Empty teams`() =
+    TeamListInnerContent(
+        SnackbarHostState(),
+        {},
+        derivedStateOf { emptyList() },
+        {}
+    )
+
+@SuppressLint("UnrememberedMutableState")
+@Preview(showBackground = true)
+@Composable
+private fun `Some teams`() =
+    TeamListInnerContent(
+        SnackbarHostState(),
+        {},
+        derivedStateOf { listOf(
+            TeamItemData(0, "My Team 1", "My Description 1"),
+            TeamItemData(0, "My Team 2", "My Description 2"),
+            TeamItemData(0, "My Team 3", "My Description 3"),
+            TeamItemData(0, "My Team 4", "My Description 4"),
+        ) },
+        {}
+    )

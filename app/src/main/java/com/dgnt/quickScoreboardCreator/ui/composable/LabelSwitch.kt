@@ -55,20 +55,27 @@ fun LabelSwitch(
 
 @Preview(showBackground = true)
 @Composable
-private fun LabelSwitchPreviewChecked() {
+private fun `Checked`() =
     LabelSwitch(
         "label",
         true,
         {}
     )
-}
 
 @Preview(showBackground = true)
 @Composable
-private fun LabelSwitchPreviewUnchecked() {
+private fun `Unchecked`() =
     LabelSwitch(
         "label",
         false,
         {}
     )
-}
+
+@Preview(showBackground = true)
+@Composable
+private fun `Long label`() =
+    LabelSwitch(
+        "this is my label this is my label this is my label this is my label ",
+        false,
+        {}
+    )

@@ -122,7 +122,7 @@ private fun TeamDetailsInnerDialogContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun TeamDetailsInnerDialogContentPreview1() {
+private fun `Empty data`() =
     TeamDetailsInnerDialogContent(
         "",
         {},
@@ -132,4 +132,3 @@ private fun TeamDetailsInnerDialogContentPreview1() {
         {},
         {},
     )
-}
