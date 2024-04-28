@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
                     launchScoreboard = {
                         context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
                             intent.putExtra(ID, it.id)
-                            it.scoreboardType?.let { scoreboardType -> intent.putExtra(scoreboardType) }
+                            (it.scoreboardType?: ScoreboardType.NONE).let { scoreboardType -> intent.putExtra(scoreboardType) }
                         })
                     }
                 )

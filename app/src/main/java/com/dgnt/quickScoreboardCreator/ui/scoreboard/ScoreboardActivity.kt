@@ -6,15 +6,22 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.common.util.getEnumExtra
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
+import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_INTERACTION
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,25 +31,30 @@ class ScoreboardActivity : ComponentActivity() {
             QuickScoreboardCreatorTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = "$SCOREBOARD_INTERACTION/{$ID}/{$TYPE}",
+                    ) {
+                        composable(
+                            route = "$SCOREBOARD_INTERACTION/{$ID}/{$TYPE}",
+                            arguments = listOf(
+                                navArgument(name = ID) {
+                                    type = NavType.IntType
+                                    defaultValue = id
+                                },
+                                navArgument(name = TYPE) {
+                                    type = NavType.EnumType(ScoreboardType::class.java)
+                                    defaultValue = scoreboardType
+
+                                }
+                            )
+                        ) {
+                            ScoreboardInteractionContent()
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    QuickScoreboardCreatorTheme {
-        Greeting("Android")
     }
 }
