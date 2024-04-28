@@ -112,6 +112,8 @@ private fun ScoreboardListInnerContent(
             }
         }
     ) { padding ->
+
+        //TODO move this to viewModel
         val categoryList = listOf(
             stringResource(R.string.defaultScoreboardConfig) to defaultScoreboardList.value.map {
                 ScoreboardItemData(null, it, stringResource(it.titleRes), stringResource(it.descriptionRes))

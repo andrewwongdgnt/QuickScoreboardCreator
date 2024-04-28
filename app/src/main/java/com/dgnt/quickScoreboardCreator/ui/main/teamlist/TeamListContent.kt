@@ -107,6 +107,7 @@ private fun TeamListInnerContent(
         }
     ) { padding ->
 
+        //TODO move this to viewModel
         val categoryList = teamList.value.groupBy {
             it.title.first().uppercase()
         }
@@ -169,10 +170,12 @@ private fun `Some teams`() =
         SnackbarHostState(),
         {},
         derivedStateOf { listOf(
-            TeamItemData(0, "My Team 1", "My Description 1"),
-            TeamItemData(0, "My Team 2", "My Description 2"),
-            TeamItemData(0, "My Team 3", "My Description 3"),
-            TeamItemData(0, "My Team 4", "My Description 4"),
+            TeamItemData(0, "DGNT", "My Description 1"),
+            TeamItemData(1, "Dragons", "My Description 2"),
+            TeamItemData(2, "Darkness", "My Description 3"),
+            TeamItemData(3, "tricksters", "tricky people"),
+            TeamItemData(4, "Jedi Council", "My Description 4"),
+            TeamItemData(5, "Terminators", "My Description 5"),
         ) },
         {}
     )
