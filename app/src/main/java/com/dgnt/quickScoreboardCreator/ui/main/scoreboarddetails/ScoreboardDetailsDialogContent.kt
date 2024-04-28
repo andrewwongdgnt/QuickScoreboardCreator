@@ -21,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
@@ -47,8 +48,34 @@ fun ScoreboardDetailsDialogContent(
             }
         }
     }
+
+    ScoreboardDetailsInnerDialogContent(
+        viewModel.title,
+        { viewModel.title = it },
+        viewModel.description,
+        { viewModel.description = it },
+        viewModel.scoreCarriesOver,
+        { viewModel.scoreCarriesOver = it },
+        valid,
+        { viewModel.onEvent(ScoreboardDetailsEvent.OnDone) },
+        { onDone() }
+    )
+}
+
+@Composable
+private fun ScoreboardDetailsInnerDialogContent(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
+    scoreCarriesOver: Boolean,
+    onScoreCarriesOverChange: (Boolean) -> Unit,
+    valid: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
     AlertDialog(
-        onDismissRequest = { onDone() },
+        onDismissRequest = onDismiss,
         title = {
             Text(
                 style = MaterialTheme.typography.titleSmall,
@@ -57,7 +84,7 @@ fun ScoreboardDetailsDialogContent(
         },
         dismissButton = {
             Button(
-                onClick = { onDone() }
+                onClick = onDismiss
             ) {
                 Text(stringResource(id = android.R.string.cancel))
             }
@@ -65,9 +92,7 @@ fun ScoreboardDetailsDialogContent(
         confirmButton = {
             Button(
                 enabled = valid,
-                onClick = {
-                    viewModel.onEvent(ScoreboardDetailsEvent.OnDone)
-                }
+                onClick = onConfirm
             ) {
                 Text(stringResource(id = R.string.add))
             }
@@ -79,15 +104,15 @@ fun ScoreboardDetailsDialogContent(
             ) {
                 val spacer: @Composable () -> Unit = { Spacer(modifier = Modifier.height(8.dp)) }
                 TextField(
-                    value = viewModel.title,
-                    onValueChange = { viewModel.title = it },
+                    value = title,
+                    onValueChange = onTitleChange,
                     placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 spacer()
                 TextField(
-                    value = viewModel.description,
-                    onValueChange = { viewModel.description = it },
+                    value = description,
+                    onValueChange = onDescriptionChange,
                     placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false,
@@ -96,14 +121,27 @@ fun ScoreboardDetailsDialogContent(
                 spacer()
                 LabelSwitch(
                     label = stringResource(id = R.string.scoreCarriesOver),
-                    checked = viewModel.scoreCarriesOver,
-                    onCheckedChange = {
-                        viewModel.scoreCarriesOver = it
-                    },
+                    checked = scoreCarriesOver,
+                    onCheckedChange = onScoreCarriesOverChange,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
     )
+}
 
+@Preview(showBackground = true)
+@Composable
+private fun ScoreboardDetailsInnerDialogContentPreview1() {
+    ScoreboardDetailsInnerDialogContent(
+        "Basketball",
+        {},
+        "NBA Sport",
+        {},
+        true,
+        {},
+        true,
+        {},
+        {},
+    )
 }

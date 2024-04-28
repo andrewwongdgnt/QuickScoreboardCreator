@@ -39,7 +39,10 @@ fun LabelSwitch(
 
     ) {
 
-        Text(text = label)
+        Text(
+            text = label,
+            modifier = Modifier.weight(1f)
+        )
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Switch(
             checked = checked,
@@ -59,6 +62,7 @@ private fun LabelSwitchPreviewChecked() {
         {}
     )
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun LabelSwitchPreviewUnchecked() {
