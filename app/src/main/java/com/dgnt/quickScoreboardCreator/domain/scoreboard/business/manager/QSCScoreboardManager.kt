@@ -39,6 +39,12 @@ class QSCScoreboardManager : ScoreboardManager {
             scoreboard.currentIntervalIndex = value
         }
 
+    override val incrementList: List<List<Int>>
+        get() = currentScoreInfo.dataList.map { it.increments }
+
+    private val currentTeamSize: Int
+        get() = incrementList.size
+
     private val currentScoreInfo get() = scoreboard.intervalList[currentIntervalIndex].first
 
     override fun updateScore(scoreIndex: Int, incrementIndex: Int) {
@@ -54,7 +60,7 @@ class QSCScoreboardManager : ScoreboardManager {
     override fun getScores(): DisplayedScoreInfo {
         val scoreInfo = currentScoreInfo
 
-        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && scoreboard.currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger }) {
+        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger }) {
 
             val firstScore = scoreInfo.dataList[0].current
             val secondScore = scoreInfo.dataList[1].current
@@ -74,7 +80,7 @@ class QSCScoreboardManager : ScoreboardManager {
     }
 
     override fun resetCurrentScores() {
-        (0 until scoreboard.currentTeamSize).forEach {
+        (0 until currentTeamSize).forEach {
             resetCurrentScore(it)
         }
     }

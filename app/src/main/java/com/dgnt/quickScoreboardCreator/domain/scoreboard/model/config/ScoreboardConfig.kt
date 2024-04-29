@@ -1,5 +1,10 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config
 
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
+
 abstract class ScoreboardConfig {
     abstract val type: String
     abstract val scoreCarriesOver: Boolean
@@ -12,23 +17,52 @@ data class IntervalListConfig(
 )
 
 data class ScoreInfoConfig(
-    val scoreRule: ScoreRule,
+    val scoreRule: ScoreRuleConfig,
     val dataList: List<ScoreDataConfig>
-)
+) {
+    fun toScoreInfo() =
+        ScoreInfo(
+            scoreRule.toScoreRule(),
+            dataList.map{
+                it.toScoreData()
+            }
+        )
+}
 
-data class ScoreRule(
+data class ScoreRuleConfig(
     val type: ScoreRuleType,
     val trigger: Int
-)
+) {
+    fun toScoreRule() =
+        when (type) {
+            ScoreRuleType.NO_RULE -> ScoreRule.NoRule
+            ScoreRuleType.MAX_RULE -> ScoreRule.ScoreRuleTrigger.MaxScoreRule(trigger)
+            ScoreRuleType.DEUCE_ADVANTAGE -> ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(trigger)
+        }
+}
 
 data class ScoreDataConfig(
     val current: Int,
     val initial: Int,
     val increments: List<Int>
-)
+) {
+    fun toScoreData() =
+        ScoreData(
+            current,
+            initial,
+            increments
+        )
+}
 
 data class IntervalDataConfig(
-    val current: Int,
-    val initial: Int,
+    val current: Long,
+    val initial: Long,
     val increasing: Boolean
-)
+) {
+    fun toIntervalData() =
+        IntervalData(
+            current,
+            initial,
+            increasing
+        )
+}

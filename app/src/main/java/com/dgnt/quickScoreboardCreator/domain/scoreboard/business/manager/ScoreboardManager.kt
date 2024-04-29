@@ -11,6 +11,7 @@ interface ScoreboardManager {
     var scoreCarriesOver: Boolean
     var intervalList: List<Pair<ScoreInfo<ScoreData>, IntervalData>>
     var currentIntervalIndex: Int
+    val incrementList: List<List<Int>>
 
     fun updateScore(scoreIndex: Int, incrementIndex: Int)
     fun getScores(): DisplayedScoreInfo
