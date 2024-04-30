@@ -13,7 +13,7 @@ interface ScoreboardManager {
     var currentIntervalIndex: Int
     val incrementList: List<List<Int>>
 
-    fun updateScore(scoreIndex: Int, incrementIndex: Int)
+    fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)
     fun getScores(): DisplayedScoreInfo
     fun resetCurrentScore(scoreIndex: Int)
     fun resetCurrentScores()

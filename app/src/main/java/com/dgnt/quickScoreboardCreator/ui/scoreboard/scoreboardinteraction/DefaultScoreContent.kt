@@ -1,22 +1,21 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dgnt.quickScoreboardCreator.ui.common.asIncrementDisplay
 import com.dgnt.quickScoreboardCreator.ui.composable.AutoSizeText
+import com.dgnt.quickScoreboardCreator.ui.composable.ScoringButton
 
 @Composable
 fun DefaultScoreContent(
@@ -34,8 +33,8 @@ fun DefaultScoreContent(
         if (isOrientationLeft)
             ScoreIncrementContent(
                 incrementList
-            ) {
-                onEvent(ScoreboardInteractionEvent.UpdateScore(0, it))
+            ) { index, positive ->
+                onEvent(ScoreboardInteractionEvent.UpdateScore(0, index, positive))
             }
 
         ScoreValueContent(
@@ -46,8 +45,8 @@ fun DefaultScoreContent(
         if (!isOrientationLeft)
             ScoreIncrementContent(
                 incrementList
-            ) {
-                onEvent(ScoreboardInteractionEvent.UpdateScore(1, it))
+            ) { index, positive ->
+                onEvent(ScoreboardInteractionEvent.UpdateScore(1, index, positive))
             }
 
     }
@@ -56,20 +55,22 @@ fun DefaultScoreContent(
 @Composable
 private fun ScoreIncrementContent(
     incrementList: List<Int>,
-    onIncrement: (Int) -> Unit
+    onIncrement: (Int, Boolean) -> Unit
 ) {
-    Column {
-        Spacer(modifier = Modifier.weight(1f))
-        Column {
-            incrementList.forEachIndexed { index, i ->
-                Button(
-                    onClick = {
-                        onIncrement(index)
-                    }
-                ) {
-                    Text(text = i.asIncrementDisplay())
-                }
-            }
+    Column(
+        modifier = Modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+    {
+
+        incrementList.forEachIndexed { index, i ->
+            ScoringButton(
+                buttonModifier = Modifier.padding(0.dp, 10.dp),
+                number = i,
+                index = index,
+                onIncrement = onIncrement
+            )
         }
     }
 }
@@ -99,7 +100,7 @@ private fun `left orientation`() =
     DefaultScoreContent(
         true,
         "9",
-        listOf(1, 2, 3),
+        listOf(1, 12, 3),
         { }
     )
 
@@ -109,6 +110,6 @@ private fun `right orientation`() =
     DefaultScoreContent(
         false,
         "9",
-        listOf(1, 2, 3),
+        listOf(1, 2, 23),
         { }
     )

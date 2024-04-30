@@ -8,6 +8,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
+import kotlin.math.abs
 
 
 class QSCScoreboardManager : ScoreboardManager {
@@ -47,20 +48,36 @@ class QSCScoreboardManager : ScoreboardManager {
 
     private val currentScoreInfo get() = scoreboard.intervalList[currentIntervalIndex].first
 
-    override fun updateScore(scoreIndex: Int, incrementIndex: Int) {
+    override fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean) {
         val scoreInfo = currentScoreInfo
 
         scoreInfo.dataList[scoreIndex].apply {
-            val newScore = current + increments[incrementIndex]
-            if ((scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule && newScore <= scoreInfo.scoreRule.trigger) || scoreInfo.scoreRule !is ScoreRule.ScoreRuleTrigger.MaxScoreRule)
-                current = newScore
+            val incrementer = abs(increments[incrementIndex]).let {
+                if (positive)
+                    it
+                else
+                    it * -1
+            }
+
+            val newScore = current + incrementer
+            if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule) {
+                val trigger = scoreInfo.scoreRule.trigger.toInt()
+                if (newScore > trigger) {
+                    current = trigger
+                    return
+                } else if (newScore < trigger * -1) {
+                    current = trigger * -1
+                    return
+                }
+            }
+            current = newScore
         }
     }
 
     override fun getScores(): DisplayedScoreInfo {
         val scoreInfo = currentScoreInfo
 
-        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger }) {
+        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger.toInt() }) {
 
             val firstScore = scoreInfo.dataList[0].current
             val secondScore = scoreInfo.dataList[1].current

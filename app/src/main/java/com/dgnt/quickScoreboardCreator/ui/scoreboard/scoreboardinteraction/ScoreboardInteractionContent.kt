@@ -63,7 +63,7 @@ private fun ScoreboardInteractionInnerContent(
 private fun `2 Teams`() =
     ScoreboardInteractionInnerContent(
         listOf(
-            listOf(1, 2, 3),
+            listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
         DisplayedScoreInfo(

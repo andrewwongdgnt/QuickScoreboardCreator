@@ -78,7 +78,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     fun onEvent(event: ScoreboardInteractionEvent) {
         when (event) {
             is ScoreboardInteractionEvent.UpdateScore -> {
-                scoreboardManager.updateScore(event.scoreIndex, event.incrementIndex)
+                scoreboardManager.updateScore(event.scoreIndex, event.incrementIndex, event.positive)
                 displayedScoreInfo = scoreboardManager.getScores()
             }
         }

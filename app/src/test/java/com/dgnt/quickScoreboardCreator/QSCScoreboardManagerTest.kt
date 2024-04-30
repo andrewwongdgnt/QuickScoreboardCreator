@@ -62,10 +62,10 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
+                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2u),
                 listOf(
                     ScoreData(0, 0, listOf(1)),
-                    ScoreData(0, 0, listOf(1)),
+                    ScoreData(0, 0, listOf(20)),
                 )
             ) to
                     IntervalData(
@@ -79,6 +79,10 @@ class QSCScoreboardManagerTest {
         Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
         sut.updateScore(0, 0)
         Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+        sut.updateScore(1, 0)
+        Assert.assertEquals("2", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+        sut.updateScore(1, 0, false)
+        Assert.assertEquals("-2", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
 
     }
 
@@ -87,7 +91,7 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
+                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2u),
                 listOf(
                     ScoreData(0, 0, listOf(1)),
                     ScoreData(0, 0, listOf(1)),
