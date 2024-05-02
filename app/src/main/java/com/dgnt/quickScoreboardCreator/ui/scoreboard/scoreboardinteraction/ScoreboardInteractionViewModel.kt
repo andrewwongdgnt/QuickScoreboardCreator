@@ -125,7 +125,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
             is ScoreboardInteractionEvent.StartTimer -> {
                 timerJob?.cancel()
-                if (timeValue <= 0L) {
+                if (timeValue <= 0L && !scoreboardManager.isTimeIncreasing()) {
                     timerInProgress = false
                     return
                 }

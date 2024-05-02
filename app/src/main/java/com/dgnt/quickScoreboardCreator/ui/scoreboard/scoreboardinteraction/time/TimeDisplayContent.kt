@@ -23,7 +23,7 @@ private fun TimeData.formatTime() :String{
     return if (minute == 0L)
         String.format("%d.%d", second, centiSecond)
     else
-        String.format("%02d:%02d.%d", minute, second, centiSecond)
+        String.format("%02d:%02d", minute, second)
 }
 
 @Preview(showBackground = true)
