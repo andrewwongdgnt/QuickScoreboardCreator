@@ -2,7 +2,6 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
 import android.content.res.Resources
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -10,10 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
@@ -32,13 +33,26 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardManager: ScoreboardManager,
+    private val timeTransformer: TimeTransformer,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var incrementList by mutableStateOf(emptyList<List<Int>>())
+        private set
     var displayedScoreInfo by mutableStateOf(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
+        private set
 
-    var timeValue by mutableLongStateOf(0L)
+    private var timeValue = 0L
+        set(value) {
+            val newValue = 0L.coerceAtLeast(value)
+            timeData = timeTransformer(newValue)
+            field = newValue
+        }
+
+    var timeData by mutableStateOf(TimeData(0, 0, 0))
+        private set
+    var timerInProgress by mutableStateOf(false)
+        private set
 
     private var timerJob: Job? = null
 
@@ -78,6 +92,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             }
             incrementList = scoreboardManager.incrementList
             displayedScoreInfo = scoreboardManager.getScores()
+            timeValue = scoreboardManager.getInitialTime()
         }
 
     }
@@ -91,25 +106,47 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
             is ScoreboardInteractionEvent.PauseTimer -> {
                 timerJob?.cancel()
-                if (event.reset)
-                    scoreboardManager.setTime(0)
+                timerInProgress = false
+                if (event.reset) {
+                    timeValue = scoreboardManager.getInitialTime()
+                    scoreboardManager.setTime(timeValue)
+                }
 
             }
+
             is ScoreboardInteractionEvent.SkipTime -> {
-
-
+                //10 seconds skip
+                val skipValue = 10000L
+                if ((event.value && scoreboardManager.isTimeIncreasing()) || (!event.value && !scoreboardManager.isTimeIncreasing()))
+                    timeValue += skipValue
+                else
+                    timeValue -= skipValue
             }
+
             is ScoreboardInteractionEvent.StartTimer -> {
                 timerJob?.cancel()
+                if (timeValue <= 0L) {
+                    timerInProgress = false
+                    return
+                }
+
                 timerJob = viewModelScope.launch {
                     while (true) {
                         delay(100)
                         if (scoreboardManager.isTimeIncreasing())
-                            timeValue+=100
+                            timeValue += 100L
                         else
-                            timeValue-=100
+                            timeValue -= 100L
+
+                        scoreboardManager.setTime(timeValue)
+                        if (timeValue == 0L) {
+                            timerJob?.cancel()
+                            timerInProgress = false
+                            break
+                        }
                     }
                 }
+                timerInProgress = true
 
             }
         }

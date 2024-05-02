@@ -5,52 +5,52 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import org.joda.time.Duration
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 
 @Composable
 fun TimeDisplayContent(
-    timerValue: Long,
+    timeData: TimeData,
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = timerValue.formatTime(),
+        text = timeData.formatTime(),
         fontSize = 50.sp,
         modifier = modifier
     )
 }
 
-
-//TODO Move this to some sort of business class
-private fun Long.formatTime(): String {
-    val duration = Duration.millis(this)
-    val hours = duration.standardHours
-    val minutes = duration.standardMinutes % 60
-    val seconds = duration.standardSeconds % 60
-    val centiSeconds = (this % 1000) / 100
-    return String.format("%02d:%02d:%02d.%d", hours, minutes, seconds, centiSeconds)
+private fun TimeData.formatTime() :String{
+    return if (minute == 0L)
+        String.format("%d.%d", second, centiSecond)
+    else
+        String.format("%02d:%02d.%d", minute, second, centiSecond)
 }
 
 @Preview(showBackground = true)
 @Composable
-fun `12 minutes`() =
-    TimeDisplayContent(720000)
+fun `12 seconds 500 milliseconds`() =
+    TimeDisplayContent(TimeData(0,12,5))
+@Preview(showBackground = true)
+@Composable
+fun `2 seconds 500 milliseconds`() =
+    TimeDisplayContent(TimeData(0,2,5))
 
 @Preview(showBackground = true)
 @Composable
-fun `1 hour 12 minutes`() =
-    TimeDisplayContent(720000 * 6)
+fun `12 minutes 8 seconds`() =
+    TimeDisplayContent(TimeData(12,8,0))
 
 @Preview(showBackground = true)
 @Composable
-fun `1 hour 12 minutes 8 seconds`() =
-    TimeDisplayContent(720000 * 6 + 8000)
+fun `13 minutes 35 seconds`() =
+    TimeDisplayContent(TimeData(13,35,0))
 
 @Preview(showBackground = true)
 @Composable
-fun `1 hour 13 minutes 35 seconds`() =
-    TimeDisplayContent(720000 * 6 + 95000)
+fun `13 minutes 35 seconds 800 milliseconds`() =
+    TimeDisplayContent(TimeData(13,35,8))
 
 @Preview(showBackground = true)
 @Composable
-fun `1 hour 13 minutes 35 seconds 880 milliseconds`() =
-    TimeDisplayContent(720000 * 6 + 95000 + 880)
+fun `213 minutes 35 seconds 800 milliseconds`() =
+    TimeDisplayContent(TimeData(213,35,8))

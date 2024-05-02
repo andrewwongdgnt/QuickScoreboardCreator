@@ -1,8 +1,9 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.repository.ScoreboardRepository
+import javax.inject.Inject
 
-class GetScoreboardUseCase(
+class GetScoreboardUseCase @Inject constructor(
     private val repository: ScoreboardRepository
 ) {
 

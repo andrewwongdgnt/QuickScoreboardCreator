@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.DefaultScoreContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeControlContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeDisplayContent
@@ -23,13 +24,15 @@ fun ScoreboardInteractionContent(
     viewModel: ScoreboardInteractionViewModel = hiltViewModel()
 ) {
 
-    val timerValue = viewModel.timeValue
+    val timeData = viewModel.timeData
+    val timerInProgress = viewModel.timerInProgress
     val incrementList = viewModel.incrementList
     val displayedScoreInfo = viewModel.displayedScoreInfo
     ScoreboardInteractionInnerContent(
         incrementList,
         displayedScoreInfo,
-        timerValue,
+        timeData,
+        timerInProgress,
         viewModel::onEvent
     )
 }
@@ -38,7 +41,8 @@ fun ScoreboardInteractionContent(
 private fun ScoreboardInteractionInnerContent(
     incrementList: List<List<Int>>,
     displayedScoreInfo: DisplayedScoreInfo,
-    timerValue: Long,
+    timeData: TimeData,
+    timerInProgress: Boolean,
     onEvent: (ScoreboardInteractionEvent) -> Unit
 ) {
     val currentTeamSize = incrementList.size
@@ -69,11 +73,11 @@ private fun ScoreboardInteractionInnerContent(
         }
         Box(modifier = Modifier.fillMaxSize()) {
             TimeDisplayContent(
-                timerValue,
+                timeData,
                 Modifier.align(Alignment.TopCenter)
             )
             TimeControlContent(
-                false,
+                timerInProgress,
                 { onEvent(ScoreboardInteractionEvent.StartTimer) },
                 { onEvent(ScoreboardInteractionEvent.PauseTimer(it)) },
                 { onEvent(ScoreboardInteractionEvent.SkipTime(it)) },
@@ -100,5 +104,6 @@ private fun `2 Teams`() =
             ),
             DisplayedScore.Blank
         ),
-        7200,
+        TimeData(12,2,4),
+        false,
     ) {}

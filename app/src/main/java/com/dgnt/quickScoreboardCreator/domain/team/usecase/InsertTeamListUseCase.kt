@@ -2,8 +2,9 @@ package com.dgnt.quickScoreboardCreator.domain.team.usecase
 
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.repository.TeamRepository
+import javax.inject.Inject
 
-class InsertTeamListUseCase(
+class InsertTeamListUseCase @Inject constructor(
     private val repository: TeamRepository
 ) {
 
