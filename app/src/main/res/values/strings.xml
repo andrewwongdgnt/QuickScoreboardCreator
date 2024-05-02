@@ -37,4 +37,7 @@
     <string name="add">Add</string>
     <string name="done">Done</string>
     <string name="undo">Undo</string>
+    <string name="startTimer">Start</string>
+    <string name="pauseTimer">Pause</string>
+    <string name="stopTimer">Stop</string>
 </resources>

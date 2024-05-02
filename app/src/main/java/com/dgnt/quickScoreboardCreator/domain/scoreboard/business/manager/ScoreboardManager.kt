@@ -19,9 +19,9 @@ interface ScoreboardManager {
     fun resetCurrentScores()
     fun provideTransformMap(map: Map<Int, String>)
     fun proceedToNextInterval()
-    fun restartTime()
-    fun resumeTime()
-    fun pauseTime()
+    fun setTime(value:Long)
+    fun getInitialTime(): Long
+    fun isTimeIncreasing(): Boolean
 
 
 }

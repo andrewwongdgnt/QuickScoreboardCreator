@@ -7,4 +7,8 @@ sealed class ScoreboardInteractionEvent {
         val incrementIndex: Int,
         val positive: Boolean
     ) : ScoreboardInteractionEvent()
+
+    data object StartTimer : ScoreboardInteractionEvent()
+    data class PauseTimer(val reset: Boolean) : ScoreboardInteractionEvent()
+    data class SkipTime(val value: Boolean) : ScoreboardInteractionEvent()
 }

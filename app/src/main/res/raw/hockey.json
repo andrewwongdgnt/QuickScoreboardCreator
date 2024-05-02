@@ -28,7 +28,7 @@
       },
       "intervalData": {
         "current": 0,
-        "initial": 0,
+        "initial": 1200000,
         "increasing": false
       }
     },
@@ -57,7 +57,7 @@
       },
       "intervalData": {
         "current": 0,
-        "initial": 0,
+        "initial": 1200000,
         "increasing": false
       }
     },
@@ -86,7 +86,7 @@
       },
       "intervalData": {
         "current": 0,
-        "initial": 0,
+        "initial": 1200000,
         "increasing": false
       }
     }

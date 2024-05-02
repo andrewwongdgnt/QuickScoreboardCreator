@@ -48,6 +48,8 @@ class QSCScoreboardManager : ScoreboardManager {
 
     private val currentScoreInfo get() = scoreboard.intervalList[currentIntervalIndex].first
 
+    private val currentIntervalData get() = scoreboard.intervalList[currentIntervalIndex].second
+
     override fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean) {
         val scoreInfo = currentScoreInfo
 
@@ -117,17 +119,14 @@ class QSCScoreboardManager : ScoreboardManager {
         }
     }
 
-    override fun restartTime() {
-        //TODO
+    override fun setTime(value: Long) {
+        currentIntervalData.current = value
     }
+    override fun getInitialTime() =
+        currentIntervalData.initial
 
-    override fun resumeTime() {
-        //TODO
-    }
-
-    override fun pauseTime() {
-        //TODO
-    }
+    override fun isTimeIncreasing() =
+        currentIntervalData.increasing
 
     private fun transform(list: List<Int>) =
         list.map {

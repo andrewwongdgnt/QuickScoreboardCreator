@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
+package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.ui.composable.AutoSizeText
 import com.dgnt.quickScoreboardCreator.ui.composable.ScoringButton
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionEvent
 
 @Composable
 fun DefaultScoreContent(

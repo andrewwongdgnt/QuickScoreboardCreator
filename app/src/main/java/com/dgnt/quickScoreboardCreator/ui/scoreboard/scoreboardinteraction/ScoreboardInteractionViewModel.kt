@@ -2,6 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
 import android.content.res.Resources
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -18,7 +19,9 @@ import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +37,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     var incrementList by mutableStateOf(emptyList<List<Int>>())
     var displayedScoreInfo by mutableStateOf(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
+
+    var timeValue by mutableLongStateOf(0L)
+
+    private var timerJob: Job? = null
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -81,7 +88,36 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 scoreboardManager.updateScore(event.scoreIndex, event.incrementIndex, event.positive)
                 displayedScoreInfo = scoreboardManager.getScores()
             }
+
+            is ScoreboardInteractionEvent.PauseTimer -> {
+                timerJob?.cancel()
+                if (event.reset)
+                    scoreboardManager.setTime(0)
+
+            }
+            is ScoreboardInteractionEvent.SkipTime -> {
+
+
+            }
+            is ScoreboardInteractionEvent.StartTimer -> {
+                timerJob?.cancel()
+                timerJob = viewModelScope.launch {
+                    while (true) {
+                        delay(100)
+                        if (scoreboardManager.isTimeIncreasing())
+                            timeValue+=100
+                        else
+                            timeValue-=100
+                    }
+                }
+
+            }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        timerJob?.cancel()
     }
 
     private fun sendUiEvent(event: UiEvent) {
