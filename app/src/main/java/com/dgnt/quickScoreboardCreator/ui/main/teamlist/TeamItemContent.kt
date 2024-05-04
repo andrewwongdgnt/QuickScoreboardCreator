@@ -39,7 +39,7 @@ fun TeamItemContent(
     ) {
         Column {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment  = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 3.dp, top = 10.dp, bottom = 10.dp)
             ) {
                 Image(
