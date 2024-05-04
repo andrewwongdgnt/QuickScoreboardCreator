@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import kotlinx.coroutines.launch
 
@@ -170,12 +171,12 @@ private fun `Some teams`() =
         SnackbarHostState(),
         {},
         derivedStateOf { listOf(
-            TeamItemData(0, "DGNT", "My Description 1"),
-            TeamItemData(1, "Dragons", "My Description 2"),
-            TeamItemData(2, "Darkness", "My Description 3"),
-            TeamItemData(3, "tricksters", "tricky people"),
-            TeamItemData(4, "Jedi Council", "My Description 4"),
-            TeamItemData(5, "Terminators", "My Description 5"),
+            TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
+            TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
+            TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER),
+            TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
+            TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER),
+            TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER),
         ) },
         {}
     )
