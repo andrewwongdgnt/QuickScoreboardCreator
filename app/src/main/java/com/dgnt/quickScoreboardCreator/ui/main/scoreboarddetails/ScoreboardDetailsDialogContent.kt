@@ -58,7 +58,7 @@ fun ScoreboardDetailsDialogContent(
         { viewModel.scoreCarriesOver = it },
         valid,
         { viewModel.onEvent(ScoreboardDetailsEvent.OnDone) },
-        { onDone() }
+        onDone
     )
 }
 

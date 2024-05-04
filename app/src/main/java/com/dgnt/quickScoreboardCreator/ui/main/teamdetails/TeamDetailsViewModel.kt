@@ -18,6 +18,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class TeamDetailsViewModel @Inject constructor(
@@ -29,11 +30,16 @@ class TeamDetailsViewModel @Inject constructor(
     var team by mutableStateOf<TeamEntity?>(null)
         private set
 
+    var teamIconChanging by mutableStateOf(false)
+        private set
+
     var title by mutableStateOf("")
 
     var description by mutableStateOf("")
 
-    var teamIcon by mutableStateOf(TeamIcon.ALIEN)
+    var teamIcon by mutableStateOf(TeamIcon.entries.toTypedArray().let {
+        it[Random.nextInt(it.size)]
+    })
         private set
 
     private val _uiEvent = Channel<UiEvent>()
@@ -81,6 +87,14 @@ class TeamDetailsViewModel @Inject constructor(
                     )
                     sendUiEvent(UiEvent.Done)
                 }
+            }
+
+            is TeamDetailsEvent.OnTeamIconEdit -> {
+                teamIconChanging = true
+            }
+            is TeamDetailsEvent.OnNewTeamIcon -> {
+                teamIcon = event.teamIcon
+                teamIconChanging = false
             }
         }
     }

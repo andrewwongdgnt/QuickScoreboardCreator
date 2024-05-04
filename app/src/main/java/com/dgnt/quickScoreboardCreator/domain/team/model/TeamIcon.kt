@@ -3,7 +3,7 @@ package com.dgnt.quickScoreboardCreator.domain.team.model
 import androidx.annotation.DrawableRes
 import com.dgnt.quickScoreboardCreator.R
 
-enum class TeamIcon(@DrawableRes val res: Int, group: TeamIconGroup) {
+enum class TeamIcon(@DrawableRes val res: Int, val group: TeamIconGroup) {
     ALIEN(R.drawable.alien, TeamIconGroup.SCIFI),
     ANT(R.drawable.ant, TeamIconGroup.ANIMALS),
     AXE(R.drawable.axe, TeamIconGroup.WEAPONS),

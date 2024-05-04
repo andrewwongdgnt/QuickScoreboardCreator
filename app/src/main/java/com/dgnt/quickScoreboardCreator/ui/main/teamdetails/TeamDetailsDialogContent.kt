@@ -11,6 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
@@ -67,12 +72,11 @@ fun TeamDetailsDialogContent(
         viewModel.description,
         { viewModel.description = it },
         viewModel.teamIcon,
-        {
-            // TODO
-        },
+        viewModel.teamIconChanging,
+        viewModel::onEvent,
         valid,
         { viewModel.onEvent(TeamDetailsEvent.OnDone) },
-        { onDone() }
+        onDone
     )
 
 }
@@ -84,7 +88,8 @@ private fun TeamDetailsInnerDialogContent(
     description: String,
     onDescriptionChange: (String) -> Unit,
     teamIcon: TeamIcon,
-    onTeamIconChange: () -> Unit,
+    teamIconChanging: Boolean,
+    onEvent: (TeamDetailsEvent) -> Unit,
     valid: Boolean,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
@@ -135,35 +140,92 @@ private fun TeamDetailsInnerDialogContent(
                     maxLines = 5
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Box(
-                    modifier = Modifier.clickable(onClick = onTeamIconChange)
-                ) {
-                    Image(
-                        painterResource(teamIcon.res),
-                        null,
-                        modifier = Modifier.padding(10.dp)
-                    )
-                    val color = MaterialTheme.colorScheme.primary
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = stringResource(R.string.edit),
-                        modifier = Modifier.align(Alignment.BottomEnd)
-                            .drawBehind {
-                                drawCircle(
-                                    style = Stroke(
-                                        width = 5f
-                                    ),
-                                    color = color,
-                                    radius = size.minDimension*0.7f
+                if (teamIconChanging) {
+                    val group = TeamIcon.entries.groupBy { it.group }
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(45.dp)
+                    ) {
+                        group.onEachIndexed { index, entry ->
+                            val teamIconGroup = entry.key
+                            val teamIcons = entry.value
+                            header {
+                                Text(
+                                    stringResource(id = teamIconGroup.res),
+                                    modifier = if (index > 0) Modifier.padding(
+                                        start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
+                                    ) else Modifier
                                 )
                             }
-                    )
-                }
+                            items(teamIcons.size) {
+                                val icon = teamIcons[it]
+                                Image(
+                                    painterResource(icon.res),
+                                    null,
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .clickable {
+                                            onEvent(TeamDetailsEvent.OnNewTeamIcon(icon))
+                                        }
+                                )
+                            }
+                        }
+
+                    }
+                } else
+                    Box(
+                        modifier = Modifier.clickable(onClick = {
+                            onEvent(TeamDetailsEvent.OnTeamIconEdit)
+                        })
+                    ) {
+                        Image(
+                            painterResource(teamIcon.res),
+                            null,
+                            modifier = Modifier.padding(5.dp)
+                        )
+                        val color = MaterialTheme.colorScheme.primary
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.edit),
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .drawBehind {
+                                    drawCircle(
+                                        style = Stroke(
+                                            width = 5f
+                                        ),
+                                        color = color,
+                                        radius = size.minDimension * 0.7f
+                                    )
+                                }
+                        )
+                    }
 
             }
         }
     )
 }
+
+fun LazyGridScope.header(
+    content: @Composable LazyGridItemScope.() -> Unit
+) {
+    item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun `New Icon Selection`() =
+    TeamDetailsInnerDialogContent(
+        "",
+        {},
+        "",
+        {},
+        TeamIcon.GORILLA,
+        true,
+        {},
+        true,
+        {},
+        {},
+    )
 
 @Preview(showBackground = true)
 @Composable
@@ -174,6 +236,7 @@ private fun `Gorilla`() =
         "",
         {},
         TeamIcon.GORILLA,
+        false,
         {},
         true,
         {},
@@ -189,11 +252,13 @@ private fun `Tiger`() =
         "",
         {},
         TeamIcon.TIGER,
+        false,
         {},
         true,
         {},
         {},
     )
+
 @Preview(showBackground = true)
 @Composable
 private fun `Alien`() =
@@ -203,6 +268,7 @@ private fun `Alien`() =
         "",
         {},
         TeamIcon.ALIEN,
+        false,
         {},
         true,
         {},
