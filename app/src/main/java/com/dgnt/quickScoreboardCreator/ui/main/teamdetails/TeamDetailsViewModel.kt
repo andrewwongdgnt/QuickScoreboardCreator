@@ -37,9 +37,7 @@ class TeamDetailsViewModel @Inject constructor(
 
     var description by mutableStateOf("")
 
-    var teamIcon by mutableStateOf(TeamIcon.entries.toTypedArray().let {
-        it[Random.nextInt(it.size)]
-    })
+    var teamIcon by mutableStateOf<TeamIcon?>(null)
         private set
 
     private val _uiEvent = Channel<UiEvent>()
@@ -48,6 +46,10 @@ class TeamDetailsViewModel @Inject constructor(
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
+        } ?: run {
+            teamIcon = TeamIcon.entries.toTypedArray().let {
+                it[Random.nextInt(it.size)]
+            }
         }
         viewModelScope.launch {
             snapshotFlow { title }
@@ -81,7 +83,7 @@ class TeamDetailsViewModel @Inject constructor(
                                 id = team?.id,
                                 title = title,
                                 description = description,
-                                teamIcon = teamIcon
+                                teamIcon = teamIcon!!
                             )
                         )
                     )

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -87,7 +89,7 @@ private fun TeamDetailsInnerDialogContent(
     onTitleChange: (String) -> Unit,
     description: String,
     onDescriptionChange: (String) -> Unit,
-    teamIcon: TeamIcon,
+    teamIcon: TeamIcon?,
     teamIconChanging: Boolean,
     onEvent: (TeamDetailsEvent) -> Unit,
     valid: Boolean,
@@ -177,27 +179,34 @@ private fun TeamDetailsInnerDialogContent(
                             onEvent(TeamDetailsEvent.OnTeamIconEdit)
                         })
                     ) {
-                        Image(
-                            painterResource(teamIcon.res),
-                            null,
-                            modifier = Modifier.padding(5.dp)
-                        )
-                        val color = MaterialTheme.colorScheme.primary
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.edit),
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .drawBehind {
-                                    drawCircle(
-                                        style = Stroke(
-                                            width = 5f
-                                        ),
-                                        color = color,
-                                        radius = size.minDimension * 0.7f
-                                    )
-                                }
-                        )
+                        if (teamIcon != null) {
+                            Image(
+                                painterResource(teamIcon.res),
+                                null,
+                                modifier = Modifier.padding(5.dp)
+                            )
+                            val color = MaterialTheme.colorScheme.primary
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = stringResource(R.string.edit),
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .drawBehind {
+                                        drawCircle(
+                                            style = Stroke(
+                                                width = 5f
+                                            ),
+                                            color = color,
+                                            radius = size.minDimension * 0.7f
+                                        )
+                                    }
+                            )
+                        } else
+                            CircularProgressIndicator(
+                                modifier = Modifier.width(72.dp).height(72.dp).padding(5.dp),
+                                color = MaterialTheme.colorScheme.secondary,
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
                     }
 
             }
@@ -268,6 +277,22 @@ private fun `Alien`() =
         "",
         {},
         TeamIcon.ALIEN,
+        false,
+        {},
+        true,
+        {},
+        {},
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `Loading icon`() =
+    TeamDetailsInnerDialogContent(
+        "",
+        {},
+        "",
+        {},
+        null,
         false,
         {},
         true,
