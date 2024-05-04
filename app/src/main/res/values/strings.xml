@@ -27,6 +27,14 @@
     </plurals>
     <!-- Team Details -->
     <string name="teamDetailsTitle">Team details</string>
+    <!-- Team Icon -->
+    <string name="ic_group_animals">Animals</string>
+    <string name="ic_group_vehicles">Vehicles</string>
+    <string name="ic_group_weapons">Weapons</string>
+    <string name="ic_group_nature">Nature</string>
+    <string name="ic_group_artifacts">Artifacts</string>
+    <string name="ic_group_people">People</string>
+    <string name="ic_group_scifi">Sci-fi</string>
     <!-- Settings -->
     <string name="contactNavTitle">Contact</string>
     <!-- Common -->

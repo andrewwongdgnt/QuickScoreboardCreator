@@ -1,6 +1,5 @@
 package com.dgnt.quickScoreboardCreator.ui.main.teamdetails
 
-import android.content.res.Resources
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,7 +13,6 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -23,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamDetailsViewModel @Inject constructor(
-    private val resources: Resources,
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val getTeamUseCase: GetTeamUseCase,
     savedStateHandle: SavedStateHandle
@@ -35,6 +32,9 @@ class TeamDetailsViewModel @Inject constructor(
     var title by mutableStateOf("")
 
     var description by mutableStateOf("")
+
+    var teamIcon by mutableStateOf(TeamIcon.ALIEN)
+        private set
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -56,6 +56,7 @@ class TeamDetailsViewModel @Inject constructor(
             getTeamUseCase(id)?.let {
                 title = it.title
                 description = it.description
+                teamIcon = it.teamIcon
                 team = it
             }
         }
@@ -65,17 +66,16 @@ class TeamDetailsViewModel @Inject constructor(
         when (event) {
             is TeamDetailsEvent.OnDone -> {
                 viewModelScope.launch {
-                    if (!validate()) {
-
+                    if (!validate())
                         return@launch
-                    }
+
                     insertTeamListUseCase(
                         listOf(
                             TeamEntity(
                                 id = team?.id,
                                 title = title,
                                 description = description,
-                                defaultIcon = TeamIcon.AXE
+                                teamIcon = teamIcon
                             )
                         )
                     )
