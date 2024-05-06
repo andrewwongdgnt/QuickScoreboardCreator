@@ -29,10 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -53,17 +49,11 @@ fun TeamDetailsDialogContent(
     onDone: () -> Unit,
     viewModel: TeamDetailsViewModel = hiltViewModel()
 ) {
-    var valid by rememberSaveable {
-        mutableStateOf(false)
-    }
+    val valid = viewModel.valid
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.Done -> onDone()
-                is UiEvent.Validation -> {
-                    valid = event.valid
-                }
-
                 else -> Unit
             }
         }
@@ -185,7 +175,7 @@ private fun TeamDetailsInnerDialogContent(
                             })
                         ) {
                             val primaryColor = MaterialTheme.colorScheme.primary
-                            val radiusModifier =  0.65f
+                            val radiusModifier = 0.65f
                             Image(
                                 painterResource(teamIcon.res),
                                 null,

@@ -7,7 +7,6 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.Scoreboard
 sealed class UiEvent {
     data class LaunchScoreboard(val id: Int? = null, val scoreboardType: ScoreboardType? = null) : UiEvent()
     data object Done : UiEvent()
-    data class Validation(val valid: Boolean) : UiEvent()
     data class ScoreboardDetails(val id: Int? = null, val scoreboardType: ScoreboardType? = null) : UiEvent()
     data class TeamDetails(val id: Int? = null) : UiEvent()
     sealed class ShowSnackbar(

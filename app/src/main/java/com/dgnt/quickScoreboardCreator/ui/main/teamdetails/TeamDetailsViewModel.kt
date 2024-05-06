@@ -40,6 +40,9 @@ class TeamDetailsViewModel @Inject constructor(
     var teamIcon by mutableStateOf<TeamIcon?>(null)
         private set
 
+    var valid by mutableStateOf(false)
+        private set
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -54,7 +57,7 @@ class TeamDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             snapshotFlow { title }
                 .collect {
-                    sendUiEvent(UiEvent.Validation(validate()))
+                    valid = validate()
                 }
         }
     }

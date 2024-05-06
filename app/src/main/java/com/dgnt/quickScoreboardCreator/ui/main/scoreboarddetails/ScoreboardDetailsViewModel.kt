@@ -41,6 +41,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     var scoreCarriesOver by mutableStateOf(true)
 
+    var valid by mutableStateOf(false)
+        private set
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -53,7 +56,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             snapshotFlow { title }
                 .collect {
-                    sendUiEvent(UiEvent.Validation(validate()))
+                    valid = validate()
                 }
         }
     }
