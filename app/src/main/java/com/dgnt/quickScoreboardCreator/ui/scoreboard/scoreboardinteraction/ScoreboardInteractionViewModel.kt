@@ -19,6 +19,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUs
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -42,6 +43,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
     var displayedScoreInfo by mutableStateOf(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
         private set
 
+    var teamList by mutableStateOf(emptyList<TeamDisplay>())
+
     private var timeValue = 0L
         set(value) {
             val newValue = 0L.coerceAtLeast(value)
@@ -58,13 +61,13 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
-
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
         } ?: savedStateHandle.get<ScoreboardType>(TYPE)?.let {
             initWithScoreboardType(it)
         }
+        teamList = (0 until scoreboardManager.incrementList.size).map { TeamDisplay.UnSelectedTeamDisplay }
 
     }
 
@@ -102,6 +105,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
             is ScoreboardInteractionEvent.UpdateScore -> {
                 scoreboardManager.updateScore(event.scoreIndex, event.incrementIndex, event.positive)
                 displayedScoreInfo = scoreboardManager.getScores()
+            }
+
+            is ScoreboardInteractionEvent.UpdateTeam -> {
+                //TODO handle team selection
             }
 
             is ScoreboardInteractionEvent.PauseTimer -> {

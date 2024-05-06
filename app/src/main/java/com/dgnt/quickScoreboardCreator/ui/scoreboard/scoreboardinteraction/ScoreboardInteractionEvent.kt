@@ -11,4 +11,8 @@ sealed class ScoreboardInteractionEvent {
     data object StartTimer : ScoreboardInteractionEvent()
     data class PauseTimer(val reset: Boolean) : ScoreboardInteractionEvent()
     data class SkipTime(val value: Boolean) : ScoreboardInteractionEvent()
+
+    data class UpdateTeam(
+        val teamIndex: Int
+    ) : ScoreboardInteractionEvent()
 }

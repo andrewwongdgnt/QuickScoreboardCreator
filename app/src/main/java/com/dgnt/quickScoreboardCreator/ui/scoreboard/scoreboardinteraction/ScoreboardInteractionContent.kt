@@ -1,8 +1,8 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
@@ -16,7 +16,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.DefaultScoreContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeControlContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeDisplayContent
 
@@ -29,8 +32,10 @@ fun ScoreboardInteractionContent(
     val timerInProgress = viewModel.timerInProgress
     val incrementList = viewModel.incrementList
     val displayedScoreInfo = viewModel.displayedScoreInfo
+    val teamList = viewModel.teamList
     ScoreboardInteractionInnerContent(
         incrementList,
+        teamList,
         displayedScoreInfo,
         timeData,
         timerInProgress,
@@ -41,6 +46,7 @@ fun ScoreboardInteractionContent(
 @Composable
 private fun ScoreboardInteractionInnerContent(
     incrementList: List<List<Int>>,
+    teamList: List<TeamDisplay>,
     displayedScoreInfo: DisplayedScoreInfo,
     timeData: TimeData,
     timerInProgress: Boolean,
@@ -48,45 +54,66 @@ private fun ScoreboardInteractionInnerContent(
 ) {
     val currentTeamSize = incrementList.size
     if (currentTeamSize == 2) {
-        Row {
+        Column {
+            Row {
+                TeamDisplayContent(
+                    isOrientationLeft = true,
+                    teamDisplay = teamList[0],
+                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(0)) },
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 5.dp)
+                )
+                TimeDisplayContent(
+                    timeData,
+                    Modifier
+                        .weight(1f)
+                        .padding(top = 5.dp)
+                )
+                TeamDisplayContent(
+                    isOrientationLeft = false,
+                    teamDisplay = teamList[1],
+                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(1)) },
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 5.dp)
+                )
+            }
+            Row(modifier = Modifier.weight(1f)) {
 
-            DefaultScoreContent(
-                true,
-                (displayedScoreInfo.displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
-                incrementList[0],
-                onEvent,
-                modifier = Modifier.weight(1f)
-            )
-            val dividerColor = MaterialTheme.colorScheme.onBackground
-            HorizontalDivider(
-                color = dividerColor,
-                modifier = Modifier
-                    .padding(horizontal = 6.dp)
-                    .width(40.dp)
-                    .align(Alignment.CenterVertically),
-                thickness = 20.dp
-            )
-            DefaultScoreContent(
-                false,
-                (displayedScoreInfo.displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
-                incrementList[1],
-                onEvent,
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Box(modifier = Modifier.fillMaxSize()) {
-            TimeDisplayContent(
-                timeData,
-                Modifier.align(Alignment.TopCenter)
-            )
+                DefaultScoreContent(
+                    true,
+                    (displayedScoreInfo.displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
+                    incrementList[0],
+                    onEvent,
+                    modifier = Modifier.weight(1f)
+                )
+                val dividerColor = MaterialTheme.colorScheme.onBackground
+                HorizontalDivider(
+                    color = dividerColor,
+                    modifier = Modifier
+                        .padding(horizontal = 6.dp)
+                        .width(40.dp)
+                        .align(Alignment.CenterVertically),
+                    thickness = 20.dp
+                )
+                DefaultScoreContent(
+                    false,
+                    (displayedScoreInfo.displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
+                    incrementList[1],
+                    onEvent,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
             TimeControlContent(
                 timerInProgress,
                 { onEvent(ScoreboardInteractionEvent.StartTimer) },
                 { onEvent(ScoreboardInteractionEvent.PauseTimer(it)) },
                 { onEvent(ScoreboardInteractionEvent.SkipTime(it)) },
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.fillMaxWidth()
             )
+
         }
+
 
     }
 
@@ -100,6 +127,10 @@ private fun `2 Teams`() =
             listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
+        ),
         DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
@@ -107,6 +138,6 @@ private fun `2 Teams`() =
             ),
             DisplayedScore.Blank
         ),
-        TimeData(12,2,4),
+        TimeData(12, 2, 4),
         false,
     ) {}

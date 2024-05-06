@@ -37,6 +37,8 @@
     <string name="ic_group_scifi">Sci-fi</string>
     <!-- Settings -->
     <string name="contactNavTitle">Contact</string>
+    <!-- Scoreboard Interaction -->
+    <string name="unselectedTeamTitle">Select a team</string>
     <!-- Common -->
     <string name="titlePlaceholder">Name*</string>
     <string name="descriptionPlaceholder">Description</string>
