@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -174,40 +175,62 @@ private fun TeamDetailsInnerDialogContent(
 
                     }
                 } else
-                    Box(
-                        modifier = Modifier.clickable(onClick = {
-                            onEvent(TeamDetailsEvent.OnTeamIconEdit)
-                        })
-                    ) {
-                        if (teamIcon != null) {
+
+                    if (teamIcon != null) {
+
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Box(
+                            modifier = Modifier.clickable(onClick = {
+                                onEvent(TeamDetailsEvent.OnTeamIconEdit)
+                            })
+                        ) {
+                            val primaryColor = MaterialTheme.colorScheme.primary
+                            val radiusModifier =  0.65f
                             Image(
                                 painterResource(teamIcon.res),
                                 null,
-                                modifier = Modifier.padding(5.dp)
-                            )
-                            val color = MaterialTheme.colorScheme.primary
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = stringResource(R.string.edit),
                                 modifier = Modifier
-                                    .align(Alignment.BottomEnd)
                                     .drawBehind {
                                         drawCircle(
                                             style = Stroke(
-                                                width = 5f
+                                                width = 20f
                                             ),
-                                            color = color,
+                                            color = primaryColor,
+                                            radius = size.minDimension * radiusModifier
+                                        )
+                                    }
+                                    .drawBehind {
+                                        drawCircle(
+                                            color = Color.White,
+                                            radius = size.minDimension * radiusModifier
+                                        )
+                                    }
+                            )
+                            val tint = MaterialTheme.colorScheme.background
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = stringResource(R.string.edit),
+                                tint = tint,
+                                modifier = Modifier
+                                    .padding(top = 10.dp, start = 10.dp)
+                                    .align(Alignment.BottomEnd)
+                                    .drawBehind {
+                                        drawCircle(
+                                            color = primaryColor.copy(alpha = 0.7f),
                                             radius = size.minDimension * 0.7f
                                         )
                                     }
                             )
-                        } else
-                            CircularProgressIndicator(
-                                modifier = Modifier.width(72.dp).height(72.dp).padding(5.dp),
-                                color = MaterialTheme.colorScheme.secondary,
-                                trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                            )
-                    }
+                        }
+                    } else
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .width(72.dp)
+                                .height(72.dp)
+                                .padding(5.dp),
+                            color = MaterialTheme.colorScheme.secondary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
 
             }
         }

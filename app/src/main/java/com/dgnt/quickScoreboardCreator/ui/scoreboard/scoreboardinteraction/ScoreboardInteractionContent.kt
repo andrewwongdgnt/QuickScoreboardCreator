@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +57,9 @@ private fun ScoreboardInteractionInnerContent(
                 onEvent,
                 modifier = Modifier.weight(1f)
             )
+            val dividerColor = MaterialTheme.colorScheme.onBackground
             HorizontalDivider(
+                color = dividerColor,
                 modifier = Modifier
                     .padding(horizontal = 6.dp)
                     .width(40.dp)
