@@ -10,4 +10,5 @@ object Routes {
 
     // Scoreboard
     const val SCOREBOARD_INTERACTION = "scoreboard_interaction"
+    const val TEAM_PICKER = "team_picker"
 }

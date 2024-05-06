@@ -9,6 +9,8 @@ sealed class UiEvent {
     data object Done : UiEvent()
     data class ScoreboardDetails(val id: Int? = null, val scoreboardType: ScoreboardType? = null) : UiEvent()
     data class TeamDetails(val id: Int? = null) : UiEvent()
+    data class TeamPicker(val scoreIndex: Int) : UiEvent()
+    data class TeamPicked(val scoreIndex: Int, val teamId: Int) : UiEvent()
     sealed class ShowSnackbar(
         open val message: Int,
         open val action: Int? = null

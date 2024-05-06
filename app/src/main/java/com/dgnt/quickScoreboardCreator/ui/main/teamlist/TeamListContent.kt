@@ -78,7 +78,7 @@ fun TeamListContent(
     }
 
     TeamListInnerContent(
-snackbarHostState,
+        snackbarHostState,
         {
             viewModel.onEvent(TeamListEvent.OnAdd)
         },
@@ -170,13 +170,15 @@ private fun `Some teams`() =
     TeamListInnerContent(
         SnackbarHostState(),
         {},
-        derivedStateOf { listOf(
-            TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
-            TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
-            TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER),
-            TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
-            TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER),
-            TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER),
-        ) },
+        derivedStateOf {
+            listOf(
+                TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
+                TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
+                TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER),
+                TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
+                TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER),
+                TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER),
+            )
+        },
         {}
     )

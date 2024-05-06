@@ -20,8 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -40,6 +38,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_DETAILS
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_LIST
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_DETAILS
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_LIST
+import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
@@ -175,27 +174,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    private fun NavController.commonNavigate(currentDestination: NavDestination? = null, route: String) = navigate(route) {
-        // Avoid building up a large stack of destinations
-        // on the back stack as users select items
-        currentDestination?.id?.let {
-            popUpTo(it) {
-                saveState = true
-                inclusive = true
-            }
-        } ?: run {
-            popUpTo(route) {
-                saveState = true
-                inclusive = true
-            }
-        }
-        // Avoid multiple copies of the same destination when
-        // reselecting the same item
-        launchSingleTop = true
-        // Restore state when reselecting a previously selected item
-        restoreState = true
     }
 
     @Preview(showBackground = true)

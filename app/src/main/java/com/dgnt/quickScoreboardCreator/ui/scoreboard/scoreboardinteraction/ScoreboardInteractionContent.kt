@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -17,6 +18,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.TeamSelectedData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.DefaultScoreContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
@@ -25,6 +28,8 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.
 
 @Composable
 fun ScoreboardInteractionContent(
+    teamSelectedData: TeamSelectedData,
+    toTeamPicker: (UiEvent.TeamPicker) -> Unit,
     viewModel: ScoreboardInteractionViewModel = hiltViewModel()
 ) {
 
@@ -33,6 +38,15 @@ fun ScoreboardInteractionContent(
     val incrementList = viewModel.incrementList
     val displayedScoreInfo = viewModel.displayedScoreInfo
     val teamList = viewModel.teamList
+    viewModel.onEvent(ScoreboardInteractionEvent.SetTeam(teamSelectedData))
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect {
+            when (it) {
+                is UiEvent.TeamPicker -> toTeamPicker(it)
+                else -> Unit
+            }
+        }
+    }
     ScoreboardInteractionInnerContent(
         incrementList,
         teamList,

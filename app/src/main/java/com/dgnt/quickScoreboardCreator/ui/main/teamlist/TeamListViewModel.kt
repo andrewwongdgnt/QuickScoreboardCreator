@@ -1,6 +1,5 @@
 package com.dgnt.quickScoreboardCreator.ui.main.teamlist
 
-import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
@@ -19,17 +18,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamListViewModel @Inject constructor(
-    private val resources: Resources,
     getTeamListUseCase: GetTeamListUseCase,
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val deleteTeamListUseCase: DeleteTeamListUseCase,
 ) : ViewModel() {
     private val teamEntityList = getTeamListUseCase()
     val teamList = teamEntityList.map {
-        it.map { e ->
-            TeamItemData(
-                e.id, e.title, e.description, e.teamIcon
-            )
+        it.mapNotNull { e ->
+            e.id?.let { id ->
+                TeamItemData(
+                    id, e.title, e.description, e.teamIcon
+                )
+            }
         }
     }
     

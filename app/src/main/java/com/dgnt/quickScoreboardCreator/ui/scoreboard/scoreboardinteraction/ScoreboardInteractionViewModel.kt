@@ -16,6 +16,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -32,6 +34,7 @@ import javax.inject.Inject
 class ScoreboardInteractionViewModel @Inject constructor(
     private val resources: Resources,
     private val getScoreboardUseCase: GetScoreboardUseCase,
+    private val getTeamUseCase: GetTeamUseCase,
     private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
@@ -61,12 +64,14 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
         } ?: savedStateHandle.get<ScoreboardType>(TYPE)?.let {
             initWithScoreboardType(it)
         }
+
         teamList = (0 until scoreboardManager.incrementList.size).map { TeamDisplay.UnSelectedTeamDisplay }
 
     }
@@ -108,7 +113,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             }
 
             is ScoreboardInteractionEvent.UpdateTeam -> {
-                //TODO handle team selection
+                sendUiEvent(UiEvent.TeamPicker(event.scoreIndex))
             }
 
             is ScoreboardInteractionEvent.PauseTimer -> {
@@ -155,6 +160,20 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 }
                 timerInProgress = true
 
+            }
+
+            is ScoreboardInteractionEvent.SetTeam -> {
+                viewModelScope.launch {
+                    teamList = (0 until scoreboardManager.incrementList.size).mapNotNull { index ->
+                        if (event.teamSelectedData.scoreIndex == index) {
+                            getTeamUseCase(event.teamSelectedData.teamId)?.let {
+                                TeamDisplay.SelectedTeamDisplay(it.title, it.teamIcon)
+                            }
+                        } else {
+                            teamList.getOrNull(index)
+                        }
+                    }
+                }
             }
         }
     }

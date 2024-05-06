@@ -1,5 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.TeamSelectedData
+
 sealed class ScoreboardInteractionEvent {
 
     data class UpdateScore(
@@ -13,6 +15,9 @@ sealed class ScoreboardInteractionEvent {
     data class SkipTime(val value: Boolean) : ScoreboardInteractionEvent()
 
     data class UpdateTeam(
-        val teamIndex: Int
+        val scoreIndex: Int
+    ) : ScoreboardInteractionEvent()
+    data class SetTeam(
+        val teamSelectedData: TeamSelectedData
     ) : ScoreboardInteractionEvent()
 }
