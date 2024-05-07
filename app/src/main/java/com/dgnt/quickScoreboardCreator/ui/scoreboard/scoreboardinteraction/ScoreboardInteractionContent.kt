@@ -1,7 +1,9 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -68,63 +70,68 @@ private fun ScoreboardInteractionInnerContent(
 ) {
     val currentTeamSize = incrementList.size
     if (currentTeamSize == 2) {
-        Column {
-            Row {
-                TeamDisplayContent(
-                    isOrientationLeft = true,
-                    teamDisplay = teamList[0],
-                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(0)) },
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp, top = 5.dp)
-                )
-                TimeDisplayContent(
-                    timeData,
-                    Modifier
-                        .weight(1f)
-                        .padding(top = 5.dp)
-                )
-                TeamDisplayContent(
-                    isOrientationLeft = false,
-                    teamDisplay = teamList[1],
-                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(1)) },
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp, top = 5.dp)
-                )
-            }
-            Row(modifier = Modifier.weight(1f)) {
-
-                DefaultScoreContent(
-                    true,
-                    (displayedScoreInfo.displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
-                    incrementList[0],
-                    onEvent,
-                    modifier = Modifier.weight(1f)
-                )
-                val dividerColor = MaterialTheme.colorScheme.onBackground
-                HorizontalDivider(
-                    color = dividerColor,
-                    modifier = Modifier
-                        .padding(horizontal = 6.dp)
-                        .width(40.dp)
-                        .align(Alignment.CenterVertically),
-                    thickness = 20.dp
-                )
-                DefaultScoreContent(
-                    false,
-                    (displayedScoreInfo.displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
-                    incrementList[1],
-                    onEvent,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
+        Row {
+            DefaultScoreContent(
+                true,
+                (displayedScoreInfo.displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
+                incrementList[0],
+                onEvent,
+                modifier = Modifier.weight(1f)
+            )
+            val dividerColor = MaterialTheme.colorScheme.onBackground
+            HorizontalDivider(
+                color = dividerColor,
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .width(40.dp)
+                    .align(Alignment.CenterVertically),
+                thickness = 20.dp
+            )
+            DefaultScoreContent(
+                false,
+                (displayedScoreInfo.displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
+                incrementList[1],
+                onEvent,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            TimeDisplayContent(
+                timeData,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+            )
             TimeControlContent(
                 timerInProgress,
                 { onEvent(ScoreboardInteractionEvent.StartTimer) },
                 { onEvent(ScoreboardInteractionEvent.PauseTimer(it)) },
                 { onEvent(ScoreboardInteractionEvent.SkipTime(it)) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .align(Alignment.TopStart)
             )
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
+            ) {
+                TeamDisplayContent(
+                    teamDisplay = teamList[0],
+                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(0)) },
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                TeamDisplayContent(
+                    teamDisplay = teamList[1],
+                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(1)) },
+                    modifier = Modifier
+                        .weight(1f)
+                )
+            }
 
         }
 
@@ -135,7 +142,30 @@ private fun ScoreboardInteractionInnerContent(
 
 @PreviewScreenSizes
 @Composable
-private fun `2 Teams`() =
+private fun `2 Teams with long names`() =
+    ScoreboardInteractionInnerContent(
+        listOf(
+            listOf(1, 2, 23),
+            listOf(1, 2, 3),
+        ),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers Tigers Tigers Tigers Tigers", TeamIcon.TIGER)
+        ),
+        DisplayedScoreInfo(
+            listOf(
+                DisplayedScore.CustomDisplayedScore("10"),
+                DisplayedScore.CustomDisplayedScore("21"),
+            ),
+            DisplayedScore.Blank
+        ),
+        TimeData(12, 2, 4),
+        false,
+    ) {}
+
+@PreviewScreenSizes
+@Composable
+private fun `2 Teams with short names`() =
     ScoreboardInteractionInnerContent(
         listOf(
             listOf(1, 2, 23),
