@@ -1,12 +1,14 @@
 package com.dgnt.quickScoreboardCreator.di
 
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.QSCScoreboardManager
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.QSCTimeTransformer
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.TimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.QSCScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCScoreboardManager
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCTimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.team.business.logic.QSCTeamCategorizer
+import com.dgnt.quickScoreboardCreator.domain.team.business.logic.TeamCategorizer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,4 +33,9 @@ object BusinessModule {
     @Singleton
     fun provideTimeTransformer(): TimeTransformer =
         QSCTimeTransformer()
+
+    @Provides
+    @Singleton
+    fun provideTeamCategorizer(): TeamCategorizer =
+        QSCTeamCategorizer()
 }

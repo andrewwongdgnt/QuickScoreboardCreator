@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
@@ -39,9 +39,7 @@ class ScoreboardListViewModel @Inject constructor(
 
     val defaultScoreboardList = flow {
         listOf(R.raw.basketball, R.raw.hockey, R.raw.spikeball).map {
-            resources.openRawResource(it).let { ins ->
-                scoreboardLoader.load(ins)
-            } as DefaultScoreboardConfig
+            scoreboardLoader(resources.openRawResource(it)) as DefaultScoreboardConfig
         }.map {
             it.scoreboardType
         }.let {

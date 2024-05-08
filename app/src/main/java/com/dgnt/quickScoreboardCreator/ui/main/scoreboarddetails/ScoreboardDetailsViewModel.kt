@@ -9,7 +9,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
@@ -76,9 +76,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         title = resources.getString(scoreboardType.titleRes)
         description = resources.getString(scoreboardType.descriptionRes)
         scoreboardType.rawRes?.let { rawRes ->
-            resources.openRawResource(rawRes).let { ins ->
-                scoreboardLoader.load(ins)
-            } as DefaultScoreboardConfig?
+            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
             scoreCarriesOver = it.scoreCarriesOver
         }

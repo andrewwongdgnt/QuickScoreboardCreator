@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamItemData
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListEvent
 
 @Composable
@@ -75,7 +75,8 @@ fun TeamItemContent(
 @Preview(showBackground = true)
 @Composable
 private fun `Normal`() =
-    TeamItemContent(TeamItemData(
+    TeamItemContent(
+        TeamItemData(
         0, title = "Dragons", description = "Legendary creatures",
         teamIcon = TeamIcon.ALIEN
     ), {})

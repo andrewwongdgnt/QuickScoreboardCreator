@@ -3,6 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -23,7 +24,7 @@ class TeamPickerViewModel @Inject constructor(
         it.mapNotNull { e ->
             e.id?.let { id ->
                 TeamItemData(
-                    id, e.title, e.teamIcon
+                    id, e.title, e.description, e.teamIcon
                 )
             }
         }

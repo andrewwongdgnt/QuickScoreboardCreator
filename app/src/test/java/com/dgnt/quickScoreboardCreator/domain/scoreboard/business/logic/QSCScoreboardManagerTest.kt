@@ -1,7 +1,6 @@
-package com.dgnt.quickScoreboardCreator
+package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.QSCScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo

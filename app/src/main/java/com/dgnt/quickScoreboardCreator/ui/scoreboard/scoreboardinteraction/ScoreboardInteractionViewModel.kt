@@ -7,9 +7,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.manager.TimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
@@ -86,9 +86,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
 
         scoreboardType.rawRes?.let { rawRes ->
-            resources.openRawResource(rawRes).let { ins ->
-                scoreboardLoader.load(ins)
-            } as DefaultScoreboardConfig?
+            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
             scoreboardManager.apply {
                 currentIntervalIndex = 0

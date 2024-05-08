@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
+import com.dgnt.quickScoreboardCreator.domain.team.business.logic.TeamCategorizer
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamListUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
@@ -21,18 +22,12 @@ class TeamListViewModel @Inject constructor(
     getTeamListUseCase: GetTeamListUseCase,
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val deleteTeamListUseCase: DeleteTeamListUseCase,
+    private val teamCategorizer: TeamCategorizer,
 ) : ViewModel() {
     private val teamEntityList = getTeamListUseCase()
-    val teamList = teamEntityList.map {
-        it.mapNotNull { e ->
-            e.id?.let { id ->
-                TeamItemData(
-                    id, e.title, e.description, e.teamIcon
-                )
-            }
-        }
+    val categorizedTeamList = teamEntityList.map {
+        teamCategorizer(it)
     }
-    
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

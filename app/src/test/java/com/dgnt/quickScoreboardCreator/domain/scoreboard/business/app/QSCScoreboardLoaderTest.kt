@@ -1,7 +1,6 @@
-package com.dgnt.quickScoreboardCreator
+package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app
 
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.loader.QSCScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
@@ -22,7 +21,7 @@ class QSCScoreboardLoaderTest {
     @Test
     fun testLoadDefault() {
         val exampleDefault = javaClass.classLoader?.getResourceAsStream("example_default.json")?.let { ins ->
-            sut.load(ins)
+            sut(ins)
         } as DefaultScoreboardConfig
 
         Assert.assertEquals(ScoreboardType.BASKETBALL, exampleDefault.scoreboardType)
@@ -33,7 +32,7 @@ class QSCScoreboardLoaderTest {
     @Test
     fun testLoadCustom() {
         val exampleCustom = javaClass.classLoader?.getResourceAsStream("example_custom.json")?.let { ins ->
-            sut.load(ins)
+            sut(ins)
         } as CustomScoreboardConfig
 
         Assert.assertEquals("Spike Ball", exampleCustom.title)

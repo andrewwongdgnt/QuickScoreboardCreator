@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 
 
@@ -131,13 +132,13 @@ private fun `big team list`() =
     TeamPickerInnerDialogContent(
         derivedStateOf {
             listOf(
-                TeamItemData(0, "DGNT1", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT2", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT3", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", TeamIcon.TIGER),
+                TeamItemData(0, "DGNT1", "dgnt", TeamIcon.TIGER),
+                TeamItemData(0, "DGNT2", "dgnt", TeamIcon.TIGER),
+                TeamItemData(0, "DGNT3", "dgnt", TeamIcon.TIGER),
+                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
+                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
+                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
+                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
             )
         },
         {},
