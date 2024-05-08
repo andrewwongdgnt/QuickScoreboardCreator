@@ -3,8 +3,10 @@ package com.dgnt.quickScoreboardCreator.di
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.QSCScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCTimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.team.business.logic.QSCTeamCategorizer
@@ -38,4 +40,9 @@ object BusinessModule {
     @Singleton
     fun provideTeamCategorizer(): TeamCategorizer =
         QSCTeamCategorizer()
+
+    @Provides
+    @Singleton
+    fun provideScoreboardCategorizer(): ScoreboardCategorizer =
+        QSCScoreboardCategorizer()
 }

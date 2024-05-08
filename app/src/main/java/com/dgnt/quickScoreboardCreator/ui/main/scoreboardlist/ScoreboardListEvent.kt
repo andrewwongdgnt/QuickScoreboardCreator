@@ -1,5 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
+
 
 sealed class ScoreboardListEvent {
     data object OnAdd: ScoreboardListEvent()

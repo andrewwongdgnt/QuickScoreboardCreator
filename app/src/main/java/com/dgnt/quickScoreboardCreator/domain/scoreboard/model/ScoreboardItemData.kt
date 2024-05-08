@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
+package com.dgnt.quickScoreboardCreator.domain.scoreboard.model
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 

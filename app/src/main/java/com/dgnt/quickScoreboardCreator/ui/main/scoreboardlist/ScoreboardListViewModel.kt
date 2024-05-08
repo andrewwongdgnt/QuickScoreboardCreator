@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
@@ -14,7 +15,6 @@ import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -26,25 +26,19 @@ class ScoreboardListViewModel @Inject constructor(
     getScoreboardListUseCase: GetScoreboardListUseCase,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val deleteScoreboardListUseCase: DeleteScoreboardListUseCase,
-    private val scoreboardLoader: ScoreboardLoader
+    private val scoreboardLoader: ScoreboardLoader,
+    private val scoreboardCategorizer: ScoreboardCategorizer,
 ) : ViewModel() {
     private val scoreboardEntityList = getScoreboardListUseCase()
-    val scoreboardList = scoreboardEntityList.map {
-        it.map { e ->
-            ScoreboardItemData(
-                e.id, null, e.title, e.description
-            )
-        }
-    }
-
-    val defaultScoreboardList = flow {
-        listOf(R.raw.basketball, R.raw.hockey, R.raw.spikeball).map {
-            scoreboardLoader(resources.openRawResource(it)) as DefaultScoreboardConfig
-        }.map {
-            it.scoreboardType
-        }.let {
-            emit(it)
-        }
+    val categorizedScoreboards = scoreboardEntityList.map { scoreboardEntityList ->
+        scoreboardCategorizer(
+            listOf(R.raw.basketball, R.raw.hockey, R.raw.spikeball).map {
+                scoreboardLoader(resources.openRawResource(it)) as DefaultScoreboardConfig
+            }.map {
+                it.scoreboardType
+            },
+            scoreboardEntityList
+        )
     }
 
     private val _uiEvent = Channel<UiEvent>()

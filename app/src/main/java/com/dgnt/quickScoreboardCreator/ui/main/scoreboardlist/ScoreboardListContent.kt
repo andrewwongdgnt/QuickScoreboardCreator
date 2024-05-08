@@ -22,9 +22,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -36,6 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardItemData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import kotlinx.coroutines.launch
@@ -49,8 +50,7 @@ fun ScoreboardListContent(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val defaultScoreboardList = viewModel.defaultScoreboardList.collectAsState(initial = emptyList())
-    val scoreboardList = viewModel.scoreboardList.collectAsState(initial = emptyList())
+    val categorizedScoreboards = viewModel.categorizedScoreboards.collectAsState(initial = CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf()) to CategorizedScoreboardItemData(R.string.customScoreboardConfig, listOf()))
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -86,8 +86,7 @@ fun ScoreboardListContent(
     ScoreboardListInnerContent(
         snackbarHostState,
         { viewModel.onEvent(ScoreboardListEvent.OnAdd) },
-        defaultScoreboardList,
-        scoreboardList,
+        categorizedScoreboards.value,
         viewModel::onEvent
     )
 
@@ -97,8 +96,7 @@ fun ScoreboardListContent(
 private fun ScoreboardListInnerContent(
     snackbarHostState: SnackbarHostState,
     onFABClick: () -> Unit,
-    defaultScoreboardList: State<List<ScoreboardType>>,
-    scoreboardList: State<List<ScoreboardItemData>>,
+    categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
     onItemClick: (ScoreboardListEvent) -> Unit
 ) {
     Scaffold(
@@ -113,12 +111,16 @@ private fun ScoreboardListInnerContent(
         }
     ) { padding ->
 
-        //TODO move this to viewModel
+
         val categoryList = listOf(
-            stringResource(R.string.defaultScoreboardConfig) to defaultScoreboardList.value.map {
-                ScoreboardItemData(null, it, stringResource(it.titleRes), stringResource(it.descriptionRes))
+            categorizedScoreboards.first.let {
+                stringResource(it.titleRes) to it.scoreboardTypeList.map { scoreboardType ->
+                    ScoreboardItemData(null, scoreboardType, stringResource(scoreboardType.titleRes), stringResource(scoreboardType.descriptionRes))
+                }
             },
-            stringResource(R.string.customScoreboardConfig) to scoreboardList.value
+            categorizedScoreboards.second.let {
+                stringResource(it.titleRes) to it.scoreboardItemDataList
+            }
         )
         LazyColumn(
             modifier = Modifier
@@ -162,8 +164,9 @@ private fun `Only defaults`() =
     ScoreboardListInnerContent(
         SnackbarHostState(),
         {},
-        derivedStateOf { listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL) },
-        derivedStateOf { emptyList() },
+        CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
+                to
+                CategorizedScoreboardItemData(R.string.customScoreboardConfig, emptyList()),
         {}
     )
 
@@ -174,11 +177,12 @@ private fun `Defaults and customs`() =
     ScoreboardListInnerContent(
         SnackbarHostState(),
         {},
-        derivedStateOf { listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL) },
-        derivedStateOf { listOf(
-            ScoreboardItemData(0, null, "My Scoreboard 1", "My Description 1"),
-            ScoreboardItemData(0, null, "My Scoreboard 2", "My Description 2"),
-            ScoreboardItemData(0, null, "My Scoreboard 3", "My Description 3 "),
-        ) },
+        CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
+                to
+                CategorizedScoreboardItemData(R.string.customScoreboardConfig, listOf(
+                    ScoreboardItemData(0, null, "My Scoreboard 1", "My Description 1"),
+                    ScoreboardItemData(0, null, "My Scoreboard 2", "My Description 2"),
+                    ScoreboardItemData(0, null, "My Scoreboard 3", "My Description 3 "),
+                )),
         {}
     )
