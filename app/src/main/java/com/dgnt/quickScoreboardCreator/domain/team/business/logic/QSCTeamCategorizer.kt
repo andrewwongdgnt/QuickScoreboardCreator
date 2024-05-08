@@ -18,7 +18,7 @@ class QSCTeamCategorizer : TeamCategorizer {
             }
                 .toSortedMap()
                 .map {
-                    CategorizedTeamItemData(it.key, it.value.sortedBy { team -> team.title })
+                    CategorizedTeamItemData(it.key, it.value.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, TeamItemData::title)))
                 }
         }
 

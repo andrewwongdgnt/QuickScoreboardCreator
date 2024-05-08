@@ -47,7 +47,7 @@ class QSCTeamCategorizerTest {
             listOf(
                 TeamEntity(id = 1, title = "Solo B", description = "Solo B Description", teamIcon = TeamIcon.ALIEN),
                 TeamEntity(id = 2, title = "Team A", description = "Team A Description", teamIcon = TeamIcon.ALIEN),
-                TeamEntity(id = 3, title = "Solo A", description = "Solo A Description", teamIcon = TeamIcon.ALIEN),
+                TeamEntity(id = 3, title = "solo A", description = "Solo A Description", teamIcon = TeamIcon.ALIEN),
                 TeamEntity(id = 4, title = "Team B", description = "Team B Description", teamIcon = TeamIcon.ALIEN),
             )
         ).let {

@@ -26,9 +26,9 @@ class QSCScoreboardCategorizerTest {
         sut(
             listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL),
             listOf(
-                ScoreboardEntity(id = 1, title = "GG", description = "GG Desc", scoreCarriesOver = true),
+                ScoreboardEntity(id = 1, title = "gg", description = "GG Desc", scoreCarriesOver = true),
                 ScoreboardEntity(id = 2, title = "ZZ", description = "GG Desc", scoreCarriesOver = true),
-                ScoreboardEntity(id = 3, title = "A", description = "GG Desc", scoreCarriesOver = true),
+                ScoreboardEntity(id = 3, title = "a", description = "GG Desc", scoreCarriesOver = true),
                 ScoreboardEntity(id = 4, title = "RRR", description = "GG Desc", scoreCarriesOver = true),
                 ScoreboardEntity(id = 5, title = "CC", description = "GG Desc", scoreCarriesOver = true),
             )

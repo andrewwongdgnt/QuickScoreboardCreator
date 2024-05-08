@@ -15,7 +15,7 @@ class QSCScoreboardCategorizer : ScoreboardCategorizer {
             )
         }
         return CategorizedScoreboardType(R.string.defaultScoreboardConfig, scoreboardTypeList) to
-                CategorizedScoreboardItemData(R.string.customScoreboardConfig, scoreboardList.sortedBy { it.title })
+                CategorizedScoreboardItemData(R.string.customScoreboardConfig, scoreboardList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, ScoreboardItemData::title)))
 
     }
 }
