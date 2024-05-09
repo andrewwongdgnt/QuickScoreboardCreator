@@ -59,16 +59,18 @@ class ScoreboardListViewModel @Inject constructor(
 
             is ScoreboardListEvent.OnDelete -> {
                 viewModelScope.launch {
-                    scoreboardEntityList.first().filter { entity ->
-                        entity.id in event.scoreboardList.map { it.id }
-                    }.let { scoreboardEntityList ->
-                        deletedScoreboardList = scoreboardEntityList
-                        deleteScoreboardListUseCase(scoreboardEntityList)
+                    scoreboardEntityList.first().find { entity ->
+                        entity.id == event.id
+                    }?.let { scoreboardEntityToDelete ->
+                        //TODO delete one thing instead of a list
+                        val list = listOf(scoreboardEntityToDelete)
+                        deletedScoreboardList = list
+                        deleteScoreboardListUseCase(list)
                     }
                     sendUiEvent(
                         UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                             message = R.plurals.deletedScoreboardMsg,
-                            quantity = event.scoreboardList.size,
+                            quantity = 1,
                             action = R.string.undo
                         )
                     )

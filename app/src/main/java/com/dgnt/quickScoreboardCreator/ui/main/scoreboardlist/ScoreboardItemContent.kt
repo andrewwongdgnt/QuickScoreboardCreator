@@ -43,9 +43,9 @@ fun ScoreboardItemContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = item.title, style = typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
-                    if (item.type == null)
+                    if (item.type == null && item.id != null)
                         IconButton(onClick = {
-                            onEvent(ScoreboardListEvent.OnDelete(listOf(item)))
+                            onEvent(ScoreboardListEvent.OnDelete(item.id))
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,

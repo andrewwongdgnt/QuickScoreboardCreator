@@ -4,37 +4,23 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker
 
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.composable.team.CategorizedTeamListContent
 
 
 @Composable
@@ -43,7 +29,7 @@ fun TeamPickerDialogContent(
     onTeamPicked: (Int, Int) -> Unit,
     viewModel: TeamPickerViewModel = hiltViewModel()
 ) {
-    val teamList = viewModel.teamList.collectAsState(initial = emptyList())
+    val categorizedTeamList = viewModel.categorizedTeamList.collectAsState(initial = emptyList())
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -55,7 +41,7 @@ fun TeamPickerDialogContent(
     }
 
     TeamPickerInnerDialogContent(
-        teamList,
+        categorizedTeamList.value,
         onDone,
         viewModel::onEvent
     )
@@ -64,7 +50,7 @@ fun TeamPickerDialogContent(
 
 @Composable
 private fun TeamPickerInnerDialogContent(
-    teamList: State<List<TeamItemData>>,
+    categorizedTeamList: List<CategorizedTeamItemData>,
     onDismiss: () -> Unit,
     onEvent: (TeamPickerEvent) -> Unit,
 ) {
@@ -85,42 +71,10 @@ private fun TeamPickerInnerDialogContent(
             }
         },
         text = {
-            LazyColumn {
-                val items = teamList.value
-                itemsIndexed(items = items) { index, item ->
-                    Row(
-                        modifier = Modifier.clickable {
-                            onEvent(TeamPickerEvent.OnTeamPicked(item.id))
-                        },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(start = 3.dp, top = 10.dp, bottom = 10.dp)
-                            ) {
-                                Image(
-                                    painterResource(item.teamIcon.res),
-                                    null,
-                                    modifier = Modifier
-                                        .padding(end = 8.dp)
-                                        .width(48.dp)
-                                )
-                                Column {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(text = item.title, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
-                                    }
-
-                                }
-                            }
-                            if (index < items.size - 1)
-                                HorizontalDivider()
-                        }
-                    }
-                }
-            }
+            CategorizedTeamListContent(
+                onItemClick = { onEvent(TeamPickerEvent.OnTeamPicked(it.id)) },
+                categorizedTeamList = categorizedTeamList
+            )
         }
     )
 }
@@ -130,18 +84,32 @@ private fun TeamPickerInnerDialogContent(
 @Composable
 private fun `big team list`() =
     TeamPickerInnerDialogContent(
-        derivedStateOf {
-            listOf(
-                TeamItemData(0, "DGNT1", "dgnt", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT2", "dgnt", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT3", "dgnt", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
-                TeamItemData(0, "DGNT", "dgnt", TeamIcon.TIGER),
+
+        listOf(
+            CategorizedTeamItemData(
+                "D",
+                listOf(
+                    TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
+                    TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
+                    TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER)
+                )
+            ),
+            CategorizedTeamItemData(
+                "T",
+                listOf(
+                    TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
+                    TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER)
+                )
+            ),
+            CategorizedTeamItemData(
+                "J",
+                listOf(
+                    TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER)
+                )
             )
-        },
+
+        ),
         {},
         {}
-        )
+    )
 

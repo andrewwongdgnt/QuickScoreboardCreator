@@ -47,16 +47,18 @@ class TeamListViewModel @Inject constructor(
 
             is TeamListEvent.OnDelete -> {
                 viewModelScope.launch {
-                    teamEntityList.first().filter { entity ->
-                        entity.id in event.teamList.map { it.id }
-                    }.let { teamEntityList ->
-                        deletedTeamList = teamEntityList
-                        deleteTeamListUseCase(teamEntityList)
+                    teamEntityList.first().find { entity ->
+                        entity.id == event.id
+                    }?.let { teamEntityToDelete ->
+                        //TODO delete one thing instead of a list
+                        val list = listOf(teamEntityToDelete)
+                        deletedTeamList = list
+                        deleteTeamListUseCase(list)
                     }
                     sendUiEvent(
                         UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                             message = R.plurals.deletedTeamMsg,
-                            quantity = event.teamList.size,
+                            quantity = 1,
                             action = R.string.undo
                         )
                     )

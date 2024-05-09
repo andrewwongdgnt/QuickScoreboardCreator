@@ -23,17 +23,17 @@ import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
-import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListEvent
 
 @Composable
 fun TeamItemContent(
+    modifier: Modifier = Modifier,
     item: TeamItemData,
-    onEvent: (TeamListEvent) -> Unit,
-    modifier: Modifier = Modifier
+    onItemClick: (TeamItemData) -> Unit,
+    onItemDelete: ((Int) -> Unit)? = null,
 ) {
     Row(
         modifier = modifier.clickable {
-            onEvent(TeamListEvent.OnEdit(item))
+            onItemClick(item)
         },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -55,13 +55,15 @@ fun TeamItemContent(
                     ) {
                         Text(text = item.title, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
 
-                        IconButton(onClick = {
-                            onEvent(TeamListEvent.OnDelete(listOf(item)))
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = stringResource(R.string.delete)
-                            )
+                        if (onItemDelete != null) {
+                            IconButton(onClick = {
+                                onItemDelete(item.id)
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = stringResource(R.string.delete)
+                                )
+                            }
                         }
                     }
                     Text(text = item.description, style = MaterialTheme.typography.labelSmall, fontStyle = FontStyle.Italic, maxLines = 2, overflow = TextOverflow.Ellipsis)
@@ -76,29 +78,51 @@ fun TeamItemContent(
 @Composable
 private fun `Normal`() =
     TeamItemContent(
-        TeamItemData(
-        0, title = "Dragons", description = "Legendary creatures",
-        teamIcon = TeamIcon.ALIEN
-    ), {})
+        item = TeamItemData(
+            0, title = "Dragons", description = "Legendary creatures",
+            teamIcon = TeamIcon.ALIEN
+        ),
+        onItemClick = {},
+        onItemDelete = {},
+    )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Long description`() =
     TeamItemContent(
-        TeamItemData(
+        item =  TeamItemData(
             0,
             title = "Dragons",
             description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
             teamIcon = TeamIcon.DRAGON
-        ), {})
+        ),
+        onItemClick = {},
+        onItemDelete = {}
+    )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Long description and long description`() =
     TeamItemContent(
-        TeamItemData(
+        item = TeamItemData(
             0,
             title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
             description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
             teamIcon = TeamIcon.DRAGON
-        ), {})
+        ),
+        onItemClick = {},
+        onItemDelete = {}
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `Cannot delete`() =
+    TeamItemContent(
+       item = TeamItemData(
+            0,
+            title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
+            description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
+            teamIcon = TeamIcon.DRAGON
+        ),
+        onItemClick = {}
+    )

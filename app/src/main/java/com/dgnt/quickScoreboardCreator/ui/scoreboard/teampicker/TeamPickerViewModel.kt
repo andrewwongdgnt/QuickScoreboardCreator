@@ -3,7 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
+import com.dgnt.quickScoreboardCreator.domain.team.business.logic.TeamCategorizer
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -16,18 +16,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamPickerViewModel @Inject constructor(
+    private val teamCategorizer: TeamCategorizer,
     getTeamListUseCase: GetTeamListUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val teamEntityList = getTeamListUseCase()
-    val teamList = teamEntityList.map {
-        it.mapNotNull { e ->
-            e.id?.let { id ->
-                TeamItemData(
-                    id, e.title, e.description, e.teamIcon
-                )
-            }
-        }
+    val categorizedTeamList = teamEntityList.map {
+        teamCategorizer(it)
     }
 
     private var scoreIndex = 0

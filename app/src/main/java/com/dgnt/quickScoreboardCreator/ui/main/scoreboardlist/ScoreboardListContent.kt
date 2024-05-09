@@ -97,7 +97,7 @@ private fun ScoreboardListInnerContent(
     snackbarHostState: SnackbarHostState,
     onFABClick: () -> Unit,
     categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
-    onItemClick: (ScoreboardListEvent) -> Unit
+    onEvent: (ScoreboardListEvent) -> Unit
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -147,7 +147,7 @@ private fun ScoreboardListInnerContent(
                     items(itemList) { scoreboard ->
                         ScoreboardItemContent(
                             item = scoreboard,
-                            onEvent = onItemClick,
+                            onEvent = onEvent,
                             modifier = Modifier
                                 .fillMaxWidth()
                         )
