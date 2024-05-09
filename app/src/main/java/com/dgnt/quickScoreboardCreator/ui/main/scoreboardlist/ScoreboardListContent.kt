@@ -23,8 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,6 +42,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreb
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.composable.DefaultSnackbar
 import kotlinx.coroutines.launch
 
 
@@ -52,10 +56,12 @@ fun ScoreboardListContent(
     val scope = rememberCoroutineScope()
     val categorizedScoreboards = viewModel.categorizedScoreboards.collectAsState(initial = CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf()) to CategorizedScoreboardItemData(R.string.customScoreboardConfig, listOf()))
     val snackbarHostState = remember { SnackbarHostState() }
+    var snackbarDismissedByUser by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar.ShowQuantitySnackbar -> {
+                    snackbarDismissedByUser = false
                     snackbarHostState.currentSnackbarData?.dismiss()
                     scope.launch {
                         val result = snackbarHostState.showSnackbar(
@@ -63,18 +69,27 @@ fun ScoreboardListContent(
                             actionLabel = context.getString(event.action),
                             withDismissAction = true
                         )
-                        if (result == SnackbarResult.ActionPerformed) {
-                            viewModel.onEvent(ScoreboardListEvent.OnUndoDelete)
+                        when (result) {
+                            SnackbarResult.ActionPerformed -> viewModel.onEvent(ScoreboardListEvent.OnUndoDelete)
+                            SnackbarResult.Dismissed -> {
+                                if (snackbarDismissedByUser)
+                                    viewModel.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
+
+                            }
                         }
+
                     }
                 }
 
                 is UiEvent.ScoreboardDetails -> {
                     snackbarHostState.currentSnackbarData?.dismiss()
+                    viewModel.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
                     toScoreboardDetails(event)
                 }
 
                 is UiEvent.LaunchScoreboard -> {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    viewModel.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
                     launchScoreboard(event)
                 }
 
@@ -87,7 +102,8 @@ fun ScoreboardListContent(
         snackbarHostState,
         { viewModel.onEvent(ScoreboardListEvent.OnAdd) },
         categorizedScoreboards.value,
-        viewModel::onEvent
+        viewModel::onEvent,
+        { snackbarDismissedByUser = true }
     )
 
 }
@@ -97,10 +113,15 @@ private fun ScoreboardListInnerContent(
     snackbarHostState: SnackbarHostState,
     onFABClick: () -> Unit,
     categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
-    onEvent: (ScoreboardListEvent) -> Unit
+    onEvent: (ScoreboardListEvent) -> Unit,
+    onSnackbarDismissed: () -> Unit,
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { snackbarData ->
+                DefaultSnackbar(snackbarData = snackbarData, onSnackbarDismissed = onSnackbarDismissed)
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onFABClick) {
                 Icon(
@@ -167,6 +188,7 @@ private fun `Only defaults`() =
         CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(R.string.customScoreboardConfig, emptyList()),
+        {},
         {}
     )
 
@@ -179,10 +201,13 @@ private fun `Defaults and customs`() =
         {},
         CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
-                CategorizedScoreboardItemData(R.string.customScoreboardConfig, listOf(
-                    ScoreboardItemData(0, null, "My Scoreboard 1", "My Description 1"),
-                    ScoreboardItemData(0, null, "My Scoreboard 2", "My Description 2"),
-                    ScoreboardItemData(0, null, "My Scoreboard 3", "My Description 3 "),
-                )),
+                CategorizedScoreboardItemData(
+                    R.string.customScoreboardConfig, listOf(
+                        ScoreboardItemData(0, null, "My Scoreboard 1", "My Description 1"),
+                        ScoreboardItemData(0, null, "My Scoreboard 2", "My Description 2"),
+                        ScoreboardItemData(0, null, "My Scoreboard 3", "My Description 3 "),
+                    )
+                ),
+        {},
         {}
     )

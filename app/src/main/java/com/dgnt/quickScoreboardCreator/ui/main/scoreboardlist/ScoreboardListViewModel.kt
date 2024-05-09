@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import android.content.res.Resources
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
@@ -8,7 +9,7 @@ import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -25,7 +26,7 @@ class ScoreboardListViewModel @Inject constructor(
     private val resources: Resources,
     getScoreboardListUseCase: GetScoreboardListUseCase,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
-    private val deleteScoreboardListUseCase: DeleteScoreboardListUseCase,
+    private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
     private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardCategorizer: ScoreboardCategorizer,
 ) : ViewModel() {
@@ -44,7 +45,16 @@ class ScoreboardListViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    private var deletedScoreboardList: List<ScoreboardEntity>? = null
+    private var deletedScoreboardList: MutableList<ScoreboardEntity> = mutableListOf()
+
+    init {
+        Log.d("AYDEN", "deleted scoreboards: ${deletedScoreboardList.size}")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("AYDEN", "onCleared")
+    }
 
     fun onEvent(event: ScoreboardListEvent) {
         when (event) {
@@ -61,16 +71,14 @@ class ScoreboardListViewModel @Inject constructor(
                 viewModelScope.launch {
                     scoreboardEntityList.first().find { entity ->
                         entity.id == event.id
-                    }?.let { scoreboardEntityToDelete ->
-                        //TODO delete one thing instead of a list
-                        val list = listOf(scoreboardEntityToDelete)
-                        deletedScoreboardList = list
-                        deleteScoreboardListUseCase(list)
+                    }?.let {
+                        deletedScoreboardList.add(it)
+                        deleteScoreboardUseCase(it)
                     }
                     sendUiEvent(
                         UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                             message = R.plurals.deletedScoreboardMsg,
-                            quantity = 1,
+                            quantity = deletedScoreboardList.size,
                             action = R.string.undo
                         )
                     )
@@ -78,15 +86,19 @@ class ScoreboardListViewModel @Inject constructor(
             }
 
             is ScoreboardListEvent.OnUndoDelete -> {
-                deletedScoreboardList?.let { scoreboardList ->
-                    viewModelScope.launch {
-                        insertScoreboardListUseCase(scoreboardList)
-                    }
+                val scoreboardList = deletedScoreboardList.toList()
+                viewModelScope.launch {
+                    insertScoreboardListUseCase(scoreboardList)
                 }
+                onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
             }
 
             is ScoreboardListEvent.OnLaunch -> {
                 sendUiEvent(UiEvent.LaunchScoreboard(event.scoreboard.id, event.scoreboard.type))
+            }
+
+            is ScoreboardListEvent.OnClearDeletedScoreboardList -> {
+                deletedScoreboardList.clear()
             }
         }
     }

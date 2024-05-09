@@ -9,4 +9,5 @@ sealed class ScoreboardListEvent {
     data class OnDelete(val id: Int): ScoreboardListEvent()
     data object OnUndoDelete: ScoreboardListEvent()
     data class OnLaunch(val scoreboard: ScoreboardItemData): ScoreboardListEvent()
+    data object OnClearDeletedScoreboardList: ScoreboardListEvent()
 }
