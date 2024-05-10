@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -38,6 +37,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_DETAILS
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_LIST
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_DETAILS
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_LIST
+import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
@@ -111,14 +111,17 @@ class MainActivity : ComponentActivity() {
         ) {
             composable(SCOREBOARD_LIST) {
                 ScoreboardListContent(
-                    toScoreboardDetails = {
-                        navController.commonNavigate(route = "$SCOREBOARD_DETAILS?$ID=${it.id}&$TYPE=${it.scoreboardType}")
-                    },
-                    launchScoreboard = {
-                        context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
-                            intent.putExtra(ID, it.id)
-                            (it.scoreboardType?: ScoreboardType.NONE).let { scoreboardType -> intent.putExtra(scoreboardType) }
-                        })
+                    onUiEvent = { uiEvent ->
+                        when (uiEvent) {
+                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(route = "$SCOREBOARD_DETAILS?$ID=${uiEvent.id}&$TYPE=${uiEvent.scoreboardType}")
+
+                            is UiEvent.LaunchScoreboard -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
+                                intent.putExtra(ID, uiEvent.id)
+                                (uiEvent.scoreboardType ?: ScoreboardType.NONE).let { scoreboardType -> intent.putExtra(scoreboardType) }
+                            })
+
+                            else -> Unit
+                        }
                     }
                 )
             }
@@ -176,13 +179,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun GreetingPreview() {
-        QuickScoreboardCreatorTheme {
-            ScoreboardListContent({}, {})
-        }
-    }
 }
 
 

@@ -43,26 +43,55 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemDat
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.composable.DefaultSnackbar
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun ScoreboardListContent(
-    toScoreboardDetails: (UiEvent.ScoreboardDetails) -> Unit,
-    launchScoreboard: (UiEvent.LaunchScoreboard) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardListViewModel = hiltViewModel()
 ) {
+
+    val categorizedScoreboards = viewModel.categorizedScoreboards.collectAsState(
+        initial = CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf()) to CategorizedScoreboardItemData(R.string.customScoreboardConfig, listOf())
+    )
+
+    ScoreboardListInnerContent(
+        { viewModel.onEvent(ScoreboardListEvent.OnAdd) },
+        categorizedScoreboards.value,
+        viewModel::onEvent,
+        viewModel.uiEvent,
+        onUiEvent,
+    )
+
+}
+
+@Composable
+private fun ScoreboardListInnerContent(
+    onFABClick: () -> Unit,
+    categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
+    onEvent: (ScoreboardListEvent) -> Unit,
+    uiEvent: Flow<UiEvent>,
+    onUiEvent: (UiEvent) -> Unit
+) {
+
+    val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val categorizedScoreboards = viewModel.categorizedScoreboards.collectAsState(initial = CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf()) to CategorizedScoreboardItemData(R.string.customScoreboardConfig, listOf()))
-    val snackbarHostState = remember { SnackbarHostState() }
-    var snackbarDismissedByUser by remember { mutableStateOf(false) }
+
+    var mustClearDeletedScoreboardList by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
+
+        fun dismissSnackbar(clear: Boolean) {
+            mustClearDeletedScoreboardList = clear
+            snackbarHostState.currentSnackbarData?.dismiss()
+        }
+        uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar.ShowQuantitySnackbar -> {
-                    snackbarDismissedByUser = false
-                    snackbarHostState.currentSnackbarData?.dismiss()
+                    dismissSnackbar(false)
                     scope.launch {
                         val result = snackbarHostState.showSnackbar(
                             message = context.resources.getQuantityString(event.message, event.quantity, event.quantity),
@@ -70,56 +99,30 @@ fun ScoreboardListContent(
                             withDismissAction = true
                         )
                         when (result) {
-                            SnackbarResult.ActionPerformed -> viewModel.onEvent(ScoreboardListEvent.OnUndoDelete)
+                            SnackbarResult.ActionPerformed -> onEvent(ScoreboardListEvent.OnUndoDelete)
                             SnackbarResult.Dismissed -> {
-                                if (snackbarDismissedByUser)
-                                    viewModel.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
-
+                                if (mustClearDeletedScoreboardList)
+                                    onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
                             }
                         }
 
                     }
                 }
 
-                is UiEvent.ScoreboardDetails -> {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                    viewModel.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
-                    toScoreboardDetails(event)
-                }
-
+                is UiEvent.ScoreboardDetails,
                 is UiEvent.LaunchScoreboard -> {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                    viewModel.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
-                    launchScoreboard(event)
+                    dismissSnackbar(true)
                 }
 
                 else -> Unit
             }
+            onUiEvent(event)
         }
     }
-
-    ScoreboardListInnerContent(
-        snackbarHostState,
-        { viewModel.onEvent(ScoreboardListEvent.OnAdd) },
-        categorizedScoreboards.value,
-        viewModel::onEvent,
-        { snackbarDismissedByUser = true }
-    )
-
-}
-
-@Composable
-private fun ScoreboardListInnerContent(
-    snackbarHostState: SnackbarHostState,
-    onFABClick: () -> Unit,
-    categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
-    onEvent: (ScoreboardListEvent) -> Unit,
-    onSnackbarDismissed: () -> Unit,
-) {
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackbarHostState) { snackbarData ->
-                DefaultSnackbar(snackbarData = snackbarData, onSnackbarDismissed = onSnackbarDismissed)
+                DefaultSnackbar(snackbarData = snackbarData, onSnackbarDismissed = { mustClearDeletedScoreboardList = true })
             }
         },
         floatingActionButton = {
@@ -183,12 +186,12 @@ private fun ScoreboardListInnerContent(
 @Composable
 private fun `Only defaults`() =
     ScoreboardListInnerContent(
-        SnackbarHostState(),
         {},
         CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(R.string.customScoreboardConfig, emptyList()),
         {},
+        emptyFlow(),
         {}
     )
 
@@ -197,7 +200,6 @@ private fun `Only defaults`() =
 @Composable
 private fun `Defaults and customs`() =
     ScoreboardListInnerContent(
-        SnackbarHostState(),
         {},
         CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
@@ -209,5 +211,6 @@ private fun `Defaults and customs`() =
                     )
                 ),
         {},
+        emptyFlow(),
         {}
     )
