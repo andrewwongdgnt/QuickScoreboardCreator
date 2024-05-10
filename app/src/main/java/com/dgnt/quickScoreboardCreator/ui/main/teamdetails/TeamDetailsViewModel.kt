@@ -75,24 +75,24 @@ class TeamDetailsViewModel @Inject constructor(
 
     fun onEvent(event: TeamDetailsEvent) {
         when (event) {
-            is TeamDetailsEvent.OnDone -> {
-                viewModelScope.launch {
-                    if (!validate())
-                        return@launch
-
-                    insertTeamListUseCase(
-                        listOf(
-                            TeamEntity(
-                                id = team?.id,
-                                title = title,
-                                description = description,
-                                teamIcon = teamIcon!!
+            TeamDetailsEvent.OnConfirm -> {
+                if (validate()) {
+                    viewModelScope.launch {
+                        insertTeamListUseCase(
+                            listOf(
+                                TeamEntity(
+                                    id = team?.id,
+                                    title = title,
+                                    description = description,
+                                    teamIcon = teamIcon!!
+                                )
                             )
                         )
-                    )
-                    sendUiEvent(UiEvent.Done)
+                    }
                 }
+                sendUiEvent(UiEvent.Done)
             }
+            TeamDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
 
             is TeamDetailsEvent.OnTeamIconEdit -> {
                 teamIconChanging = true

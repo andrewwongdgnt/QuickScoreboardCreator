@@ -42,24 +42,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 
 @Composable
 fun TeamDetailsDialogContent(
-    onDone: () -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     viewModel: TeamDetailsViewModel = hiltViewModel()
 ) {
     val valid = viewModel.valid
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.Done -> onDone()
-                else -> Unit
-            }
-        }
-    }
 
     TeamDetailsInnerDialogContent(
+        viewModel.uiEvent,
+        onUiEvent,
         viewModel.title,
         { viewModel.title = it },
         viewModel.description,
@@ -68,14 +64,16 @@ fun TeamDetailsDialogContent(
         viewModel.teamIconChanging,
         viewModel::onEvent,
         valid,
-        { viewModel.onEvent(TeamDetailsEvent.OnDone) },
-        onDone
+        { viewModel.onEvent(TeamDetailsEvent.OnConfirm) },
+        { viewModel.onEvent(TeamDetailsEvent.OnDismiss) },
     )
 
 }
 
 @Composable
 private fun TeamDetailsInnerDialogContent(
+    uiEvent: Flow<UiEvent>,
+    onUiEvent: (UiEvent) -> Unit,
     title: String,
     onTitleChange: (String) -> Unit,
     description: String,
@@ -88,6 +86,9 @@ private fun TeamDetailsInnerDialogContent(
     onDismiss: () -> Unit,
 ) {
 
+    LaunchedEffect(key1 = true) {
+        uiEvent.collect(collector = onUiEvent)
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -237,6 +238,8 @@ fun LazyGridScope.header(
 @Composable
 private fun `New Icon Selection`() =
     TeamDetailsInnerDialogContent(
+        emptyFlow(),
+        {},
         "",
         {},
         "",
@@ -253,6 +256,8 @@ private fun `New Icon Selection`() =
 @Composable
 private fun `Gorilla`() =
     TeamDetailsInnerDialogContent(
+        emptyFlow(),
+        {},
         "",
         {},
         "",
@@ -269,6 +274,8 @@ private fun `Gorilla`() =
 @Composable
 private fun `Tiger`() =
     TeamDetailsInnerDialogContent(
+        emptyFlow(),
+        {},
         "",
         {},
         "",
@@ -285,6 +292,8 @@ private fun `Tiger`() =
 @Composable
 private fun `Alien`() =
     TeamDetailsInnerDialogContent(
+        emptyFlow(),
+        {},
         "",
         {},
         "",
@@ -301,6 +310,8 @@ private fun `Alien`() =
 @Composable
 private fun `Loading icon`() =
     TeamDetailsInnerDialogContent(
+        emptyFlow(),
+        {},
         "",
         {},
         "",

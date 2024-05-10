@@ -171,9 +171,13 @@ class MainActivity : ComponentActivity() {
                 )
             ) {
                 TeamDetailsDialogContent(
-                    onDone = {
-                        navController.popBackStack()
-                    })
+                    onUiEvent = { uiEvent ->
+                        when (uiEvent) {
+                            UiEvent.Done -> navController.popBackStack()
+                            else -> Unit
+                        }
+                    }
+                )
             }
             composable(CONTACT) {
                 ContactContent(
