@@ -8,4 +8,5 @@ sealed class TeamListEvent {
     data class OnEdit(val team: TeamItemData): TeamListEvent()
     data class OnDelete(val id: Int): TeamListEvent()
     data object OnUndoDelete: TeamListEvent()
+    data object OnClearDeletedTeamList: TeamListEvent()
 }

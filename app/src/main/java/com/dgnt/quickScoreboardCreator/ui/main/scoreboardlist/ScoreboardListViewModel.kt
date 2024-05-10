@@ -1,7 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
@@ -47,19 +46,10 @@ class ScoreboardListViewModel @Inject constructor(
 
     private var deletedScoreboardList: MutableList<ScoreboardEntity> = mutableListOf()
 
-    init {
-        Log.d("AYDEN", "deleted scoreboards: ${deletedScoreboardList.size}")
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("AYDEN", "onCleared")
-    }
-
     fun onEvent(event: ScoreboardListEvent) {
         when (event) {
 
-            is ScoreboardListEvent.OnAdd -> {
+            ScoreboardListEvent.OnAdd -> {
                 sendUiEvent(UiEvent.ScoreboardDetails())
             }
 
@@ -85,7 +75,7 @@ class ScoreboardListViewModel @Inject constructor(
                 }
             }
 
-            is ScoreboardListEvent.OnUndoDelete -> {
+            ScoreboardListEvent.OnUndoDelete -> {
                 val scoreboardList = deletedScoreboardList.toList()
                 viewModelScope.launch {
                     insertScoreboardListUseCase(scoreboardList)
@@ -97,7 +87,7 @@ class ScoreboardListViewModel @Inject constructor(
                 sendUiEvent(UiEvent.LaunchScoreboard(event.scoreboard.id, event.scoreboard.type))
             }
 
-            is ScoreboardListEvent.OnClearDeletedScoreboardList -> {
+            ScoreboardListEvent.OnClearDeletedScoreboardList -> {
                 deletedScoreboardList.clear()
             }
         }

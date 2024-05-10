@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.business.logic.TeamCategorizer
-import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamListUseCase
+import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class TeamListViewModel @Inject constructor(
     getTeamListUseCase: GetTeamListUseCase,
     private val insertTeamListUseCase: InsertTeamListUseCase,
-    private val deleteTeamListUseCase: DeleteTeamListUseCase,
+    private val deleteTeamUseCase: DeleteTeamUseCase,
     private val teamCategorizer: TeamCategorizer,
 ) : ViewModel() {
     private val teamEntityList = getTeamListUseCase()
@@ -32,12 +32,12 @@ class TeamListViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    private var deletedTeamList: List<TeamEntity>? = null
+    private var deletedTeamList: MutableList<TeamEntity> = mutableListOf()
 
     fun onEvent(event: TeamListEvent) {
         when (event) {
 
-            is TeamListEvent.OnAdd -> {
+            TeamListEvent.OnAdd -> {
                 sendUiEvent(UiEvent.TeamDetails())
             }
 
@@ -49,30 +49,31 @@ class TeamListViewModel @Inject constructor(
                 viewModelScope.launch {
                     teamEntityList.first().find { entity ->
                         entity.id == event.id
-                    }?.let { teamEntityToDelete ->
-                        //TODO delete one thing instead of a list
-                        val list = listOf(teamEntityToDelete)
-                        deletedTeamList = list
-                        deleteTeamListUseCase(list)
+                    }?.let {
+                        deletedTeamList.add(it)
+                        deleteTeamUseCase(it)
                     }
                     sendUiEvent(
                         UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                             message = R.plurals.deletedTeamMsg,
-                            quantity = 1,
+                            quantity = deletedTeamList.size,
                             action = R.string.undo
                         )
                     )
                 }
             }
 
-            is TeamListEvent.OnUndoDelete -> {
-                deletedTeamList?.let { teamList ->
-                    viewModelScope.launch {
-                        insertTeamListUseCase(teamList)
-                    }
+            TeamListEvent.OnUndoDelete -> {
+                val teamList = deletedTeamList.toList()
+                viewModelScope.launch {
+                    insertTeamListUseCase(teamList)
                 }
+                onEvent(TeamListEvent.OnClearDeletedTeamList)
             }
 
+            TeamListEvent.OnClearDeletedTeamList -> {
+                deletedTeamList.clear()
+            }
         }
     }
 

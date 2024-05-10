@@ -153,8 +153,12 @@ class MainActivity : ComponentActivity() {
             }
             composable(TEAM_LIST) {
                 TeamListContent(
-                    toTeamDetails = {
-                        navController.commonNavigate(route = "$TEAM_DETAILS?$ID=${it.id}")
+                    onUiEvent = { uiEvent ->
+                        when(uiEvent){
+                            is UiEvent.TeamDetails -> navController.commonNavigate(route = "$TEAM_DETAILS?$ID=${uiEvent.id}")
+                            else -> Unit
+                        }
+
                     }
                 )
             }
