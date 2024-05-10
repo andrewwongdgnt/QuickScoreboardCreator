@@ -27,11 +27,13 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamd
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeControlContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeDisplayContent
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun ScoreboardInteractionContent(
     teamSelectedData: TeamSelectedData,
-    toTeamPicker: (UiEvent.TeamPicker) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardInteractionViewModel = hiltViewModel()
 ) {
 
@@ -41,15 +43,9 @@ fun ScoreboardInteractionContent(
     val displayedScoreInfo = viewModel.displayedScoreInfo
     val teamList = viewModel.teamList
     viewModel.onEvent(ScoreboardInteractionEvent.SetTeam(teamSelectedData))
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect {
-            when (it) {
-                is UiEvent.TeamPicker -> toTeamPicker(it)
-                else -> Unit
-            }
-        }
-    }
     ScoreboardInteractionInnerContent(
+        viewModel.uiEvent,
+        onUiEvent,
         incrementList,
         teamList,
         displayedScoreInfo,
@@ -61,6 +57,8 @@ fun ScoreboardInteractionContent(
 
 @Composable
 private fun ScoreboardInteractionInnerContent(
+    uiEvent: Flow<UiEvent>,
+    onUiEvent: (UiEvent) -> Unit,
     incrementList: List<List<Int>>,
     teamList: List<TeamDisplay>,
     displayedScoreInfo: DisplayedScoreInfo,
@@ -68,6 +66,11 @@ private fun ScoreboardInteractionInnerContent(
     timerInProgress: Boolean,
     onEvent: (ScoreboardInteractionEvent) -> Unit
 ) {
+
+    LaunchedEffect(key1 = true) {
+        uiEvent.collect(collector = onUiEvent)
+    }
+
     val currentTeamSize = incrementList.size
     if (currentTeamSize == 2) {
         Row {
@@ -144,6 +147,8 @@ private fun ScoreboardInteractionInnerContent(
 @Composable
 private fun `2 Teams with long names`() =
     ScoreboardInteractionInnerContent(
+        emptyFlow(),
+        {},
         listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),
@@ -167,6 +172,8 @@ private fun `2 Teams with long names`() =
 @Composable
 private fun `2 Teams with short names`() =
     ScoreboardInteractionInnerContent(
+        emptyFlow(),
+        {},
         listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),

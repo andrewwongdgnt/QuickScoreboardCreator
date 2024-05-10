@@ -32,6 +32,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCORE_INDEX
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_INTERACTION
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_PICKER
+import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
@@ -81,8 +82,12 @@ class ScoreboardActivity : ComponentActivity() {
                                 val teamSelectedData = viewModel.teamSelectedData
                                 ScoreboardInteractionContent(
                                     teamSelectedData,
-                                    toTeamPicker = {
-                                        navController.commonNavigate(route = "$TEAM_PICKER/${it.scoreIndex}")
+                                    onUiEvent = { uiEvent ->
+                                        when (uiEvent) {
+                                            is UiEvent.TeamPicker -> navController.commonNavigate(route = "$TEAM_PICKER/${uiEvent.scoreIndex}")
+                                            else -> Unit
+                                        }
+
                                     }
                                 )
                             }
