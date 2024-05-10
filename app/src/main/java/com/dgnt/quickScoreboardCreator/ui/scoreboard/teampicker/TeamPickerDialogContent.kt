@@ -21,39 +21,38 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.composable.team.CategorizedTeamListContent
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 
 @Composable
 fun TeamPickerDialogContent(
-    onDone: () -> Unit,
-    onTeamPicked: (Int, Int) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     viewModel: TeamPickerViewModel = hiltViewModel()
 ) {
     val categorizedTeamList = viewModel.categorizedTeamList.collectAsState(initial = emptyList())
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.Done -> onDone()
-                is UiEvent.TeamPicked -> onTeamPicked(event.scoreIndex, event.teamId)
-                else -> Unit
-            }
-        }
-    }
 
     TeamPickerInnerDialogContent(
+        viewModel.uiEvent,
+        onUiEvent,
         categorizedTeamList.value,
-        onDone,
         viewModel::onEvent
-    )
+    ) { viewModel.onEvent(TeamPickerEvent.OnDismiss) }
 
 }
 
 @Composable
 private fun TeamPickerInnerDialogContent(
+    uiEvent: Flow<UiEvent>,
+    onUiEvent: (UiEvent) -> Unit,
     categorizedTeamList: List<CategorizedTeamItemData>,
-    onDismiss: () -> Unit,
     onEvent: (TeamPickerEvent) -> Unit,
+    onDismiss: () -> Unit,
 ) {
+
+    LaunchedEffect(key1 = true) {
+        uiEvent.collect(collector = onUiEvent)
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -84,7 +83,8 @@ private fun TeamPickerInnerDialogContent(
 @Composable
 private fun `big team list`() =
     TeamPickerInnerDialogContent(
-
+        emptyFlow(),
+        {},
         listOf(
             CategorizedTeamItemData(
                 "D",

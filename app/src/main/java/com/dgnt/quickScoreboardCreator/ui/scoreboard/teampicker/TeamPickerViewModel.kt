@@ -39,7 +39,7 @@ class TeamPickerViewModel @Inject constructor(
     fun onEvent(event: TeamPickerEvent) {
         viewModelScope.launch {
             when (event) {
-                is TeamPickerEvent.OnDone ->
+                is TeamPickerEvent.OnDismiss ->
                     sendUiEvent(UiEvent.Done)
 
                 is TeamPickerEvent.OnTeamPicked ->

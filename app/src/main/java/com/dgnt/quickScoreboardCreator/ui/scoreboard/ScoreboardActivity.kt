@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
@@ -38,12 +37,6 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.Score
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 @AndroidEntryPoint
 class ScoreboardActivity : ComponentActivity() {
@@ -105,16 +98,19 @@ class ScoreboardActivity : ComponentActivity() {
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 TeamPickerDialogContent(
-                                    onDone = {
-                                        navController.popBackStack()
+                                    onUiEvent = { uiEvent ->
+                                        when (uiEvent) {
+                                            UiEvent.Done -> navController.popBackStack()
+
+                                            is UiEvent.TeamPicked -> {
+                                                viewModel.teamSelectedData = TeamSelectedData(uiEvent.scoreIndex, uiEvent.teamId)
+                                                navController.popBackStack()
+                                            }
+
+                                            else -> Unit
+                                        }
                                     },
-                                    onTeamPicked = { scoreIndex, teamId ->
-
-                                        viewModel.teamSelectedData = TeamSelectedData(scoreIndex, teamId)
-                                        navController.popBackStack()
-
-
-                                    })
+                                )
 
                             }
                         }
@@ -132,7 +128,6 @@ class ScoreboardActivity : ComponentActivity() {
         actionBar?.hide()
 
         //Hide the status bars
-
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         window.insetsController?.apply {
@@ -153,14 +148,4 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
         navController.getBackStackEntry(navGraphRoute)
     }
     return viewModel(parentEntry)
-}
-
-@Composable
-fun <T> Flow<T>.collectAsEffect(
-    context: CoroutineContext = EmptyCoroutineContext,
-    block: (T) -> Unit
-) {
-    LaunchedEffect(key1 = Unit) {
-        onEach(block).flowOn(context).launchIn(this)
-    }
 }
