@@ -59,22 +59,22 @@ fun ScoreboardListContent(
     )
 
     ScoreboardListInnerContent(
+        viewModel.uiEvent,
+        onUiEvent,
         { viewModel.onEvent(ScoreboardListEvent.OnAdd) },
         categorizedScoreboards.value,
         viewModel::onEvent,
-        viewModel.uiEvent,
-        onUiEvent,
     )
 
 }
 
 @Composable
 private fun ScoreboardListInnerContent(
+    uiEvent: Flow<UiEvent>,
+    onUiEvent: (UiEvent) -> Unit,
     onFABClick: () -> Unit,
     categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
-    onEvent: (ScoreboardListEvent) -> Unit,
-    uiEvent: Flow<UiEvent>,
-    onUiEvent: (UiEvent) -> Unit
+    onEvent: (ScoreboardListEvent) -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -186,12 +186,12 @@ private fun ScoreboardListInnerContent(
 @Composable
 private fun `Only defaults`() =
     ScoreboardListInnerContent(
+        emptyFlow(),
+        {},
         {},
         CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(R.string.customScoreboardConfig, emptyList()),
-        {},
-        emptyFlow(),
         {}
     )
 
@@ -200,6 +200,8 @@ private fun `Only defaults`() =
 @Composable
 private fun `Defaults and customs`() =
     ScoreboardListInnerContent(
+        emptyFlow(),
+        {},
         {},
         CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
@@ -210,7 +212,5 @@ private fun `Defaults and customs`() =
                         ScoreboardItemData(0, null, "My Scoreboard 3", "My Description 3 "),
                     )
                 ),
-        {},
-        emptyFlow(),
         {}
     )

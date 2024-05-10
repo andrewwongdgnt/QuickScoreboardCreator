@@ -84,25 +84,25 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     fun onEvent(event: ScoreboardDetailsEvent) {
         when (event) {
-            is ScoreboardDetailsEvent.OnDone -> {
-                viewModelScope.launch {
-                    if (!validate()) {
-
-                        return@launch
-                    }
-                    insertScoreboardListUseCase(
-                        listOf(
-                            ScoreboardEntity(
-                                id = scoreboard?.id,
-                                title = title,
-                                description = description,
-                                scoreCarriesOver = scoreCarriesOver
+            ScoreboardDetailsEvent.OnConfirm -> {
+                if (validate()) {
+                    viewModelScope.launch {
+                        insertScoreboardListUseCase(
+                            listOf(
+                                ScoreboardEntity(
+                                    id = scoreboard?.id,
+                                    title = title,
+                                    description = description,
+                                    scoreCarriesOver = scoreCarriesOver
+                                )
                             )
                         )
-                    )
-                    sendUiEvent(UiEvent.Done)
+                    }
                 }
+                sendUiEvent(UiEvent.Done)
             }
+
+            ScoreboardDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
         }
     }
 

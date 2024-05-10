@@ -143,9 +143,13 @@ class MainActivity : ComponentActivity() {
                 )
             ) {
                 ScoreboardDetailsDialogContent(
-                    onDone = {
-                        navController.popBackStack()
-                    })
+                    onUiEvent = { uiEvent ->
+                        when (uiEvent) {
+                            UiEvent.Done -> navController.popBackStack()
+                            else -> Unit
+                        }
+                    }
+                )
             }
             composable(TEAM_LIST) {
                 TeamListContent(

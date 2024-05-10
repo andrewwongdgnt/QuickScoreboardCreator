@@ -23,23 +23,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.composable.LabelSwitch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun ScoreboardDetailsDialogContent(
-    onDone: () -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardDetailsViewModel = hiltViewModel()
 ) {
     val valid = viewModel.valid
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.Done -> onDone()
-                else -> Unit
-            }
-        }
-    }
 
     ScoreboardDetailsInnerDialogContent(
+        viewModel.uiEvent,
+        onUiEvent,
         viewModel.title,
         { viewModel.title = it },
         viewModel.description,
@@ -47,13 +43,15 @@ fun ScoreboardDetailsDialogContent(
         viewModel.scoreCarriesOver,
         { viewModel.scoreCarriesOver = it },
         valid,
-        { viewModel.onEvent(ScoreboardDetailsEvent.OnDone) },
-        onDone
+        { viewModel.onEvent(ScoreboardDetailsEvent.OnConfirm) },
+        { viewModel.onEvent(ScoreboardDetailsEvent.OnDismiss) }
     )
 }
 
 @Composable
 private fun ScoreboardDetailsInnerDialogContent(
+    uiEvent: Flow<UiEvent>,
+    onUiEvent: (UiEvent) -> Unit,
     title: String,
     onTitleChange: (String) -> Unit,
     description: String,
@@ -64,6 +62,10 @@ private fun ScoreboardDetailsInnerDialogContent(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
+
+    LaunchedEffect(key1 = true) {
+        uiEvent.collect(collector = onUiEvent)
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -124,6 +126,8 @@ private fun ScoreboardDetailsInnerDialogContent(
 @Composable
 private fun `Empty data`() =
     ScoreboardDetailsInnerDialogContent(
+        emptyFlow(),
+        {},
         "",
         {},
         "",
