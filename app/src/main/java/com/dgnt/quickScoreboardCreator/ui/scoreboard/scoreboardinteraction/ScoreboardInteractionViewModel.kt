@@ -123,16 +123,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
             }
 
-            is ScoreboardInteractionEvent.SkipTime -> {
-                //10 seconds skip
-                val skipValue = 10000L
-                if ((event.value && scoreboardManager.isTimeIncreasing()) || (!event.value && !scoreboardManager.isTimeIncreasing()))
-                    timeValue += skipValue
-                else
-                    timeValue -= skipValue
-            }
-
-            is ScoreboardInteractionEvent.StartTimer -> {
+            ScoreboardInteractionEvent.StartTimer -> {
                 timerJob?.cancel()
                 if (timeValue <= 0L && !scoreboardManager.isTimeIncreasing()) {
                     timerInProgress = false

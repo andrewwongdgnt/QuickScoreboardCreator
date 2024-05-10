@@ -25,8 +25,7 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.TeamSelectedData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.DefaultScoreContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeControlContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimeDisplayContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -101,18 +100,12 @@ private fun ScoreboardInteractionInnerContent(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            TimeDisplayContent(
+            TimerContent(
+                timerInProgress,
                 timeData,
+                onEvent,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-            )
-            TimeControlContent(
-                timerInProgress,
-                { onEvent(ScoreboardInteractionEvent.StartTimer) },
-                { onEvent(ScoreboardInteractionEvent.PauseTimer(it)) },
-                { onEvent(ScoreboardInteractionEvent.SkipTime(it)) },
-                modifier = Modifier
-                    .align(Alignment.TopStart)
             )
 
             Row(
