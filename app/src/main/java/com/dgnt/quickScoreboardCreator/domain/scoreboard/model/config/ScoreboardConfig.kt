@@ -19,12 +19,14 @@ data class IntervalListConfig(
 
 data class ScoreInfoConfig(
     val scoreRule: ScoreRuleConfig,
+    val scoreMapping: Map<String, String>?,
     val dataList: List<ScoreDataConfig>
 ) {
     fun toScoreInfo() =
         ScoreInfo(
             scoreRule.toScoreRule(),
-            dataList.map{
+            scoreMapping?.mapKeys { it.key.toInt() } ?: mapOf(),
+            dataList.map {
                 it.toScoreData()
             }
         )

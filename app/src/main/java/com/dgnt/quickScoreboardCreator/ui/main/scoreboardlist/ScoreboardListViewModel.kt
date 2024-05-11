@@ -8,6 +8,7 @@ import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
@@ -32,7 +33,12 @@ class ScoreboardListViewModel @Inject constructor(
     private val scoreboardEntityList = getScoreboardListUseCase()
     val categorizedScoreboards = scoreboardEntityList.map { scoreboardEntityList ->
         scoreboardCategorizer(
-            listOf(R.raw.basketball, R.raw.hockey, R.raw.spikeball).map {
+            listOf(
+                ScoreboardType.BASKETBALL.rawRes!!,
+                ScoreboardType.HOCKEY.rawRes!!,
+                ScoreboardType.SPIKEBALL.rawRes!!,
+                ScoreboardType.TENNIS.rawRes!!,
+            ).map {
                 scoreboardLoader(resources.openRawResource(it)) as DefaultScoreboardConfig
             }.map {
                 it.scoreboardType

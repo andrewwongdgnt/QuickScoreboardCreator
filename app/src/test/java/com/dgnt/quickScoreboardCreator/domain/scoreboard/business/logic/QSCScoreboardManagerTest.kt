@@ -29,6 +29,7 @@ class QSCScoreboardManagerTest {
         sut.intervalList = listOf(
             ScoreInfo(
                 ScoreRule.NoRule,
+                mapOf(),
                 listOf(
                     ScoreData(0, 0, listOf(2, 3)),
                     ScoreData(0, 0, listOf(2, 3)),
@@ -62,6 +63,7 @@ class QSCScoreboardManagerTest {
         sut.intervalList = listOf(
             ScoreInfo(
                 ScoreRule.ScoreRuleTrigger.MaxScoreRule(2u),
+                mapOf(),
                 listOf(
                     ScoreData(0, 0, listOf(1)),
                     ScoreData(0, 0, listOf(20)),
@@ -91,6 +93,7 @@ class QSCScoreboardManagerTest {
         sut.intervalList = listOf(
             ScoreInfo(
                 ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2u),
+                mapOf(),
                 listOf(
                     ScoreData(0, 0, listOf(1)),
                     ScoreData(0, 0, listOf(1)),

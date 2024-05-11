@@ -3,6 +3,8 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import org.junit.Assert
 import org.junit.Before
@@ -27,6 +29,12 @@ class QSCScoreboardLoaderTest {
         Assert.assertEquals(ScoreboardType.BASKETBALL, exampleDefault.scoreboardType)
         Assert.assertTrue(exampleDefault.scoreCarriesOver)
         Assert.assertEquals(4, exampleDefault.intervalList.size)
+        val scoreInfo1 = exampleDefault.intervalList[0].scoreInfo
+        Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.DEUCE_ADVANTAGE, 3),scoreInfo1.scoreRule)
+        Assert.assertEquals("0",scoreInfo1.scoreMapping?.get("0"))
+        Assert.assertEquals("15",scoreInfo1.scoreMapping?.get("1"))
+        Assert.assertEquals("30",scoreInfo1.scoreMapping?.get("2"))
+        Assert.assertEquals("40",scoreInfo1.scoreMapping?.get("3"))
     }
 
     @Test

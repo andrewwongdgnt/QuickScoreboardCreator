@@ -1,8 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.BaseData
-
-data class ScoreInfo<T: BaseData<Int>>(
+data class ScoreInfo(
     val scoreRule: ScoreRule,
-    val dataList: List<T>
+    val scoreToDisplayScoreMap: Map<Int, String>,
+    val dataList: List<ScoreData>
 )

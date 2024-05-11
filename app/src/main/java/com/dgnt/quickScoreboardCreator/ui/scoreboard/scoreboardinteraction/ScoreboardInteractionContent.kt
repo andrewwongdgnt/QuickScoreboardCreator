@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -22,7 +20,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.TeamSelectedData
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.DefaultScoreContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.ScoreControl
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.TwoScoreDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerContent
@@ -72,29 +71,27 @@ private fun ScoreboardInteractionInnerContent(
 
     val currentTeamSize = incrementList.size
     if (currentTeamSize == 2) {
-        Row {
-            DefaultScoreContent(
-                true,
-                (displayedScoreInfo.displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
-                incrementList[0],
-                onEvent,
-                modifier = Modifier.weight(1f)
+        val spacing = 10.dp
+        Row (
+            modifier = Modifier.padding(spacing)
+        ){
+            ScoreControl(
+                incrementList = incrementList[0],
+                onIncrement = { index, positive ->
+                    onEvent(ScoreboardInteractionEvent.UpdateScore(0, index, positive))
+                }
             )
-            val dividerColor = MaterialTheme.colorScheme.onBackground
-            HorizontalDivider(
-                color = dividerColor,
-                modifier = Modifier
-                    .padding(horizontal = 6.dp)
-                    .width(40.dp)
-                    .align(Alignment.CenterVertically),
-                thickness = 20.dp
+            Spacer(modifier = Modifier.width(spacing))
+            TwoScoreDisplay(
+                modifier = Modifier.weight(1f),
+                displayedScoreInfo
             )
-            DefaultScoreContent(
-                false,
-                (displayedScoreInfo.displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display ?: "",
-                incrementList[1],
-                onEvent,
-                modifier = Modifier.weight(1f)
+            Spacer(modifier = Modifier.width(spacing))
+            ScoreControl(
+                incrementList = incrementList[1],
+                onIncrement = { index, positive ->
+                    onEvent(ScoreboardInteractionEvent.UpdateScore(1, index, positive))
+                }
             )
         }
         Box(
@@ -143,7 +140,7 @@ private fun `2 Teams with long names`() =
         emptyFlow(),
         {},
         listOf(
-            listOf(1, 2, 23),
+            listOf(1, 2, 2),
             listOf(1, 2, 3),
         ),
         listOf(
@@ -178,9 +175,59 @@ private fun `2 Teams with short names`() =
         DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
-                DisplayedScore.CustomDisplayedScore("21"),
+                DisplayedScore.CustomDisplayedScore("261"),
             ),
             DisplayedScore.Blank
+        ),
+        TimeData(12, 2, 4),
+        false,
+    ) {}
+
+@PreviewScreenSizes
+@Composable
+private fun `Adv`() =
+    ScoreboardInteractionInnerContent(
+        emptyFlow(),
+        {},
+        listOf(
+            listOf(1, 2, 23),
+            listOf(1, 2, 3),
+        ),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
+        ),
+        DisplayedScoreInfo(
+            listOf(
+                DisplayedScore.Advantage,
+                DisplayedScore.Blank,
+            ),
+            DisplayedScore.Blank
+        ),
+        TimeData(12, 2, 4),
+        false,
+    ) {}
+
+@PreviewScreenSizes
+@Composable
+private fun `Deuce`() =
+    ScoreboardInteractionInnerContent(
+        emptyFlow(),
+        {},
+        listOf(
+            listOf(1, 2, 23),
+            listOf(1, 2, 3),
+        ),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
+        ),
+        DisplayedScoreInfo(
+            listOf(
+                DisplayedScore.Blank,
+                DisplayedScore.Blank,
+            ),
+            DisplayedScore.Deuce
         ),
         TimeData(12, 2, 4),
         false,

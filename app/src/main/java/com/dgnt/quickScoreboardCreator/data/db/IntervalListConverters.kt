@@ -9,16 +9,16 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 
 class IntervalListConverters {
     @TypeConverter
-    fun fromJson(json: String): List<Pair<ScoreInfo<ScoreData>, IntervalData>> {
+    fun fromJson(json: String): List<Pair<ScoreInfo, IntervalData>> {
         return try {
-            GsonProvider.gson.fromJson<ArrayList<Pair<ScoreInfo<ScoreData>, IntervalData>>>(json)
+            GsonProvider.gson.fromJson<ArrayList<Pair<ScoreInfo, IntervalData>>>(json)
         } catch (e: Exception) {
             emptyList()
         }
     }
 
     @TypeConverter
-    fun toJson(value: List<Pair<ScoreInfo<ScoreData>, IntervalData>>): String {
+    fun toJson(value: List<Pair<ScoreInfo, IntervalData>>): String {
         return GsonProvider.gson.toJson(value)
     }
 }

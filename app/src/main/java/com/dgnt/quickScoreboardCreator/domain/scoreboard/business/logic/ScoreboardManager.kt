@@ -2,14 +2,13 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 
 interface ScoreboardManager {
 
     var scoreCarriesOver: Boolean
-    var intervalList: List<Pair<ScoreInfo<ScoreData>, IntervalData>>
+    var intervalList: List<Pair<ScoreInfo, IntervalData>>
     var currentIntervalIndex: Int
     val incrementList: List<List<Int>>
 
@@ -17,7 +16,6 @@ interface ScoreboardManager {
     fun getScores(): DisplayedScoreInfo
     fun resetCurrentScore(scoreIndex: Int)
     fun resetCurrentScores()
-    fun provideTransformMap(map: Map<Int, String>)
     fun proceedToNextInterval()
     fun setTime(value:Long)
     fun getInitialTime(): Long

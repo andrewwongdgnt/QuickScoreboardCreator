@@ -8,6 +8,8 @@
     <string name="hockey_description">Hockey description</string>
     <string name="spikeball">Spikeball</string>
     <string name="spikeball_description">Spikeball description</string>
+    <string name="tennis">Tennis</string>
+    <string name="tennis_description">Tennis description</string>
     <!-- Scoreboard Details -->
     <string name="scoreboardDetailsTitle">Scoreboard details</string>
     <string name="scoreCarriesOver">Do the scores carry over to next round</string>
@@ -39,6 +41,8 @@
     <string name="contactNavTitle">Contact</string>
     <!-- Scoreboard Interaction -->
     <string name="unselectedTeamTitle">Select a team</string>
+    <string name="advantageDisplay">ADV</string>
+    <string name="deuceDisplay">DEUCE</string>
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->

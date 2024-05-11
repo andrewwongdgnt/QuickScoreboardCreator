@@ -3,7 +3,6 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
@@ -13,7 +12,6 @@ import kotlin.math.abs
 
 class QSCScoreboardManager : ScoreboardManager {
 
-    private var scoreToDisplayScoreMap: Map<Int, String> = mapOf()
 
     private val scoreboard: Scoreboard =
         Scoreboard(
@@ -28,7 +26,7 @@ class QSCScoreboardManager : ScoreboardManager {
             scoreboard.scoreCarriesOver = value
         }
 
-    override var intervalList: List<Pair<ScoreInfo<ScoreData>, IntervalData>>
+    override var intervalList: List<Pair<ScoreInfo, IntervalData>>
         get() = scoreboard.intervalList
         set(value) {
             scoreboard.intervalList = value
@@ -90,7 +88,7 @@ class QSCScoreboardManager : ScoreboardManager {
             else
                 DisplayedScoreInfo(listOf(DisplayedScore.Blank, DisplayedScore.Advantage), DisplayedScore.Blank)
         }
-        val mappedScores = transform(scoreInfo.dataList.map { it.current }).map { DisplayedScore.CustomDisplayedScore(it) }
+        val mappedScores = transform(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
         return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
     }
 
@@ -102,10 +100,6 @@ class QSCScoreboardManager : ScoreboardManager {
         (0 until currentTeamSize).forEach {
             resetCurrentScore(it)
         }
-    }
-
-    override fun provideTransformMap(map: Map<Int, String>) {
-        scoreToDisplayScoreMap = map
     }
 
     override fun proceedToNextInterval() {
@@ -122,15 +116,16 @@ class QSCScoreboardManager : ScoreboardManager {
     override fun setTime(value: Long) {
         currentIntervalData.current = value
     }
+
     override fun getInitialTime() =
         currentIntervalData.initial
 
     override fun isTimeIncreasing() =
         currentIntervalData.increasing
 
-    private fun transform(list: List<Int>) =
-        list.map {
-            scoreToDisplayScoreMap[it] ?: it.toString()
+    private fun transform(scoreInfo: ScoreInfo) =
+        scoreInfo.dataList.map { it.current }.map {
+            scoreInfo.scoreToDisplayScoreMap[it] ?: it.toString()
         }
 
 
