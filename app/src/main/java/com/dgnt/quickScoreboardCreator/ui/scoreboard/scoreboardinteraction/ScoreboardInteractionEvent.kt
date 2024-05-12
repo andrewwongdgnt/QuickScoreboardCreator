@@ -19,4 +19,6 @@ sealed class ScoreboardInteractionEvent {
     data class SetTeam(
         val teamSelectedData: TeamSelectedData
     ) : ScoreboardInteractionEvent()
+
+    data object EditInterval : ScoreboardInteractionEvent()
 }

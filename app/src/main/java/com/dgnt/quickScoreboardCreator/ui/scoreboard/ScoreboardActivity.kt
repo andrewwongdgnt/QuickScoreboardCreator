@@ -26,13 +26,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.common.util.getEnumExtra
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.HAS_MAX_TIME
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.INITIAL_TIME_VALUE
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCORE_INDEX
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIME_VALUE
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
+import com.dgnt.quickScoreboardCreator.ui.common.Routes.INTERVAL_EDITOR
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_INTERACTION
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_PICKER
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
@@ -78,6 +83,7 @@ class ScoreboardActivity : ComponentActivity() {
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(route = "$TEAM_PICKER/${uiEvent.scoreIndex}")
+                                            is UiEvent.IntervalEditor -> navController.commonNavigate(route = "$INTERVAL_EDITOR/${uiEvent.currentTimeValue}/${uiEvent.initialTimeValue}/${uiEvent.hasMax}")
                                             else -> Unit
                                         }
 
@@ -104,6 +110,43 @@ class ScoreboardActivity : ComponentActivity() {
 
                                             is UiEvent.TeamPicked -> {
                                                 viewModel.teamSelectedData = TeamSelectedData(uiEvent.scoreIndex, uiEvent.teamId)
+                                                navController.popBackStack()
+                                            }
+
+                                            else -> Unit
+                                        }
+                                    },
+                                )
+
+                            }
+                            dialog(
+                                dialogProperties = DialogProperties(
+                                    usePlatformDefaultWidth = false
+                                ),
+                                route = "$INTERVAL_EDITOR/{$TIME_VALUE}/{$INITIAL_TIME_VALUE}/{$HAS_MAX_TIME}",
+                                arguments = listOf(
+                                    navArgument(name = TIME_VALUE) {
+                                        type = NavType.LongType
+                                        defaultValue = 0
+                                    },
+                                    navArgument(name = INITIAL_TIME_VALUE) {
+                                        type = NavType.LongType
+                                        defaultValue = 0
+                                    },
+                                    navArgument(name = HAS_MAX_TIME) {
+                                        type = NavType.BoolType
+                                        defaultValue = false
+                                    }
+                                )
+                            ) { entry ->
+                                val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
+                                IntervalEditorDialogContent(
+                                    onUiEvent = { uiEvent ->
+                                        when (uiEvent) {
+                                            UiEvent.Done -> navController.popBackStack()
+
+                                            is UiEvent.IntervalEdited -> {
+                                                viewModel.timeEdited = uiEvent.timeValue
                                                 navController.popBackStack()
                                             }
 

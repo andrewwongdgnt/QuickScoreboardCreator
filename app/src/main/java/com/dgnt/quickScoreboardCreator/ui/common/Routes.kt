@@ -11,4 +11,5 @@ object Routes {
     // Scoreboard
     const val SCOREBOARD_INTERACTION = "scoreboard_interaction"
     const val TEAM_PICKER = "team_picker"
+    const val INTERVAL_EDITOR = "interval_editor"
 }

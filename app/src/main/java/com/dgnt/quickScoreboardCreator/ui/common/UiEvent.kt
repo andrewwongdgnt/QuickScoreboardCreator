@@ -11,6 +11,8 @@ sealed class UiEvent {
     data class TeamDetails(val id: Int? = null) : UiEvent()
     data class TeamPicker(val scoreIndex: Int) : UiEvent()
     data class TeamPicked(val scoreIndex: Int, val teamId: Int) : UiEvent()
+    data class IntervalEditor(val currentTimeValue: Long, val initialTimeValue: Long, val hasMax: Boolean) : UiEvent()
+    data class IntervalEdited(val timeValue: Long) : UiEvent()
     sealed class ShowSnackbar(
         open val message: Int,
         open val action: Int? = null

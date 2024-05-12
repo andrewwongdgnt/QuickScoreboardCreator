@@ -26,7 +26,7 @@ fun ScoreControl(
 
         incrementList.forEachIndexed { index, i ->
             ScoringButton(
-                buttonModifier = Modifier.padding(0.dp, 10.dp),
+                buttonModifier = Modifier.padding(vertical = 10.dp),
                 number = i,
                 index = index,
                 onIncrement = onIncrement

@@ -116,7 +116,6 @@ private fun ScoreboardInteractionInnerContent(
                 modifier = Modifier
                     .align(Alignment.TopStart)
             )
-
             Column(
                 modifier = Modifier
                     .align(Alignment.TopCenter),
@@ -124,6 +123,7 @@ private fun ScoreboardInteractionInnerContent(
             ) {
                 TimerDisplayContent(
                     timeData = timeData,
+                    onEvent = onEvent,
                 )
                 IntervalDisplayContent(
                     modifier = Modifier,

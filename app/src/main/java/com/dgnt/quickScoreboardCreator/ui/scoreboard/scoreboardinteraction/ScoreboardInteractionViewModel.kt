@@ -172,6 +172,12 @@ class ScoreboardInteractionViewModel @Inject constructor(
                     }
                 }
             }
+
+            ScoreboardInteractionEvent.EditInterval -> {
+                timerJob?.cancel()
+                timerInProgress = false
+                sendUiEvent(UiEvent.IntervalEditor(timeValue, scoreboardManager.getInitialTime(), !scoreboardManager.isTimeIncreasing()))
+            }
         }
     }
 
