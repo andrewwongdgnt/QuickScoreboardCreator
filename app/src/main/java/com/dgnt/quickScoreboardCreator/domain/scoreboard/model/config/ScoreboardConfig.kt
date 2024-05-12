@@ -7,9 +7,9 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import kotlin.math.abs
 
 abstract class ScoreboardConfig {
-    abstract val type: String
-    abstract val scoreCarriesOver: Boolean
-    abstract val intervalList: List<IntervalListConfig>
+    val type: String = ""
+    val scoreCarriesOver: Boolean = false
+    val intervalList: List<IntervalListConfig> = emptyList()
 }
 
 data class IntervalListConfig(
