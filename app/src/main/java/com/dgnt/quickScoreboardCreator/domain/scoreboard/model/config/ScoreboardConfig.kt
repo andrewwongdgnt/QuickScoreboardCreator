@@ -9,10 +9,10 @@ import kotlin.math.abs
 abstract class ScoreboardConfig {
     val type: String = ""
     val scoreCarriesOver: Boolean = false
-    val intervalList: List<IntervalListConfig> = emptyList()
+    val intervalList: List<IntervalConfig> = emptyList()
 }
 
-data class IntervalListConfig(
+data class IntervalConfig(
     val scoreInfo: ScoreInfoConfig,
     val intervalData: IntervalDataConfig
 )
