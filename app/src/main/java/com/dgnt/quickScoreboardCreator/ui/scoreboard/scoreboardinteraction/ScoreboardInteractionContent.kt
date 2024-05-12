@@ -24,7 +24,8 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.TwoScoreDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerControlContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerDisplayContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -71,22 +72,23 @@ private fun ScoreboardInteractionInnerContent(
 
     val currentTeamSize = incrementList.size
     if (currentTeamSize == 2) {
-        val spacing = 10.dp
-        Row (
-            modifier = Modifier.padding(spacing)
-        ){
+        val layoutSpacing = 10.dp
+        Row(
+            modifier = Modifier.padding(layoutSpacing)
+        ) {
+            val spacerWidth = 10.dp
             ScoreControl(
                 incrementList = incrementList[0],
                 onIncrement = { index, positive ->
                     onEvent(ScoreboardInteractionEvent.UpdateScore(0, index, positive))
                 }
             )
-            Spacer(modifier = Modifier.width(spacing))
+            Spacer(modifier = Modifier.width(spacerWidth))
             TwoScoreDisplay(
                 modifier = Modifier.weight(1f),
                 displayedScoreInfo
             )
-            Spacer(modifier = Modifier.width(spacing))
+            Spacer(modifier = Modifier.width(spacerWidth))
             ScoreControl(
                 incrementList = incrementList[1],
                 onIncrement = { index, positive ->
@@ -96,11 +98,17 @@ private fun ScoreboardInteractionInnerContent(
         }
         Box(
             modifier = Modifier.fillMaxSize()
+                .padding(layoutSpacing)
         ) {
-            TimerContent(
-                timerInProgress,
-                timeData,
-                onEvent,
+            TimerControlContent(
+                timerInProgress = timerInProgress,
+                onEvent = onEvent,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+            )
+
+            TimerDisplayContent(
+                timeData = timeData,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
             )
@@ -109,7 +117,6 @@ private fun ScoreboardInteractionInnerContent(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
             ) {
                 TeamDisplayContent(
                     teamDisplay = teamList[0],
