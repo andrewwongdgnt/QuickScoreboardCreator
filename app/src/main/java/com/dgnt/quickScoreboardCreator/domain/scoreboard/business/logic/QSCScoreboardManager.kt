@@ -123,6 +123,10 @@ class QSCScoreboardManager : ScoreboardManager {
     override fun isTimeIncreasing() =
         currentIntervalData.increasing
 
+    override fun getCurrentIntervalLabelInfo() =
+        currentIntervalData.name to currentIntervalData.intervalType
+
+
     private fun transform(scoreInfo: ScoreInfo) =
         scoreInfo.dataList.map { it.current }.map {
             scoreInfo.scoreToDisplayScoreMap[it] ?: it.toString()

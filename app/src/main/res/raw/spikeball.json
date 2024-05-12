@@ -29,7 +29,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "type": "DEFAULT",
+        "intervalType": "GAME"
       }
     },
     {
@@ -58,7 +60,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "type": "DEFAULT",
+        "intervalType": "GAME"
       }
     },
     {
@@ -87,7 +91,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "type": "DEFAULT",
+        "intervalType": "GAME"
       }
     }
   ]

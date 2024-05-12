@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Quick Scoreboard Creator</string>
     <string name="blank" translatable="false"/>
+    <!-- Interval Name -->
+    <string name="period">Period</string>
+    <string name="quarter">Quarter</string>
+    <string name="game">Game</string>
+    <string name="set">Set</string>
+    <string name="round">Round</string>
     <!-- Default Scoreboard -->
     <string name="basketball">Basketball</string>
     <string name="basketball_description">Basketball description</string>
@@ -43,6 +49,7 @@
     <string name="unselectedTeamTitle">Select a team</string>
     <string name="advantageDisplay">ADV</string>
     <string name="deuceDisplay">DEUCE</string>
+    <string name="intervalLabel">%1$s %2$d</string>
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->

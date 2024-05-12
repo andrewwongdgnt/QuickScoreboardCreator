@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
@@ -24,6 +26,7 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.TwoScoreDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.IntervalDisplayContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerControlContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerDisplayContent
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +44,8 @@ fun ScoreboardInteractionContent(
     val incrementList = viewModel.incrementList
     val displayedScoreInfo = viewModel.displayedScoreInfo
     val teamList = viewModel.teamList
+    val labelInfo = viewModel.labelInfo
+    val currentInterval = viewModel.currentInterval
     viewModel.onEvent(ScoreboardInteractionEvent.SetTeam(teamSelectedData))
     ScoreboardInteractionInnerContent(
         viewModel.uiEvent,
@@ -50,6 +55,8 @@ fun ScoreboardInteractionContent(
         displayedScoreInfo,
         timeData,
         timerInProgress,
+        labelInfo,
+        currentInterval,
         viewModel::onEvent
     )
 }
@@ -63,6 +70,8 @@ private fun ScoreboardInteractionInnerContent(
     displayedScoreInfo: DisplayedScoreInfo,
     timeData: TimeData,
     timerInProgress: Boolean,
+    labelInfo: Pair<String?, IntervalType?>,
+    currentInterval: Int,
     onEvent: (ScoreboardInteractionEvent) -> Unit
 ) {
 
@@ -97,7 +106,8 @@ private fun ScoreboardInteractionInnerContent(
             )
         }
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(layoutSpacing)
         ) {
             TimerControlContent(
@@ -107,11 +117,21 @@ private fun ScoreboardInteractionInnerContent(
                     .align(Alignment.TopStart)
             )
 
-            TimerDisplayContent(
-                timeData = timeData,
+            Column(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-            )
+                    .align(Alignment.TopCenter),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TimerDisplayContent(
+                    timeData = timeData,
+                )
+                IntervalDisplayContent(
+                    modifier = Modifier,
+                    labelInfo = labelInfo,
+                    currentInterval = currentInterval
+                )
+
+            }
 
             Row(
                 modifier = Modifier
@@ -163,6 +183,8 @@ private fun `2 Teams with long names`() =
         ),
         TimeData(12, 2, 4),
         false,
+        Pair("P", null),
+        1
     ) {}
 
 @PreviewScreenSizes
@@ -188,6 +210,8 @@ private fun `2 Teams with short names`() =
         ),
         TimeData(12, 2, 4),
         false,
+        Pair(null, IntervalType.QUARTER),
+        1
     ) {}
 
 @PreviewScreenSizes
@@ -213,6 +237,8 @@ private fun `Adv`() =
         ),
         TimeData(12, 2, 4),
         false,
+        Pair(null, IntervalType.SET),
+        2
     ) {}
 
 @PreviewScreenSizes
@@ -238,4 +264,6 @@ private fun `Deuce`() =
         ),
         TimeData(12, 2, 4),
         false,
+        Pair(null, IntervalType.GAME),
+        3
     ) {}

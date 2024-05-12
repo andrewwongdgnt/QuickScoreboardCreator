@@ -2,6 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
 import android.content.res.Resources
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -11,6 +12,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
@@ -44,6 +46,11 @@ class ScoreboardInteractionViewModel @Inject constructor(
         private set
     var displayedScoreInfo by mutableStateOf(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
         private set
+
+    var labelInfo by mutableStateOf(Pair<String?, IntervalType?>(null, null))
+        private set
+
+    var currentInterval by mutableIntStateOf(1)
 
     var teamList by mutableStateOf(emptyList<TeamDisplay>())
 
@@ -98,6 +105,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
             incrementList = scoreboardManager.incrementList
             displayedScoreInfo = scoreboardManager.getScores()
             timeValue = scoreboardManager.getInitialTime()
+            labelInfo = scoreboardManager.getCurrentIntervalLabelInfo()
+            currentInterval = scoreboardManager.currentIntervalIndex + 1
         }
 
     }

@@ -30,7 +30,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "type": "CUSTOM",
+        "name": "Game"
       }
     },
     {
@@ -59,7 +61,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "type": "CUSTOM",
+        "name": "Game"
       }
     },
     {
@@ -88,7 +92,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "type": "CUSTOM",
+        "name": "Game"
       }
     }
   ]

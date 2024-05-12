@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app
 
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomIntervalDataConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleConfig
@@ -47,6 +48,8 @@ class QSCScoreboardLoaderTest {
         Assert.assertEquals("Covid sport", exampleCustom.description)
         Assert.assertFalse(exampleCustom.scoreCarriesOver)
         Assert.assertEquals(3, exampleCustom.intervalList.size)
+        val customIntervalDataConfig = exampleCustom.intervalList[0].intervalData as CustomIntervalDataConfig
+        Assert.assertEquals("Game", customIntervalDataConfig.name)
     }
 
 

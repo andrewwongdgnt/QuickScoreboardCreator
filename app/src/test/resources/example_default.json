@@ -35,7 +35,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "type": "DEFAULT",
+        "intervalType": "QUARTER"
       }
     },
     {
@@ -68,7 +70,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false
+        "increasing": false,
+        "type": "DEFAULT",
+        "intervalType": "QUARTER"
       }
     },
     {
@@ -101,7 +105,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false
+        "increasing": false,
+        "type": "DEFAULT",
+        "intervalType": "QUARTER"
       }
     },
     {
@@ -134,7 +140,9 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false
+        "increasing": false,
+        "type": "DEFAULT",
+        "intervalType": "QUARTER"
       }
     }
   ]
