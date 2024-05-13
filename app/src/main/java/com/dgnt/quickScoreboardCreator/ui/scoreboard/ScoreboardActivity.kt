@@ -26,12 +26,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.common.util.getEnumExtra
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.HAS_MAX_TIME
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.INITIAL_TIME_VALUE
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCORE_INDEX
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIME_VALUE
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.INDEX
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.VALUE
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.INTERVAL_EDITOR
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_INTERACTION
 import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_PICKER
@@ -83,7 +81,7 @@ class ScoreboardActivity : ComponentActivity() {
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(route = "$TEAM_PICKER/${uiEvent.scoreIndex}")
-                                            is UiEvent.IntervalEditor -> navController.commonNavigate(route = "$INTERVAL_EDITOR/${uiEvent.currentTimeValue}/${uiEvent.initialTimeValue}/${uiEvent.hasMax}")
+                                            is UiEvent.IntervalEditor -> navController.commonNavigate(route = "$INTERVAL_EDITOR/${uiEvent.currentTimeValue}/${uiEvent.intervalIndex}?$ID=${uiEvent.id}&$TYPE=${uiEvent.scoreboardType}")
                                             else -> Unit
                                         }
 
@@ -94,9 +92,9 @@ class ScoreboardActivity : ComponentActivity() {
                                 dialogProperties = DialogProperties(
                                     usePlatformDefaultWidth = false
                                 ),
-                                route = "$TEAM_PICKER/{$SCORE_INDEX}",
+                                route = "$TEAM_PICKER/{$INDEX}",
                                 arguments = listOf(
-                                    navArgument(name = SCORE_INDEX) {
+                                    navArgument(name = INDEX) {
                                         type = NavType.IntType
                                         defaultValue = 0
                                     }
@@ -123,19 +121,23 @@ class ScoreboardActivity : ComponentActivity() {
                                 dialogProperties = DialogProperties(
                                     usePlatformDefaultWidth = false
                                 ),
-                                route = "$INTERVAL_EDITOR/{$TIME_VALUE}/{$INITIAL_TIME_VALUE}/{$HAS_MAX_TIME}",
+                                route = "$INTERVAL_EDITOR/{$VALUE}/{$INDEX}?$ID={$ID}&$TYPE={$TYPE}",
                                 arguments = listOf(
-                                    navArgument(name = TIME_VALUE) {
+                                    navArgument(name = VALUE) {
                                         type = NavType.LongType
                                         defaultValue = 0
                                     },
-                                    navArgument(name = INITIAL_TIME_VALUE) {
-                                        type = NavType.LongType
+                                    navArgument(name = INDEX) {
+                                        type = NavType.IntType
                                         defaultValue = 0
                                     },
-                                    navArgument(name = HAS_MAX_TIME) {
-                                        type = NavType.BoolType
-                                        defaultValue = false
+                                    navArgument(name = ID) {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    },
+                                    navArgument(name = TYPE) {
+                                        type = NavType.EnumType(ScoreboardType::class.java)
+                                        defaultValue = ScoreboardType.NONE
                                     }
                                 )
                             ) { entry ->

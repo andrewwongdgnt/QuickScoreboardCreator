@@ -59,7 +59,7 @@ fun TimerDisplayContent(
 }
 
 private fun TimeData.formatTime(): String {
-    return if (minute == 0L)
+    return if (minute == 0)
         String.format("%d.%d", second, centiSecond)
     else
         String.format("%02d:%02d", minute, second)

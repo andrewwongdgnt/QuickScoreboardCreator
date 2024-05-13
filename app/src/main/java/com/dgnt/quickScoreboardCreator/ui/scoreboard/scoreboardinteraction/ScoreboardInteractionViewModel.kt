@@ -57,7 +57,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private var timeValue = 0L
         set(value) {
             val newValue = 0L.coerceAtLeast(value)
-            timeData = timeTransformer(newValue)
+            timeData = timeTransformer.toTimeData(newValue)
             field = newValue
         }
 
@@ -68,14 +68,19 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
+    private var id: Int? = null
+    private var scoreboardType: ScoreboardType? = null
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
+            this.id = id
         } ?: savedStateHandle.get<ScoreboardType>(TYPE)?.let {
             initWithScoreboardType(it)
+            this.scoreboardType = it
         }
 
         teamList = (0 until scoreboardManager.incrementList.size).map { TeamDisplay.UnSelectedTeamDisplay }
@@ -176,7 +181,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             ScoreboardInteractionEvent.EditInterval -> {
                 timerJob?.cancel()
                 timerInProgress = false
-                sendUiEvent(UiEvent.IntervalEditor(timeValue, scoreboardManager.getInitialTime(), !scoreboardManager.isTimeIncreasing()))
+                sendUiEvent(UiEvent.IntervalEditor(timeValue, scoreboardManager.currentIntervalIndex, id, scoreboardType))
             }
         }
     }

@@ -138,7 +138,6 @@ class MainActivity : ComponentActivity() {
                     navArgument(name = TYPE) {
                         type = NavType.EnumType(ScoreboardType::class.java)
                         defaultValue = ScoreboardType.NONE
-
                     }
                 )
             ) {

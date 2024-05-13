@@ -31,7 +31,7 @@ class TeamPickerViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        savedStateHandle.get<Int>(Arguments.SCORE_INDEX)?.let {
+        savedStateHandle.get<Int>(Arguments.INDEX)?.let {
             scoreIndex = it
         }
     }
