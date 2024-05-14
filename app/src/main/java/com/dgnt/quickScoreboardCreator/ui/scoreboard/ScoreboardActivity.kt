@@ -75,9 +75,11 @@ class ScoreboardActivity : ComponentActivity() {
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
-                                val teamSelectedData = viewModel.teamSelectedData
+                                val updatedTeamData = viewModel.updatedTeamData
+                                val updatedIntervalData = viewModel.updatedIntervalData
                                 ScoreboardInteractionContent(
-                                    teamSelectedData,
+                                    updatedTeamData,
+                                    updatedIntervalData,
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(route = "$TEAM_PICKER/${uiEvent.scoreIndex}")
@@ -106,8 +108,8 @@ class ScoreboardActivity : ComponentActivity() {
                                         when (uiEvent) {
                                             UiEvent.Done -> navController.popBackStack()
 
-                                            is UiEvent.TeamPicked -> {
-                                                viewModel.teamSelectedData = TeamSelectedData(uiEvent.scoreIndex, uiEvent.teamId)
+                                            is UiEvent.TeamUpdated -> {
+                                                viewModel.updatedTeamData = UpdatedTeamData(uiEvent.scoreIndex, uiEvent.teamId)
                                                 navController.popBackStack()
                                             }
 
@@ -147,8 +149,8 @@ class ScoreboardActivity : ComponentActivity() {
                                         when (uiEvent) {
                                             UiEvent.Done -> navController.popBackStack()
 
-                                            is UiEvent.IntervalEdited -> {
-                                                viewModel.timeEdited = uiEvent.timeValue
+                                            is UiEvent.IntervalUpdated -> {
+                                                viewModel.updatedIntervalData = UpdatedIntervalData(uiEvent.timeValue, uiEvent.intervalIndex)
                                                 navController.popBackStack()
                                             }
 

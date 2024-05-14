@@ -42,7 +42,7 @@ class TeamPickerViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Done)
 
             is TeamPickerEvent.OnTeamPicked ->
-                sendUiEvent(UiEvent.TeamPicked(scoreIndex, event.teamId))
+                sendUiEvent(UiEvent.TeamUpdated(scoreIndex, event.teamId))
         }
     }
 

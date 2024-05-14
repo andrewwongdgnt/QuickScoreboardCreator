@@ -42,7 +42,7 @@ fun TimerDisplayContent(
             modifier = Modifier
                 .size(editIconSize)
                 .clickable {
-                    onEvent(ScoreboardInteractionEvent.EditInterval)
+                    onEvent(ScoreboardInteractionEvent.UpdateInterval)
                 }
         )
         Text(

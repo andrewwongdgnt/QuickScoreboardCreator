@@ -8,12 +8,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalType
 
 @Composable
 fun IntervalDisplayContent(
     modifier: Modifier = Modifier,
-    labelInfo: Pair<String?, IntervalType?>,
+    labelInfo: Pair<String?, Int?>,
     currentInterval: Int,
 ) {
     Text(
@@ -26,8 +25,8 @@ fun IntervalDisplayContent(
 }
 
 @Composable
-private fun Pair<String?, IntervalType?>.format(): String {
-    return first ?: second?.nameRes?.let {
+private fun Pair<String?, Int?>.format(): String {
+    return first ?: second?.let {
         stringResource(id = it)
     } ?: ""
 }
@@ -35,7 +34,7 @@ private fun Pair<String?, IntervalType?>.format(): String {
 @Preview(showBackground = true)
 @Composable
 private fun `Default 1`() =
-    IntervalDisplayContent(labelInfo = Pair(null, IntervalType.GAME), currentInterval = 1)
+    IntervalDisplayContent(labelInfo = Pair(null, R.string.game), currentInterval = 1)
 
 @Preview(showBackground = true)
 @Composable

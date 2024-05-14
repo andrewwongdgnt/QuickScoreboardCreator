@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.TeamSelectedData
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 
 sealed class ScoreboardInteractionEvent {
 
@@ -16,9 +17,12 @@ sealed class ScoreboardInteractionEvent {
     data class UpdateTeam(
         val scoreIndex: Int
     ) : ScoreboardInteractionEvent()
-    data class SetTeam(
-        val teamSelectedData: TeamSelectedData
+    data class UpdatedTeam(
+        val updatedTeamData: UpdatedTeamData
     ) : ScoreboardInteractionEvent()
 
-    data object EditInterval : ScoreboardInteractionEvent()
+    data object UpdateInterval : ScoreboardInteractionEvent()
+    data class UpdatedInterval(
+        val updatedIntervalData: UpdatedIntervalData
+    ) : ScoreboardInteractionEvent()
 }

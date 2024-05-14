@@ -34,7 +34,7 @@ data class ScoreInfoConfig(
 
 data class ScoreRuleConfig(
     val type: ScoreRuleType,
-    val trigger: Int = 0
+    val trigger: Int
 ) {
     fun toScoreRule() =
         when (type) {
@@ -57,11 +57,15 @@ data class ScoreDataConfig(
         )
 }
 
-abstract class IntervalDataConfig(
-    val type: String = "",
+data class IntervalDataConfig(
     val current: Long = 0,
     val initial: Long = 0,
     val increasing: Boolean = false
 ) {
-    abstract fun toIntervalData(): IntervalData
+    fun toIntervalData() =
+        IntervalData(
+            current,
+            initial,
+            increasing
+        )
 }

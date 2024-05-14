@@ -29,9 +29,7 @@
       "intervalData": {
         "current": 1200000,
         "initial": 1200000,
-        "increasing": false,
-        "type": "DEFAULT",
-        "intervalType": "PERIOD"
+        "increasing": false
       }
     },
     {
@@ -60,9 +58,7 @@
       "intervalData": {
         "current": 1200000,
         "initial": 1200000,
-        "increasing": false,
-        "type": "DEFAULT",
-        "intervalType": "PERIOD"
+        "increasing": false
       }
     },
     {
@@ -91,9 +87,7 @@
       "intervalData": {
         "current": 1200000,
         "initial": 1200000,
-        "increasing": false,
-        "type": "DEFAULT",
-        "intervalType": "PERIOD"
+        "increasing": false
       }
     }
   ]

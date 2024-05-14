@@ -6,4 +6,5 @@ sealed class IntervalEditorEvent {
 
     data class OnMinuteChange(val value: String): IntervalEditorEvent()
     data class OnSecondChange(val value: String): IntervalEditorEvent()
+    data class OnIntervalChange(val value: String): IntervalEditorEvent()
 }

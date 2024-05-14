@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard
 
-data class TeamSelectedData (
+data class UpdatedTeamData (
     val scoreIndex: Int,
     val teamId: Int
 )

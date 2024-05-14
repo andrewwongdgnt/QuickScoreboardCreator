@@ -70,9 +70,7 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false,
-        "type": "DEFAULT",
-        "intervalType": "QUARTER"
+        "increasing": false
       }
     },
     {
@@ -105,9 +103,7 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false,
-        "type": "DEFAULT",
-        "intervalType": "QUARTER"
+        "increasing": false
       }
     },
     {
@@ -140,9 +136,7 @@
       "intervalData": {
         "current": 0,
         "initial": 0,
-        "increasing": false,
-        "type": "DEFAULT",
-        "intervalType": "QUARTER"
+        "increasing": false
       }
     }
   ]

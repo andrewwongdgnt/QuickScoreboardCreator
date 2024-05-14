@@ -2,6 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor
 
 import android.content.res.Resources
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -33,9 +34,14 @@ class IntervalEditorViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var currentTimeValue = 0L
-    private var intervalIndex = 0
+    var interval by mutableIntStateOf(1)
+        private set
+
+    var labelInfo by mutableStateOf(Pair<String?, Int?>(null, null))
+        private set
 
     var timeData by mutableStateOf(TimeData(0, 0, 0))
+        private set
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -46,7 +52,7 @@ class IntervalEditorViewModel @Inject constructor(
             timeData = timeTransformer.toTimeData(it)
         }
         savedStateHandle.get<Int>(Arguments.INDEX)?.let {
-            intervalIndex = it
+            interval = it + 1
         }
         savedStateHandle.get<Int>(Arguments.ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
@@ -56,7 +62,7 @@ class IntervalEditorViewModel @Inject constructor(
         viewModelScope.launch {
             snapshotFlow { timeData }
                 .collect {
-                    currentTimeValue = timeTransformer.fromTimeData(timeData)
+                    currentTimeValue = timeTransformer.fromTimeData(it)
                 }
         }
     }
@@ -70,13 +76,12 @@ class IntervalEditorViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
+        labelInfo = null to scoreboardType.intervalLabelRes
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
 
-            it.intervalList[intervalIndex].intervalData.let { data ->
 
-            }
         }
     }
 
@@ -88,7 +93,7 @@ class IntervalEditorViewModel @Inject constructor(
 
             IntervalEditorEvent.OnConfirm -> {
 
-                sendUiEvent(UiEvent.Done)
+                sendUiEvent(UiEvent.IntervalUpdated(currentTimeValue, interval - 1))
             }
 
             is IntervalEditorEvent.OnMinuteChange -> {
@@ -100,6 +105,12 @@ class IntervalEditorViewModel @Inject constructor(
             is IntervalEditorEvent.OnSecondChange -> {
                 getIntValue(event.value)?.let { second ->
                     timeData = TimeData(timeData.minute, second, timeData.centiSecond)
+                }
+            }
+
+            is IntervalEditorEvent.OnIntervalChange -> {
+                getIntValue(event.value)?.let { interval ->
+                    this.interval = interval.coerceAtLeast(1)
                 }
             }
         }

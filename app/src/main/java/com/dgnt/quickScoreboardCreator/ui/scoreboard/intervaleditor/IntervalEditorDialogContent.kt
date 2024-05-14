@@ -5,7 +5,9 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
@@ -44,6 +46,8 @@ fun IntervalEditorDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         viewModel.timeData,
+        viewModel.interval,
+        viewModel.labelInfo,
         viewModel::onEvent,
         { viewModel.onEvent(IntervalEditorEvent.OnDismiss) },
         { viewModel.onEvent(IntervalEditorEvent.OnConfirm) }
@@ -56,6 +60,8 @@ private fun IntervalEditorInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     timeData: TimeData,
+    interval: Int,
+    labelInfo: Pair<String?, Int?>,
     onEvent: (IntervalEditorEvent) -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -92,10 +98,10 @@ private fun IntervalEditorInnerDialogContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val numberFieldWidth = 65.dp
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val numberFieldWidth = 65.dp
                     TextField(
                         value = timeData.minute.toString(),
                         onValueChange = {
@@ -129,11 +135,40 @@ private fun IntervalEditorInnerDialogContent(
                     )
 
                 }
+                Spacer(modifier = Modifier.height(24.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = labelInfo.format(),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+                    TextField(
+                        value = interval.toString(),
+                        onValueChange = {
+                            if (it.length <= 2)
+                                onEvent(IntervalEditorEvent.OnIntervalChange(it))
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
+                        textStyle = LocalTextStyle.current.copy(
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier.width(numberFieldWidth)
+                    )
+                }
             }
         }
     )
 }
 
+@Composable
+private fun Pair<String?, Int?>.format(): String {
+    return first ?: second?.let {
+        stringResource(id = it)
+    } ?: ""
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -142,6 +177,8 @@ private fun `12 minutes 8 seconds`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         timeData = TimeData(12, 8, 0),
+        interval = 1,
+        labelInfo = Pair(null, R.string.quarter),
         onEvent = {},
         onDismiss = {},
         onConfirm = {},

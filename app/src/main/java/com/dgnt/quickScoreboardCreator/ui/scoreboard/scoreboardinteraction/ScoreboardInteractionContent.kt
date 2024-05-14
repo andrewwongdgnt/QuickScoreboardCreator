@@ -15,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalType
+import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.TeamSelectedData
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.ScoreControl
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.TwoScoreDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
@@ -34,11 +35,25 @@ import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun ScoreboardInteractionContent(
-    teamSelectedData: TeamSelectedData,
+    updatedTeamData: UpdatedTeamData,
+    updatedIntervalData: UpdatedIntervalData,
     onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardInteractionViewModel = hiltViewModel()
 ) {
 
+    viewModel.onEvent(ScoreboardInteractionEvent.UpdatedTeam(updatedTeamData))
+    viewModel.onEvent(ScoreboardInteractionEvent.UpdatedInterval(updatedIntervalData))
+
+    ScoreboardInteractionVMDataContent(
+        onUiEvent,
+        viewModel
+    )
+}
+@Composable
+private fun ScoreboardInteractionVMDataContent(
+    onUiEvent: (UiEvent) -> Unit,
+    viewModel: ScoreboardInteractionViewModel
+) {
     val timeData = viewModel.timeData
     val timerInProgress = viewModel.timerInProgress
     val incrementList = viewModel.incrementList
@@ -46,7 +61,7 @@ fun ScoreboardInteractionContent(
     val teamList = viewModel.teamList
     val labelInfo = viewModel.labelInfo
     val currentInterval = viewModel.currentInterval
-    viewModel.onEvent(ScoreboardInteractionEvent.SetTeam(teamSelectedData))
+
     ScoreboardInteractionInnerContent(
         viewModel.uiEvent,
         onUiEvent,
@@ -70,7 +85,7 @@ private fun ScoreboardInteractionInnerContent(
     displayedScoreInfo: DisplayedScoreInfo,
     timeData: TimeData,
     timerInProgress: Boolean,
-    labelInfo: Pair<String?, IntervalType?>,
+    labelInfo: Pair<String?, Int?>,
     currentInterval: Int,
     onEvent: (ScoreboardInteractionEvent) -> Unit
 ) {
@@ -210,7 +225,7 @@ private fun `2 Teams with short names`() =
         ),
         TimeData(12, 2, 4),
         false,
-        Pair(null, IntervalType.QUARTER),
+        Pair(null, R.string.quarter),
         1
     ) {}
 
@@ -237,7 +252,7 @@ private fun `Adv`() =
         ),
         TimeData(12, 2, 4),
         false,
-        Pair(null, IntervalType.SET),
+        Pair(null, R.string.set),
         2
     ) {}
 
@@ -264,6 +279,6 @@ private fun `Deuce`() =
         ),
         TimeData(12, 2, 4),
         false,
-        Pair(null, IntervalType.GAME),
+        Pair(null, R.string.game),
         3
     ) {}
