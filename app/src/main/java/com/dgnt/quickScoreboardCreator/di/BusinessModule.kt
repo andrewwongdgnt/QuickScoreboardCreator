@@ -27,7 +27,6 @@ object BusinessModule {
         QSCScoreboardLoader(GsonProvider.gson)
 
     @Provides
-    @Singleton
     fun provideScoreboardManager(): ScoreboardManager =
         QSCScoreboardManager()
 

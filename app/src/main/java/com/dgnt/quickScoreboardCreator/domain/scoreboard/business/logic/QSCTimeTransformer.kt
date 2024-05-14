@@ -6,7 +6,7 @@ import org.joda.time.Duration
 class QSCTimeTransformer : TimeTransformer {
     override fun toTimeData(milli: Long): TimeData {
         val duration = Duration.millis(milli)
-        val minutes = duration.standardMinutes % 60
+        val minutes = duration.standardMinutes
         val seconds = duration.standardSeconds % 60
         val centiSeconds = (milli % 1000) / 100
         return TimeData(minutes.toInt(), seconds.toInt(), centiSeconds.toInt())

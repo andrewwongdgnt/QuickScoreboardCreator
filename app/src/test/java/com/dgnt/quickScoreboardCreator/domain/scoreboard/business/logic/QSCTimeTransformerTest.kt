@@ -64,4 +64,34 @@ class QSCTimeTransformerTest {
 
     }
 
+    @Test
+    fun test60Minutes() {
+
+        sut.toTimeData(60*60*1000).let {
+            Assert.assertEquals(60, it.minute)
+            Assert.assertEquals(0, it.second)
+            Assert.assertEquals(0, it.centiSecond)
+        }
+
+        sut.fromTimeData(TimeData(60,0,0)).let {
+            Assert.assertEquals(60*60*1000, it)
+        }
+
+    }
+
+    @Test
+    fun test120Minutes() {
+
+        sut.toTimeData(60*60*1000*2).let {
+            Assert.assertEquals(120, it.minute)
+            Assert.assertEquals(0, it.second)
+            Assert.assertEquals(0, it.centiSecond)
+        }
+
+        sut.fromTimeData(TimeData(120,0,0)).let {
+            Assert.assertEquals(60*60*1000*2, it)
+        }
+
+    }
+
 }

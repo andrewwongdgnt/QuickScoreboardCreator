@@ -126,9 +126,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
             dialog(
-                dialogProperties = DialogProperties(
-                    usePlatformDefaultWidth = false
-                ),
                 route = "$SCOREBOARD_DETAILS?$ID={$ID}&$TYPE={$TYPE}",
                 arguments = listOf(
                     navArgument(name = ID) {
@@ -162,9 +159,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
             dialog(
-                dialogProperties = DialogProperties(
-                    usePlatformDefaultWidth = false
-                ),
                 route = "$TEAM_DETAILS?$ID={$ID}",
                 arguments = listOf(
                     navArgument(name = ID) {

@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
@@ -45,9 +46,11 @@ fun IntervalEditorDialogContent(
     IntervalEditorInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
-        viewModel.timeData,
-        viewModel.interval,
+        viewModel.minuteString,
+        viewModel.secondString,
+        viewModel.intervalString,
         viewModel.labelInfo,
+        viewModel.errors,
         viewModel::onEvent,
         { viewModel.onEvent(IntervalEditorEvent.OnDismiss) },
         { viewModel.onEvent(IntervalEditorEvent.OnConfirm) }
@@ -59,9 +62,11 @@ fun IntervalEditorDialogContent(
 private fun IntervalEditorInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    timeData: TimeData,
-    interval: Int,
+    minuteString: String,
+    secondString: String,
+    intervalString: String,
     labelInfo: Pair<String?, Int?>,
+    errors: Set<IntervalEditorErrorType>,
     onEvent: (IntervalEditorEvent) -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -72,6 +77,10 @@ private fun IntervalEditorInnerDialogContent(
     }
 
     AlertDialog(
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            dismissOnClickOutside = false
+        ),
         onDismissRequest = onDismiss,
         title = {
             Text(
@@ -88,7 +97,8 @@ private fun IntervalEditorInnerDialogContent(
         },
         confirmButton = {
             Button(
-                onClick = onConfirm
+                onClick = onConfirm,
+                enabled = errors.isEmpty()
             ) {
                 Text(stringResource(id = android.R.string.ok))
             }
@@ -99,11 +109,19 @@ private fun IntervalEditorInnerDialogContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val numberFieldWidth = 65.dp
+                (errors.find { it is IntervalEditorErrorType.Time } as? IntervalEditorErrorType.Time)?.let { error ->
+                    Text(
+                        text = stringResource(id = R.string.invalidTimeMsg, TimeData(error.min, error.second, 0).formatTime()),
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
+                    )
+                }
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextField(
-                        value = timeData.minute.toString(),
+                        value = minuteString,
                         onValueChange = {
                             if (it.length <= 3)
                                 onEvent(IntervalEditorEvent.OnMinuteChange(it))
@@ -121,7 +139,7 @@ private fun IntervalEditorInnerDialogContent(
                         modifier = Modifier.padding(horizontal = 10.dp)
                     )
                     TextField(
-                        value = timeData.second.toString(),
+                        value = secondString,
                         onValueChange = {
                             if (it.length <= 2)
                                 onEvent(IntervalEditorEvent.OnSecondChange(it))
@@ -136,6 +154,13 @@ private fun IntervalEditorInnerDialogContent(
 
                 }
                 Spacer(modifier = Modifier.height(24.dp))
+                (errors.find { it is IntervalEditorErrorType.Interval } as? IntervalEditorErrorType.Interval)?.let { error ->
+                    Text(
+                        text = stringResource(id = R.string.invalidIntervalMsg, error.value),
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
+                    )
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -145,7 +170,7 @@ private fun IntervalEditorInnerDialogContent(
                         modifier = Modifier.padding(horizontal = 10.dp)
                     )
                     TextField(
-                        value = interval.toString(),
+                        value = intervalString,
                         onValueChange = {
                             if (it.length <= 2)
                                 onEvent(IntervalEditorEvent.OnIntervalChange(it))
@@ -176,9 +201,43 @@ private fun `12 minutes 8 seconds`() =
     IntervalEditorInnerDialogContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        timeData = TimeData(12, 8, 0),
-        interval = 1,
+        minuteString = "12",
+        secondString = "8",
+        intervalString = "1",
         labelInfo = Pair(null, R.string.quarter),
+        errors = emptySet(),
+        onEvent = {},
+        onDismiss = {},
+        onConfirm = {},
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `invalid time`() =
+    IntervalEditorInnerDialogContent(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        minuteString = "12",
+        secondString = "8",
+        intervalString = "1",
+        labelInfo = Pair(null, R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.Time(12, 0)),
+        onEvent = {},
+        onDismiss = {},
+        onConfirm = {},
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `invalid interval`() =
+    IntervalEditorInnerDialogContent(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        minuteString = "12",
+        secondString = "8",
+        intervalString = "1",
+        labelInfo = Pair(null, R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.Interval(22)),
         onEvent = {},
         onDismiss = {},
         onConfirm = {},

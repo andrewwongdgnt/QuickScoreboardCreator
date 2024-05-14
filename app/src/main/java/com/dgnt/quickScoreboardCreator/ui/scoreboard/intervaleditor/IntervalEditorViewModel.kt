@@ -2,10 +2,8 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor
 
 import android.content.res.Resources
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -33,37 +31,70 @@ class IntervalEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var currentTimeValue = 0L
-    var interval by mutableIntStateOf(1)
+    var minuteString by mutableStateOf("")
         private set
+    var secondString by mutableStateOf("")
+        private set
+
+    private var centiSecond = 0
+
+    private var initialTimeValue = 0L
+    private var isTimeIncreasing = false
+    private var currentTimeValue = 0L
+        set(value) {
+            if (value > initialTimeValue && !isTimeIncreasing) {
+                timeTransformer.toTimeData(initialTimeValue).let {
+                    errors = errors + IntervalEditorErrorType.Time(it.minute, it.second)
+                }
+            } else {
+                errors.find { it is IntervalEditorErrorType.Time }?.let {
+                    errors = errors - it
+                }
+            }
+            field = value
+        }
+    var intervalString by mutableStateOf("")
+        private set
+
+    private var maxInterval = 1
+    private var intervalValue = 1
+        set(value) {
+            if (value < 0 || value > maxInterval) {
+                errors = errors + IntervalEditorErrorType.Interval(maxInterval)
+            } else {
+                errors.find { it is IntervalEditorErrorType.Interval }?.let {
+                    errors = errors - it
+                }
+            }
+            field = value
+        }
 
     var labelInfo by mutableStateOf(Pair<String?, Int?>(null, null))
         private set
 
-    var timeData by mutableStateOf(TimeData(0, 0, 0))
+    var errors by mutableStateOf(emptySet<IntervalEditorErrorType>())
         private set
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        savedStateHandle.get<Long>(Arguments.VALUE)?.let {
-            currentTimeValue = it
-            timeData = timeTransformer.toTimeData(it)
-        }
-        savedStateHandle.get<Int>(Arguments.INDEX)?.let {
-            interval = it + 1
-        }
         savedStateHandle.get<Int>(Arguments.ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
         } ?: savedStateHandle.get<ScoreboardType>(Arguments.TYPE)?.let {
             initWithScoreboardType(it)
         }
-        viewModelScope.launch {
-            snapshotFlow { timeData }
-                .collect {
-                    currentTimeValue = timeTransformer.fromTimeData(it)
-                }
+        savedStateHandle.get<Long>(Arguments.VALUE)?.let {
+            currentTimeValue = it
+            timeTransformer.toTimeData(it).let { td ->
+                minuteString = td.minute.toString()
+                secondString = td.second.toString()
+                centiSecond = td.centiSecond
+            }
+        }
+        savedStateHandle.get<Int>(Arguments.INDEX)?.let {
+            intervalString = (it + 1).toString()
+            intervalValue = it + 1
         }
     }
 
@@ -81,7 +112,9 @@ class IntervalEditorViewModel @Inject constructor(
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
 
-
+            initialTimeValue = it.intervalList[intervalValue - 1].intervalData.initial
+            isTimeIncreasing = it.intervalList[intervalValue - 1].intervalData.increasing
+            maxInterval = it.intervalList.size
         }
     }
 
@@ -92,35 +125,53 @@ class IntervalEditorViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Done)
 
             IntervalEditorEvent.OnConfirm -> {
-
-                sendUiEvent(UiEvent.IntervalUpdated(currentTimeValue, interval - 1))
+                val newCurrentTimeValue = if (!isTimeIncreasing)
+                    currentTimeValue.coerceIn(0, initialTimeValue)
+                else
+                    currentTimeValue.coerceAtLeast(0)
+                sendUiEvent(UiEvent.IntervalUpdated(newCurrentTimeValue, (intervalValue - 1).coerceIn(0, maxInterval - 1)))
             }
 
             is IntervalEditorEvent.OnMinuteChange -> {
-                getIntValue(event.value)?.let { min ->
-                    timeData = TimeData(min, timeData.second, timeData.centiSecond)
+                getFilteredValue(event.value)?.let { min ->
+                    minuteString = min
+                    currentTimeValue = TimeData(
+                        (min.toIntOrNull() ?: 0).coerceAtLeast(0),
+                        (secondString.toIntOrNull() ?: 0).coerceAtLeast(0),
+                        centiSecond
+                    ).let {
+                        timeTransformer.fromTimeData(it)
+                    }
                 }
             }
 
             is IntervalEditorEvent.OnSecondChange -> {
-                getIntValue(event.value)?.let { second ->
-                    timeData = TimeData(timeData.minute, second, timeData.centiSecond)
+                getFilteredValue(event.value)?.let { second ->
+                    secondString = second
+                    currentTimeValue = TimeData(
+                        (minuteString.toIntOrNull() ?: 0).coerceAtLeast(0),
+                        (second.toIntOrNull() ?: 0).coerceAtLeast(0),
+                        centiSecond
+                    ).let {
+                        timeTransformer.fromTimeData(it)
+                    }
                 }
             }
 
             is IntervalEditorEvent.OnIntervalChange -> {
-                getIntValue(event.value)?.let { interval ->
-                    this.interval = interval.coerceAtLeast(1)
+                getFilteredValue(event.value)?.let { interval ->
+                    intervalString = interval
+                    intervalValue = (interval.toIntOrNull() ?: 1).coerceAtLeast(1)
                 }
             }
         }
 
     }
 
-    private fun getIntValue(value: String) = if (value.isEmpty())
-        0
+    private fun getFilteredValue(value: String) = if (value.isEmpty())
+        ""
     else if (value.isDigitsOnly())
-        value.toInt()
+        value
     else
         null
 

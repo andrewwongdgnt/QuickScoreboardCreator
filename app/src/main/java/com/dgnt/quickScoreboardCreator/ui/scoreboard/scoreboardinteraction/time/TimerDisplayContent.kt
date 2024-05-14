@@ -58,13 +58,6 @@ fun TimerDisplayContent(
     }
 }
 
-private fun TimeData.formatTime(): String {
-    return if (minute == 0)
-        String.format("%d.%d", second, centiSecond)
-    else
-        String.format("%02d:%02d", minute, second)
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun `12 seconds 500 milliseconds`() =

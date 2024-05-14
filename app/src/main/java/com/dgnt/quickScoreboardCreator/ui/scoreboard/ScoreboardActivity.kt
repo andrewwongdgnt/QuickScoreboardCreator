@@ -10,7 +10,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModel
@@ -91,9 +90,6 @@ class ScoreboardActivity : ComponentActivity() {
                                 )
                             }
                             dialog(
-                                dialogProperties = DialogProperties(
-                                    usePlatformDefaultWidth = false
-                                ),
                                 route = "$TEAM_PICKER/{$INDEX}",
                                 arguments = listOf(
                                     navArgument(name = INDEX) {
@@ -120,9 +116,6 @@ class ScoreboardActivity : ComponentActivity() {
 
                             }
                             dialog(
-                                dialogProperties = DialogProperties(
-                                    usePlatformDefaultWidth = false
-                                ),
                                 route = "$INTERVAL_EDITOR/{$VALUE}/{$INDEX}?$ID={$ID}&$TYPE={$TYPE}",
                                 arguments = listOf(
                                     navArgument(name = VALUE) {
