@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class ScoreboardActivityViewModel : ViewModel() {
-    var updatedTeamData by mutableStateOf(UpdatedTeamData(-1, -1))
-    var updatedIntervalData by mutableStateOf(UpdatedIntervalData(-1,-1))
+    var updatedTeamData by mutableStateOf<UpdatedTeamData?>(null)
+    var updatedIntervalData by mutableStateOf<UpdatedIntervalData?>(null)
 
 }

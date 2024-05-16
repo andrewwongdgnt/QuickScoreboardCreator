@@ -35,14 +35,14 @@ import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun ScoreboardInteractionContent(
-    updatedTeamData: UpdatedTeamData,
-    updatedIntervalData: UpdatedIntervalData,
+    updatedTeamData: UpdatedTeamData?,
+    updatedIntervalData: UpdatedIntervalData?,
     onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardInteractionViewModel = hiltViewModel()
 ) {
 
-    viewModel.onEvent(ScoreboardInteractionEvent.UpdatedTeam(updatedTeamData))
-    viewModel.onEvent(ScoreboardInteractionEvent.UpdatedInterval(updatedIntervalData))
+    updatedTeamData?.let { viewModel.onEvent(ScoreboardInteractionEvent.UpdatedTeam(it)) }
+    updatedIntervalData?.let { viewModel.onEvent(ScoreboardInteractionEvent.UpdatedInterval(it)) }
 
     ScoreboardInteractionVMDataContent(
         onUiEvent,

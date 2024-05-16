@@ -88,6 +88,10 @@ class ScoreboardActivity : ComponentActivity() {
 
                                     }
                                 )
+
+                                //reset these so any recompose won't set the real values again
+                                viewModel.updatedTeamData = null
+                                viewModel.updatedIntervalData = null
                             }
                             dialog(
                                 route = "$TEAM_PICKER/{$INDEX}",
