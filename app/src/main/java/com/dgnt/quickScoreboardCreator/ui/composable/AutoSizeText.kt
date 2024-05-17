@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.InternalFoundationTextApi
-import androidx.compose.foundation.text.TextDelegate
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +29,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -210,19 +209,20 @@ fun AutoSizeText(
             val density = LocalDensity.current
             val fontFamilyResolver = LocalFontFamilyResolver.current
             val coercedLineSpacingRatio = lineSpacingRatio.takeIf { it.isFinite() && it >= 1 } ?: 1F
+            val textMeasurer = rememberTextMeasurer()
             val shouldMoveBackward: (TextUnit) -> Boolean = {
-                shouldShrink(
+                shouldShrink2(
                     text = text,
                     textStyle = combinedTextStyle.copy(
                         fontSize = it,
                         lineHeight = it * coercedLineSpacingRatio,
                     ),
-                    minLines = minLines,
                     maxLines = maxLines,
                     softWrap = softWrap,
                     layoutDirection = layoutDirection,
                     density = density,
                     fontFamilyResolver = fontFamilyResolver,
+                    textMeasurer = textMeasurer
                 )
             }
 
@@ -275,31 +275,6 @@ fun AutoSizeText(
         }
     }
 }
-
-@OptIn(InternalFoundationTextApi::class)
-private fun BoxWithConstraintsScope.shouldShrink(
-    text: AnnotatedString,
-    textStyle: TextStyle,
-    minLines: Int,
-    maxLines: Int,
-    softWrap: Boolean,
-    layoutDirection: LayoutDirection,
-    density: Density,
-    fontFamilyResolver: FontFamily.Resolver,
-) = TextDelegate(
-    text = text,
-    style = textStyle,
-    maxLines = maxLines,
-    minLines = minLines,
-    softWrap = softWrap,
-    overflow = TextOverflow.Clip,
-    density = density,
-    fontFamilyResolver = fontFamilyResolver,
-).layout(
-    constraints = constraints,
-    layoutDirection = layoutDirection,
-).hasVisualOverflow
-
 
 private fun BoxWithConstraintsScope.shouldShrink2(
     text: AnnotatedString,
