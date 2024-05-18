@@ -1,9 +1,8 @@
 package com.dgnt.quickScoreboardCreator.ui.common
 
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 
-fun NavController.commonNavigate(currentDestination: NavDestination? = null, route: String) = navigate(route) {
+fun NavController.commonNavigate(currentDestination: androidx.navigation.NavDestination? = null, navDestination: NavDestination) = navigate(navDestination) {
     // Avoid building up a large stack of destinations
     // on the back stack as users select items
     currentDestination?.id?.let {
@@ -12,7 +11,7 @@ fun NavController.commonNavigate(currentDestination: NavDestination? = null, rou
             inclusive = true
         }
     } ?: run {
-        popUpTo(route) {
+        popUpTo(navDestination) {
             saveState = true
             inclusive = true
         }

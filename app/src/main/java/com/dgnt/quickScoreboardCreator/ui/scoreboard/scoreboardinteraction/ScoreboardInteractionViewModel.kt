@@ -70,8 +70,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
-    private var id: Int? = null
-    private var scoreboardType: ScoreboardType? = null
+    private var id: Int = -1
+    private var scoreboardType: ScoreboardType = ScoreboardType.NONE
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

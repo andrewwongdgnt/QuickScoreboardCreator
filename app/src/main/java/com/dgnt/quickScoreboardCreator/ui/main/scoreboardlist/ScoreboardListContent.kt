@@ -139,7 +139,7 @@ private fun ScoreboardListInnerContent(
         val categoryList = listOf(
             categorizedScoreboards.first.let {
                 stringResource(it.titleRes) to it.scoreboardTypeList.map { scoreboardType ->
-                    ScoreboardItemData(null, scoreboardType, stringResource(scoreboardType.titleRes), stringResource(scoreboardType.descriptionRes))
+                    ScoreboardItemData(-1, scoreboardType, stringResource(scoreboardType.titleRes), stringResource(scoreboardType.descriptionRes))
                 }
             },
             categorizedScoreboards.second.let {
@@ -207,9 +207,9 @@ private fun `Defaults and customs`() =
                 to
                 CategorizedScoreboardItemData(
                     R.string.customScoreboardConfig, listOf(
-                        ScoreboardItemData(0, null, "My Scoreboard 1", "My Description 1"),
-                        ScoreboardItemData(0, null, "My Scoreboard 2", "My Description 2"),
-                        ScoreboardItemData(0, null, "My Scoreboard 3", "My Description 3 "),
+                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 1", "My Description 1"),
+                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 2", "My Description 2"),
+                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 3", "My Description 3 "),
                     )
                 ),
         {}

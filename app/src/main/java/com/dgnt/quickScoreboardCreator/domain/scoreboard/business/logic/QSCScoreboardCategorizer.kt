@@ -11,7 +11,7 @@ class QSCScoreboardCategorizer : ScoreboardCategorizer {
     override fun invoke(scoreboardTypeList: List<ScoreboardType>, scoreboardEntityList: List<ScoreboardEntity>): Pair<CategorizedScoreboardType, CategorizedScoreboardItemData> {
         val scoreboardList = scoreboardEntityList.map { e ->
             ScoreboardItemData(
-                e.id, null, e.title, e.description
+                e.id ?: -1, ScoreboardType.NONE, e.title, e.description
             )
         }
         return CategorizedScoreboardType(R.string.defaultScoreboardConfig, scoreboardTypeList) to

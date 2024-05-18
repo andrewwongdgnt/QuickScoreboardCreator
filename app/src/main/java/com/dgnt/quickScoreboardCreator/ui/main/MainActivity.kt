@@ -18,8 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.window.DialogProperties
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,16 +25,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.common.util.putExtra
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.CONTACT
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_DETAILS
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_LIST
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_DETAILS
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_LIST
+import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
@@ -47,6 +39,7 @@ import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.reflect.typeOf
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -54,7 +47,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             QuickScoreboardCreatorTheme {
-                val screenList = listOf(Screen.ScoreboardList, Screen.TeamList, Screen.Contact)
+                val navItemLists = listOf(NavItem.ScoreboardList, NavItem.TeamList, NavItem.Contact)
 
                 val navController = rememberNavController()
 
@@ -65,18 +58,18 @@ class MainActivity : ComponentActivity() {
                             NavigationBar {
                                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                                 val currentDestination = navBackStackEntry?.destination
-                                screenList.forEach { screen ->
+                                navItemLists.forEach { screen ->
                                     NavigationBarItem(
-                                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                                        selected = currentDestination?.route == screen.navDestination::class.qualifiedName,
                                         onClick = {
-                                            navController.commonNavigate(currentDestination, screen.route)
+                                            navController.commonNavigate(currentDestination, screen.navDestination)
                                         },
                                         label = {
                                             Text(text = stringResource(id = screen.titleRes))
                                         },
                                         icon = {
                                             Icon(
-                                                imageVector = if (currentDestination?.hierarchy?.any { it.route == screen.route } == true) {
+                                                imageVector = if (currentDestination?.route == screen.navDestination::class.qualifiedName) {
                                                     screen.selectedIcon
                                                 } else screen.unselectedIcon,
                                                 contentDescription = stringResource(id = screen.titleRes)
@@ -106,18 +99,18 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         NavHost(
             navController = navController,
-            startDestination = SCOREBOARD_LIST,
+            startDestination = NavDestination.ScoreboardList,
             modifier = modifier
         ) {
-            composable(SCOREBOARD_LIST) {
+            composable<NavDestination.ScoreboardList> {
                 ScoreboardListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(route = "$SCOREBOARD_DETAILS?$ID=${uiEvent.id}&$TYPE=${uiEvent.scoreboardType}")
+                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(navDestination = NavDestination.ScoreboardDetails(uiEvent.id, uiEvent.scoreboardType))
 
                             is UiEvent.LaunchScoreboard -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
                                 intent.putExtra(ID, uiEvent.id)
-                                (uiEvent.scoreboardType ?: ScoreboardType.NONE).let { scoreboardType -> intent.putExtra(scoreboardType) }
+                                intent.putExtra(uiEvent.scoreboardType)
                             })
 
                             else -> Unit
@@ -125,18 +118,8 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-            dialog(
-                route = "$SCOREBOARD_DETAILS?$ID={$ID}&$TYPE={$TYPE}",
-                arguments = listOf(
-                    navArgument(name = ID) {
-                        type = NavType.IntType
-                        defaultValue = -1
-                    },
-                    navArgument(name = TYPE) {
-                        type = NavType.EnumType(ScoreboardType::class.java)
-                        defaultValue = ScoreboardType.NONE
-                    }
-                )
+            dialog<NavDestination.ScoreboardDetails>(
+                typeMap = mapOf(typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java))
             ) {
                 ScoreboardDetailsDialogContent(
                     onUiEvent = { uiEvent ->
@@ -147,26 +130,18 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-            composable(TEAM_LIST) {
+            composable<NavDestination.TeamList> {
                 TeamListContent(
                     onUiEvent = { uiEvent ->
-                        when(uiEvent){
-                            is UiEvent.TeamDetails -> navController.commonNavigate(route = "$TEAM_DETAILS?$ID=${uiEvent.id}")
+                        when (uiEvent) {
+                            is UiEvent.TeamDetails -> navController.commonNavigate(navDestination = NavDestination.TeamDetails(uiEvent.id))
                             else -> Unit
                         }
 
                     }
                 )
             }
-            dialog(
-                route = "$TEAM_DETAILS?$ID={$ID}",
-                arguments = listOf(
-                    navArgument(name = ID) {
-                        type = NavType.IntType
-                        defaultValue = -1
-                    }
-                )
-            ) {
+            dialog<NavDestination.TeamDetails> {
                 TeamDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
@@ -176,7 +151,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-            composable(CONTACT) {
+            composable<NavDestination.Contact> {
                 ContactContent(
 
                 )

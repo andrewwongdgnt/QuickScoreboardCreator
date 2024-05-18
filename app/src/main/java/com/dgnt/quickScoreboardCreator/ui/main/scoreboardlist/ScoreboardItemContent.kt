@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 
 
 @Composable
@@ -43,7 +44,7 @@ fun ScoreboardItemContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = item.title, style = typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
-                    if (item.type == null && item.id != null)
+                    if (item.type == ScoreboardType.NONE && item.id >= 0)
                         IconButton(onClick = {
                             onEvent(ScoreboardListEvent.OnDelete(item.id))
                         }) {
@@ -71,15 +72,15 @@ fun ScoreboardItemContent(
 @Preview(showBackground = true)
 @Composable
 private fun `Normal`() =
-    ScoreboardItemContent(ScoreboardItemData(0, null, title = "Basketball", description = "NBA Sport"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball", description = "NBA Sport"), {})
 
 @Preview(showBackground = true)
 @Composable
 private fun `Long description`() =
-    ScoreboardItemContent(ScoreboardItemData(0, null, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
 
 @Preview(showBackground = true)
 @Composable
 private fun `Long title and long description`() =
-    ScoreboardItemContent(ScoreboardItemData(0, null, title = "Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
 

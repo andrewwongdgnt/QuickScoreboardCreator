@@ -22,16 +22,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.dgnt.quickScoreboardCreator.common.util.getEnumExtra
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.INDEX
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.VALUE
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.INTERVAL_EDITOR
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.SCOREBOARD_INTERACTION
-import com.dgnt.quickScoreboardCreator.ui.common.Routes.TEAM_PICKER
+import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
@@ -39,13 +33,14 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.Score
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.reflect.typeOf
 
 @AndroidEntryPoint
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val id = intent.extras?.getInt(ID, -1)
-        val scoreboardType = intent.getEnumExtra<ScoreboardType>()
+        val id = intent.extras?.getInt(ID, -1) ?: -1
+        val scoreboardType = intent.getEnumExtra<ScoreboardType>() ?: ScoreboardType.NONE
         setContent {
             QuickScoreboardCreatorTheme {
                 // A surface container using the 'background' color from the theme
@@ -53,25 +48,13 @@ class ScoreboardActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "start",
+                        startDestination = NavDestination.Start,
                     ) {
-                        navigation(
-                            startDestination = "$SCOREBOARD_INTERACTION/{$ID}/{$TYPE}",
-                            route = "start"
+                        navigation<NavDestination.Start>(
+                            startDestination = NavDestination.ScoreboardInteraction(id, scoreboardType)
                         ) {
-                            composable(
-                                route = "$SCOREBOARD_INTERACTION/{$ID}/{$TYPE}",
-                                arguments = listOf(
-                                    navArgument(name = ID) {
-                                        type = NavType.IntType
-                                        defaultValue = id
-                                    },
-                                    navArgument(name = TYPE) {
-                                        type = NavType.EnumType(ScoreboardType::class.java)
-                                        defaultValue = scoreboardType
-
-                                    }
-                                )
+                            composable<NavDestination.ScoreboardInteraction>(
+                                typeMap = mapOf(typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java))
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 val updatedTeamData = viewModel.updatedTeamData
@@ -81,8 +64,8 @@ class ScoreboardActivity : ComponentActivity() {
                                     updatedIntervalData,
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            is UiEvent.TeamPicker -> navController.commonNavigate(route = "$TEAM_PICKER/${uiEvent.scoreIndex}")
-                                            is UiEvent.IntervalEditor -> navController.commonNavigate(route = "$INTERVAL_EDITOR/${uiEvent.currentTimeValue}/${uiEvent.intervalIndex}?$ID=${uiEvent.id}&$TYPE=${uiEvent.scoreboardType}")
+                                            is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.scoreIndex))
+                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.intervalIndex, uiEvent.id, uiEvent.scoreboardType))
                                             else -> Unit
                                         }
 
@@ -93,15 +76,7 @@ class ScoreboardActivity : ComponentActivity() {
                                 viewModel.updatedTeamData = null
                                 viewModel.updatedIntervalData = null
                             }
-                            dialog(
-                                route = "$TEAM_PICKER/{$INDEX}",
-                                arguments = listOf(
-                                    navArgument(name = INDEX) {
-                                        type = NavType.IntType
-                                        defaultValue = 0
-                                    }
-                                )
-                            ) { entry ->
+                            dialog<NavDestination.TeamPicker> { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 TeamPickerDialogContent(
                                     onUiEvent = { uiEvent ->
@@ -119,26 +94,8 @@ class ScoreboardActivity : ComponentActivity() {
                                 )
 
                             }
-                            dialog(
-                                route = "$INTERVAL_EDITOR/{$VALUE}/{$INDEX}?$ID={$ID}&$TYPE={$TYPE}",
-                                arguments = listOf(
-                                    navArgument(name = VALUE) {
-                                        type = NavType.LongType
-                                        defaultValue = 0
-                                    },
-                                    navArgument(name = INDEX) {
-                                        type = NavType.IntType
-                                        defaultValue = 0
-                                    },
-                                    navArgument(name = ID) {
-                                        type = NavType.IntType
-                                        defaultValue = -1
-                                    },
-                                    navArgument(name = TYPE) {
-                                        type = NavType.EnumType(ScoreboardType::class.java)
-                                        defaultValue = ScoreboardType.NONE
-                                    }
-                                )
+                            dialog<NavDestination.IntervalEditor>(
+                                typeMap = mapOf(typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java))
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 IntervalEditorDialogContent(

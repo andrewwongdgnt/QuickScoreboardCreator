@@ -10,16 +10,17 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.ui.common.Routes
+import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 
 
-sealed class Screen(
+sealed class NavItem(
     @StringRes val titleRes: Int,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val route: String
+    val navDestination: NavDestination
 ) {
-    data object ScoreboardList : Screen(R.string.scoreboardListNavTitle, Icons.Filled.Home, Icons.Outlined.Home, Routes.SCOREBOARD_LIST)
-    data object TeamList : Screen(R.string.teamListNavTitle, Icons.Filled.Person, Icons.Outlined.Person, Routes.TEAM_LIST)
-    data object Contact : Screen(R.string.contactNavTitle, Icons.Filled.Email, Icons.Outlined.Email, Routes.CONTACT)
+    data object ScoreboardList : NavItem(R.string.scoreboardListNavTitle, Icons.Filled.Home, Icons.Outlined.Home, NavDestination.ScoreboardList)
+    data object TeamList : NavItem(R.string.teamListNavTitle, Icons.Filled.Person, Icons.Outlined.Person, NavDestination.TeamList)
+    data object Contact : NavItem(R.string.contactNavTitle, Icons.Filled.Email, Icons.Outlined.Email, NavDestination.Contact)
 }
+
