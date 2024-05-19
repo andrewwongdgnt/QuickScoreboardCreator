@@ -49,6 +49,7 @@ fun ScoreboardInteractionContent(
         viewModel
     )
 }
+
 @Composable
 private fun ScoreboardInteractionVMDataContent(
     onUiEvent: (UiEvent) -> Unit,
@@ -95,8 +96,8 @@ private fun ScoreboardInteractionInnerContent(
     }
 
     val currentTeamSize = incrementList.size
+    val layoutSpacing = 10.dp
     if (currentTeamSize == 2) {
-        val layoutSpacing = 10.dp
         Row(
             modifier = Modifier.padding(layoutSpacing)
         ) {
@@ -120,58 +121,57 @@ private fun ScoreboardInteractionInnerContent(
                 }
             )
         }
-        Box(
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(layoutSpacing)
+    ) {
+        TimerControlContent(
+            timerInProgress = timerInProgress,
+            onEvent = onEvent,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(layoutSpacing)
+                .align(Alignment.TopStart)
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TimerControlContent(
-                timerInProgress = timerInProgress,
+            TimerDisplayContent(
+                timeData = timeData,
                 onEvent = onEvent,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
             )
-            Column(
-                modifier = Modifier
-                    .align(Alignment.TopCenter),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TimerDisplayContent(
-                    timeData = timeData,
-                    onEvent = onEvent,
-                )
-                IntervalDisplayContent(
-                    modifier = Modifier,
-                    labelInfo = labelInfo,
-                    currentInterval = currentInterval
-                )
-
-            }
-
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-            ) {
-                TeamDisplayContent(
-                    teamDisplay = teamList[0],
-                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(0)) },
-                    modifier = Modifier
-                        .weight(1f)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                TeamDisplayContent(
-                    teamDisplay = teamList[1],
-                    onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(1)) },
-                    modifier = Modifier
-                        .weight(1f)
-                )
-            }
+            IntervalDisplayContent(
+                modifier = Modifier,
+                labelInfo = labelInfo,
+                currentInterval = currentInterval
+            )
 
         }
 
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        ) {
+            TeamDisplayContent(
+                teamDisplay = teamList[0],
+                onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(0)) },
+                modifier = Modifier
+                    .weight(1f)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            TeamDisplayContent(
+                teamDisplay = teamList[1],
+                onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(1)) },
+                modifier = Modifier
+                    .weight(1f)
+            )
+        }
 
     }
+
 
 }
 
