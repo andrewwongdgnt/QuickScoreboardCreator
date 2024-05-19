@@ -4,7 +4,6 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.Interval
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
-import kotlin.math.abs
 
 abstract class ScoreboardConfig {
     val type: String = ""
@@ -39,8 +38,8 @@ data class ScoreRuleConfig(
     fun toScoreRule() =
         when (type) {
             ScoreRuleType.NO_RULE -> ScoreRule.NoRule
-            ScoreRuleType.MAX_RULE -> ScoreRule.ScoreRuleTrigger.MaxScoreRule(abs(trigger).toUInt())
-            ScoreRuleType.DEUCE_ADVANTAGE -> ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(abs(trigger).toUInt())
+            ScoreRuleType.MAX_RULE -> ScoreRule.ScoreRuleTrigger.MaxScoreRule(trigger)
+            ScoreRuleType.DEUCE_ADVANTAGE -> ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(trigger)
         }
 }
 

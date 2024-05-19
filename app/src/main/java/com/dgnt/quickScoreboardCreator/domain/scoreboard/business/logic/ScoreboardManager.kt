@@ -14,8 +14,6 @@ interface ScoreboardManager {
 
     fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)
     fun getScores(): DisplayedScoreInfo
-    fun resetCurrentScore(scoreIndex: Int)
-    fun resetCurrentScores()
     fun proceedToNextInterval()
     fun setTime(value:Long)
     fun getInitialTime(): Long

@@ -60,61 +60,69 @@ class QSCScoreboardManager : ScoreboardManager {
             }
 
             val newScore = current + incrementer
-            if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule) {
-                val trigger = scoreInfo.scoreRule.trigger.toInt()
-                if (newScore > trigger) {
-                    current = trigger
-                    return
-                } else if (newScore < trigger * -1) {
-                    current = trigger * -1
-                    return
-                }
+            current = if (newScore < 0)
+                0
+            else
+                newScore
+        }
+
+        val newScore = scoreInfo.dataList[scoreIndex].current
+
+        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule) {
+            val trigger = scoreInfo.scoreRule.trigger
+            if (newScore > trigger) {
+                proceedToNextInterval()
+                return
             }
-            current = newScore
+        }
+
+        get2ScoresForDeuceAdv(scoreInfo)?.takeIf { abs(it.first - it.second) >= 2 }?.run {
+            proceedToNextInterval()
         }
     }
 
     override fun getScores(): DisplayedScoreInfo {
         val scoreInfo = currentScoreInfo
 
-        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger.toInt() }) {
-
-            val firstScore = scoreInfo.dataList[0].current
-            val secondScore = scoreInfo.dataList[1].current
-            return if (firstScore == secondScore)
+        return get2ScoresForDeuceAdv(scoreInfo)?.let {
+            val firstScore = it.first
+            val secondScore = it.second
+            if (firstScore == secondScore)
                 DisplayedScoreInfo(listOf(DisplayedScore.Blank, DisplayedScore.Blank), DisplayedScore.Deuce)
             else if (firstScore > secondScore)
                 DisplayedScoreInfo(listOf(DisplayedScore.Advantage, DisplayedScore.Blank), DisplayedScore.Blank)
             else
                 DisplayedScoreInfo(listOf(DisplayedScore.Blank, DisplayedScore.Advantage), DisplayedScore.Blank)
+        } ?: run {
+            val mappedScores = transform(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
+            return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
         }
-        val mappedScores = transform(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
-        return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
-    }
 
-    override fun resetCurrentScore(scoreIndex: Int) {
-        currentScoreInfo.dataList[scoreIndex].reset()
-    }
 
-    override fun resetCurrentScores() {
-        (0 until currentTeamSize).forEach {
-            resetCurrentScore(it)
-        }
     }
 
     override fun proceedToNextInterval() {
+        //at the end so don't increase anymore
+        if (currentIntervalIndex >= scoreboard.intervalList.size - 1)
+            return
+
         currentIntervalIndex++
+        currentIntervalData.reset()
         if (scoreCarriesOver) {
             val previousScores = scoreboard.intervalList[currentIntervalIndex - 1].first.dataList
             val currentScores = currentScoreInfo.dataList
             currentScores.forEachIndexed { index, scoreData ->
                 scoreData.current = previousScores[index].current
             }
-        }
+        } else
+            currentScoreInfo.dataList.forEach { it.reset() }
     }
 
     override fun setTime(value: Long) {
-        currentIntervalData.current = value
+        if (value <= 0)
+            proceedToNextInterval()
+        else
+            currentIntervalData.current = value
     }
 
     override fun getInitialTime() =
@@ -127,6 +135,13 @@ class QSCScoreboardManager : ScoreboardManager {
         scoreInfo.dataList.map { it.current }.map {
             scoreInfo.scoreToDisplayScoreMap[it] ?: it.toString()
         }
+
+    private fun get2ScoresForDeuceAdv(scoreInfo: ScoreInfo): Pair<Int, Int>? {
+        return if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger })
+            scoreInfo.dataList[0].current to scoreInfo.dataList[1].current
+        else
+            return null
+    }
 
 
 }

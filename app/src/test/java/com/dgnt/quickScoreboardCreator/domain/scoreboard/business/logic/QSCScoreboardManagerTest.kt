@@ -45,16 +45,51 @@ class QSCScoreboardManagerTest {
         sut.updateScore(0, 1)
         Assert.assertEquals("5", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
 
-        sut.resetCurrentScore(scoreIndex = 0)
-        Assert.assertEquals("0", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-
         sut.updateScore(1, 1)
         Assert.assertEquals("3", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
         sut.updateScore(1, 1)
         Assert.assertEquals("6", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
 
-        sut.resetCurrentScore(scoreIndex = 1)
-        Assert.assertEquals("0", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+    }
+
+    @Test
+    fun testAdvancingToNextIntervalFromTime() {
+        sut.scoreCarriesOver = true
+        sut.intervalList = listOf(
+            ScoreInfo(
+                ScoreRule.NoRule,
+                mapOf(),
+                listOf(
+                    ScoreData(2, 2, listOf(2, 3)),
+                    ScoreData(3, 3, listOf(2, 3)),
+                )
+            ) to
+                    IntervalData(
+                        4, 4
+                    ),
+            ScoreInfo(
+                ScoreRule.NoRule,
+                mapOf(),
+                listOf(
+                    ScoreData(0, 0, listOf(2, 3)),
+                    ScoreData(0, 0, listOf(2, 3)),
+                )
+            ) to
+                    IntervalData(
+                        4, 4
+                    )
+        )
+
+        sut.setTime(3)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
+        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+        Assert.assertEquals("3", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+
+        sut.setTime(0)
+        Assert.assertEquals(1, sut.currentIntervalIndex)
+        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+        Assert.assertEquals("3", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+
     }
 
     @Test
@@ -62,7 +97,31 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2u),
+                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
+                mapOf(),
+                listOf(
+                    ScoreData(0, 0, listOf(1)),
+                    ScoreData(0, 0, listOf(20)),
+                )
+            ) to
+                    IntervalData(
+                        0, 0
+                    ),
+
+            ScoreInfo(
+                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
+                mapOf(),
+                listOf(
+                    ScoreData(0, 0, listOf(1)),
+                    ScoreData(0, 0, listOf(20)),
+                )
+            ) to
+                    IntervalData(
+                        0, 0
+                    ),
+
+            ScoreInfo(
+                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
                 mapOf(),
                 listOf(
                     ScoreData(0, 0, listOf(1)),
@@ -75,15 +134,20 @@ class QSCScoreboardManagerTest {
         )
 
         sut.updateScore(0, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         Assert.assertEquals("1", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
         sut.updateScore(0, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+
         sut.updateScore(0, 0)
-        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+        Assert.assertEquals(1, sut.currentIntervalIndex)
+        Assert.assertEquals("0", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+
         sut.updateScore(1, 0)
-        Assert.assertEquals("2", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
-        sut.updateScore(1, 0, false)
-        Assert.assertEquals("-2", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+        Assert.assertEquals(2, sut.currentIntervalIndex)
+        Assert.assertEquals("0", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+
 
     }
 
@@ -92,7 +156,7 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2u),
+                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
                 mapOf(),
                 listOf(
                     ScoreData(0, 0, listOf(1)),
@@ -101,39 +165,63 @@ class QSCScoreboardManagerTest {
             ) to
                     IntervalData(
                         0, 0
+                    ),
+
+            ScoreInfo(
+                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
+                mapOf(),
+                listOf(
+                    ScoreData(1, 1, listOf(1)),
+                    ScoreData(1, 1, listOf(1)),
+                )
+            ) to
+                    IntervalData(
+                        0, 0
                     )
         )
 
         sut.updateScore(0, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         Assert.assertEquals("1", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
         sut.updateScore(0, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
         sut.updateScore(1, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         Assert.assertEquals("1", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
         sut.updateScore(1, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         sut.getScores().apply {
             Assert.assertEquals(DisplayedScore.Blank, displayedScores[0])
             Assert.assertEquals(DisplayedScore.Blank, displayedScores[1])
             Assert.assertEquals(DisplayedScore.Deuce, overallDisplayedScore)
         }
         sut.updateScore(0, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         sut.getScores().apply {
             Assert.assertEquals(DisplayedScore.Advantage, displayedScores[0])
             Assert.assertEquals(DisplayedScore.Blank, displayedScores[1])
             Assert.assertEquals(DisplayedScore.Blank, overallDisplayedScore)
         }
         sut.updateScore(1, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         sut.getScores().apply {
             Assert.assertEquals(DisplayedScore.Blank, displayedScores[0])
             Assert.assertEquals(DisplayedScore.Blank, displayedScores[1])
             Assert.assertEquals(DisplayedScore.Deuce, overallDisplayedScore)
         }
         sut.updateScore(1, 0)
+        Assert.assertEquals(0, sut.currentIntervalIndex)
         sut.getScores().apply {
             Assert.assertEquals(DisplayedScore.Blank, displayedScores[0])
             Assert.assertEquals(DisplayedScore.Advantage, displayedScores[1])
             Assert.assertEquals(DisplayedScore.Blank, overallDisplayedScore)
         }
+
+        sut.updateScore(1, 0)
+        Assert.assertEquals(1, sut.currentIntervalIndex)
+        Assert.assertEquals("1", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+        Assert.assertEquals("1", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
 
     }
 
