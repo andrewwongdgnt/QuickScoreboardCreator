@@ -86,12 +86,9 @@ class QSCScoreboardManager() : ScoreboardManager {
 
         val newScore = scoreInfo.dataList[scoreIndex].current
 
-        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule) {
-            val trigger = scoreInfo.scoreRule.trigger
-            if (newScore > trigger) {
-                proceedToNextInterval()
-                return
-            }
+        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule && newScore > scoreInfo.scoreRule.trigger) {
+            proceedToNextInterval()
+            return
         }
 
         get2ScoresForDeuceAdv(scoreInfo)?.takeIf { abs(it.first - it.second) >= 2 }?.run {
@@ -99,8 +96,11 @@ class QSCScoreboardManager() : ScoreboardManager {
             return
         }
 
-        //TODO there is a bug here where if the score rule is deuce/adv and one player is above the trigger value without the other player also at or above it,
-        // the next interval doesnt get reached
+        // this means one of the team is below the trigger and one is above
+        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.any { it.current > scoreInfo.scoreRule.trigger } && scoreInfo.dataList.any { it.current < scoreInfo.scoreRule.trigger }) {
+            proceedToNextInterval()
+            return
+        }
 
         scoresUpdateListener?.invoke(getScores())
     }
