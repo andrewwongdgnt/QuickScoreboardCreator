@@ -148,6 +148,25 @@ class QSCScoreboardManager() : ScoreboardManager {
     override fun canTimeAdvance() =
         currentIntervalData.increasing || (!currentIntervalData.increasing && currentIntervalData.current > 0)
 
+    override fun updateInterval(index: Int) {
+
+        // Boundaries
+        if (index !in 0 until scoreboard.intervalList.size)
+            return
+
+        val currentScores = currentScoreInfo.dataList
+
+        currentIntervalIndex = index
+
+        val newScores = currentScoreInfo.dataList
+        newScores.forEachIndexed { i, scoreData ->
+            currentScores.getOrNull(i)?.current?.let {
+                scoreData.current = it
+            }
+        }
+
+        triggerUpdateListeners()
+    }
     private fun transform(scoreInfo: ScoreInfo) =
         scoreInfo.dataList.map { it.current }.map {
             scoreInfo.scoreToDisplayScoreMap[it] ?: it.toString()
@@ -162,8 +181,10 @@ class QSCScoreboardManager() : ScoreboardManager {
 
     private fun proceedToNextInterval() {
         //at the end so don't increase anymore
-        if (currentIntervalIndex >= scoreboard.intervalList.size - 1)
+        if (currentIntervalIndex >= scoreboard.intervalList.size - 1){
+            currentIntervalIndex = scoreboard.intervalList.size - 1
             return
+        }
 
         currentIntervalIndex++
         currentIntervalData.reset()
@@ -171,7 +192,9 @@ class QSCScoreboardManager() : ScoreboardManager {
             val previousScores = scoreboard.intervalList[currentIntervalIndex - 1].first.dataList
             val currentScores = currentScoreInfo.dataList
             currentScores.forEachIndexed { index, scoreData ->
-                scoreData.current = previousScores[index].current
+                previousScores.getOrNull(index)?.current?.let {
+                    scoreData.current = it
+                }
             }
         } else
             currentScoreInfo.dataList.forEach { it.reset() }

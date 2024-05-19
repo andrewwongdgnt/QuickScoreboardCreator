@@ -23,4 +23,5 @@ interface ScoreboardManager {
     fun updateTimeBy(value: Long)
     fun resetTime()
     fun canTimeAdvance(): Boolean
+    fun updateInterval(index: Int)
 }

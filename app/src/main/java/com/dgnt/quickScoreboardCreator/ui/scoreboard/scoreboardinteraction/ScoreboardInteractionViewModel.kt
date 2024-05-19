@@ -212,10 +212,9 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 event.takeUnless { it.updatedIntervalData.timeValue < 0 || it.updatedIntervalData.intervalIndex < 0 }?.let {
                     timerJob?.cancel()
                     timerInProgress = false
+                    scoreboardManager.updateInterval(it.updatedIntervalData.intervalIndex)
                     scoreboardManager.updateTime(it.updatedIntervalData.timeValue)
 
-                    //TODO need to add something to scoreboard manager to properly switch intervals
-//                    currentInterval = it.updatedIntervalData.intervalIndex + 1
                 }
 
             }
