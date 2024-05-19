@@ -37,6 +37,76 @@
         "initial": 0,
         "increasing": true
       }
+    },
+    {
+      "scoreInfo": {
+        "scoreRule": {
+          "type": "DEUCE_ADVANTAGE",
+          "trigger": 3
+        },
+        "scoreMapping": {
+          "0": "0",
+          "1": "15",
+          "2": "30",
+          "3": "40"
+        },
+        "dataList": [
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1
+            ]
+          },
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1
+            ]
+          }
+        ]
+      },
+      "intervalData": {
+        "current": 0,
+        "initial": 0,
+        "increasing": true
+      }
+    },
+    {
+      "scoreInfo": {
+        "scoreRule": {
+          "type": "DEUCE_ADVANTAGE",
+          "trigger": 3
+        },
+        "scoreMapping": {
+          "0": "0",
+          "1": "15",
+          "2": "30",
+          "3": "40"
+        },
+        "dataList": [
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1
+            ]
+          },
+          {
+            "current": 0,
+            "initial": 0,
+            "increments": [
+              1
+            ]
+          }
+        ]
+      },
+      "intervalData": {
+        "current": 0,
+        "initial": 0,
+        "increasing": true
+      }
     }
   ]
 }

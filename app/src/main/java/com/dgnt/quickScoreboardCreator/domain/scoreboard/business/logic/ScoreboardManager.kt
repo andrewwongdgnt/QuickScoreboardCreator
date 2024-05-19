@@ -9,15 +9,18 @@ interface ScoreboardManager {
 
     var scoreCarriesOver: Boolean
     var intervalList: List<Pair<ScoreInfo, IntervalData>>
-    var currentIntervalIndex: Int
-    val incrementList: List<List<Int>>
+    val currentTeamSize: Int
 
+    var scoresUpdateListener: ((DisplayedScoreInfo) -> Unit)?
+    var timeUpdateListener: ((Long) -> Unit)?
+    var intervalIndexUpdateListener: ((Int) -> Unit)?
+    var incrementListUpdateListener: ((List<List<Int>>) -> Unit)?
+    var teamSizeUpdateListener: ((Int) -> Unit)?
+
+    fun triggerUpdateListeners()
     fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)
-    fun getScores(): DisplayedScoreInfo
-    fun proceedToNextInterval()
-    fun setTime(value:Long)
-    fun getInitialTime(): Long
-    fun isTimeIncreasing(): Boolean
-
-
+    fun updateTime(value:Long)
+    fun updateTimeBy(value: Long)
+    fun resetTime()
+    fun canTimeAdvance(): Boolean
 }

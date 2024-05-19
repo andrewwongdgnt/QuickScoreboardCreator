@@ -10,7 +10,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import kotlin.math.abs
 
 
-class QSCScoreboardManager : ScoreboardManager {
+class QSCScoreboardManager() : ScoreboardManager {
 
 
     private val scoreboard: Scoreboard =
@@ -32,21 +32,39 @@ class QSCScoreboardManager : ScoreboardManager {
             scoreboard.intervalList = value
         }
 
-    override var currentIntervalIndex: Int
+    private var currentIntervalIndex: Int
         get() = scoreboard.currentIntervalIndex
         set(value) {
             scoreboard.currentIntervalIndex = value
         }
 
-    override val incrementList: List<List<Int>>
+    private val incrementList: List<List<Int>>
         get() = currentScoreInfo.dataList.map { it.increments }
 
-    private val currentTeamSize: Int
+    override var scoresUpdateListener: ((DisplayedScoreInfo) -> Unit)? = null
+
+    override var timeUpdateListener: ((Long) -> Unit)? = null
+
+    override var intervalIndexUpdateListener: ((Int) -> Unit)? = null
+
+    override var incrementListUpdateListener: ((List<List<Int>>) -> Unit)? = null
+
+    override var teamSizeUpdateListener: ((Int) -> Unit)? = null
+
+    override val currentTeamSize: Int
         get() = incrementList.size
 
     private val currentScoreInfo get() = scoreboard.intervalList[currentIntervalIndex].first
 
     private val currentIntervalData get() = scoreboard.intervalList[currentIntervalIndex].second
+
+    override fun triggerUpdateListeners() {
+        timeUpdateListener?.invoke(currentIntervalData.current)
+        scoresUpdateListener?.invoke(getScores())
+        intervalIndexUpdateListener?.invoke(currentIntervalIndex)
+        incrementListUpdateListener?.invoke(incrementList)
+        teamSizeUpdateListener?.invoke(currentTeamSize)
+    }
 
     override fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean) {
         val scoreInfo = currentScoreInfo
@@ -78,10 +96,16 @@ class QSCScoreboardManager : ScoreboardManager {
 
         get2ScoresForDeuceAdv(scoreInfo)?.takeIf { abs(it.first - it.second) >= 2 }?.run {
             proceedToNextInterval()
+            return
         }
+
+        //TODO there is a bug here where if the score rule is deuce/adv and one player is above the trigger value without the other player also at or above it,
+        // the next interval doesnt get reached
+
+        scoresUpdateListener?.invoke(getScores())
     }
 
-    override fun getScores(): DisplayedScoreInfo {
+    private fun getScores(): DisplayedScoreInfo {
         val scoreInfo = currentScoreInfo
 
         return get2ScoresForDeuceAdv(scoreInfo)?.let {
@@ -101,7 +125,42 @@ class QSCScoreboardManager : ScoreboardManager {
 
     }
 
-    override fun proceedToNextInterval() {
+    override fun updateTime(value: Long) {
+        currentIntervalData.current = value.coerceAtLeast(0)
+        if (value == 0L && !currentIntervalData.increasing)
+            proceedToNextInterval()
+        else
+            timeUpdateListener?.invoke(currentIntervalData.current)
+    }
+
+    override fun updateTimeBy(value: Long) {
+        val newValue = if (currentIntervalData.increasing)
+            abs(value)
+        else
+            abs(value) * -1
+        updateTime(currentIntervalData.current + newValue)
+    }
+
+    override fun resetTime() {
+        updateTime(currentIntervalData.initial)
+    }
+
+    override fun canTimeAdvance() =
+        currentIntervalData.increasing || (!currentIntervalData.increasing && currentIntervalData.current > 0)
+
+    private fun transform(scoreInfo: ScoreInfo) =
+        scoreInfo.dataList.map { it.current }.map {
+            scoreInfo.scoreToDisplayScoreMap[it] ?: it.toString()
+        }
+
+    private fun get2ScoresForDeuceAdv(scoreInfo: ScoreInfo): Pair<Int, Int>? {
+        return if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger })
+            scoreInfo.dataList[0].current to scoreInfo.dataList[1].current
+        else
+            return null
+    }
+
+    private fun proceedToNextInterval() {
         //at the end so don't increase anymore
         if (currentIntervalIndex >= scoreboard.intervalList.size - 1)
             return
@@ -116,31 +175,8 @@ class QSCScoreboardManager : ScoreboardManager {
             }
         } else
             currentScoreInfo.dataList.forEach { it.reset() }
-    }
 
-    override fun setTime(value: Long) {
-        if (value <= 0)
-            proceedToNextInterval()
-        else
-            currentIntervalData.current = value
-    }
-
-    override fun getInitialTime() =
-        currentIntervalData.initial
-
-    override fun isTimeIncreasing() =
-        currentIntervalData.increasing
-
-    private fun transform(scoreInfo: ScoreInfo) =
-        scoreInfo.dataList.map { it.current }.map {
-            scoreInfo.scoreToDisplayScoreMap[it] ?: it.toString()
-        }
-
-    private fun get2ScoresForDeuceAdv(scoreInfo: ScoreInfo): Pair<Int, Int>? {
-        return if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger })
-            scoreInfo.dataList[0].current to scoreInfo.dataList[1].current
-        else
-            return null
+        triggerUpdateListeners()
     }
 
 

@@ -6,9 +6,12 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import io.mockk.MockKAnnotations
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
-import org.junit.Assert
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 
@@ -21,6 +24,20 @@ class QSCScoreboardManagerTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
+        resetMocks()
+    }
+
+    private fun resetMocks() {
+        sut.scoresUpdateListener = mockk()
+        every { sut.scoresUpdateListener?.invoke(any()) } answers { }
+        sut.timeUpdateListener = mockk()
+        every { sut.timeUpdateListener?.invoke(any()) } answers { }
+        sut.intervalIndexUpdateListener = mockk()
+        every { sut.intervalIndexUpdateListener?.invoke(any()) } answers { }
+        sut.incrementListUpdateListener = mockk()
+        every { sut.incrementListUpdateListener?.invoke(any()) } answers { }
+        sut.teamSizeUpdateListener = mockk()
+        every { sut.teamSizeUpdateListener?.invoke(any()) } answers { }
     }
 
     @Test
@@ -40,15 +57,68 @@ class QSCScoreboardManagerTest {
                     )
         )
 
-        sut.updateScore(0, 0)
-        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-        sut.updateScore(0, 1)
-        Assert.assertEquals("5", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+        run `increase player 1 by 2`@{
+            sut.updateScore(0, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("2"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+        run `increase player 1 by 3`@{
+            sut.updateScore(0, 1)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("5"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
 
-        sut.updateScore(1, 1)
-        Assert.assertEquals("3", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
-        sut.updateScore(1, 1)
-        Assert.assertEquals("6", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+        run `increase player 2 by 3`@{
+            sut.updateScore(1, 1)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("5"),
+                            DisplayedScore.CustomDisplayedScore("3"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+
+        run `increase player 2 by 3`@{
+            sut.updateScore(1, 1)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("5"),
+                            DisplayedScore.CustomDisplayedScore("6"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
 
     }
 
@@ -80,15 +150,37 @@ class QSCScoreboardManagerTest {
                     )
         )
 
-        sut.setTime(3)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-        Assert.assertEquals("3", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
-
-        sut.setTime(0)
-        Assert.assertEquals(1, sut.currentIntervalIndex)
-        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-        Assert.assertEquals("3", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+        run `update time to 3`@{
+            sut.updateTime(3)
+            verify(exactly = 1) { sut.timeUpdateListener?.invoke(3L) }
+            resetMocks()
+        }
+        run `update time to 0`@{
+            sut.updateTime(0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("2"),
+                            DisplayedScore.CustomDisplayedScore("3"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.timeUpdateListener?.invoke(4L) }
+            verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(1) }
+            verify(exactly = 1) {
+                sut.incrementListUpdateListener?.invoke(
+                    listOf(
+                        listOf(2, 3),
+                        listOf(2, 3),
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.teamSizeUpdateListener?.invoke(2) }
+            resetMocks()
+        }
 
     }
 
@@ -132,23 +224,90 @@ class QSCScoreboardManagerTest {
                         0, 0
                     )
         )
+        run `increase player 1 by 1`@{
 
-        sut.updateScore(0, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        Assert.assertEquals("1", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-        sut.updateScore(0, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
+            sut.updateScore(0, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+        run `increase player 1 by 1`@{
+            sut.updateScore(0, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("2"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+        run `increase player 1 by 1`@{
+            sut.updateScore(0, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.timeUpdateListener?.invoke(0L) }
+            verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(1) }
+            verify(exactly = 1) {
+                sut.incrementListUpdateListener?.invoke(
+                    listOf(
+                        listOf(1),
+                        listOf(20),
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.teamSizeUpdateListener?.invoke(2) }
+            resetMocks()
+        }
 
-        sut.updateScore(0, 0)
-        Assert.assertEquals(1, sut.currentIntervalIndex)
-        Assert.assertEquals("0", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-
-        sut.updateScore(1, 0)
-        Assert.assertEquals(2, sut.currentIntervalIndex)
-        Assert.assertEquals("0", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
-
-
+        run `increase player 2 by 20`@{
+            sut.updateScore(1, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.timeUpdateListener?.invoke(0) }
+            verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(2) }
+            verify(exactly = 1) {
+                sut.incrementListUpdateListener?.invoke(
+                    listOf(
+                        listOf(1),
+                        listOf(20),
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.teamSizeUpdateListener?.invoke(2) }
+            resetMocks()
+        }
     }
 
     @Test
@@ -179,49 +338,142 @@ class QSCScoreboardManagerTest {
                         0, 0
                     )
         )
-
-        sut.updateScore(0, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        Assert.assertEquals("1", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-        sut.updateScore(0, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        Assert.assertEquals("2", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-        sut.updateScore(1, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        Assert.assertEquals("1", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
-        sut.updateScore(1, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        sut.getScores().apply {
-            Assert.assertEquals(DisplayedScore.Blank, displayedScores[0])
-            Assert.assertEquals(DisplayedScore.Blank, displayedScores[1])
-            Assert.assertEquals(DisplayedScore.Deuce, overallDisplayedScore)
-        }
-        sut.updateScore(0, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        sut.getScores().apply {
-            Assert.assertEquals(DisplayedScore.Advantage, displayedScores[0])
-            Assert.assertEquals(DisplayedScore.Blank, displayedScores[1])
-            Assert.assertEquals(DisplayedScore.Blank, overallDisplayedScore)
-        }
-        sut.updateScore(1, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        sut.getScores().apply {
-            Assert.assertEquals(DisplayedScore.Blank, displayedScores[0])
-            Assert.assertEquals(DisplayedScore.Blank, displayedScores[1])
-            Assert.assertEquals(DisplayedScore.Deuce, overallDisplayedScore)
-        }
-        sut.updateScore(1, 0)
-        Assert.assertEquals(0, sut.currentIntervalIndex)
-        sut.getScores().apply {
-            Assert.assertEquals(DisplayedScore.Blank, displayedScores[0])
-            Assert.assertEquals(DisplayedScore.Advantage, displayedScores[1])
-            Assert.assertEquals(DisplayedScore.Blank, overallDisplayedScore)
+        run `increase player 1 by 1`@{
+            sut.updateScore(0, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
         }
 
-        sut.updateScore(1, 0)
-        Assert.assertEquals(1, sut.currentIntervalIndex)
-        Assert.assertEquals("1", (sut.getScores().displayedScores[0] as? DisplayedScore.CustomDisplayedScore)?.display)
-        Assert.assertEquals("1", (sut.getScores().displayedScores[1] as? DisplayedScore.CustomDisplayedScore)?.display)
+        run `increase player 1 by 1`@{
+            sut.updateScore(0, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("2"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+        run `increase player 2 by 1`@{
+            sut.updateScore(1, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("2"),
+                            DisplayedScore.CustomDisplayedScore("1"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+        run `increase player 2 by 1`@{
+            sut.updateScore(1, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.Blank,
+                            DisplayedScore.Blank,
+                        ),
+                        overallDisplayedScore = DisplayedScore.Deuce
+                    )
+                )
+            }
+            resetMocks()
+        }
+
+        run `increase player 1 by 1`@{
+            sut.updateScore(0, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.Advantage,
+                            DisplayedScore.Blank,
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+
+        run `increase player 2 by 1`@{
+            sut.updateScore(1, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.Blank,
+                            DisplayedScore.Blank,
+                        ),
+                        overallDisplayedScore = DisplayedScore.Deuce
+                    )
+                )
+            }
+            resetMocks()
+        }
+        run `increase player 2 by 1`@{
+            sut.updateScore(1, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.Blank,
+                            DisplayedScore.Advantage,
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+
+        run `increase player 2 by 1`@{
+            sut.updateScore(1, 0)
+            verify(exactly = 1) {
+                sut.scoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.CustomDisplayedScore("1"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.timeUpdateListener?.invoke(0L) }
+            verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(1) }
+            verify(exactly = 1) {
+                sut.incrementListUpdateListener?.invoke(
+                    listOf(
+                        listOf(1),
+                        listOf(1),
+                    )
+                )
+            }
+            verify(exactly = 1) { sut.teamSizeUpdateListener?.invoke(2) }
+            resetMocks()
+        }
+
 
     }
 
