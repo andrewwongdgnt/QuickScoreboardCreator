@@ -33,9 +33,7 @@
       "intervalData": {
         "current": 720000,
         "initial": 720000,
-        "increasing": false,
-        "type": "DEFAULT",
-        "intervalType": "QUARTER"
+        "increasing": false
       }
     },
     {

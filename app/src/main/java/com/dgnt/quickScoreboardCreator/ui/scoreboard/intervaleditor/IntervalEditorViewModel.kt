@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
@@ -38,20 +39,16 @@ class IntervalEditorViewModel @Inject constructor(
 
     private var centiSecond = 0
 
-    private var initialTimeValue = 0L
-    private var isTimeIncreasing = false
+    private val initialTimeValue
+        get() = intervalList.getOrNull(intervalValue - 1)?.intervalData?.initial
+    private val isTimeIncreasing
+        get() = intervalList.getOrNull(intervalValue - 1)?.intervalData?.increasing
+
+    private var intervalList = listOf<IntervalConfig>()
     private var currentTimeValue = 0L
         set(value) {
-            if (value > initialTimeValue && !isTimeIncreasing) {
-                timeTransformer.toTimeData(initialTimeValue).let {
-                    errors = errors + IntervalEditorErrorType.Time(it.minute, it.second)
-                }
-            } else {
-                errors.find { it is IntervalEditorErrorType.Time }?.let {
-                    errors = errors - it
-                }
-            }
             field = value
+            validate()
         }
     var intervalString by mutableStateOf("")
         private set
@@ -59,14 +56,8 @@ class IntervalEditorViewModel @Inject constructor(
     private var maxInterval = 1
     private var intervalValue = 1
         set(value) {
-            if (value < 0 || value > maxInterval) {
-                errors = errors + IntervalEditorErrorType.Interval(maxInterval)
-            } else {
-                errors.find { it is IntervalEditorErrorType.Interval }?.let {
-                    errors = errors - it
-                }
-            }
             field = value
+            validate()
         }
 
     var labelInfo by mutableStateOf(Pair<String?, Int?>(null, null))
@@ -112,8 +103,7 @@ class IntervalEditorViewModel @Inject constructor(
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
 
-            initialTimeValue = it.intervalList[intervalValue - 1].intervalData.initial
-            isTimeIncreasing = it.intervalList[intervalValue - 1].intervalData.increasing
+            intervalList = it.intervalList
             maxInterval = it.intervalList.size
         }
     }
@@ -125,11 +115,18 @@ class IntervalEditorViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Done)
 
             IntervalEditorEvent.OnConfirm -> {
-                val newCurrentTimeValue = if (!isTimeIncreasing)
-                    currentTimeValue.coerceIn(0, initialTimeValue)
-                else
-                    currentTimeValue.coerceAtLeast(0)
-                sendUiEvent(UiEvent.IntervalUpdated(newCurrentTimeValue, (intervalValue - 1).coerceIn(0, maxInterval - 1)))
+                val initialTimeValue = initialTimeValue
+                val isTimeIncreasing = isTimeIncreasing
+                if (initialTimeValue == null || isTimeIncreasing == null) {
+                    sendUiEvent(UiEvent.Done)
+                } else {
+                    val newCurrentTimeValue = if (!isTimeIncreasing)
+                        currentTimeValue.coerceIn(0, initialTimeValue)
+                    else
+                        currentTimeValue.coerceAtLeast(0)
+                    sendUiEvent(UiEvent.IntervalUpdated(newCurrentTimeValue, (intervalValue - 1).coerceIn(0, maxInterval - 1)))
+                }
+
             }
 
             is IntervalEditorEvent.OnMinuteChange -> {
@@ -174,6 +171,22 @@ class IntervalEditorViewModel @Inject constructor(
         value
     else
         null
+
+    private fun validate() {
+        val errors = mutableSetOf<IntervalEditorErrorType>()
+        val initialTimeValue = initialTimeValue
+        val isTimeIncreasing = isTimeIncreasing
+        if (initialTimeValue != null && isTimeIncreasing != null && currentTimeValue > initialTimeValue && !isTimeIncreasing) {
+            timeTransformer.toTimeData(initialTimeValue).let {
+                errors.add(IntervalEditorErrorType.Time(it.minute, it.second))
+            }
+        }
+        if (intervalValue < 0 || intervalValue > maxInterval) {
+            errors.add(IntervalEditorErrorType.Interval(maxInterval))
+        }
+
+        this.errors = errors
+    }
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
