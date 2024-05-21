@@ -13,7 +13,7 @@ import org.junit.Test
 class QSCScoreboardCategorizerTest {
 
     @InjectMockKs
-    lateinit var sut: QSCScoreboardCategorizer
+    private lateinit var sut: QSCScoreboardCategorizer
 
     @Before
     fun setup() {

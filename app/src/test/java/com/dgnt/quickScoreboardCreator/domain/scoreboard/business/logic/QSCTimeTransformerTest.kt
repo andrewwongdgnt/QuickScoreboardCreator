@@ -12,7 +12,7 @@ import org.junit.Test
 class QSCTimeTransformerTest {
 
     @InjectMockKs
-    lateinit var sut: QSCTimeTransformer
+    private lateinit var sut: QSCTimeTransformer
 
     @Before
     fun setup() {

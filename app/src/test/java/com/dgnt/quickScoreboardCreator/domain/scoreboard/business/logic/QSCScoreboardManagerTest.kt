@@ -19,7 +19,7 @@ import org.junit.Test
 class QSCScoreboardManagerTest {
 
     @InjectMockKs
-    lateinit var sut: QSCScoreboardManager
+    private lateinit var sut: QSCScoreboardManager
 
     @Before
     fun setup() {
