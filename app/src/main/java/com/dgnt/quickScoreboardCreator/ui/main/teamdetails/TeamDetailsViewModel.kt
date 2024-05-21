@@ -27,8 +27,7 @@ class TeamDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var team by mutableStateOf<TeamEntity?>(null)
-        private set
+    private var teamId: Int? = null
 
     var teamIconChanging by mutableStateOf(false)
         private set
@@ -68,7 +67,7 @@ class TeamDetailsViewModel @Inject constructor(
                 title = it.title
                 description = it.description
                 teamIcon = it.teamIcon
-                team = it
+                teamId = it.id
             }
         }
     }
@@ -81,7 +80,7 @@ class TeamDetailsViewModel @Inject constructor(
                         insertTeamListUseCase(
                             listOf(
                                 TeamEntity(
-                                    id = team?.id,
+                                    id = teamId,
                                     title = title,
                                     description = description,
                                     teamIcon = teamIcon!!
@@ -92,11 +91,13 @@ class TeamDetailsViewModel @Inject constructor(
                 }
                 sendUiEvent(UiEvent.Done)
             }
+
             TeamDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
 
             is TeamDetailsEvent.OnTeamIconEdit -> {
                 teamIconChanging = true
             }
+
             is TeamDetailsEvent.OnNewTeamIcon -> {
                 teamIcon = event.teamIcon
                 teamIconChanging = false

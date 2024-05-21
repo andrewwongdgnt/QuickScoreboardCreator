@@ -10,7 +10,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import kotlin.math.abs
 
 
-class QSCScoreboardManager() : ScoreboardManager {
+class QSCScoreboardManager : ScoreboardManager {
 
 
     private val scoreboard: Scoreboard =
