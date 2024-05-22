@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -40,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -52,17 +54,20 @@ fun TeamDetailsDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: TeamDetailsViewModel = hiltViewModel()
 ) {
-    val valid = viewModel.valid
-
+    val valid by viewModel.valid.collectAsStateWithLifecycle()
+    val title by viewModel.title.collectAsStateWithLifecycle()
+    val description by viewModel.description.collectAsStateWithLifecycle()
+    val teamIcon by viewModel.teamIcon.collectAsStateWithLifecycle()
+    val teamIconChanging by viewModel.teamIconChanging.collectAsStateWithLifecycle()
     TeamDetailsInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
-        viewModel.title,
-        { viewModel.title = it },
-        viewModel.description,
-        { viewModel.description = it },
-        viewModel.teamIcon,
-        viewModel.teamIconChanging,
+        title,
+        viewModel::onTitleChange,
+        description,
+        viewModel::onDescriptionChange,
+        teamIcon,
+        teamIconChanging,
         viewModel::onEvent,
         valid,
         { viewModel.onEvent(TeamDetailsEvent.OnConfirm) },

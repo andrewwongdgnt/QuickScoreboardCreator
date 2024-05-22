@@ -1,9 +1,5 @@
 package com.dgnt.quickScoreboardCreator.ui.main.teamdetails
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +11,13 @@ import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -29,18 +31,21 @@ class TeamDetailsViewModel @Inject constructor(
 
     private var teamId: Int? = null
 
-    var teamIconChanging by mutableStateOf(false)
-        private set
+    private val _title = MutableStateFlow("")
+    val title: StateFlow<String> = _title.asStateFlow()
 
-    var title by mutableStateOf("")
+    private val _description = MutableStateFlow("")
+    val description: StateFlow<String> = _description.asStateFlow()
 
-    var description by mutableStateOf("")
+    private val _teamIcon = MutableStateFlow(TeamIcon.ALIEN)
+    val teamIcon: StateFlow<TeamIcon?> = _teamIcon.asStateFlow()
 
-    var teamIcon by mutableStateOf<TeamIcon?>(null)
-        private set
+    private val _teamIconChanging = MutableStateFlow(false)
+    val teamIconChanging: StateFlow<Boolean> = _teamIconChanging.asStateFlow()
 
-    var valid by mutableStateOf(false)
-        private set
+    val valid: StateFlow<Boolean> = title.map {
+        it.isNotBlank()
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -49,41 +54,43 @@ class TeamDetailsViewModel @Inject constructor(
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
         } ?: run {
-            teamIcon = TeamIcon.entries.toTypedArray().let {
+            _teamIcon.value = TeamIcon.entries.toTypedArray().let {
                 it[Random.nextInt(it.size)]
             }
-        }
-        viewModelScope.launch {
-            snapshotFlow { title }
-                .collect {
-                    valid = validate()
-                }
         }
     }
 
     private fun initWithId(id: Int) {
         viewModelScope.launch {
             getTeamUseCase(id)?.let {
-                title = it.title
-                description = it.description
-                teamIcon = it.teamIcon
+                _title.value = it.title
+                _description.value = it.description
+                _teamIcon.value = it.teamIcon
                 teamId = it.id
             }
         }
     }
 
+    fun onTitleChange(title: String) {
+        _title.value = title
+    }
+
+    fun onDescriptionChange(description: String) {
+        _description.value = description
+    }
+
     fun onEvent(event: TeamDetailsEvent) {
         when (event) {
             TeamDetailsEvent.OnConfirm -> {
-                if (validate()) {
+                if (valid.value) {
                     viewModelScope.launch {
                         insertTeamListUseCase(
                             listOf(
                                 TeamEntity(
                                     id = teamId,
-                                    title = title,
-                                    description = description,
-                                    teamIcon = teamIcon!!
+                                    title = title.value,
+                                    description = description.value,
+                                    teamIcon = teamIcon.value!!
                                 )
                             )
                         )
@@ -95,17 +102,15 @@ class TeamDetailsViewModel @Inject constructor(
             TeamDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
 
             is TeamDetailsEvent.OnTeamIconEdit -> {
-                teamIconChanging = true
+                _teamIconChanging.value = true
             }
 
             is TeamDetailsEvent.OnNewTeamIcon -> {
-                teamIcon = event.teamIcon
-                teamIconChanging = false
+                _teamIcon.value = event.teamIcon
+                _teamIconChanging.value = false
             }
         }
     }
-
-    private fun validate() = title.isNotBlank()
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
