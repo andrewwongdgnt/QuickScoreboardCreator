@@ -11,7 +11,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
@@ -39,7 +39,7 @@ fun TeamListContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: TeamListViewModel = hiltViewModel()
 ) {
-    val categorizedTeamList = viewModel.categorizedTeamList.collectAsState(initial = emptyList())
+    val categorizedTeamList = viewModel.categorizedTeamList.collectAsStateWithLifecycle(initialValue = emptyList())
 
     TeamListInnerContent(
         viewModel.uiEvent,

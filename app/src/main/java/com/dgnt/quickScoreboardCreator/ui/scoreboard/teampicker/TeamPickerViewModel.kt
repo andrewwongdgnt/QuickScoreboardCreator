@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamPickerViewModel @Inject constructor(
-    private val teamCategorizer: TeamCategorizer,
+    teamCategorizer: TeamCategorizer,
     getTeamListUseCase: GetTeamListUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {

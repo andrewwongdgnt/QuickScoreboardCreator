@@ -11,11 +11,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
@@ -31,7 +31,7 @@ fun TeamPickerDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: TeamPickerViewModel = hiltViewModel()
 ) {
-    val categorizedTeamList = viewModel.categorizedTeamList.collectAsState(initial = emptyList())
+    val categorizedTeamList = viewModel.categorizedTeamList.collectAsStateWithLifecycle(initialValue = emptyList())
 
     TeamPickerInnerDialogContent(
         viewModel.uiEvent,
