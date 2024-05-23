@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
@@ -63,15 +63,11 @@ fun TeamDetailsDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         title,
-        viewModel::onTitleChange,
         description,
-        viewModel::onDescriptionChange,
         teamIcon,
         teamIconChanging,
         viewModel::onEvent,
-        valid,
-        { viewModel.onEvent(TeamDetailsEvent.OnConfirm) },
-        { viewModel.onEvent(TeamDetailsEvent.OnDismiss) },
+        valid
     )
 
 }
@@ -81,15 +77,11 @@ private fun TeamDetailsInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     title: String,
-    onTitleChange: (String) -> Unit,
     description: String,
-    onDescriptionChange: (String) -> Unit,
     teamIcon: TeamIcon?,
     teamIconChanging: Boolean,
     onEvent: (TeamDetailsEvent) -> Unit,
-    valid: Boolean,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
+    valid: Boolean
 ) {
 
     LaunchedEffect(key1 = true) {
@@ -100,7 +92,7 @@ private fun TeamDetailsInnerDialogContent(
             usePlatformDefaultWidth = false,
             dismissOnClickOutside = false
         ),
-        onDismissRequest = onDismiss,
+        onDismissRequest = { onEvent(TeamDetailsEvent.OnDismiss) },
         title = {
             Text(
                 style = MaterialTheme.typography.titleSmall,
@@ -109,7 +101,7 @@ private fun TeamDetailsInnerDialogContent(
         },
         dismissButton = {
             Button(
-                onClick = onDismiss
+                onClick = { onEvent(TeamDetailsEvent.OnDismiss) }
             ) {
                 Text(stringResource(id = android.R.string.cancel))
             }
@@ -117,7 +109,7 @@ private fun TeamDetailsInnerDialogContent(
         confirmButton = {
             Button(
                 enabled = valid,
-                onClick = onConfirm
+                onClick = { onEvent(TeamDetailsEvent.OnConfirm) }
             ) {
                 Text(stringResource(id = android.R.string.ok))
             }
@@ -130,14 +122,14 @@ private fun TeamDetailsInnerDialogContent(
             ) {
                 TextField(
                     value = title,
-                    onValueChange = onTitleChange,
+                    onValueChange = { onEvent(TeamDetailsEvent.OnTitleChange(it)) },
                     placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = description,
-                    onValueChange = onDescriptionChange,
+                    onValueChange = { onEvent(TeamDetailsEvent.OnDescriptionChange(it)) },
                     placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false,
@@ -175,63 +167,60 @@ private fun TeamDetailsInnerDialogContent(
                         }
 
                     }
-                } else
+                } else if (teamIcon != null) {
 
-                    if (teamIcon != null) {
-
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Box(
-                            modifier = Modifier.clickable(onClick = {
-                                onEvent(TeamDetailsEvent.OnTeamIconEdit)
-                            })
-                        ) {
-                            val primaryColor = MaterialTheme.colorScheme.primary
-                            val radiusModifier = 0.65f
-                            Image(
-                                painterResource(teamIcon.res),
-                                null,
-                                modifier = Modifier
-                                    .drawBehind {
-                                        drawCircle(
-                                            style = Stroke(
-                                                width = 20f
-                                            ),
-                                            color = primaryColor,
-                                            radius = size.minDimension * radiusModifier
-                                        )
-                                    }
-                                    .drawBehind {
-                                        drawCircle(
-                                            color = Color.White,
-                                            radius = size.minDimension * radiusModifier
-                                        )
-                                    }
-                            )
-                            val tint = MaterialTheme.colorScheme.background
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = stringResource(R.string.edit),
-                                tint = tint,
-                                modifier = Modifier
-                                    .padding(top = 10.dp, start = 10.dp)
-                                    .align(Alignment.BottomEnd)
-                                    .drawBehind {
-                                        drawCircle(
-                                            color = primaryColor.copy(alpha = 0.7f),
-                                            radius = size.minDimension * 0.7f
-                                        )
-                                    }
-                            )
-                        }
-                    } else
-                        CircularProgressIndicator(
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier.clickable(onClick = {
+                            onEvent(TeamDetailsEvent.OnTeamIconEdit)
+                        })
+                    ) {
+                        val primaryColor = MaterialTheme.colorScheme.primary
+                        val radiusModifier = 0.65f
+                        Image(
+                            painterResource(teamIcon.res),
+                            null,
                             modifier = Modifier
-                                .width(72.dp)
-                                .height(72.dp)
-                                .padding(5.dp),
-                            color = MaterialTheme.colorScheme.secondary,
-                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                                .drawBehind {
+                                    drawCircle(
+                                        style = Stroke(
+                                            width = 20f
+                                        ),
+                                        color = primaryColor,
+                                        radius = size.minDimension * radiusModifier
+                                    )
+                                }
+                                .drawBehind {
+                                    drawCircle(
+                                        color = Color.White,
+                                        radius = size.minDimension * radiusModifier
+                                    )
+                                }
                         )
+                        val tint = MaterialTheme.colorScheme.background
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.edit),
+                            tint = tint,
+                            modifier = Modifier
+                                .padding(top = 10.dp, start = 10.dp)
+                                .align(Alignment.BottomEnd)
+                                .drawBehind {
+                                    drawCircle(
+                                        color = primaryColor.copy(alpha = 0.7f),
+                                        radius = size.minDimension * 0.7f
+                                    )
+                                }
+                        )
+                    }
+                } else
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(72.dp)
+                            .padding(5.dp),
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
 
             }
         }
@@ -251,15 +240,11 @@ private fun `New Icon Selection`() =
         emptyFlow(),
         {},
         "",
-        {},
         "",
-        {},
         TeamIcon.GORILLA,
         true,
         {},
-        true,
-        {},
-        {},
+        true
     )
 
 @Preview(showBackground = true)
@@ -269,15 +254,11 @@ private fun `Gorilla`() =
         emptyFlow(),
         {},
         "",
-        {},
         "",
-        {},
         TeamIcon.GORILLA,
         false,
         {},
-        true,
-        {},
-        {},
+        true
     )
 
 @Preview(showBackground = true)
@@ -287,15 +268,11 @@ private fun `Tiger`() =
         emptyFlow(),
         {},
         "",
-        {},
         "",
-        {},
         TeamIcon.TIGER,
         false,
         {},
         true,
-        {},
-        {},
     )
 
 @Preview(showBackground = true)
@@ -305,15 +282,11 @@ private fun `Alien`() =
         emptyFlow(),
         {},
         "",
-        {},
         "",
-        {},
         TeamIcon.ALIEN,
         false,
         {},
         true,
-        {},
-        {},
     )
 
 @Preview(showBackground = true)
@@ -323,13 +296,9 @@ private fun `Loading icon`() =
         emptyFlow(),
         {},
         "",
-        {},
         "",
-        {},
         null,
         false,
         {},
         true,
-        {},
-        {},
     )

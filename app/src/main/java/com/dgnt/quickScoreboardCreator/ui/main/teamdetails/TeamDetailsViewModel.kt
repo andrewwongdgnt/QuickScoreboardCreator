@@ -37,7 +37,7 @@ class TeamDetailsViewModel @Inject constructor(
     private val _description = MutableStateFlow("")
     val description: StateFlow<String> = _description.asStateFlow()
 
-    private val _teamIcon = MutableStateFlow(TeamIcon.ALIEN)
+    private val _teamIcon = MutableStateFlow<TeamIcon?>(null)
     val teamIcon: StateFlow<TeamIcon?> = _teamIcon.asStateFlow()
 
     private val _teamIconChanging = MutableStateFlow(false)
@@ -71,14 +71,6 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onTitleChange(title: String) {
-        _title.value = title
-    }
-
-    fun onDescriptionChange(description: String) {
-        _description.value = description
-    }
-
     fun onEvent(event: TeamDetailsEvent) {
         when (event) {
             TeamDetailsEvent.OnConfirm -> {
@@ -101,9 +93,11 @@ class TeamDetailsViewModel @Inject constructor(
 
             TeamDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
 
-            is TeamDetailsEvent.OnTeamIconEdit -> {
-                _teamIconChanging.value = true
-            }
+            is TeamDetailsEvent.OnTitleChange -> _title.value = event.title
+
+            is TeamDetailsEvent.OnDescriptionChange -> _description.value = event.descriptionChange
+
+            is TeamDetailsEvent.OnTeamIconEdit -> _teamIconChanging.value = true
 
             is TeamDetailsEvent.OnNewTeamIcon -> {
                 _teamIcon.value = event.teamIcon

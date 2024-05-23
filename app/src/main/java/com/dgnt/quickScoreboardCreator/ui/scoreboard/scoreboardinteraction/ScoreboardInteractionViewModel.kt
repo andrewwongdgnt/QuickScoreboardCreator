@@ -140,7 +140,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
-            currentInterval = 1
             scoreboardManager.apply {
                 scoreCarriesOver = it.scoreCarriesOver
                 intervalList = it.intervalList.map {

@@ -1,10 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
 import android.content.res.Resources
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +15,13 @@ import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,17 +34,20 @@ class ScoreboardDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var scoreboard by mutableStateOf<ScoreboardEntity?>(null)
-        private set
+    private var scoreboardId: Int? = null
 
-    var title by mutableStateOf("")
+    private val _title = MutableStateFlow("")
+    val title = _title.asStateFlow()
 
-    var description by mutableStateOf("")
+    private val _description = MutableStateFlow("")
+    val description = _description.asStateFlow()
 
-    var scoreCarriesOver by mutableStateOf(true)
+    private val _scoreCarriesOver = MutableStateFlow(true)
+    val scoreCarriesOver = _scoreCarriesOver.asStateFlow()
 
-    var valid by mutableStateOf(false)
-        private set
+    val valid: StateFlow<Boolean> = title.map {
+        it.isNotBlank()
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -53,47 +58,42 @@ class ScoreboardDetailsViewModel @Inject constructor(
         } ?: savedStateHandle.get<ScoreboardType>(TYPE)?.let {
             initWithScoreboardType(it)
         }
-        viewModelScope.launch {
-            snapshotFlow { title }
-                .collect {
-                    valid = validate()
-                }
-        }
+
     }
 
     private fun initWithId(id: Int) {
         viewModelScope.launch {
             getScoreboardUseCase(id)?.let {
-                title = it.title
-                description = it.description
-                scoreCarriesOver = it.scoreCarriesOver
-                scoreboard = it
+                _title.value = it.title
+                _description.value = it.description
+                _scoreCarriesOver.value = it.scoreCarriesOver
+                scoreboardId = it.id
             }
         }
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        title = resources.getString(scoreboardType.titleRes)
-        description = resources.getString(scoreboardType.descriptionRes)
+        _title.value = resources.getString(scoreboardType.titleRes)
+        _description.value = resources.getString(scoreboardType.descriptionRes)
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
-            scoreCarriesOver = it.scoreCarriesOver
+            _scoreCarriesOver.value = it.scoreCarriesOver
         }
     }
 
     fun onEvent(event: ScoreboardDetailsEvent) {
         when (event) {
             ScoreboardDetailsEvent.OnConfirm -> {
-                if (validate()) {
+                if (valid.value) {
                     viewModelScope.launch {
                         insertScoreboardListUseCase(
                             listOf(
                                 ScoreboardEntity(
-                                    id = scoreboard?.id,
-                                    title = title,
-                                    description = description,
-                                    scoreCarriesOver = scoreCarriesOver
+                                    id = scoreboardId,
+                                    title = title.value,
+                                    description = description.value,
+                                    scoreCarriesOver = scoreCarriesOver.value
                                 )
                             )
                         )
@@ -103,10 +103,11 @@ class ScoreboardDetailsViewModel @Inject constructor(
             }
 
             ScoreboardDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
+            is ScoreboardDetailsEvent.OnDescriptionChange -> _description.value = event.descriptionChange
+            is ScoreboardDetailsEvent.OnScoreCarriesOverChange -> _scoreCarriesOver.value = event.scoreCarriesOver
+            is ScoreboardDetailsEvent.OnTitleChange -> _title.value = event.title
         }
     }
-
-    private fun validate() = title.isNotBlank()
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

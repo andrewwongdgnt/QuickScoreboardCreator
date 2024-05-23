@@ -15,12 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.composable.LabelSwitch
@@ -32,20 +34,19 @@ fun ScoreboardDetailsDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardDetailsViewModel = hiltViewModel()
 ) {
-    val valid = viewModel.valid
+    val valid by viewModel.valid.collectAsStateWithLifecycle()
+    val title by viewModel.title.collectAsStateWithLifecycle()
+    val description by viewModel.description.collectAsStateWithLifecycle()
+    val scoreCarriesOver by viewModel.scoreCarriesOver.collectAsStateWithLifecycle()
 
     ScoreboardDetailsInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
-        viewModel.title,
-        { viewModel.title = it },
-        viewModel.description,
-        { viewModel.description = it },
-        viewModel.scoreCarriesOver,
-        { viewModel.scoreCarriesOver = it },
+        title,
+        description,
+        scoreCarriesOver,
+        viewModel::onEvent,
         valid,
-        { viewModel.onEvent(ScoreboardDetailsEvent.OnConfirm) },
-        { viewModel.onEvent(ScoreboardDetailsEvent.OnDismiss) }
     )
 }
 
@@ -54,14 +55,10 @@ private fun ScoreboardDetailsInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     title: String,
-    onTitleChange: (String) -> Unit,
     description: String,
-    onDescriptionChange: (String) -> Unit,
     scoreCarriesOver: Boolean,
-    onScoreCarriesOverChange: (Boolean) -> Unit,
+    onEvent: (ScoreboardDetailsEvent) -> Unit,
     valid: Boolean,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
 ) {
 
     LaunchedEffect(key1 = true) {
@@ -72,7 +69,7 @@ private fun ScoreboardDetailsInnerDialogContent(
             usePlatformDefaultWidth = false,
             dismissOnClickOutside = false
         ),
-        onDismissRequest = onDismiss,
+        onDismissRequest = { onEvent(ScoreboardDetailsEvent.OnDismiss) },
         title = {
             Text(
                 style = MaterialTheme.typography.titleSmall,
@@ -81,7 +78,7 @@ private fun ScoreboardDetailsInnerDialogContent(
         },
         dismissButton = {
             Button(
-                onClick = onDismiss
+                onClick = { onEvent(ScoreboardDetailsEvent.OnDismiss) }
             ) {
                 Text(stringResource(id = android.R.string.cancel))
             }
@@ -89,7 +86,7 @@ private fun ScoreboardDetailsInnerDialogContent(
         confirmButton = {
             Button(
                 enabled = valid,
-                onClick = onConfirm
+                onClick = { onEvent(ScoreboardDetailsEvent.OnConfirm) }
             ) {
                 Text(stringResource(id = android.R.string.ok))
             }
@@ -102,14 +99,14 @@ private fun ScoreboardDetailsInnerDialogContent(
                 val spacer: @Composable () -> Unit = { Spacer(modifier = Modifier.height(8.dp)) }
                 TextField(
                     value = title,
-                    onValueChange = onTitleChange,
+                    onValueChange = { onEvent(ScoreboardDetailsEvent.OnTitleChange(it)) },
                     placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 spacer()
                 TextField(
                     value = description,
-                    onValueChange = onDescriptionChange,
+                    onValueChange = { onEvent(ScoreboardDetailsEvent.OnDescriptionChange(it)) },
                     placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false,
@@ -119,7 +116,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 LabelSwitch(
                     label = stringResource(id = R.string.scoreCarriesOver),
                     checked = scoreCarriesOver,
-                    onCheckedChange = onScoreCarriesOverChange,
+                    onCheckedChange = { onEvent(ScoreboardDetailsEvent.OnScoreCarriesOverChange(it)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -134,12 +131,8 @@ private fun `Empty data`() =
         emptyFlow(),
         {},
         "",
-        {},
         "",
-        {},
         true,
         {},
         true,
-        {},
-        {},
     )
