@@ -55,7 +55,7 @@ fun ScoreboardListContent(
 ) {
 
     val categorizedScoreboards = viewModel.categorizedScoreboards.collectAsStateWithLifecycle(
-        initialValue = CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf()) to CategorizedScoreboardItemData(R.string.customScoreboardConfig, listOf())
+        initialValue = CategorizedScoreboardType(listOf()) to CategorizedScoreboardItemData(listOf())
     )
 
     ScoreboardListInnerContent(
@@ -138,12 +138,12 @@ private fun ScoreboardListInnerContent(
 
         val categoryList = listOf(
             categorizedScoreboards.first.let {
-                stringResource(it.titleRes) to it.scoreboardTypeList.map { scoreboardType ->
+                stringResource(R.string.defaultScoreboardConfig) to it.scoreboardTypeList.map { scoreboardType ->
                     ScoreboardItemData(-1, scoreboardType, stringResource(scoreboardType.titleRes), stringResource(scoreboardType.descriptionRes))
                 }
             },
             categorizedScoreboards.second.let {
-                stringResource(it.titleRes) to it.scoreboardItemDataList
+                stringResource( R.string.customScoreboardConfig) to it.scoreboardItemDataList
             }
         )
         LazyColumn(
@@ -189,9 +189,9 @@ private fun `Only defaults`() =
         emptyFlow(),
         {},
         {},
-        CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
+        CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
-                CategorizedScoreboardItemData(R.string.customScoreboardConfig, emptyList()),
+                CategorizedScoreboardItemData(emptyList()),
         {}
     )
 
@@ -203,10 +203,10 @@ private fun `Defaults and customs`() =
         emptyFlow(),
         {},
         {},
-        CategorizedScoreboardType(R.string.defaultScoreboardConfig, listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
+        CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(
-                    R.string.customScoreboardConfig, listOf(
+                   listOf(
                         ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 1", "My Description 1"),
                         ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 2", "My Description 2"),
                         ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 3", "My Description 3 "),

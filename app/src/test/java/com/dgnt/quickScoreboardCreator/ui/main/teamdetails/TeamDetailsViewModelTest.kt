@@ -50,7 +50,7 @@ class TeamDetailsViewModelTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
-        coEvery { insertTeamListUseCase.invoke(any()) } answers { listOf(1) }
+        coEvery { insertTeamListUseCase(any()) } coAnswers { listOf(1) }
     }
 
     @Test

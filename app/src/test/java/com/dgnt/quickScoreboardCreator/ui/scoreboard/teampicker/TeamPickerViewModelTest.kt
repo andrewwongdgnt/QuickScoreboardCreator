@@ -78,14 +78,6 @@ class TeamPickerViewModelTest {
         )
     )
 
-    private fun initSut() {
-        sut = TeamPickerViewModel(
-            teamCategorizer,
-            getTeamListUseCase,
-            savedStateHandle,
-        )
-    }
-
     @Before
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
@@ -93,20 +85,21 @@ class TeamPickerViewModelTest {
         every { savedStateHandle.get<Int>(Arguments.INDEX) } returns 1
         coEvery { getTeamListUseCase() } coAnswers { flow { mockTeamList } }
         coEvery { teamCategorizer(mockTeamList) } coAnswers { mockCategorizedTeamList }
+        sut = TeamPickerViewModel(
+            teamCategorizer,
+            getTeamListUseCase,
+            savedStateHandle,
+        )
     }
 
     @Test
     fun testOnDismiss() = runTest {
-        initSut()
-
         sut.onEvent(TeamPickerEvent.OnDismiss)
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
     }
 
     @Test
     fun testTeamPicked() = runTest {
-        initSut()
-
         sut.onEvent(TeamPickerEvent.OnTeamPicked(2))
         Assert.assertEquals(UiEvent.TeamUpdated(1, 2), sut.uiEvent.first())
     }

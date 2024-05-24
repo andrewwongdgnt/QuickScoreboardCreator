@@ -34,7 +34,7 @@ fun ScoreboardItemContent(
     Row(
         modifier = modifier
             .clickable {
-                onEvent(ScoreboardListEvent.OnLaunch(item))
+                onEvent(ScoreboardListEvent.OnLaunch(item.id, item.type))
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -54,7 +54,7 @@ fun ScoreboardItemContent(
                             )
                         }
                     IconButton(onClick = {
-                        onEvent(ScoreboardListEvent.OnEdit(item))
+                        onEvent(ScoreboardListEvent.OnEdit(item.id, item.type))
                     }) {
                         Icon(
                             imageVector = Icons.Default.Edit,

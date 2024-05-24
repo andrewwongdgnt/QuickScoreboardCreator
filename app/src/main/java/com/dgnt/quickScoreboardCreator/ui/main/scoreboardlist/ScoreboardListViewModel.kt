@@ -1,13 +1,10 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
-import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
@@ -23,26 +20,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScoreboardListViewModel @Inject constructor(
-    private val resources: Resources,
     getScoreboardListUseCase: GetScoreboardListUseCase,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
-    private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardCategorizer: ScoreboardCategorizer,
 ) : ViewModel() {
     private val scoreboardEntityList = getScoreboardListUseCase()
     val categorizedScoreboards = scoreboardEntityList.map { scoreboardEntityList ->
         scoreboardCategorizer(
             listOf(
-                ScoreboardType.BASKETBALL.rawRes!!,
-                ScoreboardType.HOCKEY.rawRes!!,
-                ScoreboardType.SPIKEBALL.rawRes!!,
-                ScoreboardType.TENNIS.rawRes!!,
-            ).map {
-                scoreboardLoader(resources.openRawResource(it)) as DefaultScoreboardConfig
-            }.map {
-                it.scoreboardType
-            },
+                ScoreboardType.BASKETBALL,
+                ScoreboardType.HOCKEY,
+                ScoreboardType.SPIKEBALL,
+                ScoreboardType.TENNIS,
+            ),
             scoreboardEntityList
         )
     }
@@ -60,7 +51,7 @@ class ScoreboardListViewModel @Inject constructor(
             }
 
             is ScoreboardListEvent.OnEdit -> {
-                sendUiEvent(UiEvent.ScoreboardDetails(event.scoreboard.id, event.scoreboard.type))
+                sendUiEvent(UiEvent.ScoreboardDetails(event.id, event.type))
             }
 
             is ScoreboardListEvent.OnDelete -> {
@@ -90,7 +81,7 @@ class ScoreboardListViewModel @Inject constructor(
             }
 
             is ScoreboardListEvent.OnLaunch -> {
-                sendUiEvent(UiEvent.LaunchScoreboard(event.scoreboard.id, event.scoreboard.type))
+                sendUiEvent(UiEvent.LaunchScoreboard(event.id, event.type))
             }
 
             ScoreboardListEvent.OnClearDeletedScoreboardList -> {

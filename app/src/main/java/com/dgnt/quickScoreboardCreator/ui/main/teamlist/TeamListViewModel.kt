@@ -42,7 +42,7 @@ class TeamListViewModel @Inject constructor(
             }
 
             is TeamListEvent.OnEdit -> {
-                sendUiEvent(UiEvent.TeamDetails(event.team.id))
+                sendUiEvent(UiEvent.TeamDetails(event.id))
             }
 
             is TeamListEvent.OnDelete -> {

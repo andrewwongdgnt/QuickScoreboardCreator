@@ -28,12 +28,12 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 fun TeamItemContent(
     modifier: Modifier = Modifier,
     item: TeamItemData,
-    onItemClick: (TeamItemData) -> Unit,
+    onItemClick: (Int) -> Unit,
     onItemDelete: ((Int) -> Unit)? = null,
 ) {
     Row(
         modifier = modifier.clickable {
-            onItemClick(item)
+            onItemClick(item.id)
         },
         verticalAlignment = Alignment.CenterVertically
     ) {

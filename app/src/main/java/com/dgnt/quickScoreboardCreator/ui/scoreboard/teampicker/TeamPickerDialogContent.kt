@@ -76,7 +76,7 @@ private fun TeamPickerInnerDialogContent(
         },
         text = {
             CategorizedTeamListContent(
-                onItemClick = { onEvent(TeamPickerEvent.OnTeamPicked(it.id)) },
+                onItemClick = { onEvent(TeamPickerEvent.OnTeamPicked(it)) },
                 categorizedTeamList = categorizedTeamList
             )
         }

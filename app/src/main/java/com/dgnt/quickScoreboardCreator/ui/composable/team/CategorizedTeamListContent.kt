@@ -22,7 +22,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 @Composable
 fun CategorizedTeamListContent (
     modifier:Modifier = Modifier,
-    onItemClick: (TeamItemData) -> Unit,
+    onItemClick: (Int) -> Unit,
     onItemDelete: ((Int) -> Unit)? = null,
     categorizedTeamList: List<CategorizedTeamItemData>
 ) {
