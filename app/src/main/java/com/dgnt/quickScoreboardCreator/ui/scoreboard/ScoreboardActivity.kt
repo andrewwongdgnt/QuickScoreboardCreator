@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -57,8 +59,8 @@ class ScoreboardActivity : ComponentActivity() {
                                 typeMap = mapOf(typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java))
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
-                                val updatedTeamData = viewModel.updatedTeamData
-                                val updatedIntervalData = viewModel.updatedIntervalData
+                                val updatedTeamData by viewModel.updatedTeamData.collectAsStateWithLifecycle()
+                                val updatedIntervalData by viewModel.updatedIntervalData.collectAsStateWithLifecycle()
                                 ScoreboardInteractionContent(
                                     updatedTeamData,
                                     updatedIntervalData,
@@ -73,8 +75,8 @@ class ScoreboardActivity : ComponentActivity() {
                                 )
 
                                 //reset these so any recompose won't set the real values again
-                                viewModel.updatedTeamData = null
-                                viewModel.updatedIntervalData = null
+                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedTeamData(null))
+                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedIntervalData(null))
                             }
                             dialog<NavDestination.TeamPicker> { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
@@ -84,7 +86,7 @@ class ScoreboardActivity : ComponentActivity() {
                                             UiEvent.Done -> navController.popBackStack()
 
                                             is UiEvent.TeamUpdated -> {
-                                                viewModel.updatedTeamData = UpdatedTeamData(uiEvent.scoreIndex, uiEvent.teamId)
+                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedTeamData(UpdatedTeamData(uiEvent.scoreIndex, uiEvent.teamId)))
                                                 navController.popBackStack()
                                             }
 
@@ -104,7 +106,7 @@ class ScoreboardActivity : ComponentActivity() {
                                             UiEvent.Done -> navController.popBackStack()
 
                                             is UiEvent.IntervalUpdated -> {
-                                                viewModel.updatedIntervalData = UpdatedIntervalData(uiEvent.timeValue, uiEvent.intervalIndex)
+                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedIntervalData(UpdatedIntervalData(uiEvent.timeValue, uiEvent.intervalIndex)))
                                                 navController.popBackStack()
                                             }
 

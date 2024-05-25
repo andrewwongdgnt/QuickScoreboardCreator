@@ -1,12 +1,22 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class ScoreboardActivityViewModel : ViewModel() {
-    var updatedTeamData by mutableStateOf<UpdatedTeamData?>(null)
-    var updatedIntervalData by mutableStateOf<UpdatedIntervalData?>(null)
+    private val _updatedTeamData = MutableStateFlow<UpdatedTeamData?>(null)
+    val updatedTeamData: StateFlow<UpdatedTeamData?> = _updatedTeamData.asStateFlow()
+
+    private val _updatedIntervalData = MutableStateFlow<UpdatedIntervalData?>(null)
+    val updatedIntervalData: StateFlow<UpdatedIntervalData?> = _updatedIntervalData.asStateFlow()
+
+    fun onEvent(event: ScoreboardActivityEvent) {
+        when (event) {
+            is ScoreboardActivityEvent.OnUpdatedIntervalData -> _updatedIntervalData.value = event.updatedIntervalData
+            is ScoreboardActivityEvent.OnUpdatedTeamData -> _updatedTeamData.value = event.updatedTeamData
+        }
+    }
 
 }
