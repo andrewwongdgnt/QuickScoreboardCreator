@@ -73,11 +73,12 @@ class ScoreboardListViewModel @Inject constructor(
             }
 
             ScoreboardListEvent.OnUndoDelete -> {
-                val scoreboardList = deletedScoreboardList.toList()
-                viewModelScope.launch {
-                    insertScoreboardListUseCase(scoreboardList)
+                deletedScoreboardList.toList().takeUnless { it.isEmpty() }?.let { scoreboardList ->
+                    viewModelScope.launch {
+                        insertScoreboardListUseCase(scoreboardList)
+                    }
+                    onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
                 }
-                onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
             }
 
             is ScoreboardListEvent.OnLaunch -> {

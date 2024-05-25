@@ -48,11 +48,11 @@ class ScoreboardListViewModelTest {
     private lateinit var sut: ScoreboardListViewModel
 
     private val mockScoreboardList = listOf(
-        ScoreboardEntity(1, "team name", "team desc", true),
-        ScoreboardEntity(2, "team name", "team desc", true)
+        ScoreboardEntity(1, "scoreboard name", "scoreboard desc", true),
+        ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", true)
     )
     private lateinit var mockFlowScoreboardList: Flow<List<ScoreboardEntity>>
-    private val mockCategorizedScoreboards =
+    private val mockCategorizedScoreboardList =
         CategorizedScoreboardType(
             listOf(
                 ScoreboardType.BASKETBALL,
@@ -92,7 +92,7 @@ class ScoreboardListViewModelTest {
                     ScoreboardType.TENNIS
                 ), mockScoreboardList
             )
-        } answers { mockCategorizedScoreboards }
+        } answers { mockCategorizedScoreboardList }
         coEvery { insertScoreboardListUseCase(mockScoreboardList) } returns listOf(1, 2)
         sut = ScoreboardListViewModel(
             getScoreboardListUseCase,
@@ -136,6 +136,31 @@ class ScoreboardListViewModelTest {
         coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[0]) }
         coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[1]) }
         coVerify(exactly = 1) { insertScoreboardListUseCase(mockScoreboardList) }
+    }
+
+    @Test
+    fun testNoUndo() = runTest {
+        sut.onEvent(ScoreboardListEvent.OnDelete(1))
+        Assert.assertEquals(
+            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+                message = R.plurals.deletedScoreboardMsg,
+                quantity = 1,
+                action = R.string.undo
+            ), sut.uiEvent.first()
+        )
+        sut.onEvent(ScoreboardListEvent.OnDelete(2))
+        Assert.assertEquals(
+            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+                message = R.plurals.deletedScoreboardMsg,
+                quantity = 2,
+                action = R.string.undo
+            ), sut.uiEvent.first()
+        )
+        sut.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
+        sut.onEvent(ScoreboardListEvent.OnUndoDelete)
+        coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[0]) }
+        coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[1]) }
+        coVerify(exactly = 0) { insertScoreboardListUseCase(mockScoreboardList) }
     }
 
     @Test

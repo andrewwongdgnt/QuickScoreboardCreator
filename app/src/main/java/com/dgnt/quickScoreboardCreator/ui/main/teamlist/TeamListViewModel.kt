@@ -64,11 +64,12 @@ class TeamListViewModel @Inject constructor(
             }
 
             TeamListEvent.OnUndoDelete -> {
-                val teamList = deletedTeamList.toList()
-                viewModelScope.launch {
-                    insertTeamListUseCase(teamList)
+                deletedTeamList.toList().takeUnless { it.isEmpty() }?.let { teamList ->
+                    viewModelScope.launch {
+                        insertTeamListUseCase(teamList)
+                    }
+                    onEvent(TeamListEvent.OnClearDeletedTeamList)
                 }
-                onEvent(TeamListEvent.OnClearDeletedTeamList)
             }
 
             TeamListEvent.OnClearDeletedTeamList -> {
