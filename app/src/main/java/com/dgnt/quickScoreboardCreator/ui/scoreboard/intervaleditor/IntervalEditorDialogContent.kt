@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -41,16 +43,20 @@ fun IntervalEditorDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: IntervalEditorViewModel = hiltViewModel()
 ) {
-
+    val minuteString by viewModel.minuteString.collectAsStateWithLifecycle()
+    val secondString by viewModel.secondString.collectAsStateWithLifecycle()
+    val intervalString by viewModel.intervalString.collectAsStateWithLifecycle()
+    val labelInfo by viewModel.labelInfo.collectAsStateWithLifecycle()
+    val errors by viewModel.errors.collectAsStateWithLifecycle()
 
     IntervalEditorInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
-        viewModel.minuteString,
-        viewModel.secondString,
-        viewModel.intervalString,
-        viewModel.labelInfo,
-        viewModel.errors,
+        minuteString,
+        secondString,
+        intervalString,
+        labelInfo,
+        errors,
         viewModel::onEvent,
         { viewModel.onEvent(IntervalEditorEvent.OnDismiss) },
         { viewModel.onEvent(IntervalEditorEvent.OnConfirm) }

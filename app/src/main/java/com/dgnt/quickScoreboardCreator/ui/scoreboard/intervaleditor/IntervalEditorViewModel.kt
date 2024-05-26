@@ -1,9 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor
 
 import android.content.res.Resources
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -19,6 +16,8 @@ import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,10 +31,11 @@ class IntervalEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var minuteString by mutableStateOf("")
-        private set
-    var secondString by mutableStateOf("")
-        private set
+    private val _minuteString = MutableStateFlow("")
+    val minuteString = _minuteString.asStateFlow()
+
+    private val _secondString = MutableStateFlow("")
+    val secondString = _secondString.asStateFlow()
 
     private var centiSecond = 0
 
@@ -50,8 +50,8 @@ class IntervalEditorViewModel @Inject constructor(
             field = value
             validate()
         }
-    var intervalString by mutableStateOf("")
-        private set
+    private val _intervalString = MutableStateFlow("")
+    val intervalString = _intervalString.asStateFlow()
 
     private var maxInterval = 1
     private var intervalValue = 1
@@ -60,11 +60,11 @@ class IntervalEditorViewModel @Inject constructor(
             validate()
         }
 
-    var labelInfo by mutableStateOf(Pair<String?, Int?>(null, null))
-        private set
+    private val _labelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
+    val labelInfo = _labelInfo.asStateFlow()
 
-    var errors by mutableStateOf(emptySet<IntervalEditorErrorType>())
-        private set
+    private val _errors = MutableStateFlow(emptySet<IntervalEditorErrorType>())
+    val errors = _errors.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -78,13 +78,13 @@ class IntervalEditorViewModel @Inject constructor(
         savedStateHandle.get<Long>(Arguments.VALUE)?.let {
             currentTimeValue = it
             timeTransformer.toTimeData(it).let { td ->
-                minuteString = td.minute.toString()
-                secondString = td.second.toString()
+                _minuteString.value = td.minute.toString()
+                _secondString.value = td.second.toString()
                 centiSecond = td.centiSecond
             }
         }
         savedStateHandle.get<Int>(Arguments.INDEX)?.let {
-            intervalString = (it + 1).toString()
+            _intervalString.value = (it + 1).toString()
             intervalValue = it + 1
         }
     }
@@ -98,7 +98,7 @@ class IntervalEditorViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        labelInfo = null to scoreboardType.intervalLabelRes
+        _labelInfo.value = null to scoreboardType.intervalLabelRes
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
@@ -131,10 +131,10 @@ class IntervalEditorViewModel @Inject constructor(
 
             is IntervalEditorEvent.OnMinuteChange -> {
                 getFilteredValue(event.value)?.let { min ->
-                    minuteString = min
+                    _minuteString.value = min
                     currentTimeValue = TimeData(
                         (min.toIntOrNull() ?: 0).coerceAtLeast(0),
-                        (secondString.toIntOrNull() ?: 0).coerceAtLeast(0),
+                        (secondString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
                         centiSecond
                     ).let {
                         timeTransformer.fromTimeData(it)
@@ -144,9 +144,9 @@ class IntervalEditorViewModel @Inject constructor(
 
             is IntervalEditorEvent.OnSecondChange -> {
                 getFilteredValue(event.value)?.let { second ->
-                    secondString = second
+                    _secondString.value = second
                     currentTimeValue = TimeData(
-                        (minuteString.toIntOrNull() ?: 0).coerceAtLeast(0),
+                        (minuteString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
                         (second.toIntOrNull() ?: 0).coerceAtLeast(0),
                         centiSecond
                     ).let {
@@ -157,7 +157,7 @@ class IntervalEditorViewModel @Inject constructor(
 
             is IntervalEditorEvent.OnIntervalChange -> {
                 getFilteredValue(event.value)?.let { interval ->
-                    intervalString = interval
+                    _intervalString.value = interval
                     intervalValue = (interval.toIntOrNull() ?: 1).coerceAtLeast(1)
                 }
             }
@@ -185,7 +185,7 @@ class IntervalEditorViewModel @Inject constructor(
             errors.add(IntervalEditorErrorType.Interval(maxInterval))
         }
 
-        this.errors = errors
+        _errors.value = errors
     }
 
     private fun sendUiEvent(event: UiEvent) {
