@@ -1,5 +1,6 @@
 [versions]
 agp = "8.2.2"
+appacheCommonsLang3 = "3.14.0"
 kotlin = "1.9.0"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
@@ -41,6 +42,7 @@ androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "appacheCommonsLang3" }
 gson-extras = { module = "org.danilopianini:gson-extras", version.ref = "gsonExtras" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }

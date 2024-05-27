@@ -1,7 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor
 
 import android.content.res.Resources
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 
 @HiltViewModel
@@ -102,7 +102,6 @@ class IntervalEditorViewModel @Inject constructor(
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
-
             intervalList = it.intervalList
             maxInterval = it.intervalList.size
         }
@@ -167,7 +166,7 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun getFilteredValue(value: String) = if (value.isEmpty())
         ""
-    else if (value.isDigitsOnly())
+    else if (StringUtils.isNumeric(value))
         value
     else
         null

@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.joda.time)
     implementation(libs.guava)
     implementation(libs.gson.extras)
+    implementation(libs.commons.lang3)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
