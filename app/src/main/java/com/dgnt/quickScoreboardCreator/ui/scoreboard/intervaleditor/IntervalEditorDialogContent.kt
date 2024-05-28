@@ -115,12 +115,20 @@ private fun IntervalEditorInnerDialogContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val numberFieldWidth = 65.dp
-                (errors.find { it is IntervalEditorErrorType.Time } as? IntervalEditorErrorType.Time)?.let { error ->
-                    Text(
-                        text = stringResource(id = R.string.invalidTimeMsg, TimeData(error.min, error.second, 0).formatTime()),
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
-                    )
+                (errors.find { it is IntervalEditorErrorType.TimeErrorType })?.let { error ->
+                    val errorMsg = when (error) {
+                        is IntervalEditorErrorType.TimeErrorType.Time -> stringResource(id = R.string.invalidTimeMsg, TimeData(error.min, error.second, 0).formatTime())
+                        is IntervalEditorErrorType.TimeErrorType.EmptyTime -> stringResource(R.string.emptyTimeMsg)
+                        is IntervalEditorErrorType.TimeErrorType.ZeroTime -> stringResource(R.string.zeroTimeMsg)
+                        else -> null
+                    }
+                    errorMsg?.let {
+                        Text(
+                            text = errorMsg,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
+                        )
+                    }
                 }
 
                 Row(
@@ -160,12 +168,19 @@ private fun IntervalEditorInnerDialogContent(
 
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                (errors.find { it is IntervalEditorErrorType.Interval } as? IntervalEditorErrorType.Interval)?.let { error ->
-                    Text(
-                        text = stringResource(id = R.string.invalidIntervalMsg, error.value),
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
-                    )
+                (errors.find { it is IntervalEditorErrorType.IntervalErrorType })?.let { error ->
+                    val errorMsg = when (error) {
+                        is IntervalEditorErrorType.IntervalErrorType.Interval -> stringResource(id = R.string.invalidIntervalMsg, error.value)
+                        is IntervalEditorErrorType.IntervalErrorType.EmptyInterval -> stringResource(R.string.emptyIntervalMsg)
+                        else -> null
+                    }
+                    errorMsg?.let {
+                        Text(
+                            text = errorMsg,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
+                        )
+                    }
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -227,7 +242,55 @@ private fun `invalid time`() =
         secondString = "8",
         intervalString = "1",
         labelInfo = Pair(null, R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.Time(12, 0)),
+        errors = setOf(IntervalEditorErrorType.TimeErrorType.Time(12, 0)),
+        onEvent = {},
+        onDismiss = {},
+        onConfirm = {},
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `empty time`() =
+    IntervalEditorInnerDialogContent(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        minuteString = "",
+        secondString = "8",
+        intervalString = "1",
+        labelInfo = Pair(null, R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.TimeErrorType.EmptyTime),
+        onEvent = {},
+        onDismiss = {},
+        onConfirm = {},
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `zero time`() =
+    IntervalEditorInnerDialogContent(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        minuteString = "0",
+        secondString = "0",
+        intervalString = "1",
+        labelInfo = Pair(null, R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.TimeErrorType.ZeroTime),
+        onEvent = {},
+        onDismiss = {},
+        onConfirm = {},
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `empty interval`() =
+    IntervalEditorInnerDialogContent(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        minuteString = "10",
+        secondString = "0",
+        intervalString = "",
+        labelInfo = Pair(null, R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.IntervalErrorType.EmptyInterval),
         onEvent = {},
         onDismiss = {},
         onConfirm = {},
@@ -243,7 +306,7 @@ private fun `invalid interval`() =
         secondString = "8",
         intervalString = "1",
         labelInfo = Pair(null, R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.Interval(22)),
+        errors = setOf(IntervalEditorErrorType.IntervalErrorType.Interval(22)),
         onEvent = {},
         onDismiss = {},
         onConfirm = {},

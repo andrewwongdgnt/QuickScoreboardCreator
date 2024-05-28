@@ -212,7 +212,19 @@ class IntervalEditorViewModelTest {
         Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
         Assert.assertEquals("1", sut.intervalString.value)
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.Time(interval1TimeData.minute, interval1TimeData.second), sut.errors.value.first())
+        Assert.assertEquals(IntervalEditorErrorType.TimeErrorType.Time(interval1TimeData.minute, interval1TimeData.second), sut.errors.value.first())
+    }
+
+    @Test
+    fun testOnInvalidMinuteChange_Zero() = runTest {
+        initDefaultScoreboardConfig()
+        every { timeTransformer.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 0
+        sut.onEvent(IntervalEditorEvent.OnMinuteChange("0"))
+        Assert.assertEquals("0", sut.minuteString.value)
+        Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
+        Assert.assertEquals("1", sut.intervalString.value)
+        Assert.assertEquals(1, sut.errors.value.size)
+        Assert.assertEquals(IntervalEditorErrorType.TimeErrorType.ZeroTime, sut.errors.value.first())
     }
 
     @Test
@@ -223,7 +235,7 @@ class IntervalEditorViewModelTest {
         Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
         Assert.assertEquals("313", sut.intervalString.value)
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.Interval(3), sut.errors.value.first())
+        Assert.assertEquals(IntervalEditorErrorType.IntervalErrorType.Interval(3), sut.errors.value.first())
     }
 
     @Test
@@ -233,7 +245,7 @@ class IntervalEditorViewModelTest {
         sut.onEvent(IntervalEditorEvent.OnMinuteChange("13"))
         sut.onEvent(IntervalEditorEvent.OnIntervalChange("313"))
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.Interval(3), sut.errors.value.first())
+        Assert.assertEquals(IntervalEditorErrorType.IntervalErrorType.Interval(3), sut.errors.value.first())
     }
 
     @Test
@@ -243,6 +255,30 @@ class IntervalEditorViewModelTest {
         sut.onEvent(IntervalEditorEvent.OnMinuteChange("13"))
         sut.onEvent(IntervalEditorEvent.OnIntervalChange("3"))
         Assert.assertTrue(sut.errors.value.isEmpty())
+    }
+
+    @Test
+    fun testEmptyTimeAndIntervalError() = runTest {
+        initDefaultScoreboardConfig()
+        every { timeTransformer.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 123
+        sut.onEvent(IntervalEditorEvent.OnMinuteChange(""))
+        sut.onEvent(IntervalEditorEvent.OnIntervalChange(""))
+        Assert.assertTrue(sut.minuteString.value.isEmpty())
+        Assert.assertTrue(sut.intervalString.value.isEmpty())
+        Assert.assertEquals(2, sut.errors.value.size)
+        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.TimeErrorType.EmptyTime))
+        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.IntervalErrorType.EmptyInterval))
+    }
+
+    @Test
+    fun testZeroTimeAndIntervalError() = runTest {
+        initDefaultScoreboardConfig()
+        every { timeTransformer.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 0
+        sut.onEvent(IntervalEditorEvent.OnMinuteChange("0"))
+        sut.onEvent(IntervalEditorEvent.OnIntervalChange("0"))
+        Assert.assertEquals(2, sut.errors.value.size)
+        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.TimeErrorType.ZeroTime))
+        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.IntervalErrorType.Interval(3)))
     }
 
 

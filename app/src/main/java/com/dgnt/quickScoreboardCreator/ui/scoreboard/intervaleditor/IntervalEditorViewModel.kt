@@ -157,7 +157,7 @@ class IntervalEditorViewModel @Inject constructor(
             is IntervalEditorEvent.OnIntervalChange -> {
                 getFilteredValue(event.value)?.let { interval ->
                     _intervalString.value = interval
-                    intervalValue = (interval.toIntOrNull() ?: 1).coerceAtLeast(1)
+                    intervalValue = interval.toIntOrNull() ?: 0
                 }
             }
         }
@@ -173,15 +173,22 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun validate() {
         val errors = mutableSetOf<IntervalEditorErrorType>()
+        if (minuteString.value.isEmpty() || secondString.value.isEmpty())
+            errors.add(IntervalEditorErrorType.TimeErrorType.EmptyTime)
+        if (intervalString.value.isEmpty())
+            errors.add(IntervalEditorErrorType.IntervalErrorType.EmptyInterval)
+
         val initialTimeValue = initialTimeValue
         val isTimeIncreasing = isTimeIncreasing
-        if (initialTimeValue != null && isTimeIncreasing != null && currentTimeValue > initialTimeValue && !isTimeIncreasing) {
+        if (initialTimeValue != null && isTimeIncreasing != null && currentTimeValue > initialTimeValue && !isTimeIncreasing)
             timeTransformer.toTimeData(initialTimeValue).let {
-                errors.add(IntervalEditorErrorType.Time(it.minute, it.second))
+                errors.add(IntervalEditorErrorType.TimeErrorType.Time(it.minute, it.second))
             }
-        }
-        if (intervalValue < 0 || intervalValue > maxInterval) {
-            errors.add(IntervalEditorErrorType.Interval(maxInterval))
+        else if (currentTimeValue <= 0 && !errors.contains(IntervalEditorErrorType.TimeErrorType.EmptyTime))
+            errors.add(IntervalEditorErrorType.TimeErrorType.ZeroTime)
+
+        if (!errors.contains(IntervalEditorErrorType.IntervalErrorType.EmptyInterval) && (intervalValue <= 0 || intervalValue > maxInterval)) {
+            errors.add(IntervalEditorErrorType.IntervalErrorType.Interval(maxInterval))
         }
 
         _errors.value = errors

@@ -53,7 +53,10 @@
     <!-- Interval Editor -->
     <string name="intervalEditorTitle">Edit time</string>
     <string name="invalidTimeMsg">Cannot be over %1$s</string>
+    <string name="emptyTimeMsg">Must enter a time</string>
+    <string name="zeroTimeMsg">Cannot be 0 time</string>
     <string name="invalidIntervalMsg">Must be between 1 and %1$d</string>
+    <string name="emptyIntervalMsg">Must enter a value</string>
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->
