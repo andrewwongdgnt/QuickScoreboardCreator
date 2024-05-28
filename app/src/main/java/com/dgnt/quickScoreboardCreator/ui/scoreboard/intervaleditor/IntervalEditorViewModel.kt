@@ -180,12 +180,14 @@ class IntervalEditorViewModel @Inject constructor(
 
         val initialTimeValue = initialTimeValue
         val isTimeIncreasing = isTimeIncreasing
-        if (initialTimeValue != null && isTimeIncreasing != null && currentTimeValue > initialTimeValue && !isTimeIncreasing)
-            timeTransformer.toTimeData(initialTimeValue).let {
-                errors.add(IntervalEditorErrorType.TimeErrorType.Time(it.minute, it.second))
-            }
-        else if (currentTimeValue <= 0 && !errors.contains(IntervalEditorErrorType.TimeErrorType.EmptyTime))
-            errors.add(IntervalEditorErrorType.TimeErrorType.ZeroTime)
+        if (initialTimeValue != null && isTimeIncreasing != null && !isTimeIncreasing) {
+            if (currentTimeValue > initialTimeValue)
+                timeTransformer.toTimeData(initialTimeValue).let {
+                    errors.add(IntervalEditorErrorType.TimeErrorType.Time(it.minute, it.second))
+                }
+            else if (currentTimeValue <= 0 && !errors.contains(IntervalEditorErrorType.TimeErrorType.EmptyTime))
+                errors.add(IntervalEditorErrorType.TimeErrorType.ZeroTime)
+        }
 
         if (!errors.contains(IntervalEditorErrorType.IntervalErrorType.EmptyInterval) && (intervalValue <= 0 || intervalValue > maxInterval)) {
             errors.add(IntervalEditorErrorType.IntervalErrorType.Interval(maxInterval))

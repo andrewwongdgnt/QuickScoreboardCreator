@@ -270,15 +270,27 @@ class IntervalEditorViewModelTest {
         Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.IntervalErrorType.EmptyInterval))
     }
 
+    /**
+     * Since interval is out of range, we can't tell if zero time is allowed or not. Therefore there is no error about zero time
+     *
+     */
     @Test
     fun testZeroTimeAndIntervalError() = runTest {
         initDefaultScoreboardConfig()
         every { timeTransformer.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 0
         sut.onEvent(IntervalEditorEvent.OnMinuteChange("0"))
         sut.onEvent(IntervalEditorEvent.OnIntervalChange("0"))
-        Assert.assertEquals(2, sut.errors.value.size)
-        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.TimeErrorType.ZeroTime))
+        Assert.assertEquals(1, sut.errors.value.size)
         Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.IntervalErrorType.Interval(3)))
+    }
+
+    @Test
+    fun testZeroTimeAllowed() = runTest {
+        initDefaultScoreboardConfig()
+        every { timeTransformer.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 0
+        sut.onEvent(IntervalEditorEvent.OnMinuteChange("0"))
+        sut.onEvent(IntervalEditorEvent.OnIntervalChange("3"))
+        Assert.assertEquals(0, sut.errors.value.size)
     }
 
 
