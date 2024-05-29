@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
@@ -55,13 +57,13 @@ private fun ScoreboardInteractionVMDataContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardInteractionViewModel
 ) {
-    val timeData = viewModel.timeData
-    val timerInProgress = viewModel.timerInProgress
-    val incrementList = viewModel.incrementList
-    val displayedScoreInfo = viewModel.displayedScoreInfo
-    val teamList = viewModel.teamList
-    val labelInfo = viewModel.labelInfo
-    val currentInterval = viewModel.currentInterval
+    val timeData by viewModel.timeData.collectAsStateWithLifecycle()
+    val timerInProgress by viewModel.timerInProgress.collectAsStateWithLifecycle()
+    val incrementList by viewModel.incrementList.collectAsStateWithLifecycle()
+    val displayedScoreInfo by viewModel.displayedScoreInfo.collectAsStateWithLifecycle()
+    val teamList by viewModel.teamList.collectAsStateWithLifecycle()
+    val labelInfo by viewModel.labelInfo.collectAsStateWithLifecycle()
+    val currentInterval by viewModel.currentInterval.collectAsStateWithLifecycle()
 
     ScoreboardInteractionInnerContent(
         viewModel.uiEvent,

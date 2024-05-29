@@ -1,10 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
 import android.content.res.Resources
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +22,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,38 +43,39 @@ class ScoreboardInteractionViewModel @Inject constructor(
     /**
      * Display score
      */
-    var displayedScoreInfo by mutableStateOf(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
-        private set
+    private val _displayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
+    val displayedScoreInfo: StateFlow<DisplayedScoreInfo> = _displayedScoreInfo.asStateFlow()
     private val scoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
-        displayedScoreInfo = it
+        _displayedScoreInfo.value = it
     }
 
     /**
      * Display increment list
      */
-    var incrementList by mutableStateOf(emptyList<List<Int>>())
-        private set
+    private val _incrementList = MutableStateFlow(emptyList<List<Int>>())
+    val incrementList: StateFlow<List<List<Int>>> = _incrementList.asStateFlow()
     private val incrementListUpdateListener: (List<List<Int>>) -> Unit = {
-        incrementList = it
+        _incrementList.value = it
     }
 
     /**
      * Display interval number
      */
-    var currentInterval by mutableIntStateOf(1)
-        private set
+    private val _currentInterval = MutableStateFlow(1)
+    val currentInterval: StateFlow<Int> = _currentInterval.asStateFlow()
     private val intervalIndexUpdateListener: (Int) -> Unit = {
-        currentInterval = it + 1
+        _currentInterval.value = it + 1
     }
 
 
     /**
      * Display team list
      */
-    var teamList by mutableStateOf(emptyList<TeamDisplay>())
+    private val _teamList = MutableStateFlow(emptyList<TeamDisplay>())
+    val teamList: StateFlow<List<TeamDisplay>> = _teamList.asStateFlow()
     private val teamSizeUpdateListener: (Int) -> Unit = {
-        teamList =  (0 until it).map {index ->
-            teamList.getOrNull(index) ?: TeamDisplay.UnSelectedTeamDisplay
+        _teamList.value = (0 until it).map { index ->
+            teamList.value.getOrNull(index) ?: TeamDisplay.UnSelectedTeamDisplay
         }
     }
 
@@ -83,17 +83,17 @@ class ScoreboardInteractionViewModel @Inject constructor(
     /**
      * Display time
      */
-    var timeData by mutableStateOf(TimeData(0, 0, 0))
-        private set
+    private val _timeData = MutableStateFlow(TimeData(0, 0, 0))
+    val timeData: StateFlow<TimeData> = _timeData.asStateFlow()
     private val timeUpdateListener: (Long) -> Unit = {
-        timeData = timeTransformer.toTimeData(it)
+        _timeData.value = timeTransformer.toTimeData(it)
         if (it <= 0L) {
             timerJob?.cancel()
-            timerInProgress = false
+            _timerInProgress.value = false
         }
     }
-    var timerInProgress by mutableStateOf(false)
-        private set
+    private val _timerInProgress = MutableStateFlow(false)
+    val timerInProgress: StateFlow<Boolean> = _timerInProgress.asStateFlow()
 
     private var timerJob: Job? = null
 
@@ -104,8 +104,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
 
-    var labelInfo by mutableStateOf(Pair<String?, Int?>(null, null))
-        private set
+    private val _labelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
+    val labelInfo: StateFlow<Pair<String?, Int?>> = _labelInfo.asStateFlow()
 
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
@@ -136,7 +136,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        labelInfo = null to scoreboardType.intervalLabelRes
+        _labelInfo.value = null to scoreboardType.intervalLabelRes
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
@@ -162,7 +162,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
             is ScoreboardInteractionEvent.PauseTimer -> {
                 timerJob?.cancel()
-                timerInProgress = false
+                _timerInProgress.value = false
                 if (event.reset) {
                     scoreboardManager.resetTime()
                 }
@@ -172,7 +172,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             ScoreboardInteractionEvent.StartTimer -> {
                 timerJob?.cancel()
                 if (!scoreboardManager.canTimeAdvance()) {
-                    timerInProgress = false
+                    _timerInProgress.value = false
                     return
                 }
 
@@ -183,19 +183,19 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
                     }
                 }
-                timerInProgress = true
+                _timerInProgress.value = true
 
             }
 
             is ScoreboardInteractionEvent.UpdatedTeam -> {
                 viewModelScope.launch {
-                    teamList = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
+                    _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
                         if (event.updatedTeamData.scoreIndex == index) {
                             getTeamUseCase(event.updatedTeamData.teamId)?.let {
                                 TeamDisplay.SelectedTeamDisplay(it.title, it.teamIcon)
                             }
                         } else {
-                            teamList.getOrNull(index)
+                            teamList.value.getOrNull(index)
                         }
                     }
                 }
@@ -203,14 +203,14 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
             ScoreboardInteractionEvent.UpdateInterval -> {
                 timerJob?.cancel()
-                timerInProgress = false
-                sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData), currentInterval - 1, id, scoreboardType))
+                _timerInProgress.value = false
+                sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, id, scoreboardType))
             }
 
             is ScoreboardInteractionEvent.UpdatedInterval -> {
                 event.takeUnless { it.updatedIntervalData.timeValue < 0 || it.updatedIntervalData.intervalIndex < 0 }?.let {
                     timerJob?.cancel()
-                    timerInProgress = false
+                    _timerInProgress.value = false
                     scoreboardManager.updateInterval(it.updatedIntervalData.intervalIndex)
                     scoreboardManager.updateTime(it.updatedIntervalData.timeValue)
 
