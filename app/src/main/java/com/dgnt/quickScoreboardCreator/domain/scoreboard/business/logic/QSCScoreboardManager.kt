@@ -38,21 +38,27 @@ class QSCScoreboardManager : ScoreboardManager {
             scoreboard.currentIntervalIndex = value
         }
 
-    private val incrementList: List<List<Int>>
-        get() = currentScoreInfo.dataList.map { it.increments }
+    private val primaryIncrementList: List<List<Int>>
+        get() = currentScoreInfo.dataList.map { it.primary.increments }
+    private val secondaryIncrementList: List<List<Int>>
+        get() = currentScoreInfo.dataList.mapNotNull { it.secondary?.increments }
 
-    override var scoresUpdateListener: ((DisplayedScoreInfo) -> Unit)? = null
+    override var primaryScoresUpdateListener: ((DisplayedScoreInfo) -> Unit)? = null
+
+    override var secondaryScoresUpdateListener: ((DisplayedScoreInfo) -> Unit)? = null
 
     override var timeUpdateListener: ((Long) -> Unit)? = null
 
     override var intervalIndexUpdateListener: ((Int) -> Unit)? = null
 
-    override var incrementListUpdateListener: ((List<List<Int>>) -> Unit)? = null
+    override var primaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)? = null
+
+    override var secondaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)? = null
 
     override var teamSizeUpdateListener: ((Int) -> Unit)? = null
 
     override val currentTeamSize: Int
-        get() = incrementList.size
+        get() = currentScoreInfo.dataList.size
 
     private val currentScoreInfo get() = scoreboard.intervalList[currentIntervalIndex].first
 
@@ -60,16 +66,24 @@ class QSCScoreboardManager : ScoreboardManager {
 
     override fun triggerUpdateListeners() {
         timeUpdateListener?.invoke(currentIntervalData.current)
-        scoresUpdateListener?.invoke(getScores())
+        primaryScoresUpdateListener?.invoke(getPrimaryScores())
         intervalIndexUpdateListener?.invoke(currentIntervalIndex)
-        incrementListUpdateListener?.invoke(incrementList)
+        primaryIncrementListUpdateListener?.invoke(primaryIncrementList)
+        secondaryIncrementListUpdateListener?.invoke(secondaryIncrementList)
         teamSizeUpdateListener?.invoke(currentTeamSize)
     }
 
-    override fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean) {
+    override fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, positive: Boolean) {
         val scoreInfo = currentScoreInfo
+        val scoreGroup = scoreInfo.dataList[scoreIndex]
 
-        scoreInfo.dataList[scoreIndex].apply {
+        val scoreData = if (isPrimary)
+            scoreGroup.primary
+        else {
+            scoreGroup.secondary ?: return
+        }
+
+        val newScore = scoreData.run {
             val incrementer = abs(increments[incrementIndex]).let {
                 if (positive)
                     it
@@ -82,30 +96,32 @@ class QSCScoreboardManager : ScoreboardManager {
                 0
             else
                 newScore
+            current
         }
 
-        val newScore = scoreInfo.dataList[scoreIndex].current
+        if (isPrimary) {
+            if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule && newScore > scoreInfo.scoreRule.trigger) {
+                proceedToNextInterval()
+                return
+            }
 
-        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule && newScore > scoreInfo.scoreRule.trigger) {
-            proceedToNextInterval()
-            return
+            get2ScoresForDeuceAdv(scoreInfo)?.takeIf { abs(it.first - it.second) >= 2 }?.run {
+                proceedToNextInterval()
+                return
+            }
+
+            // this means one of the team is below the trigger and one is above
+            if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.any { it.primary.current > scoreInfo.scoreRule.trigger } && scoreInfo.dataList.any { it.primary.current < scoreInfo.scoreRule.trigger }) {
+                proceedToNextInterval()
+                return
+            }
         }
 
-        get2ScoresForDeuceAdv(scoreInfo)?.takeIf { abs(it.first - it.second) >= 2 }?.run {
-            proceedToNextInterval()
-            return
-        }
-
-        // this means one of the team is below the trigger and one is above
-        if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.any { it.current > scoreInfo.scoreRule.trigger } && scoreInfo.dataList.any { it.current < scoreInfo.scoreRule.trigger }) {
-            proceedToNextInterval()
-            return
-        }
-
-        scoresUpdateListener?.invoke(getScores())
+        primaryScoresUpdateListener?.invoke(getPrimaryScores())
+        secondaryScoresUpdateListener?.invoke(getSecondaryScores())
     }
 
-    private fun getScores(): DisplayedScoreInfo {
+    private fun getPrimaryScores(): DisplayedScoreInfo {
         val scoreInfo = currentScoreInfo
 
         return get2ScoresForDeuceAdv(scoreInfo)?.let {
@@ -118,10 +134,16 @@ class QSCScoreboardManager : ScoreboardManager {
             else
                 DisplayedScoreInfo(listOf(DisplayedScore.Blank, DisplayedScore.Advantage), DisplayedScore.Blank)
         } ?: run {
-            val mappedScores = transform(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
+            val mappedScores = transformPrimaryScores(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
             return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
         }
+    }
 
+    private fun getSecondaryScores(): DisplayedScoreInfo {
+        val scoreInfo = currentScoreInfo
+
+        val mappedScores = transformSecondaryScores(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
+        return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
 
     }
 
@@ -154,34 +176,41 @@ class QSCScoreboardManager : ScoreboardManager {
         if (index !in 0 until scoreboard.intervalList.size)
             return
 
-        val currentScores = currentScoreInfo.dataList
+        val currentScoreGroups = currentScoreInfo.dataList
 
         currentIntervalIndex = index
 
-        val newScores = currentScoreInfo.dataList
-        newScores.forEachIndexed { i, scoreData ->
-            currentScores.getOrNull(i)?.current?.let {
-                scoreData.current = it
+        val newScoreGroups = currentScoreInfo.dataList
+        newScoreGroups.forEachIndexed { i, newScoreGroup ->
+            currentScoreGroups.getOrNull(i)?.let { currentScoreGroup ->
+                newScoreGroup.primary.current = currentScoreGroup.primary.current
+                newScoreGroup.secondary?.let { secondary ->
+                    secondary.current = currentScoreGroup.secondary?.current ?: secondary.initial
+                }
             }
         }
 
         triggerUpdateListeners()
     }
-    private fun transform(scoreInfo: ScoreInfo) =
-        scoreInfo.dataList.map { it.current }.map {
+
+    private fun transformPrimaryScores(scoreInfo: ScoreInfo) =
+        scoreInfo.dataList.map { it.primary.current }.map {
             scoreInfo.scoreToDisplayScoreMap[it] ?: it.toString()
         }
 
     private fun get2ScoresForDeuceAdv(scoreInfo: ScoreInfo): Pair<Int, Int>? {
-        return if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.current >= scoreInfo.scoreRule.trigger })
-            scoreInfo.dataList[0].current to scoreInfo.dataList[1].current
+        return if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.primary.current >= scoreInfo.scoreRule.trigger })
+            scoreInfo.dataList[0].primary.current to scoreInfo.dataList[1].primary.current
         else
             return null
     }
 
+    private fun transformSecondaryScores(scoreInfo: ScoreInfo) =
+        scoreInfo.dataList.mapNotNull { it.secondary?.current?.toString() }
+
     private fun proceedToNextInterval() {
         //at the end so don't increase anymore
-        if (currentIntervalIndex >= scoreboard.intervalList.size - 1){
+        if (currentIntervalIndex >= scoreboard.intervalList.size - 1) {
             currentIntervalIndex = scoreboard.intervalList.size - 1
             return
         }
@@ -189,15 +218,21 @@ class QSCScoreboardManager : ScoreboardManager {
         currentIntervalIndex++
         currentIntervalData.reset()
         if (scoreCarriesOver) {
-            val previousScores = scoreboard.intervalList[currentIntervalIndex - 1].first.dataList
-            val currentScores = currentScoreInfo.dataList
-            currentScores.forEachIndexed { index, scoreData ->
-                previousScores.getOrNull(index)?.current?.let {
-                    scoreData.current = it
+            val previousScoreGroups = scoreboard.intervalList[currentIntervalIndex - 1].first.dataList
+            val currentScoreGroups = currentScoreInfo.dataList
+            currentScoreGroups.forEachIndexed { index, currentScoreGroup ->
+                previousScoreGroups.getOrNull(index)?.let { previousScoreGroup ->
+                    currentScoreGroup.primary.current = previousScoreGroup.primary.current
+                    currentScoreGroup.secondary?.let { secondary ->
+                        secondary.current = previousScoreGroup.secondary?.current ?: secondary.initial
+                    }
                 }
             }
         } else
-            currentScoreInfo.dataList.forEach { it.reset() }
+            currentScoreInfo.dataList.forEach {
+                it.primary.reset()
+                it.secondary?.reset()
+            }
 
         triggerUpdateListeners()
     }

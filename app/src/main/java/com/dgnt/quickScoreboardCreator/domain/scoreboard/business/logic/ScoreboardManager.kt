@@ -11,14 +11,16 @@ interface ScoreboardManager {
     var intervalList: List<Pair<ScoreInfo, IntervalData>>
     val currentTeamSize: Int
 
-    var scoresUpdateListener: ((DisplayedScoreInfo) -> Unit)?
+    var primaryScoresUpdateListener: ((DisplayedScoreInfo) -> Unit)?
+    var secondaryScoresUpdateListener: ((DisplayedScoreInfo) -> Unit)?
     var timeUpdateListener: ((Long) -> Unit)?
     var intervalIndexUpdateListener: ((Int) -> Unit)?
-    var incrementListUpdateListener: ((List<List<Int>>) -> Unit)?
+    var primaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)?
+    var secondaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)?
     var teamSizeUpdateListener: ((Int) -> Unit)?
 
     fun triggerUpdateListeners()
-    fun updateScore(scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)
+    fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)
     fun updateTime(value:Long)
     fun updateTimeBy(value: Long)
     fun resetTime()

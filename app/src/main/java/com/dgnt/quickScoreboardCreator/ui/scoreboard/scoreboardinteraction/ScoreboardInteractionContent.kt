@@ -107,7 +107,7 @@ private fun ScoreboardInteractionInnerContent(
             ScoreControl(
                 incrementList = incrementList[0],
                 onIncrement = { index, positive ->
-                    onEvent(ScoreboardInteractionEvent.UpdateScore(0, index, positive))
+                    onEvent(ScoreboardInteractionEvent.UpdateScore(true, 0, index, positive))
                 }
             )
             Spacer(modifier = Modifier.width(spacerWidth))
@@ -119,7 +119,7 @@ private fun ScoreboardInteractionInnerContent(
             ScoreControl(
                 incrementList = incrementList[1],
                 onIncrement = { index, positive ->
-                    onEvent(ScoreboardInteractionEvent.UpdateScore(1, index, positive))
+                    onEvent(ScoreboardInteractionEvent.UpdateScore(true, 1, index, positive))
                 }
             )
         }

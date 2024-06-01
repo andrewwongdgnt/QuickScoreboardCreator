@@ -6,6 +6,7 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 sealed class ScoreboardInteractionEvent {
 
     data class UpdateScore(
+        val isPrimary: Boolean,
         val scoreIndex: Int,
         val incrementIndex: Int,
         val positive: Boolean

@@ -54,7 +54,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
      */
     private val _incrementList = MutableStateFlow(emptyList<List<Int>>())
     val incrementList: StateFlow<List<List<Int>>> = _incrementList.asStateFlow()
-    private val incrementListUpdateListener: (List<List<Int>>) -> Unit = {
+    private val primaryIncrementListUpdateListener: (List<List<Int>>) -> Unit = {
         _incrementList.value = it
     }
 
@@ -116,10 +116,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
             this.scoreboardType = it
         }
 
-        scoreboardManager.scoresUpdateListener = scoresUpdateListener
+        scoreboardManager.primaryScoresUpdateListener = scoresUpdateListener
         scoreboardManager.timeUpdateListener = timeUpdateListener
         scoreboardManager.intervalIndexUpdateListener = intervalIndexUpdateListener
-        scoreboardManager.incrementListUpdateListener = incrementListUpdateListener
+        scoreboardManager.primaryIncrementListUpdateListener = primaryIncrementListUpdateListener
         scoreboardManager.teamSizeUpdateListener = teamSizeUpdateListener
 
         scoreboardManager.triggerUpdateListeners()
@@ -153,7 +153,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     fun onEvent(event: ScoreboardInteractionEvent) {
         when (event) {
             is ScoreboardInteractionEvent.UpdateScore -> {
-                scoreboardManager.updateScore(event.scoreIndex, event.incrementIndex, event.positive)
+                scoreboardManager.updateScore(event.isPrimary, event.scoreIndex, event.incrementIndex, event.positive)
             }
 
             is ScoreboardInteractionEvent.UpdateTeam -> {

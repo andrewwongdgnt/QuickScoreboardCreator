@@ -3,6 +3,7 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
@@ -28,28 +29,38 @@ class QSCScoreboardManagerTest {
     }
 
     private fun resetMocks() {
-        sut.scoresUpdateListener = mockk()
-        every { sut.scoresUpdateListener?.invoke(any()) } answers { }
+        sut.primaryScoresUpdateListener = mockk()
+        every { sut.primaryScoresUpdateListener?.invoke(any()) } answers { }
+        sut.secondaryScoresUpdateListener = mockk()
+        every { sut.secondaryScoresUpdateListener?.invoke(any()) } answers { }
         sut.timeUpdateListener = mockk()
         every { sut.timeUpdateListener?.invoke(any()) } answers { }
         sut.intervalIndexUpdateListener = mockk()
         every { sut.intervalIndexUpdateListener?.invoke(any()) } answers { }
-        sut.incrementListUpdateListener = mockk()
-        every { sut.incrementListUpdateListener?.invoke(any()) } answers { }
+        sut.primaryIncrementListUpdateListener = mockk()
+        every { sut.primaryIncrementListUpdateListener?.invoke(any()) } answers { }
+        sut.secondaryIncrementListUpdateListener = mockk()
+        every { sut.secondaryIncrementListUpdateListener?.invoke(any()) } answers { }
         sut.teamSizeUpdateListener = mockk()
         every { sut.teamSizeUpdateListener?.invoke(any()) } answers { }
     }
 
     @Test
-    fun testScoreUpdates() {
+    fun testPrimaryScoreUpdates() {
 
         sut.intervalList = listOf(
             ScoreInfo(
                 ScoreRule.NoRule,
                 mapOf(),
                 listOf(
-                    ScoreData(0, 0, listOf(2, 3)),
-                    ScoreData(0, 0, listOf(2, 3)),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -58,9 +69,9 @@ class QSCScoreboardManagerTest {
         )
 
         run `increase player 1 by 2`@{
-            sut.updateScore(0, 0)
+            sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("2"),
@@ -73,9 +84,9 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
         run `increase player 1 by 3`@{
-            sut.updateScore(0, 1)
+            sut.updateScore(true, 0, 1)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("5"),
@@ -89,9 +100,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 2 by 3`@{
-            sut.updateScore(1, 1)
+            sut.updateScore(true, 1, 1)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("5"),
@@ -105,9 +116,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 2 by 3`@{
-            sut.updateScore(1, 1)
+            sut.updateScore(true, 1, 1)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("5"),
@@ -123,6 +134,62 @@ class QSCScoreboardManagerTest {
     }
 
     @Test
+    fun testSecondaryScoreUpdates() {
+
+        sut.intervalList = listOf(
+            ScoreInfo(
+                ScoreRule.NoRule,
+                mapOf(),
+                listOf(
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
+                )
+            ) to
+                    IntervalData(
+                        0, 0
+                    )
+        )
+
+        run `increase player 1 secondary by 1`@{
+            sut.updateScore(false, 0, 0)
+            verify(exactly = 1) {
+                sut.secondaryScoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.CustomDisplayedScore("0"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+
+        run `increase player 2 secondary by 1`@{
+            sut.updateScore(false, 1, 0)
+            verify(exactly = 1) {
+                sut.secondaryScoresUpdateListener?.invoke(
+                    DisplayedScoreInfo(
+                        displayedScores = listOf(
+                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.CustomDisplayedScore("1"),
+                        ),
+                        overallDisplayedScore = DisplayedScore.Blank
+                    )
+                )
+            }
+            resetMocks()
+        }
+    }
+
+    @Test
     fun testAdvancingToNextIntervalFromTime() {
         sut.scoreCarriesOver = true
         sut.intervalList = listOf(
@@ -130,8 +197,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.NoRule,
                 mapOf(),
                 listOf(
-                    ScoreData(2, 2, listOf(2, 3)),
-                    ScoreData(3, 3, listOf(2, 3)),
+                    ScoreGroup(
+                        ScoreData(2, 2, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1))
+                    ),
+                    ScoreGroup(
+                        ScoreData(3, 3, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -141,8 +214,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.NoRule,
                 mapOf(),
                 listOf(
-                    ScoreData(0, 0, listOf(2, 3)),
-                    ScoreData(0, 0, listOf(2, 3)),
+                    ScoreGroup(
+                        ScoreData(2, 2, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1))
+                    ),
+                    ScoreGroup(
+                        ScoreData(3, 3, listOf(2, 3)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -158,7 +237,7 @@ class QSCScoreboardManagerTest {
         run `update time to 0`@{
             sut.updateTime(0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("2"),
@@ -171,7 +250,7 @@ class QSCScoreboardManagerTest {
             verify(exactly = 1) { sut.timeUpdateListener?.invoke(4L) }
             verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(1) }
             verify(exactly = 1) {
-                sut.incrementListUpdateListener?.invoke(
+                sut.primaryIncrementListUpdateListener?.invoke(
                     listOf(
                         listOf(2, 3),
                         listOf(2, 3),
@@ -192,8 +271,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
                 mapOf(),
                 listOf(
-                    ScoreData(0, 0, listOf(1)),
-                    ScoreData(0, 0, listOf(20)),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(1)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(20)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -204,8 +289,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
                 mapOf(),
                 listOf(
-                    ScoreData(0, 0, listOf(1)),
-                    ScoreData(0, 0, listOf(20)),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(1)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(20)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -216,8 +307,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
                 mapOf(),
                 listOf(
-                    ScoreData(0, 0, listOf(1)),
-                    ScoreData(0, 0, listOf(20)),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(1)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(20)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -226,9 +323,9 @@ class QSCScoreboardManagerTest {
         )
         run `increase player 1 by 1`@{
 
-            sut.updateScore(0, 0)
+            sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("1"),
@@ -241,9 +338,9 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
         run `increase player 1 by 1`@{
-            sut.updateScore(0, 0)
+            sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("2"),
@@ -256,9 +353,9 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
         run `increase player 1 by 1`@{
-            sut.updateScore(0, 0)
+            sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("0"),
@@ -271,7 +368,7 @@ class QSCScoreboardManagerTest {
             verify(exactly = 1) { sut.timeUpdateListener?.invoke(0L) }
             verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(1) }
             verify(exactly = 1) {
-                sut.incrementListUpdateListener?.invoke(
+                sut.primaryIncrementListUpdateListener?.invoke(
                     listOf(
                         listOf(1),
                         listOf(20),
@@ -283,9 +380,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 2 by 20`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("0"),
@@ -298,7 +395,7 @@ class QSCScoreboardManagerTest {
             verify(exactly = 1) { sut.timeUpdateListener?.invoke(0) }
             verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(2) }
             verify(exactly = 1) {
-                sut.incrementListUpdateListener?.invoke(
+                sut.primaryIncrementListUpdateListener?.invoke(
                     listOf(
                         listOf(1),
                         listOf(20),
@@ -318,8 +415,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
                 mapOf(),
                 listOf(
-                    ScoreData(0, 0, listOf(1)),
-                    ScoreData(0, 0, listOf(1)),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(1)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(1)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -330,8 +433,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
                 mapOf(),
                 listOf(
-                    ScoreData(1, 1, listOf(1)),
-                    ScoreData(1, 1, listOf(1)),
+                    ScoreGroup(
+                        ScoreData(1, 1, listOf(1)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(1, 1, listOf(1)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
                 )
             ) to
                     IntervalData(
@@ -341,8 +450,14 @@ class QSCScoreboardManagerTest {
                 ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
                 mapOf(),
                 listOf(
-                    ScoreData(0, 0, listOf(2)),
-                    ScoreData(0, 0, listOf(2)),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(2)),
+                        ScoreData(0, 0, listOf(1)),
+                    ),
+                    ScoreGroup(
+                        ScoreData(0, 0, listOf(2)),
+                        ScoreData(0, 0, listOf(1)),
+                    )
                 )
             ) to
                     IntervalData(
@@ -350,9 +465,9 @@ class QSCScoreboardManagerTest {
                     ),
         )
         run `increase player 1 by 1`@{
-            sut.updateScore(0, 0)
+            sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("1"),
@@ -366,9 +481,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 1 by 1`@{
-            sut.updateScore(0, 0)
+            sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("2"),
@@ -381,9 +496,9 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
         run `increase player 2 by 1`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("2"),
@@ -396,9 +511,9 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
         run `increase player 2 by 1`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.Blank,
@@ -412,9 +527,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 1 by 1`@{
-            sut.updateScore(0, 0)
+            sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.Advantage,
@@ -428,9 +543,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 2 by 1`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.Blank,
@@ -443,9 +558,9 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
         run `increase player 2 by 1`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.Blank,
@@ -459,9 +574,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 2 by 1`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("1"),
@@ -474,7 +589,7 @@ class QSCScoreboardManagerTest {
             verify(exactly = 1) { sut.timeUpdateListener?.invoke(0L) }
             verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(1) }
             verify(exactly = 1) {
-                sut.incrementListUpdateListener?.invoke(
+                sut.primaryIncrementListUpdateListener?.invoke(
                     listOf(
                         listOf(1),
                         listOf(1),
@@ -485,9 +600,9 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
         run `increase player 2 by 1`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("1"),
@@ -501,9 +616,9 @@ class QSCScoreboardManagerTest {
         }
 
         run `increase player 2 by 1`@{
-            sut.updateScore(1, 0)
+            sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
-                sut.scoresUpdateListener?.invoke(
+                sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
                             DisplayedScore.CustomDisplayedScore("0"),
@@ -516,7 +631,7 @@ class QSCScoreboardManagerTest {
             verify(exactly = 1) { sut.timeUpdateListener?.invoke(5L) }
             verify(exactly = 1) { sut.intervalIndexUpdateListener?.invoke(2) }
             verify(exactly = 1) {
-                sut.incrementListUpdateListener?.invoke(
+                sut.primaryIncrementListUpdateListener?.invoke(
                     listOf(
                         listOf(2),
                         listOf(2),

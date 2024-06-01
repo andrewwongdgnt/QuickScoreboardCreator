@@ -17,23 +17,36 @@
         },
         "dataList": [
           {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1
-            ]
+            "primary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            },
+            "secondary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            }
           },
           {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1
-            ]
+            "primary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            },
+            "secondary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            }
           }
         ]
       },
       "intervalData": {
-        "current": 0,
         "initial": 0,
         "increasing": true
       }
@@ -52,23 +65,36 @@
         },
         "dataList": [
           {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1
-            ]
+            "primary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            },
+            "secondary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            }
           },
           {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1
-            ]
+            "primary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            },
+            "secondary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            }
           }
         ]
       },
       "intervalData": {
-        "current": 0,
         "initial": 0,
         "increasing": true
       }
@@ -87,23 +113,36 @@
         },
         "dataList": [
           {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1
-            ]
+            "primary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            },
+            "secondary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            }
           },
           {
-            "current": 0,
-            "initial": 0,
-            "increments": [
-              1
-            ]
+            "primary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            },
+            "secondary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            }
           }
         ]
       },
       "intervalData": {
-        "current": 0,
         "initial": 0,
         "increasing": true
       }

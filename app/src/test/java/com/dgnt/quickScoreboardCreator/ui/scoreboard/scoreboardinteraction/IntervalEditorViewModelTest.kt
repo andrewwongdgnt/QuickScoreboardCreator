@@ -75,7 +75,6 @@ class IntervalEditorViewModelTest {
             defaultScoreInfoConfig,
             IntervalDataConfig(
                 interval1Time,
-                interval1Time,
                 false
             )
         ),
@@ -83,14 +82,12 @@ class IntervalEditorViewModelTest {
             defaultScoreInfoConfig,
             IntervalDataConfig(
                 interval2Time,
-                interval2Time,
                 false
             )
         ),
         IntervalConfig(
             defaultScoreInfoConfig,
             IntervalDataConfig(
-                interval3Time,
                 interval3Time,
                 true
             )

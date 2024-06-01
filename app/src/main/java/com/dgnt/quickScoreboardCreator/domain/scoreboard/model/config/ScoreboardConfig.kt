@@ -2,6 +2,7 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 
@@ -19,14 +20,14 @@ data class IntervalConfig(
 data class ScoreInfoConfig(
     val scoreRule: ScoreRuleConfig,
     val scoreMapping: Map<String, String>?,
-    val dataList: List<ScoreDataConfig>
+    val dataList: List<ScoreGroupConfig>
 ) {
     fun toScoreInfo() =
         ScoreInfo(
             scoreRule.toScoreRule(),
             scoreMapping?.mapKeys { it.key.toInt() } ?: mapOf(),
             dataList.map {
-                it.toScoreData()
+                it.toScoreGroup()
             }
         )
 }
@@ -43,27 +44,36 @@ data class ScoreRuleConfig(
         }
 }
 
+data class ScoreGroupConfig(
+    val primary: ScoreDataConfig,
+    val secondary: ScoreDataConfig?
+) {
+    fun toScoreGroup() =
+        ScoreGroup(
+            primary.toScoreData(),
+            secondary?.toScoreData(),
+        )
+}
+
 data class ScoreDataConfig(
-    val current: Int,
     val initial: Int,
     val increments: List<Int>
 ) {
     fun toScoreData() =
         ScoreData(
-            current,
+            initial,
             initial,
             increments
         )
 }
 
 data class IntervalDataConfig(
-    val current: Long = 0,
     val initial: Long = 0,
     val increasing: Boolean = false
 ) {
     fun toIntervalData() =
         IntervalData(
-            current,
+            initial,
             initial,
             increasing
         )
