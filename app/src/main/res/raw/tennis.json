@@ -22,22 +22,10 @@
               "increments": [
                 1
               ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
             }
           },
           {
             "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            },
-            "secondary": {
               "initial": 0,
               "increments": [
                 1
@@ -70,22 +58,10 @@
               "increments": [
                 1
               ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
             }
           },
           {
             "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            },
-            "secondary": {
               "initial": 0,
               "increments": [
                 1
@@ -118,22 +94,10 @@
               "increments": [
                 1
               ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
             }
           },
           {
             "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            },
-            "secondary": {
               "initial": 0,
               "increments": [
                 1
