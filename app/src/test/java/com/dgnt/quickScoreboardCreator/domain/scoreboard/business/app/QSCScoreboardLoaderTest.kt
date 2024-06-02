@@ -30,11 +30,11 @@ class QSCScoreboardLoaderTest {
         Assert.assertTrue(exampleDefault.scoreCarriesOver)
         Assert.assertEquals(4, exampleDefault.intervalList.size)
         val scoreInfo1 = exampleDefault.intervalList[0].scoreInfo
-        Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.DEUCE_ADVANTAGE, 3),scoreInfo1.scoreRule)
-        Assert.assertEquals("0",scoreInfo1.scoreMapping?.get("0"))
-        Assert.assertEquals("15",scoreInfo1.scoreMapping?.get("1"))
-        Assert.assertEquals("30",scoreInfo1.scoreMapping?.get("2"))
-        Assert.assertEquals("40",scoreInfo1.scoreMapping?.get("3"))
+        Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.DEUCE_ADVANTAGE, 3), scoreInfo1.scoreRule)
+        Assert.assertEquals("0", scoreInfo1.scoreMapping?.get("0"))
+        Assert.assertEquals("15", scoreInfo1.scoreMapping?.get("1"))
+        Assert.assertEquals("30", scoreInfo1.scoreMapping?.get("2"))
+        Assert.assertEquals("40", scoreInfo1.scoreMapping?.get("3"))
     }
 
     @Test
@@ -46,9 +46,10 @@ class QSCScoreboardLoaderTest {
         Assert.assertEquals("Spike Ball", exampleCustom.title)
         Assert.assertEquals("Covid sport", exampleCustom.description)
         Assert.assertEquals("Game", exampleCustom.intervalLabel)
-        Assert.assertEquals("Fouls", exampleCustom.secondaryScoreLabel)
         Assert.assertFalse(exampleCustom.scoreCarriesOver)
         Assert.assertEquals(3, exampleCustom.intervalList.size)
+        val interval1 = exampleCustom.intervalList[0]
+        Assert.assertEquals("Fouls", interval1.scoreInfo.secondaryScoreLabel)
 
     }
 

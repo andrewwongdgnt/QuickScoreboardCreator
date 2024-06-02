@@ -3,7 +3,6 @@
   "title": "Spike Ball",
   "description": "Covid sport",
   "intervalLabel": "Game",
-  "secondaryScoreLabel": "Fouls",
   "scoreCarriesOver": false,
   "intervalList": [
     {
@@ -12,9 +11,16 @@
           "type": "DEUCE_ADVANTAGE",
           "trigger": 20
         },
+        "secondaryScoreLabel": "Fouls",
         "dataList": [
           {
             "primary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
+            },
+            "secondary": {
               "initial": 0,
               "increments": [
                 1
@@ -27,15 +33,19 @@
               "increments": [
                 1
               ]
+            },
+            "secondary": {
+              "initial": 0,
+              "increments": [
+                1
+              ]
             }
           }
         ]
       },
       "intervalData": {
         "initial": 0,
-        "increasing": true,
-        "type": "CUSTOM",
-        "name": "Game"
+        "increasing": true
       }
     },
     {

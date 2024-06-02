@@ -83,8 +83,11 @@ class ScoreboardInteractionViewModel @Inject constructor(
     val currentInterval: StateFlow<Int> = _currentInterval.asStateFlow()
     private val intervalIndexUpdateListener: (Int) -> Unit = {
         _currentInterval.value = it + 1
+        secondaryScoreLabelInfoList.getOrNull(it)?.let { secondaryScoreLabelInfo ->
+            _secondaryScoreLabelInfo.value = secondaryScoreLabelInfo
+        }
+        onEvent(ScoreboardInteractionEvent.PauseTimer(true))
     }
-
 
     /**
      * Display team list
@@ -96,7 +99,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
             teamList.value.getOrNull(index) ?: TeamDisplay.UnSelectedTeamDisplay
         }
     }
-
 
     /**
      * Display time
@@ -126,6 +128,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private val _secondaryScoreLabelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
     val secondaryScoreLabelInfo: StateFlow<Pair<String?, Int?>> = _secondaryScoreLabelInfo.asStateFlow()
+
+    private var secondaryScoreLabelInfoList = listOf<Pair<String?, Int?>>()
 
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
@@ -159,15 +163,17 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _intervalLabelInfo.value = null to scoreboardType.intervalLabelRes
-        _secondaryScoreLabelInfo.value = null to scoreboardType.secondaryScoreLabelRes
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
-        }?.let {
+        }?.let { defaultScoreboardConfig ->
             scoreboardManager.apply {
-                scoreCarriesOver = it.scoreCarriesOver
-                intervalList = it.intervalList.map {
+                scoreCarriesOver = defaultScoreboardConfig.scoreCarriesOver
+                intervalList = defaultScoreboardConfig.intervalList.map {
                     it.scoreInfo.toScoreInfo() to it.intervalData.toIntervalData()
                 }
+            }
+            secondaryScoreLabelInfoList = defaultScoreboardConfig.intervalList.map {
+                it.scoreInfo.secondaryScoreLabel to scoreboardType.secondaryScoreLabelRes
             }
         }
 

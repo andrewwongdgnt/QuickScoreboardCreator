@@ -5,6 +5,5 @@ data class CustomScoreboardConfig(
     val title: String,
     val description: String,
     val intervalLabel: String,
-    val secondaryScoreLabel: String,
 
 ) : ScoreboardConfig()

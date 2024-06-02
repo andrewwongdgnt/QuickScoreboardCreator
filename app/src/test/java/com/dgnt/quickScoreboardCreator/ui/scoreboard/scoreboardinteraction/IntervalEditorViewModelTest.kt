@@ -62,6 +62,7 @@ class IntervalEditorViewModelTest {
             0,
         ),
         mapOf(),
+        null,
         listOf()
     )
 

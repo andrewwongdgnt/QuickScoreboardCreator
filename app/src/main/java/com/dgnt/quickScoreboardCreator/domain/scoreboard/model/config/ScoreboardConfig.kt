@@ -20,6 +20,7 @@ data class IntervalConfig(
 data class ScoreInfoConfig(
     val scoreRule: ScoreRuleConfig,
     val scoreMapping: Map<String, String>?,
+    val secondaryScoreLabel: String?,
     val dataList: List<ScoreGroupConfig>
 ) {
     fun toScoreInfo() =
