@@ -6,13 +6,14 @@ import com.dgnt.quickScoreboardCreator.R
 
 enum class ScoreboardType(
     @RawRes val rawRes: Int? = null,
-    @StringRes val titleRes: Int,
-    @StringRes val descriptionRes: Int,
-    @StringRes val intervalLabelRes: Int,
+    @StringRes val titleRes: Int=R.string.blank,
+    @StringRes val descriptionRes: Int=R.string.blank,
+    @StringRes val intervalLabelRes: Int=R.string.blank,
+    @StringRes val secondaryScoreLabelRes: Int=R.string.blank,
 ) {
-    NONE(titleRes = R.string.blank, descriptionRes = R.string.blank, intervalLabelRes = R.string.blank),
-    BASKETBALL(R.raw.basketball, R.string.basketball, R.string.basketball_description, R.string.quarter),
-    HOCKEY(R.raw.hockey, R.string.hockey, R.string.hockey_description, R.string.period),
+    NONE(),
+    BASKETBALL(R.raw.basketball, R.string.basketball, R.string.basketball_description, R.string.quarter, R.string.fouls),
+    HOCKEY(R.raw.hockey, R.string.hockey, R.string.hockey_description, R.string.period, R.string.penalties),
     SPIKEBALL(R.raw.spikeball, R.string.spikeball, R.string.spikeball_description, R.string.game),
-    TENNIS(R.raw.tennis, R.string.tennis, R.string.tennis_description, R.string.set),
+    TENNIS(R.raw.tennis, R.string.tennis, R.string.tennis_description, R.string.set, R.string.games),
 }

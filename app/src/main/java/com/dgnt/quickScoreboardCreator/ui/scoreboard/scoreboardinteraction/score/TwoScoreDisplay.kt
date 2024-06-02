@@ -1,7 +1,10 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
@@ -11,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
@@ -18,50 +22,120 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
 import com.dgnt.quickScoreboardCreator.ui.composable.AutoSizeText
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionEvent
 
 @Composable
 fun TwoScoreDisplay(
     modifier: Modifier = Modifier,
-    displayedScoreInfo: DisplayedScoreInfo,
-
-    ) {
-    Row(
+    primaryDisplayedScoreInfo: DisplayedScoreInfo,
+    secondaryDisplayedScoreInfo: DisplayedScoreInfo,
+    secondaryIncrementList: List<List<Int>>,
+    secondaryScoreLabelInfo: Pair<String?, Int?>,
+    onEvent: (ScoreboardInteractionEvent) -> Unit
+) {
+    Column(
         modifier = modifier.fillMaxHeight(),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalArrangement = Arrangement.Center
     ) {
-        if (displayedScoreInfo.overallDisplayedScore != DisplayedScore.Blank)
-            ScoreValueContent(
-                modifier = Modifier.weight(1f),
-                displayedScore = displayedScoreInfo.overallDisplayedScore,
-            )
-        else {
-            ScoreValueContent(
-                modifier = Modifier.weight(1f),
-                displayedScore = displayedScoreInfo.displayedScores[0],
-            )
+        val hasSecondaryScores = secondaryDisplayedScoreInfo.displayedScores.isNotEmpty()
+        Row(
 
-            val dividerColor = MaterialTheme.colorScheme.onBackground
-            HorizontalDivider(
-                color = dividerColor,
-                modifier = Modifier
-                    .padding(horizontal = 6.dp)
-                    .width(40.dp),
-                thickness = 20.dp
-            )
+            modifier = Modifier.offset(y = if (hasSecondaryScores) 10.dp else 0.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
 
-            ScoreValueContent(
-                modifier = Modifier.weight(1f),
-                displayedScore = displayedScoreInfo.displayedScores[1],
-            )
+            val maxFontSize = if (hasSecondaryScores) 135.sp else 200.sp
+            if (primaryDisplayedScoreInfo.overallDisplayedScore != DisplayedScore.Blank)
+                ScoreValueContent(
+                    modifier = Modifier.weight(1f),
+                    displayedScore = primaryDisplayedScoreInfo.overallDisplayedScore,
+                    maxFontSize = maxFontSize
+                )
+            else {
+                ScoreValueContent(
+                    modifier = Modifier.weight(1f),
+                    displayedScore = primaryDisplayedScoreInfo.displayedScores[0],
+                    maxFontSize = maxFontSize
+                )
+
+                val dividerColor = MaterialTheme.colorScheme.onBackground
+                HorizontalDivider(
+                    color = dividerColor,
+                    modifier = Modifier
+                        .padding(horizontal = 6.dp)
+                        .width(40.dp),
+                    thickness = 20.dp
+                )
+
+                ScoreValueContent(
+                    modifier = Modifier.weight(1f),
+                    displayedScore = primaryDisplayedScoreInfo.displayedScores[1],
+                    maxFontSize = maxFontSize
+                )
+            }
         }
-
+        if (!hasSecondaryScores)
+            return@Column
+        Row(
+            modifier = Modifier.offset(y = (-15).dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val maxFontSize = 50.sp
+            if (secondaryDisplayedScoreInfo.overallDisplayedScore != DisplayedScore.Blank)
+                ScoreValueContent(
+                    modifier = Modifier.weight(1f),
+                    displayedScore = secondaryDisplayedScoreInfo.overallDisplayedScore,
+                    maxFontSize = maxFontSize
+                )
+            else {
+                ScoreControl(
+                    modifier = Modifier.weight(2f),
+                    incrementList = secondaryIncrementList[0],
+                    onIncrement = { index, positive ->
+                        onEvent(ScoreboardInteractionEvent.UpdateScore(false, 0, index, positive))
+                    }
+                )
+                ScoreValueContent(
+                    modifier = Modifier.weight(1f),
+                    displayedScore = secondaryDisplayedScoreInfo.displayedScores[0],
+                    maxFontSize = maxFontSize
+                )
+                AutoSizeText(
+                    text = secondaryScoreLabelInfo.format(),
+                    maxTextSize = maxFontSize,
+                    maxLines = 1,
+                    alignment = Alignment.Center,
+                    modifier = modifier
+                )
+                ScoreValueContent(
+                    modifier = Modifier.weight(1f),
+                    displayedScore = secondaryDisplayedScoreInfo.displayedScores[1],
+                    maxFontSize = maxFontSize
+                )
+                ScoreControl(
+                    modifier = Modifier.weight(2f),
+                    incrementList = secondaryIncrementList[0],
+                    onIncrement = { index, positive ->
+                        onEvent(ScoreboardInteractionEvent.UpdateScore(false, 1, index, positive))
+                    }
+                )
+            }
+        }
     }
+}
+
+@Composable
+private fun Pair<String?, Int?>.format(): String {
+    return first ?: second?.let {
+        stringResource(id = it)
+    } ?: ""
 }
 
 @Composable
 private fun ScoreValueContent(
     modifier: Modifier = Modifier,
     displayedScore: DisplayedScore,
+    maxFontSize: TextUnit
 ) {
     val displayedValue = when (displayedScore) {
         DisplayedScore.Advantage -> stringResource(id = R.string.advantageDisplay)
@@ -71,7 +145,7 @@ private fun ScoreValueContent(
     }
     AutoSizeText(
         text = displayedValue,
-        maxTextSize = 200.sp,
+        maxTextSize = maxFontSize,
         maxLines = 1,
         alignment = Alignment.Center,
         modifier = modifier
@@ -84,24 +158,44 @@ private fun ScoreValueContent(
 @Composable
 private fun `Normal scores`() =
     TwoScoreDisplay(
-        displayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
                 DisplayedScore.CustomDisplayedScore("10"),
             ),
             DisplayedScore.Blank
-        )
+        ),
+        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+            listOf(
+                DisplayedScore.CustomDisplayedScore("1"),
+                DisplayedScore.CustomDisplayedScore("1"),
+            ),
+            DisplayedScore.Blank
+        ),
+        secondaryIncrementList = listOf(
+            listOf(1),
+            listOf(1),
+        ),
+        secondaryScoreLabelInfo = Pair(null, R.string.fouls),
+        onEvent = {}
     )
 
 @PreviewScreenSizes
 @Composable
 private fun `Deuce`() =
     TwoScoreDisplay(
-        displayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.Blank,
                 DisplayedScore.Blank,
             ),
             DisplayedScore.Deuce
-        )
+        ),
+        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+            listOf(),
+            DisplayedScore.Blank
+        ),
+        secondaryIncrementList = listOf(),
+        secondaryScoreLabelInfo = Pair(null, R.string.blank),
+        onEvent = {}
     )

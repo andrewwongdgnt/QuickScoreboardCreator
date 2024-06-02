@@ -18,7 +18,7 @@ fun ScoreControl(
     onIncrement: (Int, Boolean) -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxHeight(),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     )

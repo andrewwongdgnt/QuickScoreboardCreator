@@ -12,11 +12,11 @@ import com.dgnt.quickScoreboardCreator.R
 @Composable
 fun IntervalDisplayContent(
     modifier: Modifier = Modifier,
-    labelInfo: Pair<String?, Int?>,
+    intervalLabelInfo: Pair<String?, Int?>,
     currentInterval: Int,
 ) {
     Text(
-        text = stringResource(id = R.string.intervalLabel, labelInfo.format(), currentInterval),
+        text = stringResource(id = R.string.intervalLabel, intervalLabelInfo.format(), currentInterval),
         fontSize = 30.sp,
         textAlign = TextAlign.Center,
         modifier = modifier
@@ -34,9 +34,9 @@ private fun Pair<String?, Int?>.format(): String {
 @Preview(showBackground = true)
 @Composable
 private fun `Default 1`() =
-    IntervalDisplayContent(labelInfo = Pair(null, R.string.game), currentInterval = 1)
+    IntervalDisplayContent(intervalLabelInfo = Pair(null, R.string.game), currentInterval = 1)
 
 @Preview(showBackground = true)
 @Composable
 private fun `Custom 2`() =
-    IntervalDisplayContent(labelInfo = Pair("Custom", null), currentInterval = 2)
+    IntervalDisplayContent(intervalLabelInfo = Pair("Custom", null), currentInterval = 2)

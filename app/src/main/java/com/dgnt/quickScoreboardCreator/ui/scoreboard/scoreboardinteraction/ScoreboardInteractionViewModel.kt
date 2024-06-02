@@ -41,21 +41,39 @@ class ScoreboardInteractionViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * Display score
+     * Primary Display score
      */
-    private val _displayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
-    val displayedScoreInfo: StateFlow<DisplayedScoreInfo> = _displayedScoreInfo.asStateFlow()
-    private val scoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
-        _displayedScoreInfo.value = it
+    private val _primaryDisplayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
+    val primaryDisplayedScoreInfo: StateFlow<DisplayedScoreInfo> = _primaryDisplayedScoreInfo.asStateFlow()
+    private val primaryScoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
+        _primaryDisplayedScoreInfo.value = it
     }
 
     /**
-     * Display increment list
+     * Secondary Display score
      */
-    private val _incrementList = MutableStateFlow(emptyList<List<Int>>())
-    val incrementList: StateFlow<List<List<Int>>> = _incrementList.asStateFlow()
+    private val _secondaryDisplayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
+    val secondaryDisplayedScoreInfo: StateFlow<DisplayedScoreInfo> = _secondaryDisplayedScoreInfo.asStateFlow()
+    private val secondaryScoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
+        _secondaryDisplayedScoreInfo.value = it
+    }
+
+    /**
+     * Primary Display increment list
+     */
+    private val _primaryIncrementList = MutableStateFlow(emptyList<List<Int>>())
+    val primaryIncrementList: StateFlow<List<List<Int>>> = _primaryIncrementList.asStateFlow()
     private val primaryIncrementListUpdateListener: (List<List<Int>>) -> Unit = {
-        _incrementList.value = it
+        _primaryIncrementList.value = it
+    }
+
+    /**
+     * Secondary Display increment list
+     */
+    private val _secondaryIncrementList = MutableStateFlow(emptyList<List<Int>>())
+    val secondaryIncrementList: StateFlow<List<List<Int>>> = _secondaryIncrementList.asStateFlow()
+    private val secondaryIncrementListUpdateListener: (List<List<Int>>) -> Unit = {
+        _secondaryIncrementList.value = it
     }
 
     /**
@@ -103,9 +121,11 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    private val _intervalLabelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
+    val intervalLabelInfo: StateFlow<Pair<String?, Int?>> = _intervalLabelInfo.asStateFlow()
 
-    private val _labelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
-    val labelInfo: StateFlow<Pair<String?, Int?>> = _labelInfo.asStateFlow()
+    private val _secondaryScoreLabelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
+    val secondaryScoreLabelInfo: StateFlow<Pair<String?, Int?>> = _secondaryScoreLabelInfo.asStateFlow()
 
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
@@ -116,10 +136,12 @@ class ScoreboardInteractionViewModel @Inject constructor(
             this.scoreboardType = it
         }
 
-        scoreboardManager.primaryScoresUpdateListener = scoresUpdateListener
+        scoreboardManager.primaryScoresUpdateListener = primaryScoresUpdateListener
+        scoreboardManager.secondaryScoresUpdateListener = secondaryScoresUpdateListener
         scoreboardManager.timeUpdateListener = timeUpdateListener
         scoreboardManager.intervalIndexUpdateListener = intervalIndexUpdateListener
         scoreboardManager.primaryIncrementListUpdateListener = primaryIncrementListUpdateListener
+        scoreboardManager.secondaryIncrementListUpdateListener = secondaryIncrementListUpdateListener
         scoreboardManager.teamSizeUpdateListener = teamSizeUpdateListener
 
         scoreboardManager.triggerUpdateListeners()
@@ -136,7 +158,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        _labelInfo.value = null to scoreboardType.intervalLabelRes
+        _intervalLabelInfo.value = null to scoreboardType.intervalLabelRes
+        _secondaryScoreLabelInfo.value = null to scoreboardType.secondaryScoreLabelRes
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {

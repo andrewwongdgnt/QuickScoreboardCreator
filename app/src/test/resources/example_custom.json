@@ -3,6 +3,7 @@
   "title": "Spike Ball",
   "description": "Covid sport",
   "intervalLabel": "Game",
+  "secondaryScoreLabel": "Fouls",
   "scoreCarriesOver": false,
   "intervalList": [
     {

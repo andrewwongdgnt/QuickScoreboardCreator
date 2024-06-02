@@ -7,6 +7,10 @@
     <string name="game">Game</string>
     <string name="set">Set</string>
     <string name="round">Round</string>
+    <!-- Secondary Score Name -->
+    <string name="fouls">Fouls</string>
+    <string name="penalties">Penalties</string>
+    <string name="games">Games</string>
     <!-- Default Scoreboard -->
     <string name="basketball">Basketball</string>
     <string name="basketball_description">Basketball description</string>

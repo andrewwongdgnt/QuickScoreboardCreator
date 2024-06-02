@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -57,23 +58,29 @@ private fun ScoreboardInteractionVMDataContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardInteractionViewModel
 ) {
+    val primaryDisplayedScoreInfo by viewModel.primaryDisplayedScoreInfo.collectAsStateWithLifecycle()
+    val primaryIncrementList by viewModel.primaryIncrementList.collectAsStateWithLifecycle()
+    val secondaryDisplayedScoreInfo by viewModel.secondaryDisplayedScoreInfo.collectAsStateWithLifecycle()
+    val secondaryIncrementList by viewModel.secondaryIncrementList.collectAsStateWithLifecycle()
+    val secondaryScoreLabelInfo by viewModel.secondaryScoreLabelInfo.collectAsStateWithLifecycle()
+    val teamList by viewModel.teamList.collectAsStateWithLifecycle()
     val timeData by viewModel.timeData.collectAsStateWithLifecycle()
     val timerInProgress by viewModel.timerInProgress.collectAsStateWithLifecycle()
-    val incrementList by viewModel.incrementList.collectAsStateWithLifecycle()
-    val displayedScoreInfo by viewModel.displayedScoreInfo.collectAsStateWithLifecycle()
-    val teamList by viewModel.teamList.collectAsStateWithLifecycle()
-    val labelInfo by viewModel.labelInfo.collectAsStateWithLifecycle()
+    val intervalLabelInfo by viewModel.intervalLabelInfo.collectAsStateWithLifecycle()
     val currentInterval by viewModel.currentInterval.collectAsStateWithLifecycle()
 
     ScoreboardInteractionInnerContent(
         viewModel.uiEvent,
         onUiEvent,
-        incrementList,
+        primaryDisplayedScoreInfo,
+        primaryIncrementList,
+        secondaryDisplayedScoreInfo,
+        secondaryIncrementList,
+        secondaryScoreLabelInfo,
         teamList,
-        displayedScoreInfo,
         timeData,
         timerInProgress,
-        labelInfo,
+        intervalLabelInfo,
         currentInterval,
         viewModel::onEvent
     )
@@ -83,12 +90,15 @@ private fun ScoreboardInteractionVMDataContent(
 private fun ScoreboardInteractionInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    incrementList: List<List<Int>>,
+    primaryDisplayedScoreInfo: DisplayedScoreInfo,
+    primaryIncrementList: List<List<Int>>,
+    secondaryDisplayedScoreInfo: DisplayedScoreInfo,
+    secondaryIncrementList: List<List<Int>>,
+    secondaryScoreLabelInfo: Pair<String?, Int?>,
     teamList: List<TeamDisplay>,
-    displayedScoreInfo: DisplayedScoreInfo,
     timeData: TimeData,
     timerInProgress: Boolean,
-    labelInfo: Pair<String?, Int?>,
+    intervalLabelInfo: Pair<String?, Int?>,
     currentInterval: Int,
     onEvent: (ScoreboardInteractionEvent) -> Unit
 ) {
@@ -97,7 +107,7 @@ private fun ScoreboardInteractionInnerContent(
         uiEvent.collect(collector = onUiEvent)
     }
 
-    val currentTeamSize = incrementList.size
+    val currentTeamSize = teamList.size
     val layoutSpacing = 10.dp
     if (currentTeamSize == 2) {
         Row(
@@ -105,7 +115,8 @@ private fun ScoreboardInteractionInnerContent(
         ) {
             val spacerWidth = 10.dp
             ScoreControl(
-                incrementList = incrementList[0],
+                modifier = Modifier.fillMaxHeight(),
+                incrementList = primaryIncrementList[0],
                 onIncrement = { index, positive ->
                     onEvent(ScoreboardInteractionEvent.UpdateScore(true, 0, index, positive))
                 }
@@ -113,11 +124,16 @@ private fun ScoreboardInteractionInnerContent(
             Spacer(modifier = Modifier.width(spacerWidth))
             TwoScoreDisplay(
                 modifier = Modifier.weight(1f),
-                displayedScoreInfo
+                primaryDisplayedScoreInfo,
+                secondaryDisplayedScoreInfo,
+                secondaryIncrementList,
+                secondaryScoreLabelInfo,
+                onEvent
             )
             Spacer(modifier = Modifier.width(spacerWidth))
             ScoreControl(
-                incrementList = incrementList[1],
+                modifier = Modifier.fillMaxHeight(),
+                incrementList = primaryIncrementList[1],
                 onIncrement = { index, positive ->
                     onEvent(ScoreboardInteractionEvent.UpdateScore(true, 1, index, positive))
                 }
@@ -146,7 +162,7 @@ private fun ScoreboardInteractionInnerContent(
             )
             IntervalDisplayContent(
                 modifier = Modifier,
-                labelInfo = labelInfo,
+                intervalLabelInfo = intervalLabelInfo,
                 currentInterval = currentInterval
             )
 
@@ -183,20 +199,32 @@ private fun `2 Teams with long names`() =
     ScoreboardInteractionInnerContent(
         emptyFlow(),
         {},
-        listOf(
-            listOf(1, 2, 2),
-            listOf(1, 2, 3),
-        ),
-        listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers Tigers Tigers Tigers Tigers", TeamIcon.TIGER)
-        ),
         DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
                 DisplayedScore.CustomDisplayedScore("21"),
             ),
             DisplayedScore.Blank
+        ),
+        listOf(
+            listOf(1, 2, 2),
+            listOf(1, 2, 3),
+        ),
+        DisplayedScoreInfo(
+            listOf(
+                DisplayedScore.CustomDisplayedScore("1"),
+                DisplayedScore.CustomDisplayedScore("0"),
+            ),
+            DisplayedScore.Blank
+        ),
+        listOf(
+            listOf(1),
+            listOf(1),
+        ),
+        Pair("S", null),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers Tigers Tigers Tigers Tigers", TeamIcon.TIGER)
         ),
         TimeData(12, 2, 4),
         false,
@@ -210,20 +238,32 @@ private fun `2 Teams with short names`() =
     ScoreboardInteractionInnerContent(
         emptyFlow(),
         {},
-        listOf(
-            listOf(1, 2, 23),
-            listOf(1, 2, 3),
-        ),
-        listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
-        ),
         DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
                 DisplayedScore.CustomDisplayedScore("261"),
             ),
             DisplayedScore.Blank
+        ),
+        listOf(
+            listOf(1, 2, 23),
+            listOf(1, 2, 3),
+        ),
+        DisplayedScoreInfo(
+            listOf(
+                DisplayedScore.CustomDisplayedScore("1"),
+                DisplayedScore.CustomDisplayedScore("0"),
+            ),
+            DisplayedScore.Blank
+        ),
+        listOf(
+            listOf(1),
+            listOf(1),
+        ),
+        Pair(null, R.string.fouls),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
         ),
         TimeData(12, 2, 4),
         false,
@@ -237,20 +277,26 @@ private fun `Adv`() =
     ScoreboardInteractionInnerContent(
         emptyFlow(),
         {},
-        listOf(
-            listOf(1, 2, 23),
-            listOf(1, 2, 3),
-        ),
-        listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
-        ),
         DisplayedScoreInfo(
             listOf(
                 DisplayedScore.Advantage,
                 DisplayedScore.Blank,
             ),
             DisplayedScore.Blank
+        ),
+        listOf(
+            listOf(1, 2, 23),
+            listOf(1, 2, 3),
+        ),
+        DisplayedScoreInfo(
+            listOf(),
+            DisplayedScore.Blank
+        ),
+        listOf(),
+        Pair(null, R.string.blank),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
         ),
         TimeData(12, 2, 4),
         false,
@@ -264,20 +310,26 @@ private fun `Deuce`() =
     ScoreboardInteractionInnerContent(
         emptyFlow(),
         {},
-        listOf(
-            listOf(1, 2, 23),
-            listOf(1, 2, 3),
-        ),
-        listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
-        ),
         DisplayedScoreInfo(
             listOf(
                 DisplayedScore.Blank,
                 DisplayedScore.Blank,
             ),
             DisplayedScore.Deuce
+        ),
+        listOf(
+            listOf(1, 2, 23),
+            listOf(1, 2, 3),
+        ),
+        DisplayedScoreInfo(
+            listOf(),
+            DisplayedScore.Blank
+        ),
+        listOf(),
+        Pair(null, R.string.blank),
+        listOf(
+            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
         ),
         TimeData(12, 2, 4),
         false,

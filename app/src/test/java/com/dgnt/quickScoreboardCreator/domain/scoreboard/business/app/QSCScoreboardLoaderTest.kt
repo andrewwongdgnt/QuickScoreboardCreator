@@ -46,6 +46,7 @@ class QSCScoreboardLoaderTest {
         Assert.assertEquals("Spike Ball", exampleCustom.title)
         Assert.assertEquals("Covid sport", exampleCustom.description)
         Assert.assertEquals("Game", exampleCustom.intervalLabel)
+        Assert.assertEquals("Fouls", exampleCustom.secondaryScoreLabel)
         Assert.assertFalse(exampleCustom.scoreCarriesOver)
         Assert.assertEquals(3, exampleCustom.intervalList.size)
 

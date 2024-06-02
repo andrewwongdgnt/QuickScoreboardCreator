@@ -67,6 +67,7 @@ class QSCScoreboardManager : ScoreboardManager {
     override fun triggerUpdateListeners() {
         timeUpdateListener?.invoke(currentIntervalData.current)
         primaryScoresUpdateListener?.invoke(getPrimaryScores())
+        secondaryScoresUpdateListener?.invoke(getSecondaryScores())
         intervalIndexUpdateListener?.invoke(currentIntervalIndex)
         primaryIncrementListUpdateListener?.invoke(primaryIncrementList)
         secondaryIncrementListUpdateListener?.invoke(secondaryIncrementList)
