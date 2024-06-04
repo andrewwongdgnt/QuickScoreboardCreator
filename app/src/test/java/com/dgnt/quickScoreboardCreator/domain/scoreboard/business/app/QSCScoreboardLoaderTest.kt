@@ -28,13 +28,26 @@ class QSCScoreboardLoaderTest {
 
         Assert.assertEquals(ScoreboardType.BASKETBALL, exampleDefault.scoreboardType)
         Assert.assertTrue(exampleDefault.scoreCarriesOver)
-        Assert.assertEquals(4, exampleDefault.intervalList.size)
-        val scoreInfo1 = exampleDefault.intervalList[0].scoreInfo
-        Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.DEUCE_ADVANTAGE, 3), scoreInfo1.scoreRule)
-        Assert.assertEquals("0", scoreInfo1.scoreMapping?.get("0"))
-        Assert.assertEquals("15", scoreInfo1.scoreMapping?.get("1"))
-        Assert.assertEquals("30", scoreInfo1.scoreMapping?.get("2"))
-        Assert.assertEquals("40", scoreInfo1.scoreMapping?.get("3"))
+        Assert.assertEquals(6, exampleDefault.intervalList.size)
+        (0 until 4).forEach {
+            val intervalInfo = exampleDefault.intervalList[it]
+            val scoreInfo = intervalInfo.scoreInfo
+            Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.DEUCE_ADVANTAGE, 3), scoreInfo.scoreRule)
+            Assert.assertEquals("0", scoreInfo.scoreMapping?.get("0"))
+            Assert.assertEquals("15", scoreInfo.scoreMapping?.get("1"))
+            Assert.assertEquals("30", scoreInfo.scoreMapping?.get("2"))
+            Assert.assertEquals("40", scoreInfo.scoreMapping?.get("3"))
+            Assert.assertTrue(intervalInfo.intervalData.increasing)
+        }
+
+        (4 until 6).forEach {
+            val intervalInfo = exampleDefault.intervalList[it]
+            val scoreInfo = intervalInfo.scoreInfo
+            Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.NO_RULE, 0), scoreInfo.scoreRule)
+            Assert.assertNull(scoreInfo.scoreMapping)
+            Assert.assertFalse(intervalInfo.intervalData.increasing)
+        }
+
     }
 
     @Test
@@ -47,9 +60,11 @@ class QSCScoreboardLoaderTest {
         Assert.assertEquals("Covid sport", exampleCustom.description)
         Assert.assertEquals("Game", exampleCustom.intervalLabel)
         Assert.assertFalse(exampleCustom.scoreCarriesOver)
-        Assert.assertEquals(3, exampleCustom.intervalList.size)
-        val interval1 = exampleCustom.intervalList[0]
-        Assert.assertEquals("Fouls", interval1.scoreInfo.secondaryScoreLabel)
+        Assert.assertEquals(2, exampleCustom.intervalList.size)
+        (0 until 2).forEach {
+            val intervalInfo = exampleCustom.intervalList[it]
+            Assert.assertEquals("Fouls", intervalInfo.scoreInfo.secondaryScoreLabel)
+        }
 
     }
 

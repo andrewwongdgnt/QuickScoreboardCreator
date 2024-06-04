@@ -44,90 +44,16 @@
         "initial": 1200000,
         "increasing": false
       }
-    },
+    }
+  ],
+  "repeatRule": [
     {
-      "scoreInfo": {
-        "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
-        },
-        "dataList": [
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          },
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          }
-        ]
-      },
-      "intervalData": {
-        "initial": 1200000,
-        "increasing": false
-      }
-    },
-    {
-      "scoreInfo": {
-        "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
-        },
-        "dataList": [
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          },
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          }
-        ]
-      },
-      "intervalData": {
-        "initial": 1200000,
-        "increasing": false
-      }
+      "from": 0,
+      "to": [
+        0,
+        1,
+        2
+      ]
     }
   ]
 }

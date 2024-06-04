@@ -6,4 +6,3 @@ data class DefaultScoreboardConfig(
     val scoreboardType: ScoreboardType
 
 ) : ScoreboardConfig()
-

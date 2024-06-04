@@ -43,13 +43,7 @@
       "scoreInfo": {
         "scoreRule": {
           "type": "DEUCE_ADVANTAGE",
-          "trigger": 3
-        },
-        "scoreMapping": {
-          "0": "0",
-          "1": "15",
-          "2": "30",
-          "3": "40"
+          "trigger": 6
         },
         "dataList": [
           {
@@ -74,42 +68,30 @@
         "initial": 0,
         "increasing": true
       }
+    }
+  ],
+  "repeatRule": [
+    {
+      "from": 0,
+      "to": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
     },
     {
-      "scoreInfo": {
-        "scoreRule": {
-          "type": "DEUCE_ADVANTAGE",
-          "trigger": 3
-        },
-        "scoreMapping": {
-          "0": "0",
-          "1": "15",
-          "2": "30",
-          "3": "40"
-        },
-        "dataList": [
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          },
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          }
-        ]
-      },
-      "intervalData": {
-        "initial": 0,
-        "increasing": true
-      }
+      "from": 1,
+      "to": [
+        11
+      ]
     }
   ]
 }

@@ -96,98 +96,24 @@
         "initial": 0,
         "increasing": false
       }
+    }
+  ],
+  "repeatRule": [
+    {
+      "from": 0,
+      "to": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
-      "scoreInfo": {
-        "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
-        },
-        "dataList": [
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1,
-                2,
-                3
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          },
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1,
-                2,
-                3
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          }
-        ]
-      },
-      "intervalData": {
-        "initial": 0,
-        "increasing": false
-      }
-    },
-    {
-      "scoreInfo": {
-        "scoreRule": {
-          "type": "NO_RULE",
-          "trigger": 0
-        },
-        "dataList": [
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1,
-                2,
-                3
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          },
-          {
-            "primary": {
-              "initial": 0,
-              "increments": [
-                1,
-                2,
-                3
-              ]
-            },
-            "secondary": {
-              "initial": 0,
-              "increments": [
-                1
-              ]
-            }
-          }
-        ]
-      },
-      "intervalData": {
-        "initial": 0,
-        "increasing": false
-      }
+      "from": 1,
+      "to": [
+        4,
+        5
+      ]
     }
   ]
 }
