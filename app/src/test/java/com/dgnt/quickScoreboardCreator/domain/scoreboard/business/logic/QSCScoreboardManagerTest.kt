@@ -6,6 +6,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import io.mockk.MockKAnnotations
@@ -191,7 +192,7 @@ class QSCScoreboardManagerTest {
 
     @Test
     fun testAdvancingToNextIntervalFromTime() {
-        sut.scoreCarriesOver = true
+        sut.winRule = WinRule.Final
         sut.intervalList = listOf(
             ScoreInfo(
                 ScoreRule.NoRule,

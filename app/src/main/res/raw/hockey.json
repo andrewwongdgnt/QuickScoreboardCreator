@@ -1,7 +1,7 @@
 {
   "type": "DEFAULT",
   "scoreboardType": "HOCKEY",
-  "scoreCarriesOver": true,
+  "winRuleType": "FINAL",
   "intervalList": [
     {
       "scoreInfo": {

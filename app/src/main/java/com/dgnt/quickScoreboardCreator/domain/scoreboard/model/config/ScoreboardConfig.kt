@@ -8,7 +8,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 
 abstract class ScoreboardConfig {
     val type: String = ""
-    val scoreCarriesOver: Boolean = false
+    val winRuleType: WinRuleType = WinRuleType.FINAL
     var intervalList: List<IntervalConfig> = emptyList()
     val repeatRule: List<RepeatRuleConfig> = emptyList()
 }

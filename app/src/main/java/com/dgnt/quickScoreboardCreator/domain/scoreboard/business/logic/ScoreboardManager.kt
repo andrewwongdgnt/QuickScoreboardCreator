@@ -3,11 +3,12 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 
 interface ScoreboardManager {
 
-    var scoreCarriesOver: Boolean
+    var winRule: WinRule
     var intervalList: List<Pair<ScoreInfo, IntervalData>>
     val currentTeamSize: Int
 

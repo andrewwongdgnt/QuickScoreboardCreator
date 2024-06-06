@@ -6,6 +6,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultSco
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -27,7 +28,7 @@ class QSCScoreboardLoaderTest {
         } as DefaultScoreboardConfig
 
         Assert.assertEquals(ScoreboardType.BASKETBALL, exampleDefault.scoreboardType)
-        Assert.assertTrue(exampleDefault.scoreCarriesOver)
+        Assert.assertEquals(WinRuleType.FINAL, exampleDefault.winRuleType)
         Assert.assertEquals(6, exampleDefault.intervalList.size)
         (0 until 4).forEach {
             val intervalInfo = exampleDefault.intervalList[it]
@@ -59,7 +60,7 @@ class QSCScoreboardLoaderTest {
         Assert.assertEquals("Spike Ball", exampleCustom.title)
         Assert.assertEquals("Covid sport", exampleCustom.description)
         Assert.assertEquals("Game", exampleCustom.intervalLabel)
-        Assert.assertFalse(exampleCustom.scoreCarriesOver)
+        Assert.assertEquals(WinRuleType.COUNT, exampleCustom.winRuleType)
         Assert.assertEquals(2, exampleCustom.intervalList.size)
         (0 until 2).forEach {
             val intervalInfo = exampleCustom.intervalList[it]

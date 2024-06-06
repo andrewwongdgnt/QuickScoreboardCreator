@@ -8,6 +8,5 @@ data class ScoreboardEntity(
     @PrimaryKey val id: Int? = null,
     val title: String,
     val description: String,
-    val scoreCarriesOver: Boolean,
 //    val intervalListL: List<Pair<ScoreInfo, IntervalData>>
 )

@@ -3,7 +3,7 @@
   "title": "Spike Ball",
   "description": "Covid sport",
   "intervalLabel": "Game",
-  "scoreCarriesOver": false,
+  "winRuleType": "COUNT",
   "intervalList": [
     {
       "scoreInfo": {

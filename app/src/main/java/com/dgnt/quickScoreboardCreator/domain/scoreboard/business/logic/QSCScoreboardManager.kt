@@ -5,6 +5,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import kotlin.math.abs
@@ -15,15 +16,15 @@ class QSCScoreboardManager : ScoreboardManager {
 
     private val scoreboard: Scoreboard =
         Scoreboard(
-            false,
+            WinRule.Count,
             listOf(),
             0
         )
 
-    override var scoreCarriesOver: Boolean
-        get() = scoreboard.scoreCarriesOver
+    override var winRule: WinRule
+        get() = scoreboard.winRule
         set(value) {
-            scoreboard.scoreCarriesOver = value
+            scoreboard.winRule = value
         }
 
     override var intervalList: List<Pair<ScoreInfo, IntervalData>>
@@ -218,7 +219,7 @@ class QSCScoreboardManager : ScoreboardManager {
 
         currentIntervalIndex++
         currentIntervalData.reset()
-        if (scoreCarriesOver) {
+        if (winRule.scoreCarriesOver) {
             val previousScoreGroups = scoreboard.intervalList[currentIntervalIndex - 1].first.dataList
             val currentScoreGroups = currentScoreInfo.dataList
             currentScoreGroups.forEachIndexed { index, currentScoreGroup ->

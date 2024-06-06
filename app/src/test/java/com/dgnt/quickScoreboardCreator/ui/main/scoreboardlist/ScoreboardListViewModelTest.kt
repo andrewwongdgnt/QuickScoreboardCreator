@@ -48,8 +48,8 @@ class ScoreboardListViewModelTest {
     private lateinit var sut: ScoreboardListViewModel
 
     private val mockScoreboardList = listOf(
-        ScoreboardEntity(1, "scoreboard name", "scoreboard desc", true),
-        ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", true)
+        ScoreboardEntity(1, "scoreboard name", "scoreboard desc"),
+        ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2")
     )
     private lateinit var mockFlowScoreboardList: Flow<List<ScoreboardEntity>>
     private val mockCategorizedScoreboardList =

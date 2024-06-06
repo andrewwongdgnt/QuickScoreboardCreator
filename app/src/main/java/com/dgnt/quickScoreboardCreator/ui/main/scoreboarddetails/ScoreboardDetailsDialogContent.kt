@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.composable.LabelSwitch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -37,14 +36,12 @@ fun ScoreboardDetailsDialogContent(
     val valid by viewModel.valid.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
     val description by viewModel.description.collectAsStateWithLifecycle()
-    val scoreCarriesOver by viewModel.scoreCarriesOver.collectAsStateWithLifecycle()
 
     ScoreboardDetailsInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         title,
         description,
-        scoreCarriesOver,
         viewModel::onEvent,
         valid,
     )
@@ -56,7 +53,6 @@ private fun ScoreboardDetailsInnerDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     title: String,
     description: String,
-    scoreCarriesOver: Boolean,
     onEvent: (ScoreboardDetailsEvent) -> Unit,
     valid: Boolean,
 ) {
@@ -112,13 +108,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                     singleLine = false,
                     maxLines = 5
                 )
-                spacer()
-                LabelSwitch(
-                    label = stringResource(id = R.string.scoreCarriesOver),
-                    checked = scoreCarriesOver,
-                    onCheckedChange = { onEvent(ScoreboardDetailsEvent.OnScoreCarriesOverChange(it)) },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+
             }
         }
     )
@@ -132,7 +122,6 @@ private fun `Empty data`() =
         {},
         "",
         "",
-        true,
         {},
         true,
     )

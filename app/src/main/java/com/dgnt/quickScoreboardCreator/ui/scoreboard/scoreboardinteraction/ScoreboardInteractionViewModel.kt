@@ -167,7 +167,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let { defaultScoreboardConfig ->
             scoreboardManager.apply {
-                scoreCarriesOver = defaultScoreboardConfig.scoreCarriesOver
+                winRule = defaultScoreboardConfig.winRuleType.toWinRule()
                 intervalList = defaultScoreboardConfig.intervalList.map {
                     it.scoreInfo.toScoreInfo() to it.intervalData.toIntervalData()
                 }

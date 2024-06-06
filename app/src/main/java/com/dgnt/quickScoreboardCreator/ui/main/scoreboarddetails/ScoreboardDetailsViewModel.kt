@@ -8,6 +8,7 @@ import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
@@ -42,8 +43,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private val _description = MutableStateFlow("")
     val description = _description.asStateFlow()
 
-    private val _scoreCarriesOver = MutableStateFlow(true)
-    val scoreCarriesOver = _scoreCarriesOver.asStateFlow()
+    private val _winRule = MutableStateFlow<WinRule>(WinRule.Count)
+    val winRule = _winRule.asStateFlow()
 
     val valid: StateFlow<Boolean> = title.map {
         it.isNotBlank()
@@ -66,7 +67,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
             getScoreboardUseCase(id)?.let {
                 _title.value = it.title
                 _description.value = it.description
-                _scoreCarriesOver.value = it.scoreCarriesOver
                 scoreboardId = it.id
             }
         }
@@ -78,7 +78,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
-            _scoreCarriesOver.value = it.scoreCarriesOver
+            _winRule.value = it.winRuleType.toWinRule()
         }
     }
 
@@ -93,7 +93,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
                                     id = scoreboardId,
                                     title = title.value,
                                     description = description.value,
-                                    scoreCarriesOver = scoreCarriesOver.value
                                 )
                             )
                         )
@@ -104,7 +103,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
             ScoreboardDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
             is ScoreboardDetailsEvent.OnDescriptionChange -> _description.value = event.descriptionChange
-            is ScoreboardDetailsEvent.OnScoreCarriesOverChange -> _scoreCarriesOver.value = event.scoreCarriesOver
             is ScoreboardDetailsEvent.OnTitleChange -> _title.value = event.title
         }
     }
