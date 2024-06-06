@@ -131,6 +131,7 @@ class IntervalEditorViewModel @Inject constructor(
             is IntervalEditorEvent.OnMinuteChange -> {
                 getFilteredValue(event.value)?.let { min ->
                     _minuteString.value = min
+                    centiSecond = 0
                     currentTimeValue = TimeData(
                         (min.toIntOrNull() ?: 0).coerceAtLeast(0),
                         (secondString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
@@ -144,6 +145,7 @@ class IntervalEditorViewModel @Inject constructor(
             is IntervalEditorEvent.OnSecondChange -> {
                 getFilteredValue(event.value)?.let { second ->
                     _secondString.value = second
+                    centiSecond = 0
                     currentTimeValue = TimeData(
                         (minuteString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
                         (second.toIntOrNull() ?: 0).coerceAtLeast(0),
