@@ -1,7 +1,6 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
@@ -14,30 +13,11 @@ import kotlin.math.abs
 class QSCScoreboardManager : ScoreboardManager {
 
 
-    private val scoreboard: Scoreboard =
-        Scoreboard(
-            WinRule.Count,
-            listOf(),
-            0
-        )
+    override var winRule: WinRule = WinRule.Count
 
-    override var winRule: WinRule
-        get() = scoreboard.winRule
-        set(value) {
-            scoreboard.winRule = value
-        }
+    override var intervalList: List<Pair<ScoreInfo, IntervalData>> = listOf()
 
-    override var intervalList: List<Pair<ScoreInfo, IntervalData>>
-        get() = scoreboard.intervalList
-        set(value) {
-            scoreboard.intervalList = value
-        }
-
-    private var currentIntervalIndex: Int
-        get() = scoreboard.currentIntervalIndex
-        set(value) {
-            scoreboard.currentIntervalIndex = value
-        }
+    private var currentIntervalIndex: Int = 0
 
     private val primaryIncrementList: List<List<Int>>
         get() = currentScoreInfo.dataList.map { it.primary.increments }
@@ -61,9 +41,10 @@ class QSCScoreboardManager : ScoreboardManager {
     override val currentTeamSize: Int
         get() = currentScoreInfo.dataList.size
 
-    private val currentScoreInfo get() = scoreboard.intervalList[currentIntervalIndex].first
+    private val currentScoreInfo get() = intervalList[currentIntervalIndex].first
 
-    private val currentIntervalData get() = scoreboard.intervalList[currentIntervalIndex].second
+    private val currentIntervalData get() = intervalList[currentIntervalIndex].second
+
 
     override fun triggerUpdateListeners() {
         timeUpdateListener?.invoke(currentIntervalData.current)
@@ -175,7 +156,7 @@ class QSCScoreboardManager : ScoreboardManager {
     override fun updateInterval(index: Int) {
 
         // Boundaries
-        if (index !in 0 until scoreboard.intervalList.size)
+        if (index !in intervalList.indices)
             return
 
         val currentScoreGroups = currentScoreInfo.dataList
@@ -211,16 +192,19 @@ class QSCScoreboardManager : ScoreboardManager {
         scoreInfo.dataList.mapNotNull { it.secondary?.current?.toString() }
 
     private fun proceedToNextInterval() {
-        //at the end so don't increase anymore
-        if (currentIntervalIndex >= scoreboard.intervalList.size - 1) {
-            currentIntervalIndex = scoreboard.intervalList.size - 1
+
+        if (currentIntervalIndex >= intervalList.size - 1) {
+            currentIntervalIndex = intervalList.size - 1
+
+            //TODO calculate the winner
+
             return
         }
 
         currentIntervalIndex++
         currentIntervalData.reset()
         if (winRule.scoreCarriesOver) {
-            val previousScoreGroups = scoreboard.intervalList[currentIntervalIndex - 1].first.dataList
+            val previousScoreGroups = intervalList[currentIntervalIndex - 1].first.dataList
             val currentScoreGroups = currentScoreInfo.dataList
             currentScoreGroups.forEachIndexed { index, currentScoreGroup ->
                 previousScoreGroups.getOrNull(index)?.let { previousScoreGroup ->
