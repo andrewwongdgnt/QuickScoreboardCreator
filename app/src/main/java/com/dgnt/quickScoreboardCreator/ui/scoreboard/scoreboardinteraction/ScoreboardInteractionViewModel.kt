@@ -112,6 +112,13 @@ class ScoreboardInteractionViewModel @Inject constructor(
             _timerInProgress.value = false
         }
     }
+
+    /**
+     * Winners by team index
+     */
+    private val winnersUpdateListener: (Set<Int>) -> Unit = {
+        //TODO handle winners
+    }
     private val _timerInProgress = MutableStateFlow(false)
     val timerInProgress: StateFlow<Boolean> = _timerInProgress.asStateFlow()
 
@@ -147,6 +154,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         scoreboardManager.primaryIncrementListUpdateListener = primaryIncrementListUpdateListener
         scoreboardManager.secondaryIncrementListUpdateListener = secondaryIncrementListUpdateListener
         scoreboardManager.teamSizeUpdateListener = teamSizeUpdateListener
+        scoreboardManager.winnersUpdateListener = winnersUpdateListener
 
         scoreboardManager.triggerUpdateListeners()
 

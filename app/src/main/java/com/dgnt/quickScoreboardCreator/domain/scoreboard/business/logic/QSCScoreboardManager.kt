@@ -7,10 +7,13 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
+import javax.inject.Inject
 import kotlin.math.abs
 
 
-class QSCScoreboardManager : ScoreboardManager {
+class QSCScoreboardManager @Inject constructor(
+    private val winCalculator: WinCalculator
+) : ScoreboardManager {
 
 
     override var winRule: WinRule = WinRule.Count
@@ -37,6 +40,8 @@ class QSCScoreboardManager : ScoreboardManager {
     override var secondaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)? = null
 
     override var teamSizeUpdateListener: ((Int) -> Unit)? = null
+
+    override var winnersUpdateListener: ((Set<Int>) -> Unit)? = null
 
     override val currentTeamSize: Int
         get() = currentScoreInfo.dataList.size
@@ -159,6 +164,9 @@ class QSCScoreboardManager : ScoreboardManager {
         if (index !in intervalList.indices)
             return
 
+
+        winCalculator.store(currentScoreInfo, currentIntervalIndex)
+
         val currentScoreGroups = currentScoreInfo.dataList
 
         currentIntervalIndex = index
@@ -193,11 +201,13 @@ class QSCScoreboardManager : ScoreboardManager {
 
     private fun proceedToNextInterval() {
 
+        winCalculator.store(currentScoreInfo, currentIntervalIndex)
+
         if (currentIntervalIndex >= intervalList.size - 1) {
             currentIntervalIndex = intervalList.size - 1
 
-            //TODO calculate the winner
-
+            val winners = winCalculator.calculate(winRule)
+            winnersUpdateListener?.invoke(winners)
             return
         }
 

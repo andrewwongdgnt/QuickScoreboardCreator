@@ -12,6 +12,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
@@ -19,6 +20,9 @@ import org.junit.Test
 
 
 class QSCScoreboardManagerTest {
+
+    @MockK
+    private lateinit var winCalculator: WinCalculator
 
     @InjectMockKs
     private lateinit var sut: QSCScoreboardManager
@@ -44,6 +48,11 @@ class QSCScoreboardManagerTest {
         every { sut.secondaryIncrementListUpdateListener?.invoke(any()) } answers { }
         sut.teamSizeUpdateListener = mockk()
         every { sut.teamSizeUpdateListener?.invoke(any()) } answers { }
+        sut.winnersUpdateListener = mockk()
+        every { sut.winnersUpdateListener?.invoke(any()) } answers { }
+
+        every { winCalculator.store(any(), any()) } answers { }
+        every { winCalculator.calculate(any()) } answers { setOf(0) }
     }
 
     @Test

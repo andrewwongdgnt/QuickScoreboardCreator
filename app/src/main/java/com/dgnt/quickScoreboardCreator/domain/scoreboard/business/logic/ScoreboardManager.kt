@@ -19,6 +19,7 @@ interface ScoreboardManager {
     var primaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)?
     var secondaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)?
     var teamSizeUpdateListener: ((Int) -> Unit)?
+    var winnersUpdateListener: ((Set<Int>) -> Unit)?
 
     fun triggerUpdateListeners()
     fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)

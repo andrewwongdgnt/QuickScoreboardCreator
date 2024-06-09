@@ -6,9 +6,11 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCTimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCWinCalculator
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.WinCalculator
 import com.dgnt.quickScoreboardCreator.domain.team.business.logic.QSCTeamCategorizer
 import com.dgnt.quickScoreboardCreator.domain.team.business.logic.TeamCategorizer
 import dagger.Module
@@ -26,9 +28,14 @@ object BusinessModule {
     fun provideScoreboardLoader(): ScoreboardLoader =
         QSCScoreboardLoader(GsonProvider.gson)
 
+
     @Provides
-    fun provideScoreboardManager(): ScoreboardManager =
-        QSCScoreboardManager()
+    fun provideWinCalculator(): WinCalculator =
+        QSCWinCalculator()
+
+    @Provides
+    fun provideScoreboardManager(winCalculator: WinCalculator): ScoreboardManager =
+        QSCScoreboardManager(winCalculator)
 
     @Provides
     @Singleton
