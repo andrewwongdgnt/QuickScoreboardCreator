@@ -48,7 +48,8 @@
       },
       "intervalData": {
         "initial": 0,
-        "increasing": true
+        "increasing": true,
+        "soundEffect": "BUZZER"
       }
     },
     {

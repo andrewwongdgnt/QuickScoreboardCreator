@@ -46,7 +46,8 @@
       },
       "intervalData": {
         "initial": 720000,
-        "increasing": false
+        "increasing": false,
+        "soundEffect": "BUZZER"
       }
     }
   ],

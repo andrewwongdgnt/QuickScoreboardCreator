@@ -8,6 +8,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
@@ -119,6 +120,13 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val winnersUpdateListener: (Set<Int>) -> Unit = {
         //TODO handle winners
     }
+
+    private val intervalOnEndListener: (IntervalEndSoundType) -> Unit = { soundType ->
+        soundType.rawRes?.let {
+            sendUiEvent(UiEvent.PlaySound(it))
+        }
+    }
+
     private val _timerInProgress = MutableStateFlow(false)
     val timerInProgress: StateFlow<Boolean> = _timerInProgress.asStateFlow()
 
@@ -155,6 +163,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         scoreboardManager.secondaryIncrementListUpdateListener = secondaryIncrementListUpdateListener
         scoreboardManager.teamSizeUpdateListener = teamSizeUpdateListener
         scoreboardManager.winnersUpdateListener = winnersUpdateListener
+        scoreboardManager.intervalOnEndListener = intervalOnEndListener
 
         scoreboardManager.triggerUpdateListeners()
 

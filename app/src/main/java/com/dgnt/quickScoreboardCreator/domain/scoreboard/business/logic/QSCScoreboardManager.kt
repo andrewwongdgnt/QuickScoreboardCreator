@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
@@ -42,6 +43,8 @@ class QSCScoreboardManager @Inject constructor(
     override var teamSizeUpdateListener: ((Int) -> Unit)? = null
 
     override var winnersUpdateListener: ((Set<Int>) -> Unit)? = null
+
+    override var intervalOnEndListener: ((IntervalEndSoundType) -> Unit)? = null
 
     override val currentTeamSize: Int
         get() = currentScoreInfo.dataList.size
@@ -202,6 +205,7 @@ class QSCScoreboardManager @Inject constructor(
     private fun proceedToNextInterval() {
 
         winCalculator.store(currentScoreInfo, currentIntervalIndex)
+        intervalOnEndListener?.invoke(currentIntervalData.soundEffect)
 
         if (currentIntervalIndex >= intervalList.size - 1) {
             currentIntervalIndex = intervalList.size - 1

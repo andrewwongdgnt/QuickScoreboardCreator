@@ -76,12 +76,14 @@ data class ScoreDataConfig(
 
 data class IntervalDataConfig(
     val initial: Long = 0,
-    val increasing: Boolean = false
+    val increasing: Boolean = false,
+    val soundEffect: IntervalEndSoundType? = null
 ) {
     fun toIntervalData() =
         IntervalData(
             initial,
             initial,
-            increasing
+            increasing,
+            soundEffect ?: IntervalEndSoundType.NONE
         )
 }

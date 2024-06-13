@@ -20,6 +20,12 @@
     <string name="spikeball_description">Spikeball description</string>
     <string name="tennis">Tennis</string>
     <string name="tennis_description">Tennis description</string>
+    <!-- Interval end sounds -->
+    <string name="bell">Bell</string>
+    <string name="buzzer">Buzzer</string>
+    <string name="lowBuzzer">Deep Buzzer</string>
+    <string name="horn">Horn</string>
+    <string name="whistle">Whistle</string>
     <!-- Scoreboard Details -->
     <string name="scoreboardDetailsTitle">Scoreboard details</string>
     <string name="scoreCarriesOver">Do the scores carry over to next round</string>

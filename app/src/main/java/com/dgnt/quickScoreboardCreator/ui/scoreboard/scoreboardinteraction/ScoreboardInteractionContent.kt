@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -102,10 +104,20 @@ private fun ScoreboardInteractionInnerContent(
     currentInterval: Int,
     onEvent: (ScoreboardInteractionEvent) -> Unit
 ) {
-
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        uiEvent.collect(collector = onUiEvent)
+        uiEvent.collect {event ->
+            when (event) {
+                is UiEvent.PlaySound -> {
+                    val mMediaPlayer = MediaPlayer.create(context, event.soundRes)
+                    mMediaPlayer.start()
+                }
+                else -> onUiEvent(event)
+            }
+        }
     }
+
+
 
     val currentTeamSize = teamList.size
     val layoutSpacing = 10.dp

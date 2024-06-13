@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -20,6 +21,7 @@ interface ScoreboardManager {
     var secondaryIncrementListUpdateListener: ((List<List<Int>>) -> Unit)?
     var teamSizeUpdateListener: ((Int) -> Unit)?
     var winnersUpdateListener: ((Set<Int>) -> Unit)?
+    var intervalOnEndListener: ((IntervalEndSoundType) -> Unit)?
 
     fun triggerUpdateListeners()
     fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)

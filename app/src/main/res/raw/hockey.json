@@ -42,7 +42,8 @@
       },
       "intervalData": {
         "initial": 1200000,
-        "increasing": false
+        "increasing": false,
+        "soundEffect": "HORN"
       }
     }
   ],

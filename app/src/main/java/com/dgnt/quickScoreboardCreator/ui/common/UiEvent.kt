@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.common
 
 import androidx.annotation.PluralsRes
+import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 
@@ -28,4 +29,6 @@ sealed class UiEvent {
             @StringRes override val action: Int
         ) : ShowSnackbar(message, action)
     }
+
+    data class PlaySound(@RawRes val soundRes: Int) : UiEvent()
 }
