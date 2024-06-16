@@ -43,6 +43,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemDat
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.composable.DefaultSnackbar
+import com.dgnt.quickScoreboardCreator.ui.composable.carditem.CardItemContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -143,7 +144,7 @@ private fun ScoreboardListInnerContent(
                 }
             },
             categorizedScoreboards.second.let {
-                stringResource( R.string.customScoreboardConfig) to it.scoreboardItemDataList
+                stringResource(R.string.customScoreboardConfig) to it.scoreboardItemDataList
             }
         )
         LazyColumn(
@@ -154,8 +155,8 @@ private fun ScoreboardListInnerContent(
         ) {
 
             categoryList
-                .forEach {
-                    val title = it.first
+                .forEach { category ->
+                    val title = category.first
                     stickyHeader {
                         Text(
                             text = title,
@@ -167,8 +168,12 @@ private fun ScoreboardListInnerContent(
                                 .padding(10.dp)
                         )
                     }
-                    val itemList = it.second
-                    items(itemList) { scoreboard ->
+                    val itemList = category.second
+                    items(
+                        items = itemList,
+                        key = { it.id }
+                    ) { scoreboard ->
+
                         ScoreboardItemContent(
                             item = scoreboard,
                             onEvent = onEvent,
@@ -206,7 +211,7 @@ private fun `Defaults and customs`() =
         CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(
-                   listOf(
+                    listOf(
                         ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 1", "My Description 1"),
                         ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 2", "My Description 2"),
                         ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 3", "My Description 3 "),
