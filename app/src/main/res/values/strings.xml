@@ -80,4 +80,5 @@
     <string name="startTimer">Start</string>
     <string name="pauseTimer">Pause</string>
     <string name="stopTimer">Stop</string>
+    <string name="launch">Launch</string>
 </resources>

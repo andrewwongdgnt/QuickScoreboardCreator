@@ -21,7 +21,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.composable.team.CategorizedTeamListContent
+import com.dgnt.quickScoreboardCreator.ui.composable.carditem.CategorizedTeamListContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

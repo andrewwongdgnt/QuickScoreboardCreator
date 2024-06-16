@@ -1,6 +1,5 @@
-package com.dgnt.quickScoreboardCreator.ui.composable.team
+package com.dgnt.quickScoreboardCreator.ui.composable.carditem
 
-import TeamItemContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,12 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CategorizedTeamListContent (
-    modifier:Modifier = Modifier,
+fun CategorizedTeamListContent(
+    modifier: Modifier = Modifier,
     onItemClick: (Int) -> Unit,
     onItemDelete: ((Int) -> Unit)? = null,
     categorizedTeamList: List<CategorizedTeamItemData>
@@ -32,8 +30,8 @@ fun CategorizedTeamListContent (
     ) {
 
         categorizedTeamList
-            .forEach {
-                val title = it.title
+            .forEach {category ->
+                val title = category.title
                 stickyHeader {
                     Text(
                         text = title,
@@ -45,15 +43,27 @@ fun CategorizedTeamListContent (
                             .padding(10.dp)
                     )
                 }
-                val itemList = it.teamItemDataList
-                items(itemList) { team ->
-                    TeamItemContent(
-                        item = team,
-                        onItemClick = onItemClick,
-                        onItemDelete = onItemDelete,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
+                val itemList = category.teamItemDataList
+                items(
+                    items = itemList,
+                    key = { it.id }
+                ) { team ->
+                    SwipeBox(
+                        modifier = Modifier.animateItem(),
+                        onDelete = {
+                            onItemDelete?.invoke(team.id)
+                        }
+                    ) {
+                        CardItemContent(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            id = team.id,
+                            title = team.title,
+                            description = team.description,
+                            iconRes = team.teamIcon.res,
+                            onClick = onItemClick
+                        )
+                    }
                 }
             }
     }
