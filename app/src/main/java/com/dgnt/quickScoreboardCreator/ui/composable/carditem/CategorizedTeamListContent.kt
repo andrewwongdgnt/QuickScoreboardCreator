@@ -30,7 +30,7 @@ fun CategorizedTeamListContent(
     ) {
 
         categorizedTeamList
-            .forEach {category ->
+            .forEach { category ->
                 val title = category.title
                 stickyHeader {
                     Text(
@@ -48,12 +48,7 @@ fun CategorizedTeamListContent(
                     items = itemList,
                     key = { it.id }
                 ) { team ->
-                    SwipeBox(
-                        modifier = Modifier.animateItem(),
-                        onDelete = {
-                            onItemDelete?.invoke(team.id)
-                        }
-                    ) {
+                    val cardItemContent = @Composable {
                         CardItemContent(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -64,6 +59,18 @@ fun CategorizedTeamListContent(
                             onClick = onItemClick
                         )
                     }
+
+                    onItemDelete?.let {
+                        SwipeBox(
+                            modifier = Modifier.animateItem(),
+                            onDelete = {
+                                onItemDelete.invoke(team.id)
+                            },
+                        content = cardItemContent)
+                    } ?: run {
+                        cardItemContent()
+                    }
+
                 }
             }
     }
