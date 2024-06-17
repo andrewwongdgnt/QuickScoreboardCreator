@@ -5,6 +5,7 @@ import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
@@ -48,8 +49,8 @@ class ScoreboardListViewModelTest {
     private lateinit var sut: ScoreboardListViewModel
 
     private val mockScoreboardList = listOf(
-        ScoreboardEntity(1, "scoreboard name", "scoreboard desc"),
-        ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2")
+        ScoreboardEntity(1, "scoreboard name", "scoreboard desc", ScoreboardIcon.SOCCER),
+        ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.SOCCER)
     )
     private lateinit var mockFlowScoreboardList: Flow<List<ScoreboardEntity>>
     private val mockCategorizedScoreboardList =
@@ -65,13 +66,15 @@ class ScoreboardListViewModelTest {
                     id = 1,
                     type = ScoreboardType.NONE,
                     title = "A team name",
-                    description = "team desc"
+                    description = "team desc",
+                    scoreboardIcon = ScoreboardIcon.TENNIS
                 ),
                 ScoreboardItemData(
                     id = 2,
                     type = ScoreboardType.NONE,
                     title = "Next team name",
-                    description = "team desc"
+                    description = "team desc",
+                    scoreboardIcon = ScoreboardIcon.TENNIS
                 )
             )
         )

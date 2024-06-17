@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class ScoreboardDetailsViewModel @Inject constructor(
@@ -42,6 +44,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     private val _description = MutableStateFlow("")
     val description = _description.asStateFlow()
+
+    private val _scoreboardIcon = MutableStateFlow<ScoreboardIcon?>(null)
+    val scoreboardIcon: StateFlow<ScoreboardIcon?> = _scoreboardIcon.asStateFlow()
+
+    private val _scoreboardIconChanging = MutableStateFlow(false)
+    val scoreboardIconChanging: StateFlow<Boolean> = _scoreboardIconChanging.asStateFlow()
 
     private val _winRule = MutableStateFlow<WinRule>(WinRule.Count)
     val winRule = _winRule.asStateFlow()
@@ -67,6 +75,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             getScoreboardUseCase(id)?.let {
                 _title.value = it.title
                 _description.value = it.description
+                _scoreboardIcon.value = it.scoreboardIcon
                 scoreboardId = it.id
             }
         }
@@ -75,6 +84,13 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _title.value = resources.getString(scoreboardType.titleRes)
         _description.value = resources.getString(scoreboardType.descriptionRes)
+        _scoreboardIcon.value = when (scoreboardType) {
+            ScoreboardType.NONE -> ScoreboardIcon.entries.toTypedArray().let {
+                it[Random.nextInt(it.size)]
+            }
+
+            else -> scoreboardType.icon
+        }
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
@@ -93,6 +109,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
                                     id = scoreboardId,
                                     title = title.value,
                                     description = description.value,
+                                    scoreboardIcon = scoreboardIcon.value!!
                                 )
                             )
                         )
@@ -104,6 +121,11 @@ class ScoreboardDetailsViewModel @Inject constructor(
             ScoreboardDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
             is ScoreboardDetailsEvent.OnDescriptionChange -> _description.value = event.descriptionChange
             is ScoreboardDetailsEvent.OnTitleChange -> _title.value = event.title
+            is ScoreboardDetailsEvent.OnScoreboardIconEdit -> _scoreboardIconChanging.value = true
+            is ScoreboardDetailsEvent.OnNewScoreboardIcon -> {
+                _scoreboardIcon.value = event.scoreboardIcon
+                _scoreboardIconChanging.value = false
+            }
         }
     }
 

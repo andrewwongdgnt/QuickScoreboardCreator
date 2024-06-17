@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 
@@ -72,15 +73,15 @@ fun ScoreboardItemContent(
 @Preview(showBackground = true)
 @Composable
 private fun `Normal`() =
-    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball", description = "NBA Sport"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball", description = "NBA Sport", ScoreboardIcon.BASKETBALL), {})
 
 @Preview(showBackground = true)
 @Composable
 private fun `Long description`() =
-    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool", ScoreboardIcon.BASKETBALL), {})
 
 @Preview(showBackground = true)
 @Composable
 private fun `Long title and long description`() =
-    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool"), {})
+    ScoreboardItemContent(ScoreboardItemData(0, ScoreboardType.NONE, title = "Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball Basketball", description = "Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool Basketball is pretty cool", ScoreboardIcon.BASKETBALL), {})
 

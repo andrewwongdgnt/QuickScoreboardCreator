@@ -4,6 +4,7 @@
   "description": "Covid sport",
   "intervalLabel": "Game",
   "winRuleType": "COUNT",
+  "icon": "BOXING",
   "intervalList": [
     {
       "scoreInfo": {

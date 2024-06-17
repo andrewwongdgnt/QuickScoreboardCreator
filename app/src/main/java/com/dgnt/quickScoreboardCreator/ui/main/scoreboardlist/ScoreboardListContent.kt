@@ -39,11 +39,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.composable.DefaultSnackbar
-import com.dgnt.quickScoreboardCreator.ui.composable.carditem.CardItemContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -140,7 +140,13 @@ private fun ScoreboardListInnerContent(
         val categoryList = listOf(
             categorizedScoreboards.first.let {
                 stringResource(R.string.defaultScoreboardConfig) to it.scoreboardTypeList.map { scoreboardType ->
-                    ScoreboardItemData(-1, scoreboardType, stringResource(scoreboardType.titleRes), stringResource(scoreboardType.descriptionRes))
+                    ScoreboardItemData(
+                        -1,
+                        scoreboardType,
+                        stringResource(scoreboardType.titleRes),
+                        stringResource(scoreboardType.descriptionRes),
+                        scoreboardType.icon
+                    )
                 }
             },
             categorizedScoreboards.second.let {
@@ -171,7 +177,7 @@ private fun ScoreboardListInnerContent(
                     val itemList = category.second
                     items(
                         items = itemList,
-                        key = { it.id }
+                        key = { it.id.takeIf { it>=0 }?: it.type }
                     ) { scoreboard ->
 
                         ScoreboardItemContent(
@@ -212,9 +218,9 @@ private fun `Defaults and customs`() =
                 to
                 CategorizedScoreboardItemData(
                     listOf(
-                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 1", "My Description 1"),
-                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 2", "My Description 2"),
-                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 3", "My Description 3 "),
+                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 1", "My Description 1", ScoreboardIcon.BASKETBALL),
+                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 2", "My Description 2", ScoreboardIcon.TENNIS),
+                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 3", "My Description 3 ", ScoreboardIcon.BOXING),
                     )
                 ),
         {}

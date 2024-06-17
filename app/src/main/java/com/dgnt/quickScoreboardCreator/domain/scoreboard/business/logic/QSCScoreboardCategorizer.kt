@@ -1,6 +1,5 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
-import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardType
@@ -11,7 +10,7 @@ class QSCScoreboardCategorizer : ScoreboardCategorizer {
     override fun invoke(scoreboardTypeList: List<ScoreboardType>, scoreboardEntityList: List<ScoreboardEntity>): Pair<CategorizedScoreboardType, CategorizedScoreboardItemData> {
         val scoreboardList = scoreboardEntityList.map { e ->
             ScoreboardItemData(
-                e.id ?: -1, ScoreboardType.NONE, e.title, e.description
+                e.id ?: -1, ScoreboardType.NONE, e.title, e.description, e.scoreboardIcon
             )
         }
         return CategorizedScoreboardType(scoreboardTypeList) to

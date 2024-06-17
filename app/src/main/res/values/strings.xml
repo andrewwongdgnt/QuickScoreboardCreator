@@ -81,4 +81,5 @@
     <string name="pauseTimer">Pause</string>
     <string name="stopTimer">Stop</string>
     <string name="launch">Launch</string>
+    <string name="pickIconMsg">Pick an icon</string>
 </resources>
