@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -44,6 +46,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemDat
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.composable.DefaultSnackbar
+import com.dgnt.quickScoreboardCreator.ui.composable.carditem.CardItemContent
+import com.dgnt.quickScoreboardCreator.ui.composable.carditem.SwipeBox
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -177,15 +181,42 @@ private fun ScoreboardListInnerContent(
                     val itemList = category.second
                     items(
                         items = itemList,
-                        key = { it.id.takeIf { it>=0 }?: it.type }
+                        key = { item ->
+                            item.id.takeIf { it >= 0 } ?: item.type
+                        }
                     ) { scoreboard ->
-
-                        ScoreboardItemContent(
-                            item = scoreboard,
-                            onEvent = onEvent,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        )
+                        val cardItemContent = @Composable {
+                            CardItemContent(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                id = scoreboard.id,
+                                title = scoreboard.title,
+                                description = scoreboard.description,
+                                iconRes = scoreboard.scoreboardIcon.res,
+                                onClick = {
+                                    onEvent(ScoreboardListEvent.OnEdit(scoreboard.id, scoreboard.type))
+                                }
+                            ) {
+                                IconButton(onClick = {
+                                    onEvent(ScoreboardListEvent.OnLaunch(scoreboard.id, scoreboard.type))
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                        contentDescription = stringResource(R.string.launch)
+                                    )
+                                }
+                            }
+                        }
+                        scoreboard.id.takeIf { it >=0 }?.let {
+                            SwipeBox(
+                                modifier = Modifier.animateItem(),
+                                onDelete = {
+                                    onEvent( ScoreboardListEvent.OnDelete(scoreboard.id))
+                                },
+                                content = cardItemContent)
+                        } ?: run {
+                            cardItemContent()
+                        }
                     }
                 }
         }

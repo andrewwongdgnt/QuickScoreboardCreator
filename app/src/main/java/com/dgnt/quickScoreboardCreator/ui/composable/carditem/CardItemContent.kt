@@ -34,7 +34,7 @@ fun CardItemContent(
     description: String,
     @DrawableRes iconRes: Int,
     onClick: (Int) -> Unit,
-    onLaunch: ((Int) -> Unit)? = null,
+    iconContent: @Composable () -> Unit = { },
 ) {
     ListItem(
         modifier = modifier
@@ -53,17 +53,7 @@ fun CardItemContent(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
-
-                if (onLaunch != null) {
-                    IconButton(onClick = {
-                        onLaunch(id)
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = stringResource(R.string.launch)
-                        )
-                    }
-                }
+                iconContent()
             }
         },
         supportingContent = {
@@ -96,8 +86,14 @@ private fun `Normal`() =
         description = "Legendary creatures",
         iconRes = TeamIcon.ALIEN.res,
         onClick = {},
-        onLaunch = {},
-    )
+    ) {
+        IconButton(onClick = { }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = stringResource(R.string.launch)
+            )
+        }
+    }
 
 @Preview(showBackground = true)
 @Composable
@@ -107,9 +103,15 @@ private fun `Long description`() =
         title = "Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
         iconRes = TeamIcon.DRAGON.res,
-        onClick = {},
-        onLaunch = {}
-    )
+        onClick = {}
+    ) {
+        IconButton(onClick = { }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = stringResource(R.string.launch)
+            )
+        }
+    }
 
 @Preview(showBackground = true)
 @Composable
@@ -119,9 +121,15 @@ private fun `Long description and long description`() =
         title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
         iconRes = TeamIcon.DRAGON.res,
-        onClick = {},
-        onLaunch = {}
-    )
+        onClick = {}
+    ) {
+        IconButton(onClick = { }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = stringResource(R.string.launch)
+            )
+        }
+    }
 
 @Preview(showBackground = true)
 @Composable
