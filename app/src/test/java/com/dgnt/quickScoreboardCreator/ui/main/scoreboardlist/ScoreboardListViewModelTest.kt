@@ -67,14 +67,14 @@ class ScoreboardListViewModelTest {
                     type = ScoreboardType.NONE,
                     title = "A team name",
                     description = "team desc",
-                    scoreboardIcon = ScoreboardIcon.TENNIS
+                    icon = ScoreboardIcon.TENNIS
                 ),
                 ScoreboardItemData(
                     id = 2,
                     type = ScoreboardType.NONE,
                     title = "Next team name",
                     description = "team desc",
-                    scoreboardIcon = ScoreboardIcon.TENNIS
+                    icon = ScoreboardIcon.TENNIS
                 )
             )
         )

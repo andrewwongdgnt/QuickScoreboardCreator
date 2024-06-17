@@ -58,13 +58,13 @@ class TeamListViewModelTest {
                     id = 1,
                     title = "A team name",
                     description = "team desc",
-                    teamIcon = TeamIcon.ALIEN
+                    icon = TeamIcon.ALIEN
                 ),
                 TeamItemData(
                     id = 2,
                     title = "a team name 2",
                     description = "team desc 2",
-                    teamIcon = TeamIcon.ALIEN
+                    icon = TeamIcon.ALIEN
                 )
             )
         ),
@@ -75,13 +75,13 @@ class TeamListViewModelTest {
                     id = 4,
                     title = "F team name",
                     description = "team desc",
-                    teamIcon = TeamIcon.ANT
+                    icon = TeamIcon.ANT
                 ),
                 TeamItemData(
                     id = 6,
                     title = "F team name 2",
                     description = "team desc 2",
-                    teamIcon = TeamIcon.BOOK
+                    icon = TeamIcon.BOOK
                 )
             )
         )

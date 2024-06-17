@@ -9,7 +9,7 @@ class QSCTeamCategorizer : TeamCategorizer {
         teamEntityList.mapNotNull { e ->
             e.id?.let { id ->
                 TeamItemData(
-                    id, e.title, e.description, e.teamIcon
+                    id, e.title, e.description, e.icon
                 )
             }
         }.let { teamList ->

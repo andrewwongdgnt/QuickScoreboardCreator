@@ -37,11 +37,11 @@ class TeamDetailsViewModel @Inject constructor(
     private val _description = MutableStateFlow("")
     val description: StateFlow<String> = _description.asStateFlow()
 
-    private val _teamIcon = MutableStateFlow<TeamIcon?>(null)
-    val teamIcon: StateFlow<TeamIcon?> = _teamIcon.asStateFlow()
+    private val _icon = MutableStateFlow<TeamIcon?>(null)
+    val icon: StateFlow<TeamIcon?> = _icon.asStateFlow()
 
-    private val _teamIconChanging = MutableStateFlow(false)
-    val teamIconChanging: StateFlow<Boolean> = _teamIconChanging.asStateFlow()
+    private val _iconChanging = MutableStateFlow(false)
+    val iconChanging: StateFlow<Boolean> = _iconChanging.asStateFlow()
 
     val valid: StateFlow<Boolean> = title.map {
         it.isNotBlank()
@@ -54,7 +54,7 @@ class TeamDetailsViewModel @Inject constructor(
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
         } ?: run {
-            _teamIcon.value = TeamIcon.entries.toTypedArray().let {
+            _icon.value = TeamIcon.entries.toTypedArray().let {
                 it[Random.nextInt(it.size)]
             }
         }
@@ -65,7 +65,7 @@ class TeamDetailsViewModel @Inject constructor(
             getTeamUseCase(id)?.let {
                 _title.value = it.title
                 _description.value = it.description
-                _teamIcon.value = it.teamIcon
+                _icon.value = it.icon
                 teamId = it.id
             }
         }
@@ -82,7 +82,7 @@ class TeamDetailsViewModel @Inject constructor(
                                     id = teamId,
                                     title = title.value,
                                     description = description.value,
-                                    teamIcon = teamIcon.value!!
+                                    icon = icon.value!!
                                 )
                             )
                         )
@@ -97,11 +97,11 @@ class TeamDetailsViewModel @Inject constructor(
 
             is TeamDetailsEvent.OnDescriptionChange -> _description.value = event.descriptionChange
 
-            is TeamDetailsEvent.OnTeamIconEdit -> _teamIconChanging.value = true
+            is TeamDetailsEvent.OnIconEdit -> _iconChanging.value = true
 
-            is TeamDetailsEvent.OnNewTeamIcon -> {
-                _teamIcon.value = event.teamIcon
-                _teamIconChanging.value = false
+            is TeamDetailsEvent.OnNewIcon -> {
+                _icon.value = event.icon
+                _iconChanging.value = false
             }
         }
     }

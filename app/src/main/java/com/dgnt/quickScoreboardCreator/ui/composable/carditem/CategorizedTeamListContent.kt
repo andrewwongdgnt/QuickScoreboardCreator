@@ -55,7 +55,7 @@ fun CategorizedTeamListContent(
                             id = team.id,
                             title = team.title,
                             description = team.description,
-                            iconRes = team.teamIcon.res,
+                            iconRes = team.icon.res,
                             onClick = onItemClick
                         )
                     }

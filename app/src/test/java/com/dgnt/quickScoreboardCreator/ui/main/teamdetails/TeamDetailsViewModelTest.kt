@@ -61,7 +61,7 @@ class TeamDetailsViewModelTest {
 
         Assert.assertEquals("team name", sut.title.value)
         Assert.assertEquals("team desc", sut.description.value)
-        Assert.assertEquals(TeamIcon.ALIEN, sut.teamIcon.value)
+        Assert.assertEquals(TeamIcon.ALIEN, sut.icon.value)
         Assert.assertTrue(sut.valid.value)
     }
 
@@ -72,7 +72,7 @@ class TeamDetailsViewModelTest {
 
         Assert.assertTrue(sut.title.value.isEmpty())
         Assert.assertTrue(sut.description.value.isEmpty())
-        Assert.assertNotNull(sut.teamIcon.value)
+        Assert.assertNotNull(sut.icon.value)
         Assert.assertFalse(sut.valid.value)
     }
 
@@ -93,11 +93,11 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
         initSut()
 
-        sut.onEvent(TeamDetailsEvent.OnTeamIconEdit)
-        Assert.assertTrue(sut.teamIconChanging.value)
-        sut.onEvent(TeamDetailsEvent.OnNewTeamIcon(TeamIcon.BEAR))
-        Assert.assertEquals(TeamIcon.BEAR, sut.teamIcon.value)
-        Assert.assertFalse(sut.teamIconChanging.value)
+        sut.onEvent(TeamDetailsEvent.OnIconEdit)
+        Assert.assertTrue(sut.iconChanging.value)
+        sut.onEvent(TeamDetailsEvent.OnNewIcon(TeamIcon.BEAR))
+        Assert.assertEquals(TeamIcon.BEAR, sut.icon.value)
+        Assert.assertFalse(sut.iconChanging.value)
     }
 
     @Test
@@ -118,7 +118,7 @@ class TeamDetailsViewModelTest {
 
         sut.onEvent(TeamDetailsEvent.OnTitleChange("new team"))
         sut.onEvent(TeamDetailsEvent.OnDescriptionChange("new team desc"))
-        sut.onEvent(TeamDetailsEvent.OnNewTeamIcon(TeamIcon.DRAGON))
+        sut.onEvent(TeamDetailsEvent.OnNewIcon(TeamIcon.DRAGON))
         sut.onEvent(TeamDetailsEvent.OnConfirm)
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
         coVerify(exactly = 1) {
@@ -128,7 +128,7 @@ class TeamDetailsViewModelTest {
                         id = null,
                         title = "new team",
                         description = "new team desc",
-                        teamIcon = TeamIcon.DRAGON
+                        icon = TeamIcon.DRAGON
                     )
                 )
             )
@@ -143,7 +143,7 @@ class TeamDetailsViewModelTest {
 
         sut.onEvent(TeamDetailsEvent.OnTitleChange("new team"))
         sut.onEvent(TeamDetailsEvent.OnDescriptionChange("new team desc"))
-        sut.onEvent(TeamDetailsEvent.OnNewTeamIcon(TeamIcon.DRAGON))
+        sut.onEvent(TeamDetailsEvent.OnNewIcon(TeamIcon.DRAGON))
         sut.onEvent(TeamDetailsEvent.OnConfirm)
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
         coVerify(exactly = 1) {
@@ -153,7 +153,7 @@ class TeamDetailsViewModelTest {
                         id = 2,
                         title = "new team",
                         description = "new team desc",
-                        teamIcon = TeamIcon.DRAGON
+                        icon = TeamIcon.DRAGON
                     )
                 )
             )

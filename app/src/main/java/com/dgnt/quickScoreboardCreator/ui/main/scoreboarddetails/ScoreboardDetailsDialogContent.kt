@@ -47,16 +47,16 @@ fun ScoreboardDetailsDialogContent(
     val valid by viewModel.valid.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
     val description by viewModel.description.collectAsStateWithLifecycle()
-    val scoreboardIcon by viewModel.scoreboardIcon.collectAsStateWithLifecycle()
-    val scoreboardIconChanging by viewModel.scoreboardIconChanging.collectAsStateWithLifecycle()
+    val icon by viewModel.icon.collectAsStateWithLifecycle()
+    val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
 
     ScoreboardDetailsInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         title,
         description,
-        scoreboardIcon,
-        scoreboardIconChanging,
+        icon,
+        iconChanging,
         viewModel::onEvent,
         valid,
     )
@@ -68,8 +68,8 @@ private fun ScoreboardDetailsInnerDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     title: String,
     description: String,
-    scoreboardIcon: ScoreboardIcon?,
-    scoreboardIconChanging: Boolean,
+    icon: ScoreboardIcon?,
+    iconChanging: Boolean,
     onEvent: (ScoreboardDetailsEvent) -> Unit,
     valid: Boolean,
 ) {
@@ -126,7 +126,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                     maxLines = 5
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                if (scoreboardIconChanging) {
+                if (iconChanging) {
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(45.dp)
                     ) {
@@ -142,7 +142,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                                 modifier = Modifier
                                     .padding(2.dp)
                                     .clickable {
-                                        onEvent(ScoreboardDetailsEvent.OnNewScoreboardIcon(icon))
+                                        onEvent(ScoreboardDetailsEvent.OnNewIcon(icon))
                                     }
                             )
                         }
@@ -150,9 +150,9 @@ private fun ScoreboardDetailsInnerDialogContent(
                     }
                 } else
                     IconDisplay(
-                        iconRes = scoreboardIcon?.res,
+                        iconRes = icon?.res,
                         onClick = {
-                            onEvent(ScoreboardDetailsEvent.OnScoreboardIconEdit)
+                            onEvent(ScoreboardDetailsEvent.OnIconEdit)
                         }
                     )
 

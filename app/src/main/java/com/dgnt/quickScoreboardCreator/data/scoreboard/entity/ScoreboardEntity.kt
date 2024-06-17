@@ -9,6 +9,6 @@ data class ScoreboardEntity(
     @PrimaryKey val id: Int? = null,
     val title: String,
     val description: String,
-    val scoreboardIcon: ScoreboardIcon
+    val icon: ScoreboardIcon
 //    val intervalListL: List<Pair<ScoreInfo, IntervalData>>
 )

@@ -7,5 +7,5 @@ data class ScoreboardItemData(
     val type: ScoreboardType,
     val title: String,
     val description: String,
-    val scoreboardIcon: ScoreboardIcon
+    val icon: ScoreboardIcon
 )

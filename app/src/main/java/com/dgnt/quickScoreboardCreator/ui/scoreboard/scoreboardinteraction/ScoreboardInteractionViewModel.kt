@@ -238,7 +238,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
                     _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
                         if (event.updatedTeamData.scoreIndex == index) {
                             getTeamUseCase(event.updatedTeamData.teamId)?.let {
-                                TeamDisplay.SelectedTeamDisplay(it.title, it.teamIcon)
+                                TeamDisplay.SelectedTeamDisplay(it.title, it.icon)
                             }
                         } else {
                             teamList.value.getOrNull(index)

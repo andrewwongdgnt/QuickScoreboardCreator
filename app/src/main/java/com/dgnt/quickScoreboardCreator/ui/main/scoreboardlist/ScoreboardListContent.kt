@@ -192,7 +192,7 @@ private fun ScoreboardListInnerContent(
                                 id = scoreboard.id,
                                 title = scoreboard.title,
                                 description = scoreboard.description,
-                                iconRes = scoreboard.scoreboardIcon.res,
+                                iconRes = scoreboard.icon.res,
                                 onClick = {
                                     onEvent(ScoreboardListEvent.OnEdit(scoreboard.id, scoreboard.type))
                                 }

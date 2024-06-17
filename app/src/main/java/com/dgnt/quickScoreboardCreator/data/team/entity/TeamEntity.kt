@@ -9,5 +9,5 @@ data class TeamEntity(
     @PrimaryKey val id: Int? = null,
     val title: String,
     val description: String,
-    val teamIcon: TeamIcon
+    val icon: TeamIcon
 )

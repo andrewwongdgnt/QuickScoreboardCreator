@@ -7,6 +7,6 @@ sealed class TeamDisplay {
     data object UnSelectedTeamDisplay : TeamDisplay()
     data class SelectedTeamDisplay(
         val name: String,
-        val teamIcon: TeamIcon
+        val icon: TeamIcon
     ) : TeamDisplay()
 }

@@ -48,15 +48,15 @@ fun TeamDetailsDialogContent(
     val valid by viewModel.valid.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
     val description by viewModel.description.collectAsStateWithLifecycle()
-    val teamIcon by viewModel.teamIcon.collectAsStateWithLifecycle()
-    val teamIconChanging by viewModel.teamIconChanging.collectAsStateWithLifecycle()
+    val icon by viewModel.icon.collectAsStateWithLifecycle()
+    val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
     TeamDetailsInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         title,
         description,
-        teamIcon,
-        teamIconChanging,
+        icon,
+        iconChanging,
         viewModel::onEvent,
         valid
     )
@@ -69,8 +69,8 @@ private fun TeamDetailsInnerDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     title: String,
     description: String,
-    teamIcon: TeamIcon?,
-    teamIconChanging: Boolean,
+    icon: TeamIcon?,
+    iconChanging: Boolean,
     onEvent: (TeamDetailsEvent) -> Unit,
     valid: Boolean
 ) {
@@ -127,30 +127,30 @@ private fun TeamDetailsInnerDialogContent(
                     maxLines = 5
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                if (teamIconChanging) {
+                if (iconChanging) {
                     val group = TeamIcon.entries.groupBy { it.group }
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(45.dp)
                     ) {
                         group.onEachIndexed { index, entry ->
-                            val teamIconGroup = entry.key
-                            val teamIcons = entry.value
+                            val iconGroup = entry.key
+                            val icons = entry.value
                             header {
                                 Text(
-                                    stringResource(id = teamIconGroup.res),
+                                    stringResource(id = iconGroup.res),
                                     modifier = if (index > 0) Modifier.padding(
                                         start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
                                     ) else Modifier
                                 )
                             }
-                            items(teamIcons.toTypedArray()) { icon ->
+                            items(icons.toTypedArray()) { icon ->
                                 Image(
                                     painterResource(icon.res),
                                     null,
                                     modifier = Modifier
                                         .padding(2.dp)
                                         .clickable {
-                                            onEvent(TeamDetailsEvent.OnNewTeamIcon(icon))
+                                            onEvent(TeamDetailsEvent.OnNewIcon(icon))
                                         }
                                 )
                             }
@@ -159,9 +159,9 @@ private fun TeamDetailsInnerDialogContent(
                     }
                 } else
                     IconDisplay(
-                        iconRes = teamIcon?.res,
+                        iconRes = icon?.res,
                         onClick = {
-                            onEvent(TeamDetailsEvent.OnTeamIconEdit)
+                            onEvent(TeamDetailsEvent.OnIconEdit)
                         }
                     )
 

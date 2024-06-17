@@ -27,11 +27,11 @@ class QSCScoreboardCategorizerTest {
         sut(
             listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL),
             listOf(
-                ScoreboardEntity(id = 1, title = "gg", description = "GG Desc", scoreboardIcon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 2, title = "ZZ", description = "GG Desc", scoreboardIcon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 3, title = "a", description = "GG Desc", scoreboardIcon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 4, title = "RRR", description = "GG Desc", scoreboardIcon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 5, title = "CC", description = "GG Desc", scoreboardIcon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 1, title = "gg", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 2, title = "ZZ", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 3, title = "a", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 4, title = "RRR", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 5, title = "CC", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
             )
         ).let {
             val defaults = it.first

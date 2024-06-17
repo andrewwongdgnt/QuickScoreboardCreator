@@ -79,7 +79,7 @@ private fun ImageContent(
     when (teamDisplay) {
         is TeamDisplay.SelectedTeamDisplay -> {
             Image(
-                painter = painterResource(teamDisplay.teamIcon.res),
+                painter = painterResource(teamDisplay.icon.res),
                 null,
                 modifier = imageModifier
             )
