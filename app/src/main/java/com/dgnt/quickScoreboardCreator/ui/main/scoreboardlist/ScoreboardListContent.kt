@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -194,14 +194,14 @@ private fun ScoreboardListInnerContent(
                                 description = scoreboard.description,
                                 iconRes = scoreboard.icon.res,
                                 onClick = {
-                                    onEvent(ScoreboardListEvent.OnEdit(scoreboard.id, scoreboard.type))
+                                    onEvent(ScoreboardListEvent.OnLaunch(scoreboard.id, scoreboard.type))
                                 }
                             ) {
                                 IconButton(onClick = {
-                                    onEvent(ScoreboardListEvent.OnLaunch(scoreboard.id, scoreboard.type))
+                                    onEvent(ScoreboardListEvent.OnEdit(scoreboard.id, scoreboard.type))
                                 }) {
                                     Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                        imageVector = Icons.Default.Edit,
                                         contentDescription = stringResource(R.string.launch)
                                     )
                                 }
