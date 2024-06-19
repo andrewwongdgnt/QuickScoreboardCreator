@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.composable.carditem
+package com.dgnt.quickScoreboardCreator.ui.common.composable.carditem
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

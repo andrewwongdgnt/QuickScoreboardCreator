@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.composable
+package com.dgnt.quickScoreboardCreator.ui.common.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

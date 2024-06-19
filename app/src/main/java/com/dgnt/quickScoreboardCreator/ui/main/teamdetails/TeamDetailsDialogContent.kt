@@ -35,7 +35,7 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.header
-import com.dgnt.quickScoreboardCreator.ui.composable.IconDisplay
+import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

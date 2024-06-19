@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.composable
+package com.dgnt.quickScoreboardCreator.ui.common.imagevector
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

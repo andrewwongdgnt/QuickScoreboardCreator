@@ -15,9 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.ui.composable.rememberPauseCircle
-import com.dgnt.quickScoreboardCreator.ui.composable.rememberPlayCircle
-import com.dgnt.quickScoreboardCreator.ui.composable.rememberStopCircle
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberPauseCircle
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberPlayCircle
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberStopCircle
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionEvent
 
 @Composable

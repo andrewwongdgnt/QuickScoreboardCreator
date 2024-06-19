@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.composable.carditem
+package com.dgnt.quickScoreboardCreator.ui.common.composable.carditem
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

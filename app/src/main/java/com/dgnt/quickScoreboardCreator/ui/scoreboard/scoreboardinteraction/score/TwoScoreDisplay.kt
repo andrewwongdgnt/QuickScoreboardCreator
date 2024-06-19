@@ -21,7 +21,7 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
-import com.dgnt.quickScoreboardCreator.ui.composable.AutoSizeText
+import com.dgnt.quickScoreboardCreator.ui.common.composable.AutoSizeText
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionEvent
 
 @Composable

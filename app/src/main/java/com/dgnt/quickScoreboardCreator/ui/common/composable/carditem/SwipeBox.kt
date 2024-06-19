@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.dgnt.quickScoreboardCreator.ui.composable.carditem
+package com.dgnt.quickScoreboardCreator.ui.common.composable.carditem
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background

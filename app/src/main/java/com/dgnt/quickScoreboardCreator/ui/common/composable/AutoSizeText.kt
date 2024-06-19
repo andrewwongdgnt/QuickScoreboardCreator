@@ -1,6 +1,6 @@
 // LAST UPDATE: 10 April 2024 v4.3:
 // - Correction of updated density value in AutoSizeText function
-package com.dgnt.quickScoreboardCreator.ui.composable
+package com.dgnt.quickScoreboardCreator.ui.common.composable
 
 import android.util.Log
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -46,7 +46,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.roundToPx
 import com.dgnt.quickScoreboardCreator.ui.common.toImmutableWrapper
 import com.dgnt.quickScoreboardCreator.ui.common.toIntSize
 import com.dgnt.quickScoreboardCreator.ui.common.toSp
-import com.dgnt.quickScoreboardCreator.ui.composable.SuggestedFontSizesStatus.Companion.rememberSuggestedFontSizesStatus
+import com.dgnt.quickScoreboardCreator.ui.common.composable.SuggestedFontSizesStatus.Companion.rememberSuggestedFontSizesStatus
 
 import kotlin.math.min
 
