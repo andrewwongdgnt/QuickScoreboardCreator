@@ -2,7 +2,6 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.scor
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +13,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoringButton
 @Composable
 fun ScoreControl(
     modifier: Modifier = Modifier,
+    simpleMode: Boolean,
     incrementList: List<Int>,
     onIncrement: (Int, Boolean) -> Unit,
 ) {
@@ -27,6 +27,7 @@ fun ScoreControl(
         incrementList.forEachIndexed { index, i ->
             ScoringButton(
                 buttonModifier = Modifier.padding(vertical = 10.dp),
+                simpleMode = simpleMode,
                 number = i,
                 index = index,
                 onIncrement = onIncrement
@@ -39,8 +40,18 @@ fun ScoreControl(
 
 @PreviewScreenSizes
 @Composable
-private fun `left orientation`() =
+private fun `advance left orientation`() =
     ScoreControl(
+        simpleMode = false,
+        incrementList = listOf(1, 12, 3),
+        onIncrement = { _, _ -> }
+    )
+
+@PreviewScreenSizes
+@Composable
+private fun `simple left orientation`() =
+    ScoreControl(
+        simpleMode = true,
         incrementList = listOf(1, 12, 3),
         onIncrement = { _, _ -> }
     )

@@ -27,6 +27,7 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.Score
 @Composable
 fun TwoScoreDisplay(
     modifier: Modifier = Modifier,
+    simpleMode: Boolean,
     primaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
@@ -90,6 +91,7 @@ fun TwoScoreDisplay(
             else {
                 ScoreControl(
                     modifier = Modifier.weight(2f),
+                    simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
                     onIncrement = { index, positive ->
                         onEvent(ScoreboardInteractionEvent.UpdateScore(false, 0, index, positive))
@@ -114,6 +116,7 @@ fun TwoScoreDisplay(
                 )
                 ScoreControl(
                     modifier = Modifier.weight(2f),
+                    simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
                     onIncrement = { index, positive ->
                         onEvent(ScoreboardInteractionEvent.UpdateScore(false, 1, index, positive))
@@ -158,6 +161,7 @@ private fun ScoreValueContent(
 @Composable
 private fun `Normal scores`() =
     TwoScoreDisplay(
+        simpleMode = false,
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
@@ -184,6 +188,7 @@ private fun `Normal scores`() =
 @Composable
 private fun `Deuce`() =
     TwoScoreDisplay(
+        simpleMode = true,
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.Blank,

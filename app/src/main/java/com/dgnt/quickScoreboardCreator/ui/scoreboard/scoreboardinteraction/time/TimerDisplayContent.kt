@@ -26,6 +26,7 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.Score
 @Composable
 fun TimerDisplayContent(
     modifier: Modifier = Modifier,
+    simpleMode: Boolean,
     timeData: TimeData,
     onEvent: (ScoreboardInteractionEvent) -> Unit,
 ) {
@@ -35,55 +36,64 @@ fun TimerDisplayContent(
     ) {
 
         val editIconSize = 44.dp
-        Image(
-            imageVector = Icons.Default.Edit,
-            contentDescription = stringResource(R.string.edit),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-            modifier = Modifier
-                .size(editIconSize)
-                .clickable {
-                    onEvent(ScoreboardInteractionEvent.UpdateInterval)
-                }
-        )
+        if (!simpleMode)
+            Image(
+                imageVector = Icons.Default.Edit,
+                contentDescription = stringResource(R.string.edit),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+                modifier = Modifier
+                    .size(editIconSize)
+                    .clickable {
+                        onEvent(ScoreboardInteractionEvent.UpdateInterval)
+                    }
+            )
         Text(
             text = timeData.formatTime(),
             fontSize = 50.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-        Spacer(
             modifier = Modifier
-                .size(editIconSize)
+                .padding(horizontal = 8.dp)
+                .clickable(
+                    enabled = !simpleMode
+                ) {
+                    onEvent(ScoreboardInteractionEvent.UpdateInterval)
+
+                }
         )
+        if (!simpleMode)
+            Spacer(
+                modifier = Modifier
+                    .size(editIconSize)
+            )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun `12 seconds 500 milliseconds`() =
-    TimerDisplayContent(timeData = TimeData(0, 12, 5), onEvent = { })
+    TimerDisplayContent(timeData = TimeData(0, 12, 5), simpleMode = true, onEvent = { })
 
 @Preview(showBackground = true)
 @Composable
 private fun `2 seconds 500 milliseconds`() =
-    TimerDisplayContent(timeData = TimeData(0, 2, 5), onEvent = { })
+    TimerDisplayContent(timeData = TimeData(0, 2, 5), simpleMode = false, onEvent = { })
 
 @Preview(showBackground = true)
 @Composable
 private fun `12 minutes 8 seconds`() =
-    TimerDisplayContent(timeData = TimeData(12, 8, 0), onEvent = { })
+    TimerDisplayContent(timeData = TimeData(12, 8, 0), simpleMode = true, onEvent = { })
 
 @Preview(showBackground = true)
 @Composable
 private fun `13 minutes 35 seconds`() =
-    TimerDisplayContent(timeData = TimeData(13, 35, 0), onEvent = { })
+    TimerDisplayContent(timeData = TimeData(13, 35, 0), simpleMode = false, onEvent = { })
 
 @Preview(showBackground = true)
 @Composable
 private fun `13 minutes 35 seconds 800 milliseconds`() =
-    TimerDisplayContent(timeData = TimeData(13, 35, 8), onEvent = { })
+    TimerDisplayContent(timeData = TimeData(13, 35, 8), simpleMode = true, onEvent = { })
 
 @Preview(showBackground = true)
 @Composable
 private fun `213 minutes 35 seconds 800 milliseconds`() =
-    TimerDisplayContent(timeData = TimeData(213, 35, 8), onEvent = { })
+    TimerDisplayContent(timeData = TimeData(213, 35, 8), simpleMode = false, onEvent = { })

@@ -28,6 +28,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.mode.ModeControlContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.ScoreControl
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.TwoScoreDisplay
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
@@ -68,6 +69,7 @@ private fun ScoreboardInteractionVMDataContent(
     val teamList by viewModel.teamList.collectAsStateWithLifecycle()
     val timeData by viewModel.timeData.collectAsStateWithLifecycle()
     val timerInProgress by viewModel.timerInProgress.collectAsStateWithLifecycle()
+    val simpleMode by viewModel.simpleMode.collectAsStateWithLifecycle()
     val intervalLabelInfo by viewModel.intervalLabelInfo.collectAsStateWithLifecycle()
     val currentInterval by viewModel.currentInterval.collectAsStateWithLifecycle()
 
@@ -82,6 +84,7 @@ private fun ScoreboardInteractionVMDataContent(
         teamList,
         timeData,
         timerInProgress,
+        simpleMode,
         intervalLabelInfo,
         currentInterval,
         viewModel::onEvent
@@ -100,6 +103,7 @@ private fun ScoreboardInteractionInnerContent(
     teamList: List<TeamDisplay>,
     timeData: TimeData,
     timerInProgress: Boolean,
+    simpleMode: Boolean,
     intervalLabelInfo: Pair<String?, Int?>,
     currentInterval: Int,
     onEvent: (ScoreboardInteractionEvent) -> Unit
@@ -117,8 +121,6 @@ private fun ScoreboardInteractionInnerContent(
         }
     }
 
-
-
     val currentTeamSize = teamList.size
     val layoutSpacing = 10.dp
     if (currentTeamSize == 2) {
@@ -128,6 +130,7 @@ private fun ScoreboardInteractionInnerContent(
             val spacerWidth = 10.dp
             ScoreControl(
                 modifier = Modifier.fillMaxHeight(),
+                simpleMode = simpleMode,
                 incrementList = primaryIncrementList[0],
                 onIncrement = { index, positive ->
                     onEvent(ScoreboardInteractionEvent.UpdateScore(true, 0, index, positive))
@@ -136,6 +139,7 @@ private fun ScoreboardInteractionInnerContent(
             Spacer(modifier = Modifier.width(spacerWidth))
             TwoScoreDisplay(
                 modifier = Modifier.weight(1f),
+                simpleMode = simpleMode,
                 primaryDisplayedScoreInfo,
                 secondaryDisplayedScoreInfo,
                 secondaryIncrementList,
@@ -145,6 +149,7 @@ private fun ScoreboardInteractionInnerContent(
             Spacer(modifier = Modifier.width(spacerWidth))
             ScoreControl(
                 modifier = Modifier.fillMaxHeight(),
+                simpleMode = simpleMode,
                 incrementList = primaryIncrementList[1],
                 onIncrement = { index, positive ->
                     onEvent(ScoreboardInteractionEvent.UpdateScore(true, 1, index, positive))
@@ -169,6 +174,7 @@ private fun ScoreboardInteractionInnerContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TimerDisplayContent(
+                simpleMode = simpleMode,
                 timeData = timeData,
                 onEvent = onEvent,
             )
@@ -179,6 +185,12 @@ private fun ScoreboardInteractionInnerContent(
             )
 
         }
+        ModeControlContent(
+            simpleMode = simpleMode,
+            onEvent = onEvent,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+        )
 
         Row(
             modifier = Modifier
@@ -186,14 +198,18 @@ private fun ScoreboardInteractionInnerContent(
                 .fillMaxWidth()
         ) {
             TeamDisplayContent(
+                simpleMode = simpleMode,
                 teamDisplay = teamList[0],
+                teamNumber = 1,
                 onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(0)) },
                 modifier = Modifier
                     .weight(1f)
             )
             Spacer(modifier = Modifier.width(6.dp))
             TeamDisplayContent(
+                simpleMode = simpleMode,
                 teamDisplay = teamList[1],
+                teamNumber = 2,
                 onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(1)) },
                 modifier = Modifier
                     .weight(1f)
@@ -240,6 +256,7 @@ private fun `2 Teams with long names`() =
         ),
         TimeData(12, 2, 4),
         false,
+        false,
         Pair("P", null),
         1
     ) {}
@@ -279,6 +296,7 @@ private fun `2 Teams with short names`() =
         ),
         TimeData(12, 2, 4),
         false,
+        true,
         Pair(null, R.string.quarter),
         1
     ) {}
@@ -312,6 +330,7 @@ private fun `Adv`() =
         ),
         TimeData(12, 2, 4),
         false,
+        true,
         Pair(null, R.string.set),
         2
     ) {}
@@ -344,6 +363,7 @@ private fun `Deuce`() =
             TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
         ),
         TimeData(12, 2, 4),
+        false,
         false,
         Pair(null, R.string.game),
         3

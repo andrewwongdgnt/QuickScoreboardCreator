@@ -1,6 +1,5 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -16,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,17 +27,18 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TeamDisplayContent(
     modifier: Modifier = Modifier,
+    simpleMode: Boolean,
     teamDisplay: TeamDisplay,
+    teamNumber: Int,
     onEditClick: () -> Unit
 ) {
     Row(
         modifier = modifier
-        .clickable(onClick = onEditClick)
-        .fillMaxWidth(),
+            .clickable(enabled = !simpleMode, onClick = onEditClick)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
 
@@ -45,7 +46,8 @@ fun TeamDisplayContent(
             modifier = Modifier
                 .padding(end = 10.dp)
                 .align(Alignment.CenterVertically),
-            teamDisplay
+            simpleMode = simpleMode,
+            teamDisplay = teamDisplay
         )
         val textValue = when (teamDisplay) {
             is TeamDisplay.SelectedTeamDisplay -> {
@@ -53,7 +55,10 @@ fun TeamDisplayContent(
             }
 
             is TeamDisplay.UnSelectedTeamDisplay -> {
-                stringResource(R.string.unselectedTeamTitle)
+                if (simpleMode)
+                    stringResource(R.string.genericTeamTitle, teamNumber)
+                else
+                    stringResource(R.string.unselectedTeamTitle)
             }
         }
         Text(
@@ -72,10 +77,13 @@ fun TeamDisplayContent(
 @Composable
 private fun ImageContent(
     modifier: Modifier = Modifier,
+    simpleMode: Boolean,
     teamDisplay: TeamDisplay
 ) {
     val imageModifier = modifier
         .requiredSize(56.dp)
+        .alpha(if (simpleMode && teamDisplay is TeamDisplay.UnSelectedTeamDisplay) 0f else 100f)
+
     when (teamDisplay) {
         is TeamDisplay.SelectedTeamDisplay -> {
             Image(
@@ -86,6 +94,7 @@ private fun ImageContent(
         }
 
         is TeamDisplay.UnSelectedTeamDisplay -> {
+
             Image(
                 imageVector = Icons.Default.Edit,
                 contentDescription = stringResource(R.string.edit),
@@ -99,19 +108,46 @@ private fun ImageContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun `Team display`() =
+private fun `Advance Team display`() =
     TeamDisplayContent(
+        simpleMode = false,
         teamDisplay = TeamDisplay.SelectedTeamDisplay(
             "GORILLA",
             TeamIcon.GORILLA
         ),
+        teamNumber = 1,
         onEditClick = {}
     )
 
 @Preview(showBackground = true)
 @Composable
-private fun `No team display`() =
+private fun `Simple Team display`() =
     TeamDisplayContent(
+        simpleMode = true,
+        teamDisplay = TeamDisplay.SelectedTeamDisplay(
+            "GORILLA",
+            TeamIcon.GORILLA
+        ),
+        teamNumber = 1,
+        onEditClick = {}
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `Advance No team display`() =
+    TeamDisplayContent(
+        simpleMode = false,
         teamDisplay = TeamDisplay.UnSelectedTeamDisplay,
+        teamNumber = 1,
+        onEditClick = {}
+    )
+
+@Preview(showBackground = true)
+@Composable
+private fun `Simple No team display`() =
+    TeamDisplayContent(
+        simpleMode = true,
+        teamDisplay = TeamDisplay.UnSelectedTeamDisplay,
+        teamNumber = 1,
         onEditClick = {}
     )

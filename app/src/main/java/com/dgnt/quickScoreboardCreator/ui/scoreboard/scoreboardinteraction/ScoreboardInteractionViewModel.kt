@@ -127,6 +127,9 @@ class ScoreboardInteractionViewModel @Inject constructor(
         }
     }
 
+    private val _simpleMode = MutableStateFlow(true)
+    val simpleMode: StateFlow<Boolean> = _simpleMode.asStateFlow()
+
     private val _timerInProgress = MutableStateFlow(false)
     val timerInProgress: StateFlow<Boolean> = _timerInProgress.asStateFlow()
 
@@ -213,6 +216,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
                     scoreboardManager.resetTime()
                 }
 
+            }
+
+            is ScoreboardInteractionEvent.ToggleMode -> {
+                _simpleMode.value = !event.simpleMode
             }
 
             ScoreboardInteractionEvent.StartTimer -> {
