@@ -124,9 +124,9 @@ class ScoreboardDetailsViewModelTest {
         initSut()
 
         Assert.assertFalse(sut.valid.value)
-        sut.onEvent(ScoreboardDetailsEvent.OnDescriptionChange("Some value"))
+        sut.onDescriptionChange("Some value")
         Assert.assertFalse(sut.valid.value)
-        sut.onEvent(ScoreboardDetailsEvent.OnTitleChange("Some value"))
+        sut.onTitleChange("Some value")
         Assert.assertTrue(sut.valid.value)
     }
 
@@ -136,9 +136,9 @@ class ScoreboardDetailsViewModelTest {
         every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
         initSut()
 
-        sut.onEvent(ScoreboardDetailsEvent.OnIconEdit)
+        sut.onIconEdit()
         Assert.assertTrue(sut.iconChanging.value)
-        sut.onEvent(ScoreboardDetailsEvent.OnNewIcon(ScoreboardIcon.VOLLEYBALL))
+        sut.onIconChange(ScoreboardIcon.VOLLEYBALL)
         Assert.assertEquals(ScoreboardIcon.VOLLEYBALL, sut.icon.value)
         Assert.assertFalse(sut.iconChanging.value)
     }
@@ -149,9 +149,9 @@ class ScoreboardDetailsViewModelTest {
         every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
         initSut()
 
-        sut.onEvent(ScoreboardDetailsEvent.OnDismiss)
+        sut.onDismiss()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
-        sut.onEvent(ScoreboardDetailsEvent.OnConfirm)
+        sut.onConfirm()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
     }
 
@@ -161,10 +161,10 @@ class ScoreboardDetailsViewModelTest {
         every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
         initSut()
 
-        sut.onEvent(ScoreboardDetailsEvent.OnTitleChange("new scoreboard"))
-        sut.onEvent(ScoreboardDetailsEvent.OnDescriptionChange("new scoreboard desc"))
-        sut.onEvent(ScoreboardDetailsEvent.OnNewIcon(ScoreboardIcon.SOCCER))
-        sut.onEvent(ScoreboardDetailsEvent.OnConfirm)
+        sut.onTitleChange("new scoreboard")
+        sut.onDescriptionChange("new scoreboard desc")
+        sut.onIconChange(ScoreboardIcon.SOCCER)
+        sut.onConfirm()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
         coVerify(exactly = 1) {
             insertScoreboardListUseCase.invoke(
@@ -186,10 +186,10 @@ class ScoreboardDetailsViewModelTest {
         coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
         initSut()
 
-        sut.onEvent(ScoreboardDetailsEvent.OnTitleChange("new scoreboard"))
-        sut.onEvent(ScoreboardDetailsEvent.OnDescriptionChange("new scoreboard desc"))
-        sut.onEvent(ScoreboardDetailsEvent.OnNewIcon(ScoreboardIcon.BOXING))
-        sut.onEvent(ScoreboardDetailsEvent.OnConfirm)
+        sut.onTitleChange("new scoreboard")
+        sut.onDescriptionChange("new scoreboard desc")
+        sut.onIconChange(ScoreboardIcon.BOXING)
+        sut.onConfirm()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
         coVerify(exactly = 1) {
             insertScoreboardListUseCase.invoke(

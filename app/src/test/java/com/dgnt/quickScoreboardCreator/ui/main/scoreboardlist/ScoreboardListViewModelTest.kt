@@ -107,19 +107,19 @@ class ScoreboardListViewModelTest {
 
     @Test
     fun testOnAdd() = runTest {
-        sut.onEvent(ScoreboardListEvent.OnAdd)
+        sut.onAdd()
         Assert.assertEquals(UiEvent.ScoreboardDetails(), sut.uiEvent.first())
     }
 
     @Test
     fun testOnEdit() = runTest {
-        sut.onEvent(ScoreboardListEvent.OnEdit(1, ScoreboardType.TENNIS))
+        sut.onEdit(1, ScoreboardType.TENNIS)
         Assert.assertEquals(UiEvent.ScoreboardDetails(1, ScoreboardType.TENNIS), sut.uiEvent.first())
     }
 
     @Test
     fun testOnDeleteAndUndo() = runTest {
-        sut.onEvent(ScoreboardListEvent.OnDelete(1))
+        sut.onDelete(1)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedScoreboardMsg,
@@ -127,7 +127,7 @@ class ScoreboardListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(ScoreboardListEvent.OnDelete(2))
+        sut.onDelete(2)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedScoreboardMsg,
@@ -135,7 +135,7 @@ class ScoreboardListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(ScoreboardListEvent.OnUndoDelete)
+        sut.onUndoDelete()
         coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[0]) }
         coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[1]) }
         coVerify(exactly = 1) { insertScoreboardListUseCase(mockScoreboardList) }
@@ -143,7 +143,7 @@ class ScoreboardListViewModelTest {
 
     @Test
     fun testNoUndo() = runTest {
-        sut.onEvent(ScoreboardListEvent.OnDelete(1))
+        sut.onDelete(1)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedScoreboardMsg,
@@ -151,7 +151,7 @@ class ScoreboardListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(ScoreboardListEvent.OnDelete(2))
+        sut.onDelete(2)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedScoreboardMsg,
@@ -159,8 +159,8 @@ class ScoreboardListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
-        sut.onEvent(ScoreboardListEvent.OnUndoDelete)
+        sut.onClearDeletedScoreboardList()
+        sut.onUndoDelete()
         coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[0]) }
         coVerify(exactly = 1) { deleteScoreboardUseCase(mockScoreboardList[1]) }
         coVerify(exactly = 0) { insertScoreboardListUseCase(mockScoreboardList) }
@@ -168,7 +168,7 @@ class ScoreboardListViewModelTest {
 
     @Test
     fun testOnLaunch() = runTest {
-        sut.onEvent(ScoreboardListEvent.OnLaunch(1, ScoreboardType.TENNIS))
+        sut.onLaunch(1, ScoreboardType.TENNIS)
         Assert.assertEquals(UiEvent.LaunchScoreboard(1, ScoreboardType.TENNIS), sut.uiEvent.first())
     }
 }

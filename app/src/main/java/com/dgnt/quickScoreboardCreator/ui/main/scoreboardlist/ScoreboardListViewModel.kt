@@ -43,53 +43,38 @@ class ScoreboardListViewModel @Inject constructor(
 
     private var deletedScoreboardList: MutableList<ScoreboardEntity> = mutableListOf()
 
-    fun onEvent(event: ScoreboardListEvent) {
-        when (event) {
+    fun onAdd() = sendUiEvent(UiEvent.ScoreboardDetails())
 
-            ScoreboardListEvent.OnAdd -> {
-                sendUiEvent(UiEvent.ScoreboardDetails())
-            }
+    fun onEdit(id: Int, type: ScoreboardType) = sendUiEvent(UiEvent.ScoreboardDetails(id, type))
 
-            is ScoreboardListEvent.OnEdit -> {
-                sendUiEvent(UiEvent.ScoreboardDetails(event.id, event.type))
-            }
+    fun onDelete(id: Int) =                 viewModelScope.launch {
+        scoreboardEntityList.first().find { entity ->
+            entity.id == id
+        }?.let {
+            deletedScoreboardList.add(it)
+            deleteScoreboardUseCase(it)
+        }
+        sendUiEvent(
+            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+                message = R.plurals.deletedScoreboardMsg,
+                quantity = deletedScoreboardList.size,
+                action = R.string.undo
+            )
+        )
+    }
 
-            is ScoreboardListEvent.OnDelete -> {
-                viewModelScope.launch {
-                    scoreboardEntityList.first().find { entity ->
-                        entity.id == event.id
-                    }?.let {
-                        deletedScoreboardList.add(it)
-                        deleteScoreboardUseCase(it)
-                    }
-                    sendUiEvent(
-                        UiEvent.ShowSnackbar.ShowQuantitySnackbar(
-                            message = R.plurals.deletedScoreboardMsg,
-                            quantity = deletedScoreboardList.size,
-                            action = R.string.undo
-                        )
-                    )
-                }
+    fun onUndoDelete() {
+        deletedScoreboardList.toList().takeUnless { it.isEmpty() }?.let { scoreboardList ->
+            viewModelScope.launch {
+                insertScoreboardListUseCase(scoreboardList)
             }
-
-            ScoreboardListEvent.OnUndoDelete -> {
-                deletedScoreboardList.toList().takeUnless { it.isEmpty() }?.let { scoreboardList ->
-                    viewModelScope.launch {
-                        insertScoreboardListUseCase(scoreboardList)
-                    }
-                    onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
-                }
-            }
-
-            is ScoreboardListEvent.OnLaunch -> {
-                sendUiEvent(UiEvent.LaunchScoreboard(event.id, event.type))
-            }
-
-            ScoreboardListEvent.OnClearDeletedScoreboardList -> {
-                deletedScoreboardList.clear()
-            }
+            onClearDeletedScoreboardList()
         }
     }
+
+    fun onClearDeletedScoreboardList() = deletedScoreboardList.clear()
+
+    fun onLaunch(id: Int, type: ScoreboardType) = sendUiEvent(UiEvent.LaunchScoreboard(id, type))
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

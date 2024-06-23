@@ -34,8 +34,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.header
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
+import com.dgnt.quickScoreboardCreator.ui.common.header
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -51,14 +51,19 @@ fun ScoreboardDetailsDialogContent(
     val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
 
     ScoreboardDetailsInnerDialogContent(
-        viewModel.uiEvent,
-        onUiEvent,
-        title,
-        description,
-        icon,
-        iconChanging,
-        viewModel::onEvent,
-        valid,
+        uiEvent = viewModel.uiEvent,
+        onUiEvent = onUiEvent,
+        title = title,
+        onTitleChange = viewModel::onTitleChange,
+        description = description,
+        onDescriptionChange = viewModel::onDescriptionChange,
+        icon = icon,
+        onIconChange = viewModel::onIconChange,
+        iconChanging = iconChanging,
+        onIconEdit = viewModel::onIconEdit,
+        valid = valid,
+        onDismiss = viewModel::onDismiss,
+        onConfirm = viewModel::onConfirm,
     )
 }
 
@@ -67,11 +72,16 @@ private fun ScoreboardDetailsInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     title: String,
+    onTitleChange: (String) -> Unit,
     description: String,
+    onDescriptionChange: (String) -> Unit,
     icon: ScoreboardIcon?,
+    onIconChange: (ScoreboardIcon) -> Unit,
     iconChanging: Boolean,
-    onEvent: (ScoreboardDetailsEvent) -> Unit,
+    onIconEdit: () -> Unit,
     valid: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
 ) {
 
     LaunchedEffect(key1 = true) {
@@ -82,7 +92,7 @@ private fun ScoreboardDetailsInnerDialogContent(
             usePlatformDefaultWidth = false,
             dismissOnClickOutside = false
         ),
-        onDismissRequest = { onEvent(ScoreboardDetailsEvent.OnDismiss) },
+        onDismissRequest = onDismiss,
         title = {
             Text(
                 style = MaterialTheme.typography.titleSmall,
@@ -91,7 +101,7 @@ private fun ScoreboardDetailsInnerDialogContent(
         },
         dismissButton = {
             Button(
-                onClick = { onEvent(ScoreboardDetailsEvent.OnDismiss) }
+                onClick = onDismiss
             ) {
                 Text(stringResource(id = android.R.string.cancel))
             }
@@ -99,7 +109,7 @@ private fun ScoreboardDetailsInnerDialogContent(
         confirmButton = {
             Button(
                 enabled = valid,
-                onClick = { onEvent(ScoreboardDetailsEvent.OnConfirm) }
+                onClick = onConfirm
             ) {
                 Text(stringResource(id = android.R.string.ok))
             }
@@ -112,14 +122,14 @@ private fun ScoreboardDetailsInnerDialogContent(
             ) {
                 TextField(
                     value = title,
-                    onValueChange = { onEvent(ScoreboardDetailsEvent.OnTitleChange(it)) },
+                    onValueChange = onTitleChange,
                     placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = description,
-                    onValueChange = { onEvent(ScoreboardDetailsEvent.OnDescriptionChange(it)) },
+                    onValueChange = onDescriptionChange,
                     placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false,
@@ -135,14 +145,14 @@ private fun ScoreboardDetailsInnerDialogContent(
                                 stringResource(id = R.string.pickIconMsg),
                             )
                         }
-                        items(ScoreboardIcon.entries.toTypedArray()){ icon ->
+                        items(ScoreboardIcon.entries.toTypedArray()) { icon ->
                             Image(
                                 painterResource(icon.res),
                                 null,
                                 modifier = Modifier
                                     .padding(2.dp)
                                     .clickable {
-                                        onEvent(ScoreboardDetailsEvent.OnNewIcon(icon))
+                                        onIconChange(icon)
                                     }
                             )
                         }
@@ -151,9 +161,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 } else
                     IconDisplay(
                         iconRes = icon?.res,
-                        onClick = {
-                            onEvent(ScoreboardDetailsEvent.OnIconEdit)
-                        }
+                        onClick = onIconEdit
                     )
 
             }
@@ -165,54 +173,74 @@ private fun ScoreboardDetailsInnerDialogContent(
 @Composable
 private fun `New Icon Selection`() =
     ScoreboardDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        null,
-        true,
-        {},
-        true,
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = null,
+        onIconChange = {},
+        iconChanging = true,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Basketball`() =
     ScoreboardDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        ScoreboardIcon.BASKETBALL,
-        false,
-        {},
-        true,
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = ScoreboardIcon.BASKETBALL,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Hockey`() =
     ScoreboardDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        ScoreboardIcon.HOCKEY,
-        false,
-        {},
-        true,
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = ScoreboardIcon.HOCKEY,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Loading Icon`() =
     ScoreboardDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        null,
-        false,
-        {},
-        true,
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = null,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )

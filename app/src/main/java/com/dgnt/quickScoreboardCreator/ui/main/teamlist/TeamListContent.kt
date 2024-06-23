@@ -42,14 +42,14 @@ fun TeamListContent(
     val categorizedTeamList = viewModel.categorizedTeamList.collectAsStateWithLifecycle(initialValue = emptyList())
 
     TeamListInnerContent(
-        viewModel.uiEvent,
-        onUiEvent,
-        categorizedTeamList.value,
-        viewModel::onAdd,
-        viewModel::onEdit,
-        { viewModel.onDelete(it) },
-        viewModel::onUndoDelete,
-        viewModel::onClearDeletedTeamList
+        uiEvent = viewModel.uiEvent,
+        onUiEvent = onUiEvent,
+        categorizedTeamList = categorizedTeamList.value,
+        onAdd = viewModel::onAdd,
+        onEdit = viewModel::onEdit,
+        onDelete = { viewModel.onDelete(it) },
+        onUndoDelete = viewModel::onUndoDelete,
+        onClearDeletedTeamList = viewModel::onClearDeletedTeamList
     )
 
 }

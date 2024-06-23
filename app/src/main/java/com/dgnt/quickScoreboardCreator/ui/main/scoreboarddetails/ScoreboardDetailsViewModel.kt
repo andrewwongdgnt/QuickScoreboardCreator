@@ -98,35 +98,41 @@ class ScoreboardDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: ScoreboardDetailsEvent) {
-        when (event) {
-            ScoreboardDetailsEvent.OnConfirm -> {
-                if (valid.value) {
-                    viewModelScope.launch {
-                        insertScoreboardListUseCase(
-                            listOf(
-                                ScoreboardEntity(
-                                    id = scoreboardId,
-                                    title = title.value,
-                                    description = description.value,
-                                    icon = icon.value!!
-                                )
-                            )
+    fun onConfirm() {
+        if (valid.value) {
+            viewModelScope.launch {
+                insertScoreboardListUseCase(
+                    listOf(
+                        ScoreboardEntity(
+                            id = scoreboardId,
+                            title = title.value,
+                            description = description.value,
+                            icon = icon.value!!
                         )
-                    }
-                }
-                sendUiEvent(UiEvent.Done)
-            }
-
-            ScoreboardDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
-            is ScoreboardDetailsEvent.OnDescriptionChange -> _description.value = event.descriptionChange
-            is ScoreboardDetailsEvent.OnTitleChange -> _title.value = event.title
-            is ScoreboardDetailsEvent.OnIconEdit -> _iconChanging.value = true
-            is ScoreboardDetailsEvent.OnNewIcon -> {
-                _icon.value = event.icon
-                _iconChanging.value = false
+                    )
+                )
             }
         }
+        sendUiEvent(UiEvent.Done)
+    }
+
+    fun onDismiss() = sendUiEvent(UiEvent.Done)
+
+    fun onTitleChange(title: String) {
+        _title.value = title
+    }
+
+    fun onDescriptionChange(description: String) {
+        _description.value = description
+    }
+
+    fun onIconEdit(){
+        _iconChanging.value = true
+    }
+
+    fun onIconChange(icon: ScoreboardIcon) {
+        _icon.value = icon
+        _iconChanging.value = false
     }
 
     private fun sendUiEvent(event: UiEvent) {

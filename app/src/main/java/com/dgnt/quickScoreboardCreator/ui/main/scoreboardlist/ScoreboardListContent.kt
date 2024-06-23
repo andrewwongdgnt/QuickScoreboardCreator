@@ -64,11 +64,15 @@ fun ScoreboardListContent(
     )
 
     ScoreboardListInnerContent(
-        viewModel.uiEvent,
-        onUiEvent,
-        { viewModel.onEvent(ScoreboardListEvent.OnAdd) },
-        categorizedScoreboards.value,
-        viewModel::onEvent,
+        uiEvent = viewModel.uiEvent,
+        onUiEvent = onUiEvent,
+        categorizedScoreboards = categorizedScoreboards.value,
+        onLaunch = viewModel::onLaunch,
+        onAdd = viewModel::onAdd,
+        onEdit = viewModel::onEdit,
+        onDelete = { viewModel.onDelete(it) },
+        onUndoDelete = viewModel::onUndoDelete,
+        onClearDeletedScoreboardList = viewModel::onClearDeletedScoreboardList
     )
 
 }
@@ -77,9 +81,13 @@ fun ScoreboardListContent(
 private fun ScoreboardListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    onFABClick: () -> Unit,
     categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
-    onEvent: (ScoreboardListEvent) -> Unit
+    onLaunch: (id: Int, type: ScoreboardType) -> Unit,
+    onAdd: () -> Unit,
+    onEdit: (id: Int, type: ScoreboardType) -> Unit,
+    onDelete: (id: Int) -> Unit,
+    onUndoDelete: () -> Unit,
+    onClearDeletedScoreboardList: () -> Unit,
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -104,10 +112,10 @@ private fun ScoreboardListInnerContent(
                             withDismissAction = true
                         )
                         when (result) {
-                            SnackbarResult.ActionPerformed -> onEvent(ScoreboardListEvent.OnUndoDelete)
+                            SnackbarResult.ActionPerformed -> onUndoDelete()
                             SnackbarResult.Dismissed -> {
                                 if (mustClearDeletedScoreboardList)
-                                    onEvent(ScoreboardListEvent.OnClearDeletedScoreboardList)
+                                    onClearDeletedScoreboardList()
                             }
                         }
 
@@ -131,7 +139,7 @@ private fun ScoreboardListInnerContent(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onFABClick) {
+            FloatingActionButton(onClick = onAdd) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.add)
@@ -194,11 +202,11 @@ private fun ScoreboardListInnerContent(
                                 description = scoreboard.description,
                                 iconRes = scoreboard.icon.res,
                                 onClick = {
-                                    onEvent(ScoreboardListEvent.OnLaunch(scoreboard.id, scoreboard.type))
+                                    onLaunch(scoreboard.id, scoreboard.type)
                                 }
                             ) {
                                 IconButton(onClick = {
-                                    onEvent(ScoreboardListEvent.OnEdit(scoreboard.id, scoreboard.type))
+                                    onEdit(scoreboard.id, scoreboard.type)
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
@@ -207,13 +215,14 @@ private fun ScoreboardListInnerContent(
                                 }
                             }
                         }
-                        scoreboard.id.takeIf { it >=0 }?.let {
+                        scoreboard.id.takeIf { it >= 0 }?.let {
                             SwipeBox(
                                 modifier = Modifier.animateItem(),
                                 onDelete = {
-                                    onEvent( ScoreboardListEvent.OnDelete(scoreboard.id))
+                                    onDelete(scoreboard.id)
                                 },
-                                content = cardItemContent)
+                                content = cardItemContent
+                            )
                         } ?: run {
                             cardItemContent()
                         }
@@ -228,13 +237,17 @@ private fun ScoreboardListInnerContent(
 @Composable
 private fun `Only defaults`() =
     ScoreboardListInnerContent(
-        emptyFlow(),
-        {},
-        {},
-        CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        categorizedScoreboards = CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(emptyList()),
-        {}
+        onLaunch = { _, _ -> },
+        onAdd = {},
+        onEdit = { _, _ -> },
+        onDelete = {},
+        onUndoDelete = {},
+        onClearDeletedScoreboardList = {},
     )
 
 @SuppressLint("UnrememberedMutableState")
@@ -242,10 +255,9 @@ private fun `Only defaults`() =
 @Composable
 private fun `Defaults and customs`() =
     ScoreboardListInnerContent(
-        emptyFlow(),
-        {},
-        {},
-        CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        categorizedScoreboards = CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(
                     listOf(
@@ -254,5 +266,10 @@ private fun `Defaults and customs`() =
                         ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 3", "My Description 3 ", ScoreboardIcon.BOXING),
                     )
                 ),
-        {}
+        onLaunch = { _, _ -> },
+        onAdd = {},
+        onEdit = { _, _ -> },
+        onDelete = {},
+        onUndoDelete = {},
+        onClearDeletedScoreboardList = {},
     )

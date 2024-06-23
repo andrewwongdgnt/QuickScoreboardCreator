@@ -51,19 +51,19 @@ fun TeamDetailsDialogContent(
     val icon by viewModel.icon.collectAsStateWithLifecycle()
     val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
     TeamDetailsInnerDialogContent(
-        viewModel.uiEvent,
-        onUiEvent,
-        title,
-        viewModel::onTitleChange,
-        description,
-        viewModel::onDescriptionChange,
-        icon,
-        viewModel::onIconChange,
-        iconChanging,
-        viewModel::onIconEdit,
-        valid,
-        viewModel::onDismiss,
-        viewModel::onConfirm,
+        uiEvent = viewModel.uiEvent,
+        onUiEvent = onUiEvent,
+        title = title,
+        onTitleChange = viewModel::onTitleChange,
+        description = description,
+        onDescriptionChange = viewModel::onDescriptionChange,
+        icon = icon,
+        onIconChange = viewModel::onIconChange,
+        iconChanging = iconChanging,
+        onIconEdit = viewModel::onIconEdit,
+        valid = valid,
+        onDismiss = viewModel::onDismiss,
+        onConfirm = viewModel::onConfirm,
     )
 
 }
