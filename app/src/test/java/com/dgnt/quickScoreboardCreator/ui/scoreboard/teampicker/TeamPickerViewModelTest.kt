@@ -94,13 +94,13 @@ class TeamPickerViewModelTest {
 
     @Test
     fun testOnDismiss() = runTest {
-        sut.onEvent(TeamPickerEvent.OnDismiss)
+        sut.onDismiss()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
     }
 
     @Test
     fun testTeamPicked() = runTest {
-        sut.onEvent(TeamPickerEvent.OnTeamPicked(2))
+        sut.onTeamPicked(2)
         Assert.assertEquals(UiEvent.TeamUpdated(1, 2), sut.uiEvent.first())
     }
 

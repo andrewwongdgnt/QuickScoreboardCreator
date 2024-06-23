@@ -34,11 +34,12 @@ fun TeamPickerDialogContent(
     val categorizedTeamList = viewModel.categorizedTeamList.collectAsStateWithLifecycle(initialValue = emptyList())
 
     TeamPickerInnerDialogContent(
-        viewModel.uiEvent,
-        onUiEvent,
-        categorizedTeamList.value,
-        viewModel::onEvent
-    ) { viewModel.onEvent(TeamPickerEvent.OnDismiss) }
+        uiEvent = viewModel.uiEvent,
+        onUiEvent = onUiEvent,
+        categorizedTeamList = categorizedTeamList.value,
+        onDismiss = viewModel::onDismiss,
+        onTeamPicked = viewModel::onTeamPicked
+    )
 
 }
 
@@ -47,8 +48,8 @@ private fun TeamPickerInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     categorizedTeamList: List<CategorizedTeamItemData>,
-    onEvent: (TeamPickerEvent) -> Unit,
     onDismiss: () -> Unit,
+    onTeamPicked: (Int) -> Unit
 ) {
 
     LaunchedEffect(key1 = true) {
@@ -76,7 +77,7 @@ private fun TeamPickerInnerDialogContent(
         },
         text = {
             CategorizedTeamListContent(
-                onItemClick = { onEvent(TeamPickerEvent.OnTeamPicked(it)) },
+                onItemClick = onTeamPicked,
                 categorizedTeamList = categorizedTeamList
             )
         }
@@ -88,9 +89,9 @@ private fun TeamPickerInnerDialogContent(
 @Composable
 private fun `big team list`() =
     TeamPickerInnerDialogContent(
-        emptyFlow(),
-        {},
-        listOf(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        categorizedTeamList = listOf(
             CategorizedTeamItemData(
                 "D",
                 listOf(
@@ -114,7 +115,7 @@ private fun `big team list`() =
             )
 
         ),
-        {},
-        {}
+        onDismiss = {},
+        onTeamPicked = {}
     )
 

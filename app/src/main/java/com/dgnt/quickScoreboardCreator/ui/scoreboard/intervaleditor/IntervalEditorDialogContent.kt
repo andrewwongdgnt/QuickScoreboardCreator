@@ -53,13 +53,15 @@ fun IntervalEditorDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         minuteString,
+        viewModel::onMinuteChange,
         secondString,
+        viewModel::onSecondChange,
         intervalString,
+        viewModel::onIntervalChange,
         labelInfo,
         errors,
-        viewModel::onEvent,
-        { viewModel.onEvent(IntervalEditorEvent.OnDismiss) },
-        { viewModel.onEvent(IntervalEditorEvent.OnConfirm) }
+        viewModel::onDismiss,
+        viewModel::onConfirm
     )
 
 }
@@ -69,11 +71,13 @@ private fun IntervalEditorInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     minuteString: String,
+    onMinuteChange: (String) -> Unit,
     secondString: String,
+    onSecondChange: (String) -> Unit,
     intervalString: String,
+    onIntervalChange: (String) -> Unit,
     labelInfo: Pair<String?, Int?>,
     errors: Set<IntervalEditorErrorType>,
-    onEvent: (IntervalEditorEvent) -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
@@ -138,7 +142,7 @@ private fun IntervalEditorInnerDialogContent(
                         value = minuteString,
                         onValueChange = {
                             if (it.length <= 3)
-                                onEvent(IntervalEditorEvent.OnMinuteChange(it))
+                                onMinuteChange(it)
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
@@ -156,7 +160,7 @@ private fun IntervalEditorInnerDialogContent(
                         value = secondString,
                         onValueChange = {
                             if (it.length <= 2)
-                                onEvent(IntervalEditorEvent.OnSecondChange(it))
+                                onSecondChange(it)
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
@@ -194,7 +198,7 @@ private fun IntervalEditorInnerDialogContent(
                         value = intervalString,
                         onValueChange = {
                             if (it.length <= 2)
-                                onEvent(IntervalEditorEvent.OnIntervalChange(it))
+                                onIntervalChange(it)
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
@@ -223,11 +227,13 @@ private fun `12 minutes 8 seconds`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         minuteString = "12",
+        onMinuteChange = {},
         secondString = "8",
+        onSecondChange = {},
         intervalString = "1",
+        onIntervalChange = {},
         labelInfo = Pair(null, R.string.quarter),
         errors = emptySet(),
-        onEvent = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -239,11 +245,13 @@ private fun `invalid time`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         minuteString = "12",
+        onMinuteChange = {},
         secondString = "8",
+        onSecondChange = {},
         intervalString = "1",
+        onIntervalChange = {},
         labelInfo = Pair(null, R.string.quarter),
         errors = setOf(IntervalEditorErrorType.TimeErrorType.Time(12, 0)),
-        onEvent = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -255,11 +263,13 @@ private fun `empty time`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         minuteString = "",
+        onMinuteChange = {},
         secondString = "8",
+        onSecondChange = {},
         intervalString = "1",
+        onIntervalChange = {},
         labelInfo = Pair(null, R.string.quarter),
         errors = setOf(IntervalEditorErrorType.TimeErrorType.EmptyTime),
-        onEvent = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -271,11 +281,13 @@ private fun `zero time`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         minuteString = "0",
+        onMinuteChange = {},
         secondString = "0",
+        onSecondChange = {},
         intervalString = "1",
+        onIntervalChange = {},
         labelInfo = Pair(null, R.string.quarter),
         errors = setOf(IntervalEditorErrorType.TimeErrorType.ZeroTime),
-        onEvent = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -287,11 +299,13 @@ private fun `empty interval`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         minuteString = "10",
+        onMinuteChange = {},
         secondString = "0",
+        onSecondChange = {},
         intervalString = "",
+        onIntervalChange = {},
         labelInfo = Pair(null, R.string.quarter),
         errors = setOf(IntervalEditorErrorType.IntervalErrorType.EmptyInterval),
-        onEvent = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -303,11 +317,13 @@ private fun `invalid interval`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         minuteString = "12",
+        onMinuteChange = {},
         secondString = "8",
+        onSecondChange = {},
         intervalString = "1",
+        onIntervalChange = {},
         labelInfo = Pair(null, R.string.quarter),
         errors = setOf(IntervalEditorErrorType.IntervalErrorType.Interval(22)),
-        onEvent = {},
         onDismiss = {},
         onConfirm = {},
     )

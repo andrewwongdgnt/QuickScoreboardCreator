@@ -107,63 +107,55 @@ class IntervalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: IntervalEditorEvent) {
+    fun onDismiss() = sendUiEvent(UiEvent.Done)
 
-        when (event) {
-            IntervalEditorEvent.OnDismiss ->
-                sendUiEvent(UiEvent.Done)
+    fun onConfirm(){
+        val initialTimeValue = initialTimeValue
+        val isTimeIncreasing = isTimeIncreasing
+        if (initialTimeValue == null || isTimeIncreasing == null) {
+            sendUiEvent(UiEvent.Done)
+        } else {
+            val newCurrentTimeValue = if (!isTimeIncreasing)
+                currentTimeValue.coerceIn(0, initialTimeValue)
+            else
+                currentTimeValue.coerceAtLeast(0)
+            sendUiEvent(UiEvent.IntervalUpdated(newCurrentTimeValue, (intervalValue - 1).coerceIn(0, maxInterval - 1)))
+        }
+    }
 
-            IntervalEditorEvent.OnConfirm -> {
-                val initialTimeValue = initialTimeValue
-                val isTimeIncreasing = isTimeIncreasing
-                if (initialTimeValue == null || isTimeIncreasing == null) {
-                    sendUiEvent(UiEvent.Done)
-                } else {
-                    val newCurrentTimeValue = if (!isTimeIncreasing)
-                        currentTimeValue.coerceIn(0, initialTimeValue)
-                    else
-                        currentTimeValue.coerceAtLeast(0)
-                    sendUiEvent(UiEvent.IntervalUpdated(newCurrentTimeValue, (intervalValue - 1).coerceIn(0, maxInterval - 1)))
-                }
-
-            }
-
-            is IntervalEditorEvent.OnMinuteChange -> {
-                getFilteredValue(event.value)?.let { min ->
-                    _minuteString.value = min
-                    centiSecond = 0
-                    currentTimeValue = TimeData(
-                        (min.toIntOrNull() ?: 0).coerceAtLeast(0),
-                        (secondString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
-                        centiSecond
-                    ).let {
-                        timeTransformer.fromTimeData(it)
-                    }
-                }
-            }
-
-            is IntervalEditorEvent.OnSecondChange -> {
-                getFilteredValue(event.value)?.let { second ->
-                    _secondString.value = second
-                    centiSecond = 0
-                    currentTimeValue = TimeData(
-                        (minuteString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
-                        (second.toIntOrNull() ?: 0).coerceAtLeast(0),
-                        centiSecond
-                    ).let {
-                        timeTransformer.fromTimeData(it)
-                    }
-                }
-            }
-
-            is IntervalEditorEvent.OnIntervalChange -> {
-                getFilteredValue(event.value)?.let { interval ->
-                    _intervalString.value = interval
-                    intervalValue = interval.toIntOrNull() ?: 0
-                }
+    fun onMinuteChange(value: String){
+        getFilteredValue(value)?.let { min ->
+            _minuteString.value = min
+            centiSecond = 0
+            currentTimeValue = TimeData(
+                (min.toIntOrNull() ?: 0).coerceAtLeast(0),
+                (secondString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
+                centiSecond
+            ).let {
+                timeTransformer.fromTimeData(it)
             }
         }
+    }
 
+    fun onSecondChange(value: String){
+        getFilteredValue(value)?.let { second ->
+            _secondString.value = second
+            centiSecond = 0
+            currentTimeValue = TimeData(
+                (minuteString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
+                (second.toIntOrNull() ?: 0).coerceAtLeast(0),
+                centiSecond
+            ).let {
+                timeTransformer.fromTimeData(it)
+            }
+        }
+    }
+
+    fun onIntervalChange(value: String) {
+        getFilteredValue(value)?.let { interval ->
+            _intervalString.value = interval
+            intervalValue = interval.toIntOrNull() ?: 0
+        }
     }
 
     private fun getFilteredValue(value: String) = if (value.isEmpty())

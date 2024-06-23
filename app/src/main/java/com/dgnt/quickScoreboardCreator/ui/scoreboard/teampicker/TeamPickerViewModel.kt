@@ -36,15 +36,9 @@ class TeamPickerViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: TeamPickerEvent) {
-        when (event) {
-            is TeamPickerEvent.OnDismiss ->
-                sendUiEvent(UiEvent.Done)
+    fun onDismiss() = sendUiEvent(UiEvent.Done)
 
-            is TeamPickerEvent.OnTeamPicked ->
-                sendUiEvent(UiEvent.TeamUpdated(scoreIndex, event.teamId))
-        }
-    }
+    fun onTeamPicked(id: Int) = sendUiEvent(UiEvent.TeamUpdated(scoreIndex, id))
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

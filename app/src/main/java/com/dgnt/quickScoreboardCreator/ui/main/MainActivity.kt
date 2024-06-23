@@ -106,11 +106,11 @@ class MainActivity : ComponentActivity() {
                 ScoreboardListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(navDestination = NavDestination.ScoreboardDetails(uiEvent.id, uiEvent.scoreboardType))
+                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(navDestination = NavDestination.ScoreboardDetails(uiEvent.id, uiEvent.type))
 
                             is UiEvent.LaunchScoreboard -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
                                 intent.putExtra(ID, uiEvent.id)
-                                intent.putExtra(uiEvent.scoreboardType)
+                                intent.putExtra(uiEvent.type)
                             })
 
                             else -> Unit

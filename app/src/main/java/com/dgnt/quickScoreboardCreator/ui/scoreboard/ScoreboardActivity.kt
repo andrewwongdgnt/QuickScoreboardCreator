@@ -66,8 +66,8 @@ class ScoreboardActivity : ComponentActivity() {
                                     updatedIntervalData,
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.scoreIndex))
-                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.intervalIndex, uiEvent.id, uiEvent.scoreboardType))
+                                            is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
+                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.id, uiEvent.type))
                                             else -> Unit
                                         }
 
@@ -86,7 +86,7 @@ class ScoreboardActivity : ComponentActivity() {
                                             UiEvent.Done -> navController.popBackStack()
 
                                             is UiEvent.TeamUpdated -> {
-                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedTeamData(UpdatedTeamData(uiEvent.scoreIndex, uiEvent.teamId)))
+                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedTeamData(UpdatedTeamData(uiEvent.index, uiEvent.id)))
                                                 navController.popBackStack()
                                             }
 
@@ -106,7 +106,7 @@ class ScoreboardActivity : ComponentActivity() {
                                             UiEvent.Done -> navController.popBackStack()
 
                                             is UiEvent.IntervalUpdated -> {
-                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedIntervalData(UpdatedIntervalData(uiEvent.timeValue, uiEvent.intervalIndex)))
+                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedIntervalData(UpdatedIntervalData(uiEvent.timeValue, uiEvent.index)))
                                                 navController.popBackStack()
                                             }
 
