@@ -82,9 +82,9 @@ class TeamDetailsViewModelTest {
         initSut()
 
         Assert.assertFalse(sut.valid.value)
-        sut.onEvent(TeamDetailsEvent.OnDescriptionChange("Some value"))
+        sut.onDescriptionChange("Some value")
         Assert.assertFalse(sut.valid.value)
-        sut.onEvent(TeamDetailsEvent.OnTitleChange("Some value"))
+        sut.onTitleChange("Some value")
         Assert.assertTrue(sut.valid.value)
     }
 
@@ -93,9 +93,9 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
         initSut()
 
-        sut.onEvent(TeamDetailsEvent.OnIconEdit)
+        sut.onIconEdit()
         Assert.assertTrue(sut.iconChanging.value)
-        sut.onEvent(TeamDetailsEvent.OnNewIcon(TeamIcon.BEAR))
+        sut.onIconChange(TeamIcon.BEAR)
         Assert.assertEquals(TeamIcon.BEAR, sut.icon.value)
         Assert.assertFalse(sut.iconChanging.value)
     }
@@ -105,9 +105,9 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
         initSut()
 
-        sut.onEvent(TeamDetailsEvent.OnDismiss)
+        sut.onDismiss()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
-        sut.onEvent(TeamDetailsEvent.OnConfirm)
+        sut.onConfirm()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
     }
 
@@ -116,10 +116,10 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
         initSut()
 
-        sut.onEvent(TeamDetailsEvent.OnTitleChange("new team"))
-        sut.onEvent(TeamDetailsEvent.OnDescriptionChange("new team desc"))
-        sut.onEvent(TeamDetailsEvent.OnNewIcon(TeamIcon.DRAGON))
-        sut.onEvent(TeamDetailsEvent.OnConfirm)
+        sut.onTitleChange("new team")
+        sut.onDescriptionChange("new team desc")
+        sut.onIconChange(TeamIcon.DRAGON)
+        sut.onConfirm()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
         coVerify(exactly = 1) {
             insertTeamListUseCase.invoke(
@@ -141,10 +141,10 @@ class TeamDetailsViewModelTest {
         coEvery { getTeamUseCase(2) } coAnswers { TeamEntity(2, "team name 2", "team desc 2", TeamIcon.TREE) }
         initSut()
 
-        sut.onEvent(TeamDetailsEvent.OnTitleChange("new team"))
-        sut.onEvent(TeamDetailsEvent.OnDescriptionChange("new team desc"))
-        sut.onEvent(TeamDetailsEvent.OnNewIcon(TeamIcon.DRAGON))
-        sut.onEvent(TeamDetailsEvent.OnConfirm)
+        sut.onTitleChange("new team")
+        sut.onDescriptionChange("new team desc")
+        sut.onIconChange(TeamIcon.DRAGON)
+        sut.onConfirm()
         Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
         coVerify(exactly = 1) {
             insertTeamListUseCase.invoke(

@@ -71,39 +71,41 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: TeamDetailsEvent) {
-        when (event) {
-            TeamDetailsEvent.OnConfirm -> {
-                if (valid.value) {
-                    viewModelScope.launch {
-                        insertTeamListUseCase(
-                            listOf(
-                                TeamEntity(
-                                    id = teamId,
-                                    title = title.value,
-                                    description = description.value,
-                                    icon = icon.value!!
-                                )
-                            )
+    fun onConfirm() {
+        if (valid.value) {
+            viewModelScope.launch {
+                insertTeamListUseCase(
+                    listOf(
+                        TeamEntity(
+                            id = teamId,
+                            title = title.value,
+                            description = description.value,
+                            icon = icon.value!!
                         )
-                    }
-                }
-                sendUiEvent(UiEvent.Done)
-            }
-
-            TeamDetailsEvent.OnDismiss -> sendUiEvent(UiEvent.Done)
-
-            is TeamDetailsEvent.OnTitleChange -> _title.value = event.title
-
-            is TeamDetailsEvent.OnDescriptionChange -> _description.value = event.descriptionChange
-
-            is TeamDetailsEvent.OnIconEdit -> _iconChanging.value = true
-
-            is TeamDetailsEvent.OnNewIcon -> {
-                _icon.value = event.icon
-                _iconChanging.value = false
+                    )
+                )
             }
         }
+        sendUiEvent(UiEvent.Done)
+    }
+
+    fun onDismiss() = sendUiEvent(UiEvent.Done)
+
+    fun onTitleChange(title: String) {
+        _title.value = title
+    }
+
+    fun onDescriptionChange(description: String) {
+        _description.value = description
+    }
+
+    fun onIconEdit() {
+        _iconChanging.value = true
+    }
+
+    fun onIconChange(icon: TeamIcon) {
+        _icon.value = icon
+        _iconChanging.value = false
     }
 
     private fun sendUiEvent(event: UiEvent) {

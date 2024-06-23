@@ -34,8 +34,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.header
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
+import com.dgnt.quickScoreboardCreator.ui.common.header
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -54,11 +54,16 @@ fun TeamDetailsDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         title,
+        viewModel::onTitleChange,
         description,
+        viewModel::onDescriptionChange,
         icon,
+        viewModel::onIconChange,
         iconChanging,
-        viewModel::onEvent,
-        valid
+        viewModel::onIconEdit,
+        valid,
+        viewModel::onDismiss,
+        viewModel::onConfirm,
     )
 
 }
@@ -68,11 +73,16 @@ private fun TeamDetailsInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     title: String,
+    onTitleChange: (String) -> Unit,
     description: String,
+    onDescriptionChange: (String) -> Unit,
     icon: TeamIcon?,
+    onIconChange: (TeamIcon) -> Unit,
     iconChanging: Boolean,
-    onEvent: (TeamDetailsEvent) -> Unit,
-    valid: Boolean
+    onIconEdit: () -> Unit,
+    valid: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
 ) {
 
     LaunchedEffect(key1 = true) {
@@ -83,7 +93,7 @@ private fun TeamDetailsInnerDialogContent(
             usePlatformDefaultWidth = false,
             dismissOnClickOutside = false
         ),
-        onDismissRequest = { onEvent(TeamDetailsEvent.OnDismiss) },
+        onDismissRequest = onDismiss,
         title = {
             Text(
                 style = MaterialTheme.typography.titleSmall,
@@ -92,7 +102,7 @@ private fun TeamDetailsInnerDialogContent(
         },
         dismissButton = {
             Button(
-                onClick = { onEvent(TeamDetailsEvent.OnDismiss) }
+                onClick = onDismiss
             ) {
                 Text(stringResource(id = android.R.string.cancel))
             }
@@ -100,7 +110,7 @@ private fun TeamDetailsInnerDialogContent(
         confirmButton = {
             Button(
                 enabled = valid,
-                onClick = { onEvent(TeamDetailsEvent.OnConfirm) }
+                onClick = onConfirm
             ) {
                 Text(stringResource(id = android.R.string.ok))
             }
@@ -113,14 +123,14 @@ private fun TeamDetailsInnerDialogContent(
             ) {
                 TextField(
                     value = title,
-                    onValueChange = { onEvent(TeamDetailsEvent.OnTitleChange(it)) },
+                    onValueChange = onTitleChange,
                     placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = description,
-                    onValueChange = { onEvent(TeamDetailsEvent.OnDescriptionChange(it)) },
+                    onValueChange = onDescriptionChange,
                     placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false,
@@ -150,7 +160,7 @@ private fun TeamDetailsInnerDialogContent(
                                     modifier = Modifier
                                         .padding(2.dp)
                                         .clickable {
-                                            onEvent(TeamDetailsEvent.OnNewIcon(icon))
+                                            onIconChange(icon)
                                         }
                                 )
                             }
@@ -160,9 +170,7 @@ private fun TeamDetailsInnerDialogContent(
                 } else
                     IconDisplay(
                         iconRes = icon?.res,
-                        onClick = {
-                            onEvent(TeamDetailsEvent.OnIconEdit)
-                        }
+                        onClick = onIconEdit
                     )
 
             }
@@ -174,68 +182,93 @@ private fun TeamDetailsInnerDialogContent(
 @Composable
 private fun `New Icon Selection`() =
     TeamDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        TeamIcon.GORILLA,
-        true,
-        {},
-        true
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = TeamIcon.GORILLA,
+        onIconChange = {},
+        iconChanging = true,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Gorilla`() =
     TeamDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        TeamIcon.GORILLA,
-        false,
-        {},
-        true
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = TeamIcon.GORILLA,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Tiger`() =
     TeamDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        TeamIcon.TIGER,
-        false,
-        {},
-        true,
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = TeamIcon.TIGER,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Alien`() =
     TeamDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        TeamIcon.ALIEN,
-        false,
-        {},
-        true,
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = TeamIcon.ALIEN,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Loading icon`() =
     TeamDetailsInnerDialogContent(
-        emptyFlow(),
-        {},
-        "",
-        "",
-        null,
-        false,
-        {},
-        true,
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        icon = null,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        valid = true,
+        onDismiss = {},
+        onConfirm = {},
     )
