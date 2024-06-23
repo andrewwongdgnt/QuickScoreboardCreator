@@ -108,19 +108,19 @@ class TeamListViewModelTest {
 
     @Test
     fun testOnAdd() = runTest {
-        sut.onEvent(TeamListEvent.OnAdd)
+        sut.onAdd()
         Assert.assertEquals(UiEvent.TeamDetails(), sut.uiEvent.first())
     }
 
     @Test
     fun testOnEdit() = runTest {
-        sut.onEvent(TeamListEvent.OnEdit(1))
+        sut.onEdit(1)
         Assert.assertEquals(UiEvent.TeamDetails(1), sut.uiEvent.first())
     }
 
     @Test
     fun testOnDeleteAndUndo() = runTest {
-        sut.onEvent(TeamListEvent.OnDelete(1))
+        sut.onDelete(1)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedTeamMsg,
@@ -128,7 +128,7 @@ class TeamListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(TeamListEvent.OnDelete(2))
+        sut.onDelete(2)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedTeamMsg,
@@ -136,7 +136,7 @@ class TeamListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(TeamListEvent.OnUndoDelete)
+        sut.onUndoDelete()
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[0]) }
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[1]) }
         coVerify(exactly = 1) { insertTeamListUseCase(mockTeamList) }
@@ -144,7 +144,7 @@ class TeamListViewModelTest {
 
     @Test
     fun testNoUndo() = runTest {
-        sut.onEvent(TeamListEvent.OnDelete(1))
+        sut.onDelete(1)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedTeamMsg,
@@ -152,7 +152,7 @@ class TeamListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(TeamListEvent.OnDelete(2))
+        sut.onDelete(2)
         Assert.assertEquals(
             UiEvent.ShowSnackbar.ShowQuantitySnackbar(
                 message = R.plurals.deletedTeamMsg,
@@ -160,8 +160,8 @@ class TeamListViewModelTest {
                 action = R.string.undo
             ), sut.uiEvent.first()
         )
-        sut.onEvent(TeamListEvent.OnClearDeletedTeamList)
-        sut.onEvent(TeamListEvent.OnUndoDelete)
+        sut.onClearDeletedTeamList()
+        sut.onUndoDelete()
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[0]) }
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[1]) }
         coVerify(exactly = 0) { insertTeamListUseCase(any()) }

@@ -34,49 +34,36 @@ class TeamListViewModel @Inject constructor(
 
     private var deletedTeamList: MutableList<TeamEntity> = mutableListOf()
 
-    fun onEvent(event: TeamListEvent) {
-        when (event) {
+    fun onAdd() = sendUiEvent(UiEvent.TeamDetails())
 
-            TeamListEvent.OnAdd -> {
-                sendUiEvent(UiEvent.TeamDetails())
-            }
+    fun onEdit(id: Int) = sendUiEvent(UiEvent.TeamDetails(id))
 
-            is TeamListEvent.OnEdit -> {
-                sendUiEvent(UiEvent.TeamDetails(event.id))
-            }
+    fun onDelete(id: Int) = viewModelScope.launch {
+        teamEntityList.first().find { entity ->
+            entity.id == id
+        }?.let {
+            deletedTeamList.add(it)
+            deleteTeamUseCase(it)
+        }
+        sendUiEvent(
+            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+                message = R.plurals.deletedTeamMsg,
+                quantity = deletedTeamList.size,
+                action = R.string.undo
+            )
+        )
+    }
 
-            is TeamListEvent.OnDelete -> {
-                viewModelScope.launch {
-                    teamEntityList.first().find { entity ->
-                        entity.id == event.id
-                    }?.let {
-                        deletedTeamList.add(it)
-                        deleteTeamUseCase(it)
-                    }
-                    sendUiEvent(
-                        UiEvent.ShowSnackbar.ShowQuantitySnackbar(
-                            message = R.plurals.deletedTeamMsg,
-                            quantity = deletedTeamList.size,
-                            action = R.string.undo
-                        )
-                    )
-                }
+    fun onUndoDelete() {
+        deletedTeamList.toList().takeUnless { it.isEmpty() }?.let { teamList ->
+            viewModelScope.launch {
+                insertTeamListUseCase(teamList)
             }
-
-            TeamListEvent.OnUndoDelete -> {
-                deletedTeamList.toList().takeUnless { it.isEmpty() }?.let { teamList ->
-                    viewModelScope.launch {
-                        insertTeamListUseCase(teamList)
-                    }
-                    onEvent(TeamListEvent.OnClearDeletedTeamList)
-                }
-            }
-
-            TeamListEvent.OnClearDeletedTeamList -> {
-                deletedTeamList.clear()
-            }
+            onClearDeletedTeamList()
         }
     }
+
+    fun onClearDeletedTeamList() = deletedTeamList.clear()
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

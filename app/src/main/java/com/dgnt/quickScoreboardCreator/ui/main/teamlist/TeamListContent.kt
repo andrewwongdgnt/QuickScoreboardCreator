@@ -44,9 +44,12 @@ fun TeamListContent(
     TeamListInnerContent(
         viewModel.uiEvent,
         onUiEvent,
-        { viewModel.onEvent(TeamListEvent.OnAdd) },
         categorizedTeamList.value,
-        viewModel::onEvent
+        viewModel::onAdd,
+        viewModel::onEdit,
+        { viewModel.onDelete(it) },
+        viewModel::onUndoDelete,
+        viewModel::onClearDeletedTeamList
     )
 
 }
@@ -55,9 +58,12 @@ fun TeamListContent(
 private fun TeamListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    onFABClick: () -> Unit,
     categorizedTeamList: List<CategorizedTeamItemData>,
-    onEvent: (TeamListEvent) -> Unit,
+    onAdd: () -> Unit,
+    onEdit: (id: Int) -> Unit,
+    onDelete: (id: Int) -> Unit,
+    onUndoDelete: () -> Unit,
+    onClearDeletedTeamList: () -> Unit,
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -81,11 +87,11 @@ private fun TeamListInnerContent(
                             actionLabel = context.getString(event.action),
                             withDismissAction = true
                         )
-                        when(result) {
-                            SnackbarResult.ActionPerformed -> onEvent(TeamListEvent.OnUndoDelete)
+                        when (result) {
+                            SnackbarResult.ActionPerformed -> onUndoDelete()
                             SnackbarResult.Dismissed -> {
                                 if (mustClearDeletedTeamList)
-                                    onEvent(TeamListEvent.OnClearDeletedTeamList)
+                                    onClearDeletedTeamList()
                             }
                         }
                     }
@@ -107,7 +113,7 @@ private fun TeamListInnerContent(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onFABClick) {
+            FloatingActionButton(onClick = onAdd) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.add)
@@ -120,8 +126,8 @@ private fun TeamListInnerContent(
             modifier = Modifier
                 .padding(padding)
                 .padding(bottom = 100.dp),
-            onItemClick = { onEvent(TeamListEvent.OnEdit(it)) },
-            onItemDelete = { onEvent(TeamListEvent.OnDelete(it)) },
+            onItemClick = onEdit,
+            onItemDelete = onDelete,
             categorizedTeamList = categorizedTeamList
         )
     }
@@ -131,21 +137,23 @@ private fun TeamListInnerContent(
 @Composable
 private fun `Empty teams`() =
     TeamListInnerContent(
-        emptyFlow(),
-        {},
-        {},
-        emptyList(),
-        {}
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        categorizedTeamList = emptyList(),
+        onAdd = {},
+        onEdit = {},
+        onDelete = {},
+        onUndoDelete = {},
+        onClearDeletedTeamList = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Some teams`() =
     TeamListInnerContent(
-        emptyFlow(),
-        {},
-        {},
-        listOf(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        categorizedTeamList = listOf(
             CategorizedTeamItemData(
                 "D",
                 listOf(
@@ -169,5 +177,9 @@ private fun `Some teams`() =
             )
 
         ),
-        {}
+        onAdd = {},
+        onEdit = {},
+        onDelete = {},
+        onUndoDelete = {},
+        onClearDeletedTeamList = {},
     )
