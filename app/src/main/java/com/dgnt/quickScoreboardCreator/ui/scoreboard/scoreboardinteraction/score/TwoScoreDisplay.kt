@@ -22,7 +22,6 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
 import com.dgnt.quickScoreboardCreator.ui.common.composable.AutoSizeText
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionEvent
 
 @Composable
 fun TwoScoreDisplay(
@@ -32,7 +31,7 @@ fun TwoScoreDisplay(
     secondaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
     secondaryScoreLabelInfo: Pair<String?, Int?>,
-    onEvent: (ScoreboardInteractionEvent) -> Unit
+    onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxHeight(),
@@ -94,7 +93,7 @@ fun TwoScoreDisplay(
                     simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
                     onIncrement = { index, positive ->
-                        onEvent(ScoreboardInteractionEvent.UpdateScore(false, 0, index, positive))
+                        onScoreChange(false, 0, index, positive)
                     }
                 )
                 ScoreValueContent(
@@ -119,7 +118,7 @@ fun TwoScoreDisplay(
                     simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
                     onIncrement = { index, positive ->
-                        onEvent(ScoreboardInteractionEvent.UpdateScore(false, 1, index, positive))
+                        onScoreChange(false, 1, index, positive)
                     }
                 )
             }
@@ -181,7 +180,7 @@ private fun `Normal scores`() =
             listOf(1),
         ),
         secondaryScoreLabelInfo = Pair(null, R.string.fouls),
-        onEvent = {}
+        onScoreChange = { _, _, _, _ -> }
     )
 
 @PreviewScreenSizes
@@ -202,5 +201,5 @@ private fun `Deuce`() =
         ),
         secondaryIncrementList = listOf(),
         secondaryScoreLabelInfo = Pair(null, R.string.blank),
-        onEvent = {}
+        onScoreChange = { _, _, _, _ -> }
     )

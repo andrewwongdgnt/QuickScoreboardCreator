@@ -47,12 +47,12 @@ fun ScoreboardInteractionContent(
     viewModel: ScoreboardInteractionViewModel = hiltViewModel()
 ) {
 
-    updatedTeamData?.let { viewModel.onEvent(ScoreboardInteractionEvent.UpdatedTeam(it)) }
-    updatedIntervalData?.let { viewModel.onEvent(ScoreboardInteractionEvent.UpdatedInterval(it)) }
+    updatedTeamData?.let { viewModel.onTeamPick(it) }
+    updatedIntervalData?.let { viewModel.onIntervalEdit(it) }
 
     ScoreboardInteractionVMDataContent(
-        onUiEvent,
-        viewModel
+        onUiEvent = onUiEvent,
+        viewModel = viewModel
     )
 }
 
@@ -74,20 +74,25 @@ private fun ScoreboardInteractionVMDataContent(
     val currentInterval by viewModel.currentInterval.collectAsStateWithLifecycle()
 
     ScoreboardInteractionInnerContent(
-        viewModel.uiEvent,
-        onUiEvent,
-        primaryDisplayedScoreInfo,
-        primaryIncrementList,
-        secondaryDisplayedScoreInfo,
-        secondaryIncrementList,
-        secondaryScoreLabelInfo,
-        teamList,
-        timeData,
-        timerInProgress,
-        simpleMode,
-        intervalLabelInfo,
-        currentInterval,
-        viewModel::onEvent
+        uiEvent = viewModel.uiEvent,
+        onUiEvent = onUiEvent,
+        primaryDisplayedScoreInfo = primaryDisplayedScoreInfo,
+        primaryIncrementList = primaryIncrementList,
+        secondaryDisplayedScoreInfo = secondaryDisplayedScoreInfo,
+        secondaryIncrementList = secondaryIncrementList,
+        secondaryScoreLabelInfo = secondaryScoreLabelInfo,
+        onScoreChange = viewModel::onScoreChange,
+        teamList = teamList,
+        toTeamPicker = viewModel::toTeamPicker,
+        timeData = timeData,
+        timerInProgress = timerInProgress,
+        onTimerPause = viewModel::onTimerPause,
+        onTimerStart = viewModel::onTimerStart,
+        simpleMode = simpleMode,
+        onToggleModeChange = viewModel::onToggleModeChange,
+        intervalLabelInfo = intervalLabelInfo,
+        currentInterval = currentInterval,
+        toIntervalEditor = viewModel::toIntervalEditor,
     )
 }
 
@@ -100,22 +105,28 @@ private fun ScoreboardInteractionInnerContent(
     secondaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
     secondaryScoreLabelInfo: Pair<String?, Int?>,
+    onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
     teamList: List<TeamDisplay>,
+    toTeamPicker: (Int) -> Unit,
     timeData: TimeData,
     timerInProgress: Boolean,
+    onTimerPause: (Boolean) -> Unit,
+    onTimerStart: () -> Unit,
     simpleMode: Boolean,
+    onToggleModeChange: (Boolean) -> Unit,
     intervalLabelInfo: Pair<String?, Int?>,
     currentInterval: Int,
-    onEvent: (ScoreboardInteractionEvent) -> Unit
+    toIntervalEditor: () -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        uiEvent.collect {event ->
+        uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PlaySound -> {
                     val mMediaPlayer = MediaPlayer.create(context, event.soundRes)
                     mMediaPlayer.start()
                 }
+
                 else -> onUiEvent(event)
             }
         }
@@ -133,18 +144,18 @@ private fun ScoreboardInteractionInnerContent(
                 simpleMode = simpleMode,
                 incrementList = primaryIncrementList[0],
                 onIncrement = { index, positive ->
-                    onEvent(ScoreboardInteractionEvent.UpdateScore(true, 0, index, positive))
+                    onScoreChange(true, 0, index, positive)
                 }
             )
             Spacer(modifier = Modifier.width(spacerWidth))
             TwoScoreDisplay(
                 modifier = Modifier.weight(1f),
                 simpleMode = simpleMode,
-                primaryDisplayedScoreInfo,
-                secondaryDisplayedScoreInfo,
-                secondaryIncrementList,
-                secondaryScoreLabelInfo,
-                onEvent
+                primaryDisplayedScoreInfo = primaryDisplayedScoreInfo,
+                secondaryDisplayedScoreInfo = secondaryDisplayedScoreInfo,
+                secondaryIncrementList = secondaryIncrementList,
+                secondaryScoreLabelInfo = secondaryScoreLabelInfo,
+                onScoreChange = onScoreChange
             )
             Spacer(modifier = Modifier.width(spacerWidth))
             ScoreControl(
@@ -152,7 +163,7 @@ private fun ScoreboardInteractionInnerContent(
                 simpleMode = simpleMode,
                 incrementList = primaryIncrementList[1],
                 onIncrement = { index, positive ->
-                    onEvent(ScoreboardInteractionEvent.UpdateScore(true, 1, index, positive))
+                    onScoreChange(true, 1, index, positive)
                 }
             )
         }
@@ -163,10 +174,11 @@ private fun ScoreboardInteractionInnerContent(
             .padding(layoutSpacing)
     ) {
         TimerControlContent(
-            timerInProgress = timerInProgress,
-            onEvent = onEvent,
             modifier = Modifier
-                .align(Alignment.TopStart)
+                .align(Alignment.TopStart),
+            timerInProgress = timerInProgress,
+            onTimerPause = onTimerPause,
+            onTimerStart = onTimerStart,
         )
         Column(
             modifier = Modifier
@@ -176,7 +188,7 @@ private fun ScoreboardInteractionInnerContent(
             TimerDisplayContent(
                 simpleMode = simpleMode,
                 timeData = timeData,
-                onEvent = onEvent,
+                toIntervalEditor = toIntervalEditor,
             )
             IntervalDisplayContent(
                 modifier = Modifier,
@@ -186,10 +198,10 @@ private fun ScoreboardInteractionInnerContent(
 
         }
         ModeControlContent(
-            simpleMode = simpleMode,
-            onEvent = onEvent,
             modifier = Modifier
-                .align(Alignment.TopEnd)
+                .align(Alignment.TopEnd),
+            simpleMode = simpleMode,
+            onToggleModeChange = onToggleModeChange,
         )
 
         Row(
@@ -201,7 +213,7 @@ private fun ScoreboardInteractionInnerContent(
                 simpleMode = simpleMode,
                 teamDisplay = teamList[0],
                 teamNumber = 1,
-                onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(0)) },
+                onEditClick = { toTeamPicker(0) },
                 modifier = Modifier
                     .weight(1f)
             )
@@ -210,7 +222,7 @@ private fun ScoreboardInteractionInnerContent(
                 simpleMode = simpleMode,
                 teamDisplay = teamList[1],
                 teamNumber = 2,
-                onEditClick = { onEvent(ScoreboardInteractionEvent.UpdateTeam(1)) },
+                onEditClick = { toTeamPicker(1) },
                 modifier = Modifier
                     .weight(1f)
             )
@@ -225,146 +237,170 @@ private fun ScoreboardInteractionInnerContent(
 @Composable
 private fun `2 Teams with long names`() =
     ScoreboardInteractionInnerContent(
-        emptyFlow(),
-        {},
-        DisplayedScoreInfo(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
                 DisplayedScore.CustomDisplayedScore("21"),
             ),
             DisplayedScore.Blank
         ),
-        listOf(
+        primaryIncrementList = listOf(
             listOf(1, 2, 2),
             listOf(1, 2, 3),
         ),
-        DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("1"),
                 DisplayedScore.CustomDisplayedScore("0"),
             ),
             DisplayedScore.Blank
         ),
-        listOf(
+        secondaryIncrementList = listOf(
             listOf(1),
             listOf(1),
         ),
-        Pair("S", null),
-        listOf(
+        secondaryScoreLabelInfo = Pair("S", null),
+        onScoreChange = { _, _, _, _ -> },
+        teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
             TeamDisplay.SelectedTeamDisplay("Tigers Tigers Tigers Tigers Tigers", TeamIcon.TIGER)
         ),
-        TimeData(12, 2, 4),
-        false,
-        false,
-        Pair("P", null),
-        1
-    ) {}
+        toTeamPicker = { _ -> },
+        timeData = TimeData(12, 2, 4),
+        timerInProgress = false,
+        onTimerPause = { _ -> },
+        onTimerStart = {},
+        simpleMode = false,
+        onToggleModeChange = { _ -> },
+        intervalLabelInfo = Pair("P", null),
+        currentInterval = 1,
+        toIntervalEditor = {}
+    )
 
 @PreviewScreenSizes
 @Composable
 private fun `2 Teams with short names`() =
     ScoreboardInteractionInnerContent(
-        emptyFlow(),
-        {},
-        DisplayedScoreInfo(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("10"),
                 DisplayedScore.CustomDisplayedScore("261"),
             ),
             DisplayedScore.Blank
         ),
-        listOf(
+        primaryIncrementList = listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
-        DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.CustomDisplayedScore("1"),
                 DisplayedScore.CustomDisplayedScore("0"),
             ),
             DisplayedScore.Blank
         ),
-        listOf(
+        secondaryIncrementList = listOf(
             listOf(1),
             listOf(1),
         ),
-        Pair(null, R.string.fouls),
-        listOf(
+        secondaryScoreLabelInfo = Pair(null, R.string.fouls),
+        onScoreChange = { _, _, _, _ -> },
+        teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
             TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
         ),
-        TimeData(12, 2, 4),
-        false,
-        true,
-        Pair(null, R.string.quarter),
-        1
-    ) {}
+        toTeamPicker = { _ -> },
+        timeData = TimeData(12, 2, 4),
+        timerInProgress = false,
+        onTimerPause = { _ -> },
+        onTimerStart = {},
+        simpleMode = true,
+        onToggleModeChange = { _ -> },
+        intervalLabelInfo = Pair(null, R.string.quarter),
+        currentInterval = 1,
+        toIntervalEditor = {}
+    )
 
 @PreviewScreenSizes
 @Composable
 private fun `Adv`() =
     ScoreboardInteractionInnerContent(
-        emptyFlow(),
-        {},
-        DisplayedScoreInfo(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.Advantage,
                 DisplayedScore.Blank,
             ),
             DisplayedScore.Blank
         ),
-        listOf(
+        primaryIncrementList = listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
-        DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(),
             DisplayedScore.Blank
         ),
-        listOf(),
-        Pair(null, R.string.blank),
-        listOf(
+        secondaryIncrementList = listOf(),
+        secondaryScoreLabelInfo = Pair(null, R.string.blank),
+        onScoreChange = { _, _, _, _ -> },
+        teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
             TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
         ),
-        TimeData(12, 2, 4),
-        false,
-        true,
-        Pair(null, R.string.set),
-        2
-    ) {}
+        toTeamPicker = { _ -> },
+        timeData = TimeData(12, 2, 4),
+        timerInProgress = false,
+        onTimerPause = { _ -> },
+        onTimerStart = {},
+        simpleMode = true,
+        onToggleModeChange = { _ -> },
+        intervalLabelInfo = Pair(null, R.string.set),
+        currentInterval = 2,
+        toIntervalEditor = {}
+    )
 
 @PreviewScreenSizes
 @Composable
 private fun `Deuce`() =
     ScoreboardInteractionInnerContent(
-        emptyFlow(),
-        {},
-        DisplayedScoreInfo(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
                 DisplayedScore.Blank,
                 DisplayedScore.Blank,
             ),
             DisplayedScore.Deuce
         ),
-        listOf(
+        primaryIncrementList = listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
-        DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(),
             DisplayedScore.Blank
         ),
-        listOf(),
-        Pair(null, R.string.blank),
-        listOf(
+        secondaryIncrementList = listOf(),
+        secondaryScoreLabelInfo = Pair(null, R.string.blank),
+        onScoreChange = { _, _, _, _ -> },
+        teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
             TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
         ),
-        TimeData(12, 2, 4),
-        false,
-        false,
-        Pair(null, R.string.game),
-        3
-    ) {}
+        toTeamPicker = { _ -> },
+        timeData = TimeData(12, 2, 4),
+        timerInProgress = false,
+        onTimerPause = { _ -> },
+        onTimerStart = {},
+        simpleMode = false,
+        onToggleModeChange = { _ -> },
+        intervalLabelInfo = Pair(null, R.string.game),
+        currentInterval = 3,
+        toIntervalEditor = {}
+    )

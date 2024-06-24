@@ -15,13 +15,12 @@ import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberToggleOff
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberToggleOn
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionEvent
 
 @Composable
 fun ModeControlContent(
     modifier: Modifier = Modifier,
     simpleMode: Boolean,
-    onEvent: (ScoreboardInteractionEvent) -> Unit,
+    onToggleModeChange: (Boolean) -> Unit,
 ) {
 
     val iconWidth = 56.dp
@@ -37,7 +36,7 @@ fun ModeControlContent(
                 .width(iconWidth)
                 .height(iconHeight)
                 .clickable {
-                    onEvent(ScoreboardInteractionEvent.ToggleMode(simpleMode))
+                    onToggleModeChange(simpleMode)
                 }
         )
         Text(
@@ -56,9 +55,15 @@ fun ModeControlContent(
 @Preview(showBackground = true)
 @Composable
 private fun `simple mode`() =
-    ModeControlContent(simpleMode = true, onEvent = {})
+    ModeControlContent(
+        simpleMode = true,
+        onToggleModeChange = {}
+    )
 
 @Preview(showBackground = true)
 @Composable
 private fun `advance mode`() =
-    ModeControlContent(simpleMode = false, onEvent = {})
+    ModeControlContent(
+        simpleMode = false,
+        onToggleModeChange = {}
+    )

@@ -18,6 +18,8 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -87,7 +89,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         secondaryScoreLabelInfoList.getOrNull(it)?.let { secondaryScoreLabelInfo ->
             _secondaryScoreLabelInfo.value = secondaryScoreLabelInfo
         }
-        onEvent(ScoreboardInteractionEvent.PauseTimer(true))
+        onTimerPause(true)
     }
 
     /**
@@ -199,77 +201,72 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     }
 
-    fun onEvent(event: ScoreboardInteractionEvent) {
-        when (event) {
-            is ScoreboardInteractionEvent.UpdateScore -> {
-                scoreboardManager.updateScore(event.isPrimary, event.scoreIndex, event.incrementIndex, event.positive)
-            }
+    fun onScoreChange(
+        isPrimary: Boolean,
+        scoreIndex: Int,
+        incrementIndex: Int,
+        positive: Boolean,
+    ) = scoreboardManager.updateScore(isPrimary, scoreIndex, incrementIndex, positive)
 
-            is ScoreboardInteractionEvent.UpdateTeam -> {
-                sendUiEvent(UiEvent.TeamPicker(event.scoreIndex))
-            }
+    fun toTeamPicker(index: Int) = sendUiEvent(UiEvent.TeamPicker(index))
 
-            is ScoreboardInteractionEvent.PauseTimer -> {
-                timerJob?.cancel()
-                _timerInProgress.value = false
-                if (event.reset) {
-                    scoreboardManager.resetTime()
-                }
-
-            }
-
-            is ScoreboardInteractionEvent.ToggleMode -> {
-                _simpleMode.value = !event.simpleMode
-            }
-
-            ScoreboardInteractionEvent.StartTimer -> {
-                timerJob?.cancel()
-                if (!scoreboardManager.canTimeAdvance()) {
-                    _timerInProgress.value = false
-                    return
-                }
-
-                timerJob = viewModelScope.launch {
-                    while (true) {
-                        delay(100)
-                        scoreboardManager.updateTimeBy(100L)
-
+    fun onTeamPick(updatedTeamData: UpdatedTeamData) {
+        viewModelScope.launch {
+            _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
+                if (updatedTeamData.scoreIndex == index) {
+                    getTeamUseCase(updatedTeamData.teamId)?.let {
+                        TeamDisplay.SelectedTeamDisplay(it.title, it.icon)
                     }
-                }
-                _timerInProgress.value = true
-
-            }
-
-            is ScoreboardInteractionEvent.UpdatedTeam -> {
-                viewModelScope.launch {
-                    _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
-                        if (event.updatedTeamData.scoreIndex == index) {
-                            getTeamUseCase(event.updatedTeamData.teamId)?.let {
-                                TeamDisplay.SelectedTeamDisplay(it.title, it.icon)
-                            }
-                        } else {
-                            teamList.value.getOrNull(index)
-                        }
-                    }
+                } else {
+                    teamList.value.getOrNull(index)
                 }
             }
+        }
+    }
 
-            ScoreboardInteractionEvent.UpdateInterval -> {
-                timerJob?.cancel()
-                _timerInProgress.value = false
-                sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, id, scoreboardType))
+    fun onTimerPause(reset: Boolean) {
+        timerJob?.cancel()
+        _timerInProgress.value = false
+        if (reset) {
+            scoreboardManager.resetTime()
+        }
+    }
+
+    fun onTimerStart() {
+        timerJob?.cancel()
+        if (!scoreboardManager.canTimeAdvance()) {
+            _timerInProgress.value = false
+            return
+        }
+
+        timerJob = viewModelScope.launch {
+            while (true) {
+                delay(100)
+                scoreboardManager.updateTimeBy(100L)
+
             }
+        }
+        _timerInProgress.value = true
 
-            is ScoreboardInteractionEvent.UpdatedInterval -> {
-                event.takeUnless { it.updatedIntervalData.timeValue < 0 || it.updatedIntervalData.intervalIndex < 0 }?.let {
-                    timerJob?.cancel()
-                    _timerInProgress.value = false
-                    scoreboardManager.updateInterval(it.updatedIntervalData.intervalIndex)
-                    scoreboardManager.updateTime(it.updatedIntervalData.timeValue)
+    }
 
-                }
+    fun onToggleModeChange(isSimpleMode: Boolean) {
+        _simpleMode.value = !isSimpleMode
+    }
 
-            }
+    fun toIntervalEditor() {
+        timerJob?.cancel()
+        _timerInProgress.value = false
+        sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, id, scoreboardType))
+    }
+
+    fun onIntervalEdit(updatedIntervalData: UpdatedIntervalData) {
+        updatedIntervalData.takeUnless { it.timeValue < 0 || it.intervalIndex < 0 }?.let {
+            timerJob?.cancel()
+            _timerInProgress.value = false
+            scoreboardManager.updateInterval(it.intervalIndex)
+            scoreboardManager.updateTime(it.timeValue)
+
         }
     }
 

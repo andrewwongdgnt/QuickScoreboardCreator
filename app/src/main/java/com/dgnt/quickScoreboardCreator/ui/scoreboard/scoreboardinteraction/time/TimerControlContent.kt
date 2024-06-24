@@ -15,13 +15,13 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberPauseCircle
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberPlayCircle
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberStopCircle
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionEvent
 
 @Composable
 fun TimerControlContent(
     modifier: Modifier = Modifier,
     timerInProgress: Boolean,
-    onEvent: (ScoreboardInteractionEvent) -> Unit,
+    onTimerPause: (Boolean) -> Unit,
+    onTimerStart: () -> Unit,
 ) {
 
     val iconSize = 56.dp
@@ -34,9 +34,9 @@ fun TimerControlContent(
                 .clickable(
                     onClick = {
                         if (timerInProgress)
-                            onEvent(ScoreboardInteractionEvent.PauseTimer(false))
+                            onTimerPause(false)
                         else
-                            onEvent(ScoreboardInteractionEvent.StartTimer)
+                            onTimerStart()
                     }
                 )
         )
@@ -47,7 +47,7 @@ fun TimerControlContent(
             contentDescription = stringResource(id = R.string.stopTimer),
             modifier = Modifier
                 .size(iconSize)
-                .clickable(onClick = { onEvent(ScoreboardInteractionEvent.PauseTimer(true)) })
+                .clickable(onClick = { onTimerPause(true) })
         )
     }
 
@@ -56,9 +56,17 @@ fun TimerControlContent(
 @Preview(showBackground = true)
 @Composable
 private fun `in progress timer`() =
-    TimerControlContent(timerInProgress = true, onEvent = {})
+    TimerControlContent(
+        timerInProgress = true,
+        onTimerPause = { _ -> },
+        onTimerStart = {}
+    )
 
 @Preview(showBackground = true)
 @Composable
 private fun `paused timer`() =
-    TimerControlContent(timerInProgress = false, onEvent = {})
+    TimerControlContent(
+        timerInProgress = false,
+        onTimerPause = { _ -> },
+        onTimerStart = {}
+    )
