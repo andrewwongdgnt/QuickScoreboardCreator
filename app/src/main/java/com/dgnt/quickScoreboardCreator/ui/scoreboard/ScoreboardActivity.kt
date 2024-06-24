@@ -75,8 +75,8 @@ class ScoreboardActivity : ComponentActivity() {
                                 )
 
                                 //reset these so any recompose won't set the real values again
-                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedTeamData(null))
-                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedIntervalData(null))
+                                viewModel.onTeamDataUpdate(null)
+                                viewModel.onIntervalDataUpdate(null)
                             }
                             dialog<NavDestination.TeamPicker> { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
@@ -86,7 +86,7 @@ class ScoreboardActivity : ComponentActivity() {
                                             UiEvent.Done -> navController.popBackStack()
 
                                             is UiEvent.TeamUpdated -> {
-                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedTeamData(UpdatedTeamData(uiEvent.index, uiEvent.id)))
+                                                viewModel.onTeamDataUpdate(UpdatedTeamData(uiEvent.index, uiEvent.id))
                                                 navController.popBackStack()
                                             }
 
@@ -106,7 +106,7 @@ class ScoreboardActivity : ComponentActivity() {
                                             UiEvent.Done -> navController.popBackStack()
 
                                             is UiEvent.IntervalUpdated -> {
-                                                viewModel.onEvent(ScoreboardActivityEvent.OnUpdatedIntervalData(UpdatedIntervalData(uiEvent.timeValue, uiEvent.index)))
+                                                viewModel.onIntervalDataUpdate(UpdatedIntervalData(uiEvent.timeValue, uiEvent.index))
                                                 navController.popBackStack()
                                             }
 
