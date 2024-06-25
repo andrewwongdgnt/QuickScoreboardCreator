@@ -1,11 +1,15 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 
 package com.dgnt.quickScoreboardCreator.ui.main.teamdetails
 
 
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,9 +17,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +58,7 @@ fun TeamDetailsDialogContent(
     val description by viewModel.description.collectAsStateWithLifecycle()
     val icon by viewModel.icon.collectAsStateWithLifecycle()
     val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
+    val isNewEntity by viewModel.isNewEntity.collectAsStateWithLifecycle()
     TeamDetailsInnerDialogContent(
         uiEvent = viewModel.uiEvent,
         onUiEvent = onUiEvent,
@@ -62,6 +71,8 @@ fun TeamDetailsDialogContent(
         iconChanging = iconChanging,
         onIconEdit = viewModel::onIconEdit,
         valid = valid,
+        isNewEntity = isNewEntity,
+        onDelete = viewModel::onDelete,
         onDismiss = viewModel::onDismiss,
         onConfirm = viewModel::onConfirm,
     )
@@ -81,6 +92,8 @@ private fun TeamDetailsInnerDialogContent(
     iconChanging: Boolean,
     onIconEdit: () -> Unit,
     valid: Boolean,
+    isNewEntity: Boolean,
+    onDelete: () -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
@@ -95,10 +108,28 @@ private fun TeamDetailsInnerDialogContent(
         ),
         onDismissRequest = onDismiss,
         title = {
-            Text(
-                style = MaterialTheme.typography.titleSmall,
-                text = stringResource(id = R.string.teamDetailsTitle)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier.weight(1F),
+                    style = MaterialTheme.typography.titleSmall,
+                    text = stringResource(id = R.string.teamDetailsTitle)
+                )
+                if (!isNewEntity) {
+                    val context = LocalContext.current
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(id = R.string.delete),
+                        Modifier.combinedClickable(
+                            onClick = {
+                                Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show()
+                            },
+                            onLongClick = onDelete
+                        )
+                    )
+                }
+            }
         },
         dismissButton = {
             Button(
@@ -193,6 +224,8 @@ private fun `New Icon Selection`() =
         iconChanging = true,
         onIconEdit = {},
         valid = true,
+        isNewEntity = false,
+        onDelete = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -212,6 +245,8 @@ private fun `Gorilla`() =
         iconChanging = false,
         onIconEdit = {},
         valid = true,
+        isNewEntity = false,
+        onDelete = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -231,6 +266,8 @@ private fun `Tiger`() =
         iconChanging = false,
         onIconEdit = {},
         valid = true,
+        isNewEntity = true,
+        onDelete = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -249,7 +286,9 @@ private fun `Alien`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        valid = true,
+        valid = false,
+        isNewEntity = false,
+        onDelete = {},
         onDismiss = {},
         onConfirm = {},
     )
@@ -269,6 +308,8 @@ private fun `Loading icon`() =
         iconChanging = false,
         onIconEdit = {},
         valid = true,
+        isNewEntity = false,
+        onDelete = {},
         onDismiss = {},
         onConfirm = {},
     )

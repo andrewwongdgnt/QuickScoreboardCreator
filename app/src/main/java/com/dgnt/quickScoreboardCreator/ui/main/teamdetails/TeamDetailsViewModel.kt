@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
@@ -26,10 +27,11 @@ import kotlin.random.Random
 class TeamDetailsViewModel @Inject constructor(
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val getTeamUseCase: GetTeamUseCase,
+    private val deleteTeamUseCase: DeleteTeamUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var teamId: Int? = null
+    private var originalEntity: TeamEntity? = null
 
     private val _title = MutableStateFlow("")
     val title: StateFlow<String> = _title.asStateFlow()
@@ -42,6 +44,9 @@ class TeamDetailsViewModel @Inject constructor(
 
     private val _iconChanging = MutableStateFlow(false)
     val iconChanging: StateFlow<Boolean> = _iconChanging.asStateFlow()
+
+    private val _isNewEntity = MutableStateFlow(true)
+    val isNewEntity = _isNewEntity.asStateFlow()
 
     val valid: StateFlow<Boolean> = title.map {
         it.isNotBlank()
@@ -62,11 +67,11 @@ class TeamDetailsViewModel @Inject constructor(
 
     private fun initWithId(id: Int) {
         viewModelScope.launch {
-            getTeamUseCase(id)?.let {
+            originalEntity = getTeamUseCase(id)?.also {
                 _title.value = it.title
                 _description.value = it.description
                 _icon.value = it.icon
-                teamId = it.id
+                _isNewEntity.value = false
             }
         }
     }
@@ -77,7 +82,7 @@ class TeamDetailsViewModel @Inject constructor(
                 insertTeamListUseCase(
                     listOf(
                         TeamEntity(
-                            id = teamId,
+                            id = originalEntity?.id,
                             title = title.value,
                             description = description.value,
                             icon = icon.value!!
@@ -90,6 +95,14 @@ class TeamDetailsViewModel @Inject constructor(
     }
 
     fun onDismiss() = sendUiEvent(UiEvent.Done)
+
+    fun onDelete() = viewModelScope.launch {
+
+        originalEntity?.let {
+            deleteTeamUseCase(it)
+        }
+        sendUiEvent(UiEvent.Done)
+    }
 
     fun onTitleChange(title: String) {
         _title.value = title

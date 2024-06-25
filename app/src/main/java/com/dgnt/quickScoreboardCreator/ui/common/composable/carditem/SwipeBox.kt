@@ -75,7 +75,7 @@ private fun DismissBackground(dismissState: SwipeToDismissBoxState) {
     ) {
         Spacer(modifier = Modifier)
         Icon(
-            Icons.Default.Delete,
+            imageVector = Icons.Default.Delete,
             contentDescription = stringResource(id = R.string.delete)
         )
     }
