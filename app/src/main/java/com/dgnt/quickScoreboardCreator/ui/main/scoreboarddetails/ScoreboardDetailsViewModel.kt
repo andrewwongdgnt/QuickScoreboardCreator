@@ -10,6 +10,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
@@ -33,11 +34,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private val resources: Resources,
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val getScoreboardUseCase: GetScoreboardUseCase,
+    private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
     private val scoreboardLoader: ScoreboardLoader,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var scoreboardId: Int? = null
+    private var originalEntity: ScoreboardEntity? = null
 
     private val _title = MutableStateFlow("")
     val title = _title.asStateFlow()
@@ -50,6 +52,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     private val _iconChanging = MutableStateFlow(false)
     val iconChanging: StateFlow<Boolean> = _iconChanging.asStateFlow()
+
+    private val _isNewEntity = MutableStateFlow(true)
+    val isNewEntity = _isNewEntity.asStateFlow()
 
     private val _winRule = MutableStateFlow<WinRule>(WinRule.Count)
     val winRule = _winRule.asStateFlow()
@@ -72,11 +77,11 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     private fun initWithId(id: Int) {
         viewModelScope.launch {
-            getScoreboardUseCase(id)?.let {
+           originalEntity = getScoreboardUseCase(id)?.also {
                 _title.value = it.title
                 _description.value = it.description
                 _icon.value = it.icon
-                scoreboardId = it.id
+                _isNewEntity.value = false
             }
         }
     }
@@ -91,6 +96,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
             else -> scoreboardType.icon
         }
+        _isNewEntity.value = true
         scoreboardType.rawRes?.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
@@ -104,7 +110,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 insertScoreboardListUseCase(
                     listOf(
                         ScoreboardEntity(
-                            id = scoreboardId,
+                            id = originalEntity?.id,
                             title = title.value,
                             description = description.value,
                             icon = icon.value!!
@@ -117,6 +123,14 @@ class ScoreboardDetailsViewModel @Inject constructor(
     }
 
     fun onDismiss() = sendUiEvent(UiEvent.Done)
+
+    fun onDelete() = viewModelScope.launch {
+
+        originalEntity?.let {
+            deleteScoreboardUseCase(it)
+        }
+        sendUiEvent(UiEvent.Done)
+    }
 
     fun onTitleChange(title: String) {
         _title.value = title

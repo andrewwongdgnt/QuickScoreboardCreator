@@ -7,9 +7,7 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,11 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -36,12 +30,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.header
 import kotlinx.coroutines.flow.Flow
@@ -101,112 +95,83 @@ private fun TeamDetailsInnerDialogContent(
     LaunchedEffect(key1 = true) {
         uiEvent.collect(collector = onUiEvent)
     }
-    AlertDialog(
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            dismissOnClickOutside = false
-        ),
-        onDismissRequest = onDismiss,
-        title = {
-            Row(
+
+    val context = LocalContext.current
+    DefaultAlertDialog(
+        title = stringResource(id = R.string.teamDetailsTitle),
+        actionIcon = Icons.Default.Delete.takeUnless { isNewEntity },
+        actionContentDescription = stringResource(id = R.string.delete),
+        actionOnClick = {
+            Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show()
+        },
+        actionOnLongClick = onDelete,
+        confirmText = stringResource(id = android.R.string.ok),
+        confirmEnabled = valid,
+        onConfirm = onConfirm,
+        dismissText = stringResource(id = android.R.string.cancel),
+        onDismiss = onDismiss
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TextField(
+                value = title,
+                onValueChange = onTitleChange,
+                placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    modifier = Modifier.weight(1F),
-                    style = MaterialTheme.typography.titleSmall,
-                    text = stringResource(id = R.string.teamDetailsTitle)
-                )
-                if (!isNewEntity) {
-                    val context = LocalContext.current
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(id = R.string.delete),
-                        Modifier.combinedClickable(
-                            onClick = {
-                                Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show()
-                            },
-                            onLongClick = onDelete
-                        )
-                    )
-                }
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = onDismiss
-            ) {
-                Text(stringResource(id = android.R.string.cancel))
-            }
-        },
-        confirmButton = {
-            Button(
-                enabled = valid,
-                onClick = onConfirm
-            ) {
-                Text(stringResource(id = android.R.string.ok))
-            }
-        },
-        text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TextField(
-                    value = title,
-                    onValueChange = onTitleChange,
-                    placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    value = description,
-                    onValueChange = onDescriptionChange,
-                    placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = false,
-                    maxLines = 5
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                if (iconChanging) {
-                    val group = TeamIcon.entries.groupBy { it.group }
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(45.dp)
-                    ) {
-                        group.onEachIndexed { index, entry ->
-                            val iconGroup = entry.key
-                            val icons = entry.value
-                            header {
-                                Text(
-                                    stringResource(id = iconGroup.res),
-                                    modifier = if (index > 0) Modifier.padding(
-                                        start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
-                                    ) else Modifier
-                                )
-                            }
-                            items(icons.toTypedArray()) { icon ->
-                                Image(
-                                    painterResource(icon.res),
-                                    null,
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .clickable {
-                                            onIconChange(icon)
-                                        }
-                                )
-                            }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = description,
+                onValueChange = onDescriptionChange,
+                placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = false,
+                maxLines = 5
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            if (iconChanging) {
+                val group = TeamIcon.entries.groupBy { it.group }
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(45.dp)
+                ) {
+                    group.onEachIndexed { index, entry ->
+                        val iconGroup = entry.key
+                        val icons = entry.value
+                        header {
+                            Text(
+                                stringResource(id = iconGroup.res),
+                                modifier = if (index > 0) Modifier.padding(
+                                    start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
+                                ) else Modifier
+                            )
                         }
-
+                        items(icons.toTypedArray()) { icon ->
+                            Image(
+                                painterResource(icon.res),
+                                null,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clickable {
+                                        onIconChange(icon)
+                                    }
+                            )
+                        }
                     }
-                } else
-                    IconDisplay(
-                        iconRes = icon?.res,
-                        onClick = onIconEdit
-                    )
 
-            }
+                }
+            } else
+                IconDisplay(
+                    iconRes = icon?.res,
+                    onClick = onIconEdit
+                )
+
         }
-    )
+    }
+
+
 }
 
 @Preview(showBackground = true)
