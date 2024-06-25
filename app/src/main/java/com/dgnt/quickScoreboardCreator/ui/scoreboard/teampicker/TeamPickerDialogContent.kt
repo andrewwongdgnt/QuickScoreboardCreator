@@ -4,16 +4,11 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker
 
 
 import android.annotation.SuppressLint
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
@@ -21,6 +16,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CategorizedTeamListContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -56,32 +52,19 @@ private fun TeamPickerInnerDialogContent(
         uiEvent.collect(collector = onUiEvent)
     }
 
-    AlertDialog(
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            dismissOnClickOutside = false
-        ),
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                style = MaterialTheme.typography.titleSmall,
-                text = stringResource(id = R.string.teamPickerTitle)
-            )
-        },
-        confirmButton = {
-            Button(
-                onClick = onDismiss
-            ) {
-                Text(stringResource(id = android.R.string.cancel))
-            }
-        },
-        text = {
-            CategorizedTeamListContent(
-                onItemClick = onTeamPicked,
-                categorizedTeamList = categorizedTeamList
-            )
-        }
-    )
+    DefaultAlertDialog(
+        title = stringResource(id = R.string.teamPickerTitle),
+        confirmText = stringResource(id = android.R.string.cancel),
+        onConfirm = onDismiss,
+        onDismissRequest = onDismiss
+
+    ) {
+        CategorizedTeamListContent(
+            onItemClick = onTeamPicked,
+            categorizedTeamList = categorizedTeamList
+        )
+    }
+
 }
 
 @SuppressLint("UnrememberedMutableState")

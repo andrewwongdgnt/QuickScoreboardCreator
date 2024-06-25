@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -28,12 +26,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -86,131 +84,110 @@ private fun IntervalEditorInnerDialogContent(
         uiEvent.collect(collector = onUiEvent)
     }
 
-    AlertDialog(
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            dismissOnClickOutside = false
-        ),
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                style = MaterialTheme.typography.titleSmall,
-                text = stringResource(id = R.string.intervalEditorTitle)
-            )
-        },
-        dismissButton = {
-            Button(
-                onClick = onDismiss
-            ) {
-                Text(stringResource(id = android.R.string.cancel))
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                enabled = errors.isEmpty()
-            ) {
-                Text(stringResource(id = android.R.string.ok))
-            }
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val numberFieldWidth = 65.dp
-                (errors.find { it is IntervalEditorErrorType.TimeErrorType })?.let { error ->
-                    val errorMsg = when (error) {
-                        is IntervalEditorErrorType.TimeErrorType.Time -> stringResource(id = R.string.invalidTimeMsg, TimeData(error.min, error.second, 0).formatTime())
-                        is IntervalEditorErrorType.TimeErrorType.EmptyTime -> stringResource(R.string.emptyTimeMsg)
-                        is IntervalEditorErrorType.TimeErrorType.ZeroTime -> stringResource(R.string.zeroTimeMsg)
-                        else -> null
-                    }
-                    errorMsg?.let {
-                        Text(
-                            text = errorMsg,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
-                        )
-                    }
+    DefaultAlertDialog(
+        title = stringResource(id = R.string.intervalEditorTitle),
+        confirmText = stringResource(id = android.R.string.ok),
+        confirmEnabled = errors.isEmpty(),
+        onConfirm = onConfirm,
+        dismissText = stringResource(id = android.R.string.cancel),
+        onDismiss = onDismiss
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val numberFieldWidth = 65.dp
+            (errors.find { it is IntervalEditorErrorType.TimeErrorType })?.let { error ->
+                val errorMsg = when (error) {
+                    is IntervalEditorErrorType.TimeErrorType.Time -> stringResource(id = R.string.invalidTimeMsg, TimeData(error.min, error.second, 0).formatTime())
+                    is IntervalEditorErrorType.TimeErrorType.EmptyTime -> stringResource(R.string.emptyTimeMsg)
+                    is IntervalEditorErrorType.TimeErrorType.ZeroTime -> stringResource(R.string.zeroTimeMsg)
+                    else -> null
                 }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextField(
-                        value = minuteString,
-                        onValueChange = {
-                            if (it.length <= 3)
-                                onMinuteChange(it)
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier.width(numberFieldWidth)
-                    )
+                errorMsg?.let {
                     Text(
-                        text = ":",
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(horizontal = 10.dp)
+                        text = errorMsg,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
                     )
-                    TextField(
-                        value = secondString,
-                        onValueChange = {
-                            if (it.length <= 2)
-                                onSecondChange(it)
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier.width(numberFieldWidth)
-                    )
+                }
+            }
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextField(
+                    value = minuteString,
+                    onValueChange = {
+                        if (it.length <= 3)
+                            onMinuteChange(it)
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    textStyle = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    ),
+                    modifier = Modifier.width(numberFieldWidth)
+                )
+                Text(
+                    text = ":",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = 10.dp)
+                )
+                TextField(
+                    value = secondString,
+                    onValueChange = {
+                        if (it.length <= 2)
+                            onSecondChange(it)
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    textStyle = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    ),
+                    modifier = Modifier.width(numberFieldWidth)
+                )
+
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            (errors.find { it is IntervalEditorErrorType.IntervalErrorType })?.let { error ->
+                val errorMsg = when (error) {
+                    is IntervalEditorErrorType.IntervalErrorType.Interval -> stringResource(id = R.string.invalidIntervalMsg, error.value)
+                    is IntervalEditorErrorType.IntervalErrorType.EmptyInterval -> stringResource(R.string.emptyIntervalMsg)
+                    else -> null
                 }
-                Spacer(modifier = Modifier.height(24.dp))
-                (errors.find { it is IntervalEditorErrorType.IntervalErrorType })?.let { error ->
-                    val errorMsg = when (error) {
-                        is IntervalEditorErrorType.IntervalErrorType.Interval -> stringResource(id = R.string.invalidIntervalMsg, error.value)
-                        is IntervalEditorErrorType.IntervalErrorType.EmptyInterval -> stringResource(R.string.emptyIntervalMsg)
-                        else -> null
-                    }
-                    errorMsg?.let {
-                        Text(
-                            text = errorMsg,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
-                        )
-                    }
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                errorMsg?.let {
                     Text(
-                        text = labelInfo.format(),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    )
-                    TextField(
-                        value = intervalString,
-                        onValueChange = {
-                            if (it.length <= 2)
-                                onIntervalChange(it)
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier.width(numberFieldWidth)
+                        text = errorMsg,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 6.dp)
                     )
                 }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = labelInfo.format(),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(horizontal = 10.dp)
+                )
+                TextField(
+                    value = intervalString,
+                    onValueChange = {
+                        if (it.length <= 2)
+                            onIntervalChange(it)
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    textStyle = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    ),
+                    modifier = Modifier.width(numberFieldWidth)
+                )
             }
         }
-    )
+    }
 }
 
 @Composable

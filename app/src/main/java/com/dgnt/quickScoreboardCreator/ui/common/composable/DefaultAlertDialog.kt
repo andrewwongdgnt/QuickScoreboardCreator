@@ -27,7 +27,8 @@ fun DefaultAlertDialog(
     confirmEnabled: Boolean = true,
     onConfirm: () -> Unit = {},
     dismissText: String = "",
-    onDismiss: () -> Unit = {},
+    onDismiss: (() -> Unit)? = null,
+    onDismissRequest: () -> Unit = onDismiss ?: {},
     body: @Composable () -> Unit
 ) {
 
@@ -37,7 +38,7 @@ fun DefaultAlertDialog(
             usePlatformDefaultWidth = false,
             dismissOnClickOutside = false
         ),
-        onDismissRequest = onDismiss,
+        onDismissRequest = onDismissRequest,
         title = {
             Row(
                 modifier = Modifier.fillMaxWidth()
@@ -60,10 +61,12 @@ fun DefaultAlertDialog(
             }
         },
         dismissButton = {
-            Button(
-                onClick = onDismiss
-            ) {
-                Text(dismissText)
+            onDismiss?.let {
+                Button(
+                    onClick = onDismiss
+                ) {
+                    Text(dismissText)
+                }
             }
         },
         confirmButton = {
