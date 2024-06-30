@@ -9,6 +9,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultSco
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
@@ -48,6 +49,9 @@ class ScoreboardDetailsViewModelTest {
     private lateinit var getScoreboardUseCase: GetScoreboardUseCase
 
     @MockK
+    private lateinit var deleteScoreboardUseCase: DeleteScoreboardUseCase
+
+    @MockK
     private lateinit var savedStateHandle: SavedStateHandle
 
     private lateinit var sut: ScoreboardDetailsViewModel
@@ -57,6 +61,7 @@ class ScoreboardDetailsViewModelTest {
             resources,
             insertScoreboardListUseCase,
             getScoreboardUseCase,
+            deleteScoreboardUseCase,
             scoreboardLoader,
             savedStateHandle,
         )
@@ -94,7 +99,7 @@ class ScoreboardDetailsViewModelTest {
         every { resources.getString(ScoreboardType.BASKETBALL.titleRes) } returns "Basketball"
         every { resources.getString(ScoreboardType.BASKETBALL.descriptionRes) } returns "Basketball Desc"
         every { scoreboardLoader.invoke(inputStream) } returns scoreboardConfig
-        every { scoreboardConfig.winRuleType} returns WinRuleType.COUNT
+        every { scoreboardConfig.winRuleType } returns WinRuleType.COUNT
         initSut()
 
         Assert.assertEquals("Basketball", sut.title.value)
@@ -201,6 +206,27 @@ class ScoreboardDetailsViewModelTest {
                         icon = ScoreboardIcon.BOXING
                     )
                 )
+            )
+        }
+    }
+
+    @Test
+    fun testDeletingAScoreboard() = runTest {
+        every { savedStateHandle.get<Int>(Arguments.ID) } returns 2
+        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
+        initSut()
+
+        sut.onDelete()
+        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        coVerify(exactly = 1) {
+            deleteScoreboardUseCase.invoke(
+                ScoreboardEntity(
+                    id = 2,
+                    title = "scoreboard name 2",
+                    description = "scoreboard desc 2",
+                    icon = ScoreboardIcon.TENNIS
+                )
+
             )
         }
     }

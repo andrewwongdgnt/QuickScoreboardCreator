@@ -3,6 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.main.teamdetails
 import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
@@ -34,6 +35,9 @@ class TeamDetailsViewModelTest {
     private lateinit var getTeamUseCase: GetTeamUseCase
 
     @MockK
+    private lateinit var deleteTeamUseCase: DeleteTeamUseCase
+
+    @MockK
     private lateinit var savedStateHandle: SavedStateHandle
 
     private lateinit var sut: TeamDetailsViewModel
@@ -42,6 +46,7 @@ class TeamDetailsViewModelTest {
         sut = TeamDetailsViewModel(
             insertTeamListUseCase,
             getTeamUseCase,
+            deleteTeamUseCase,
             savedStateHandle,
         )
     }
@@ -156,6 +161,27 @@ class TeamDetailsViewModelTest {
                         icon = TeamIcon.DRAGON
                     )
                 )
+            )
+        }
+    }
+
+    @Test
+    fun testDeletingATeam() = runTest {
+        every { savedStateHandle.get<Int>(Arguments.ID) } returns 2
+        coEvery { getTeamUseCase(2) } coAnswers { TeamEntity(2, "team name 2", "team desc 2", TeamIcon.TREE) }
+        initSut()
+
+        sut.onDelete()
+        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        coVerify(exactly = 1) {
+            deleteTeamUseCase.invoke(
+                TeamEntity(
+                    id = 2,
+                    title = "team name 2",
+                    description = "team desc 2",
+                    icon = TeamIcon.TREE
+                )
+
             )
         }
     }
