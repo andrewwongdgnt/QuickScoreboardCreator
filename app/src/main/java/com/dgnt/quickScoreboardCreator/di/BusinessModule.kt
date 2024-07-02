@@ -1,6 +1,8 @@
 package com.dgnt.quickScoreboardCreator.di
 
 import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
+import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
+import com.dgnt.quickScoreboardCreator.domain.history.business.logic.QSCHistoryCreator
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.QSCScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.QSCScoreboardCategorizer
@@ -51,4 +53,8 @@ object BusinessModule {
     @Singleton
     fun provideScoreboardCategorizer(): ScoreboardCategorizer =
         QSCScoreboardCategorizer()
+
+    @Provides
+    fun provideHistoryCreator(): HistoryCreator =
+        QSCHistoryCreator()
 }
