@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
 
 import android.media.MediaPlayer
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,12 +11,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +29,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberTimeline
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.mode.ModeControlContent
@@ -197,12 +201,24 @@ private fun ScoreboardInteractionInnerContent(
             )
 
         }
-        ModeControlContent(
+        Row(
             modifier = Modifier
-                .align(Alignment.TopEnd),
-            simpleMode = simpleMode,
-            onToggleModeChange = onToggleModeChange,
-        )
+                .align(Alignment.TopEnd)
+        ) {
+            Icon(
+                imageVector = rememberTimeline(),
+                contentDescription = stringResource(id = R.string.timeline),
+                modifier = Modifier
+                    .clickable {
+                        //TODO handle timeline chart
+                    }
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            ModeControlContent(
+                simpleMode = simpleMode,
+                onToggleModeChange = onToggleModeChange,
+            )
+        }
 
         Row(
             modifier = Modifier

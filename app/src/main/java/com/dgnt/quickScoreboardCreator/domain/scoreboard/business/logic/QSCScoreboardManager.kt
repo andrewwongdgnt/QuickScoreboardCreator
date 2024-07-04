@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
+import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
@@ -13,7 +14,8 @@ import kotlin.math.abs
 
 
 class QSCScoreboardManager @Inject constructor(
-    private val winCalculator: WinCalculator
+    private val winCalculator: WinCalculator,
+    private val historyCreator: HistoryCreator
 ) : ScoreboardManager {
 
 
@@ -70,9 +72,8 @@ class QSCScoreboardManager @Inject constructor(
 
         val scoreData = if (isPrimary)
             scoreGroup.primary
-        else {
+        else
             scoreGroup.secondary ?: return
-        }
 
         val newScore = scoreData.run {
             val incrementer = abs(increments[incrementIndex]).let {
@@ -89,6 +90,15 @@ class QSCScoreboardManager @Inject constructor(
                 newScore
             current
         }
+
+        historyCreator.addEntry(
+            intervalIndex = currentIntervalIndex,
+            currentTime = currentIntervalData.current,
+            isPrimary = isPrimary,
+            scoreIndex = scoreIndex,
+            currentScore = newScore,
+            currentDisplayedScore = transformPrimaryScores(scoreInfo)[scoreIndex]
+        )
 
         if (isPrimary) {
             if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule && newScore > scoreInfo.scoreRule.trigger) {
