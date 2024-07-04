@@ -21,29 +21,26 @@ class QSCHistoryCreator : HistoryCreator {
         )
     }
 
-    override fun create() = allEntries
-        .groupBy { it.intervalIndex }
-        .mapValues { entry ->
-            entry.value.groupBy { it.scoreIndex }
-                .values
-                .map { historyEntries ->
+    override fun create() =
+        allEntries
+            .groupBy { it.intervalIndex }
+            .mapValues { entry ->
+                entry.value.groupBy { it.scoreIndex }
+                    .mapValues { historyEntries ->
 
-                    val mapHistoryEntry: (HistoryEntry) -> HistoricalScore = {
-                        HistoricalScore(it.currentScore, it.currentDisplayedScore, it.currentTime)
+                        val mapHistoryEntry: (HistoryEntry) -> HistoricalScore = {
+                            HistoricalScore(it.currentScore, it.currentDisplayedScore, it.currentTime)
+                        }
+                        HistoricalScoreGroup(
+                            historyEntries.value.filter { it.isPrimary }.map(mapHistoryEntry),
+                            historyEntries.value.filterNot { it.isPrimary }.sortedBy { it.currentTime }.map(mapHistoryEntry)
+                        )
+                    }.let {
+                        HistoricalInterval(it)
                     }
-                    HistoricalScoreGroup(
-                        historyEntries.filter { it.isPrimary }.map(mapHistoryEntry),
-                        historyEntries.filterNot { it.isPrimary }.map(mapHistoryEntry)
-                    )
-                }
-        }
-        .values
-        .map {
-            HistoricalInterval(it)
-        }
-        .let {
-            HistoricalScoreboard(it)
-        }
+            }.let {
+                HistoricalScoreboard(it)
+            }
 
 
     private data class HistoryEntry(
