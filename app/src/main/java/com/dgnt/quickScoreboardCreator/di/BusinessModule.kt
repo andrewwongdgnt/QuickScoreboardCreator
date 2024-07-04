@@ -36,8 +36,8 @@ object BusinessModule {
         QSCWinCalculator()
 
     @Provides
-    fun provideScoreboardManager(winCalculator: WinCalculator): ScoreboardManager =
-        QSCScoreboardManager(winCalculator)
+    fun provideScoreboardManager(winCalculator: WinCalculator, historyCreator: HistoryCreator): ScoreboardManager =
+        QSCScoreboardManager(winCalculator, historyCreator)
 
     @Provides
     @Singleton
