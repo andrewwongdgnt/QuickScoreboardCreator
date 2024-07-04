@@ -4,7 +4,6 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
@@ -41,7 +40,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
-    private val historyCreator: HistoryCreator,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -272,8 +270,9 @@ class ScoreboardInteractionViewModel @Inject constructor(
         }
     }
 
-    fun onHistoryCreate() {
-        historyCreator.create()
+    fun toTimelineViewer() {
+        val historicalScoreboard = scoreboardManager.createTimeline()
+
     }
 
     override fun onCleared() {

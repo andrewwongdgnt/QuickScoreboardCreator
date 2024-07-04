@@ -97,6 +97,7 @@ private fun ScoreboardInteractionVMDataContent(
         intervalLabelInfo = intervalLabelInfo,
         currentInterval = currentInterval,
         toIntervalEditor = viewModel::toIntervalEditor,
+        toTimelineViewer = viewModel::toTimelineViewer
     )
 }
 
@@ -121,6 +122,7 @@ private fun ScoreboardInteractionInnerContent(
     intervalLabelInfo: Pair<String?, Int?>,
     currentInterval: Int,
     toIntervalEditor: () -> Unit,
+    toTimelineViewer: () -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
@@ -209,9 +211,7 @@ private fun ScoreboardInteractionInnerContent(
                 imageVector = rememberTimeline(),
                 contentDescription = stringResource(id = R.string.timeline),
                 modifier = Modifier
-                    .clickable {
-                        //TODO handle timeline chart
-                    }
+                    .clickable(onClick = toTimelineViewer)
             )
             Spacer(modifier = Modifier.width(5.dp))
             ModeControlContent(
@@ -292,7 +292,8 @@ private fun `2 Teams with long names`() =
         onToggleModeChange = { _ -> },
         intervalLabelInfo = Pair("P", null),
         currentInterval = 1,
-        toIntervalEditor = {}
+        toIntervalEditor = {},
+        toTimelineViewer = {},
     )
 
 @PreviewScreenSizes
@@ -338,7 +339,8 @@ private fun `2 Teams with short names`() =
         onToggleModeChange = { _ -> },
         intervalLabelInfo = Pair(null, R.string.quarter),
         currentInterval = 1,
-        toIntervalEditor = {}
+        toIntervalEditor = {},
+        toTimelineViewer = {},
     )
 
 @PreviewScreenSizes
@@ -378,7 +380,8 @@ private fun `Adv`() =
         onToggleModeChange = { _ -> },
         intervalLabelInfo = Pair(null, R.string.set),
         currentInterval = 2,
-        toIntervalEditor = {}
+        toIntervalEditor = {},
+        toTimelineViewer = {},
     )
 
 @PreviewScreenSizes
@@ -418,5 +421,6 @@ private fun `Deuce`() =
         onToggleModeChange = { _ -> },
         intervalLabelInfo = Pair(null, R.string.game),
         currentInterval = 3,
-        toIntervalEditor = {}
+        toIntervalEditor = {},
+        toTimelineViewer = {},
     )

@@ -97,7 +97,7 @@ class QSCScoreboardManager @Inject constructor(
             isPrimary = isPrimary,
             scoreIndex = scoreIndex,
             currentScore = newScore,
-            currentDisplayedScore = transformPrimaryScores(scoreInfo)[scoreIndex]
+            currentDisplayedScore = if (isPrimary) transformPrimaryScores(scoreInfo)[scoreIndex] else transformSecondaryScores(scoreInfo)[scoreIndex]
         )
 
         if (isPrimary) {
@@ -196,6 +196,9 @@ class QSCScoreboardManager @Inject constructor(
 
         triggerUpdateListeners()
     }
+
+    override fun createTimeline() =
+        historyCreator.create()
 
     private fun transformPrimaryScores(scoreInfo: ScoreInfo) =
         scoreInfo.dataList.map { it.primary.current }.map {

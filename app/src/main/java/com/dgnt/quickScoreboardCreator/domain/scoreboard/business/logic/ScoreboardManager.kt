@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
@@ -30,4 +31,5 @@ interface ScoreboardManager {
     fun resetTime()
     fun canTimeAdvance(): Boolean
     fun updateInterval(index: Int)
+    fun createTimeline(): HistoricalScoreboard
 }
