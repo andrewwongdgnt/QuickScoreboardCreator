@@ -4,9 +4,12 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
+import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
@@ -30,6 +33,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +41,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val resources: Resources,
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val getTeamUseCase: GetTeamUseCase,
+    private val insertHistoryUseCase: InsertHistoryListUseCase,
     private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
@@ -160,6 +165,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
             this.scoreboardType = it
         }
 
+        insertEmptyHistory()
+
         scoreboardManager.primaryScoresUpdateListener = primaryScoresUpdateListener
         scoreboardManager.secondaryScoresUpdateListener = secondaryScoresUpdateListener
         scoreboardManager.timeUpdateListener = timeUpdateListener
@@ -171,8 +178,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
         scoreboardManager.intervalOnEndListener = intervalOnEndListener
 
         scoreboardManager.triggerUpdateListeners()
-
-
     }
 
     private fun initWithId(id: Int) {
@@ -199,6 +204,21 @@ class ScoreboardInteractionViewModel @Inject constructor(
             }
         }
 
+    }
+
+    private fun insertEmptyHistory() = viewModelScope.launch {
+
+        insertHistoryUseCase(
+            listOf(
+                HistoryEntity(
+                    title = "Test",
+                    description = "TestDesc",
+                    icon = ScoreboardIcon.SOCCER,
+                    createdAt = DateTime.now(),
+                    historicalScoreboard = scoreboardManager.createTimeline()
+                )
+            )
+        )
     }
 
     fun onScoreChange(

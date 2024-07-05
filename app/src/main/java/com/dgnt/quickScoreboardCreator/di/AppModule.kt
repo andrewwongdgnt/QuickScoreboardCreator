@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.res.Resources
 import androidx.room.Room
 import com.dgnt.quickScoreboardCreator.data.db.QSCDatabase
+import com.dgnt.quickScoreboardCreator.data.history.repository.QSCHistoryRepository
 import com.dgnt.quickScoreboardCreator.data.scoreboard.repository.QSCScoreboardRepository
 import com.dgnt.quickScoreboardCreator.data.team.repository.QSCTeamRepository
+import com.dgnt.quickScoreboardCreator.domain.history.repository.HistoryRepository
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.repository.ScoreboardRepository
 import com.dgnt.quickScoreboardCreator.domain.team.repository.TeamRepository
 import dagger.Module
@@ -41,5 +43,10 @@ object AppModule {
     @Singleton
     fun provideTeamRepository(db: QSCDatabase): TeamRepository =
         QSCTeamRepository(db.teamDao)
+
+    @Provides
+    @Singleton
+    fun provideHistoryRepository(db: QSCDatabase): HistoryRepository =
+        QSCHistoryRepository(db.historyDao)
 
 }

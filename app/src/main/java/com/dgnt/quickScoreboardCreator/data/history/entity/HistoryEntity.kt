@@ -13,5 +13,5 @@ data class HistoryEntity(
     val description: String,
     val icon: ScoreboardIcon,
     val createdAt: DateTime,
-    val historicalScores: HistoricalScoreboard
+    val historicalScoreboard: HistoricalScoreboard
 )
