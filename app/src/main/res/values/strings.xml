@@ -69,6 +69,8 @@
     <string name="zeroTimeMsg">Cannot be 0 time</string>
     <string name="invalidIntervalMsg">Must be between 1 and %1$d</string>
     <string name="emptyIntervalMsg">Must enter a value</string>
+    <!-- Timeline Viewer -->
+    <string name="timelineViewerTitle">Timeline</string>
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->
@@ -87,4 +89,5 @@
     <string name="pickIconMsg">Pick an icon</string>
     <string name="simpleMode">Simple</string>
     <string name="advanceMode">Advance</string>
+    <string name="save">Save</string>
 </resources>

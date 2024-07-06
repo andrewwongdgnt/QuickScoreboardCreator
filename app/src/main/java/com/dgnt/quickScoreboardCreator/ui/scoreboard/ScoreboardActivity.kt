@@ -1,6 +1,8 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard
 
+import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +27,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.dgnt.quickScoreboardCreator.common.util.getEnumExtra
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
@@ -33,8 +36,11 @@ import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.reflect.typeOf
 
 @AndroidEntryPoint
@@ -68,6 +74,7 @@ class ScoreboardActivity : ComponentActivity() {
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
                                             is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.id, uiEvent.type))
+                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.historicalScoreboard, uiEvent.index, uiEvent.id, uiEvent.type))
                                             else -> Unit
                                         }
 
@@ -83,11 +90,11 @@ class ScoreboardActivity : ComponentActivity() {
                                 TeamPickerDialogContent(
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            UiEvent.Done -> navController.popBackStack()
+                                            UiEvent.Done -> navController.navigateUp()
 
                                             is UiEvent.TeamUpdated -> {
                                                 viewModel.onTeamDataUpdate(UpdatedTeamData(uiEvent.index, uiEvent.id))
-                                                navController.popBackStack()
+                                                navController.navigateUp()
                                             }
 
                                             else -> Unit
@@ -103,13 +110,29 @@ class ScoreboardActivity : ComponentActivity() {
                                 IntervalEditorDialogContent(
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            UiEvent.Done -> navController.popBackStack()
+                                            UiEvent.Done -> navController.navigateUp()
 
                                             is UiEvent.IntervalUpdated -> {
                                                 viewModel.onIntervalDataUpdate(UpdatedIntervalData(uiEvent.timeValue, uiEvent.index))
-                                                navController.popBackStack()
+                                                navController.navigateUp()
                                             }
 
+                                            else -> Unit
+                                        }
+                                    },
+                                )
+
+                            }
+                            dialog<NavDestination.TimelineViewer>(
+                                typeMap = mapOf(
+                                    typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java),
+                                    typeOf<HistoricalScoreboard>() to parcelableType<HistoricalScoreboard>()
+                                )
+                            ) {
+                                TimelineViewerDialogContent(
+                                    onUiEvent = { uiEvent ->
+                                        when (uiEvent) {
+                                            UiEvent.Done -> navController.navigateUp()
                                             else -> Unit
                                         }
                                     },
@@ -151,4 +174,23 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
         navController.getBackStackEntry(navGraphRoute)
     }
     return viewModel(parentEntry)
+}
+
+inline fun <reified T : Parcelable> parcelableType(
+    isNullableAllowed: Boolean = false,
+    json: Json = Json,
+) = object : NavType<T>(isNullableAllowed = isNullableAllowed) {
+    override fun get(bundle: Bundle, key: String) =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            bundle.getParcelable(key, T::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            bundle.getParcelable(key)
+        }
+
+    override fun parseValue(value: String): T = json.decodeFromString(value)
+
+    override fun serializeAsValue(value: T): String = json.encodeToString(value)
+
+    override fun put(bundle: Bundle, key: String, value: T) = bundle.putParcelable(key, value)
 }

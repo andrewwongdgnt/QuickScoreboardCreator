@@ -3,6 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.common
 import androidx.annotation.PluralsRes
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 
 sealed class UiEvent {
@@ -14,6 +15,7 @@ sealed class UiEvent {
     data class TeamUpdated(val index: Int, val id: Int) : UiEvent()
     data class IntervalEditor(val currentTimeValue: Long, val index: Int, val id: Int = -1, val type: ScoreboardType = ScoreboardType.NONE) : UiEvent()
     data class IntervalUpdated(val timeValue: Long, val index: Int) : UiEvent()
+    data class TimelineViewer(val historicalScoreboard: HistoricalScoreboard, val index: Int, val id: Int = -1, val type: ScoreboardType = ScoreboardType.NONE) : UiEvent()
     sealed class ShowSnackbar(
         open val message: Int,
         open val action: Int? = null

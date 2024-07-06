@@ -21,6 +21,7 @@ room = "2.6.1"
 runtimeLivedata = "1.6.7"
 composeNavigation = "2.8.0-beta01"
 serialization = "1.6.3"
+kotlinPlugin = "1.8.10"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -65,3 +66,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
 androidx-room = { id = "androidx.room", version.ref = "room"}
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlinPlugin"  }

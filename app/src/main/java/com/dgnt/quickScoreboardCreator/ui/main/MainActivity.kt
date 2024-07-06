@@ -124,7 +124,7 @@ class MainActivity : ComponentActivity() {
                 ScoreboardDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            UiEvent.Done -> navController.popBackStack()
+                            UiEvent.Done -> navController.navigateUp()
                             else -> Unit
                         }
                     }
@@ -145,7 +145,7 @@ class MainActivity : ComponentActivity() {
                 TeamDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            UiEvent.Done -> navController.popBackStack()
+                            UiEvent.Done -> navController.navigateUp()
                             else -> Unit
                         }
                     }
