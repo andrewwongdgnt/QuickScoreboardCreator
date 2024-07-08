@@ -79,7 +79,7 @@ private fun TeamListInnerContent(
         }
         uiEvent.collect { event ->
             when (event) {
-                is UiEvent.ShowSnackbar.ShowQuantitySnackbar -> {
+                is UiEvent.SnackBar.QuantitySnackBar -> {
                     dismissSnackbar(false)
                     scope.launch {
                         val result = snackbarHostState.showSnackbar(

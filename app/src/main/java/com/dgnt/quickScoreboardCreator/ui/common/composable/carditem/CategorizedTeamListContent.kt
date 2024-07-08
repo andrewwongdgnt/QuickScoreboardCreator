@@ -52,11 +52,12 @@ fun CategorizedTeamListContent(
                         CardItemContent(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            id = team.id,
                             title = team.title,
                             description = team.description,
                             iconRes = team.icon.res,
-                            onClick = onItemClick
+                            onClick = {
+                                onItemClick(team.id)
+                            }
                         )
                     }
 

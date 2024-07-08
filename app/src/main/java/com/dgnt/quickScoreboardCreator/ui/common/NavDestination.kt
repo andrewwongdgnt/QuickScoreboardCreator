@@ -1,13 +1,12 @@
 package com.dgnt.quickScoreboardCreator.ui.common
 
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 object Arguments {
+    const val SCOREBOARD_IDENTIFIER = "scoreboardIdentifier"
     const val ID = "id"
-    const val TYPE = "type"
     const val INDEX = "index"
     const val VALUE = "value"
     const val HISTORICAL_SCOREBOARD = "historicalScoreboard"
@@ -26,10 +25,8 @@ sealed class NavDestination {
 
     @Serializable
     data class ScoreboardDetails(
-        @SerialName(Arguments.ID)
-        val id: Int,
-        @SerialName(Arguments.TYPE)
-        val type: ScoreboardType
+        @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
+        val scoreboardIdentifier: ScoreboardIdentifier?
     ) : NavDestination()
 
     @Serializable
@@ -40,10 +37,8 @@ sealed class NavDestination {
 
     @Serializable
     data class ScoreboardInteraction(
-        @SerialName(Arguments.ID)
-        val id: Int,
-        @SerialName(Arguments.TYPE)
-        val type: ScoreboardType
+        @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
+        val scoreboardIdentifier: ScoreboardIdentifier
     ) : NavDestination()
 
     @Serializable
@@ -58,10 +53,8 @@ sealed class NavDestination {
         val value: Long,
         @SerialName(Arguments.INDEX)
         val index: Int,
-        @SerialName(Arguments.ID)
-        val id: Int,
-        @SerialName(Arguments.TYPE)
-        val type: ScoreboardType
+        @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
+        val scoreboardIdentifier: ScoreboardIdentifier
     ) : NavDestination()
 
     @Serializable
@@ -70,10 +63,6 @@ sealed class NavDestination {
         val historicalScoreboard: HistoricalScoreboard,
         @SerialName(Arguments.INDEX)
         val index: Int,
-        @SerialName(Arguments.ID)
-        val id: Int,
-        @SerialName(Arguments.TYPE)
-        val type: ScoreboardType
     ) : NavDestination()
 
     @Serializable

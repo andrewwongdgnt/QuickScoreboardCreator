@@ -122,7 +122,7 @@ class TeamListViewModelTest {
     fun testOnDeleteAndUndo() = runTest {
         sut.onDelete(1)
         Assert.assertEquals(
-            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+            UiEvent.SnackBar.QuantitySnackBar(
                 message = R.plurals.deletedTeamMsg,
                 quantity = 1,
                 action = R.string.undo
@@ -130,7 +130,7 @@ class TeamListViewModelTest {
         )
         sut.onDelete(2)
         Assert.assertEquals(
-            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+            UiEvent.SnackBar.QuantitySnackBar(
                 message = R.plurals.deletedTeamMsg,
                 quantity = 2,
                 action = R.string.undo
@@ -146,7 +146,7 @@ class TeamListViewModelTest {
     fun testNoUndo() = runTest {
         sut.onDelete(1)
         Assert.assertEquals(
-            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+            UiEvent.SnackBar.QuantitySnackBar(
                 message = R.plurals.deletedTeamMsg,
                 quantity = 1,
                 action = R.string.undo
@@ -154,7 +154,7 @@ class TeamListViewModelTest {
         )
         sut.onDelete(2)
         Assert.assertEquals(
-            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+            UiEvent.SnackBar.QuantitySnackBar(
                 message = R.plurals.deletedTeamMsg,
                 quantity = 2,
                 action = R.string.undo

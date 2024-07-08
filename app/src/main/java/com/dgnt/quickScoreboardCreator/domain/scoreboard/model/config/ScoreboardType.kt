@@ -6,14 +6,13 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 
 enum class ScoreboardType(
-    @RawRes val rawRes: Int? = null,
-    @StringRes val titleRes: Int = R.string.blank,
-    @StringRes val descriptionRes: Int = R.string.blank,
-    val icon: ScoreboardIcon = ScoreboardIcon.BASKETBALL,
-    @StringRes val intervalLabelRes: Int = R.string.blank,
+    @RawRes val rawRes: Int,
+    @StringRes val titleRes: Int,
+    @StringRes val descriptionRes: Int ,
+    val icon: ScoreboardIcon,
+    @StringRes val intervalLabelRes: Int ,
     @StringRes val secondaryScoreLabelRes: Int = R.string.blank,
 ) {
-    NONE,
     BASKETBALL(R.raw.basketball, R.string.basketball, R.string.basketball_description, ScoreboardIcon.BASKETBALL, R.string.quarter, R.string.fouls),
     HOCKEY(R.raw.hockey, R.string.hockey, R.string.hockey_description, ScoreboardIcon.HOCKEY, R.string.period, R.string.penalties),
     SPIKEBALL(R.raw.spikeball, R.string.spikeball, R.string.spikeball_description, ScoreboardIcon.BASKETBALL, R.string.game),

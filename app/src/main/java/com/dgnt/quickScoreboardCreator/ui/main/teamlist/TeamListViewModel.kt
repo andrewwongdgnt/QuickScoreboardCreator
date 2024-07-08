@@ -46,7 +46,7 @@ class TeamListViewModel @Inject constructor(
             deleteTeamUseCase(it)
         }
         sendUiEvent(
-            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+            UiEvent.SnackBar.QuantitySnackBar(
                 message = R.plurals.deletedTeamMsg,
                 quantity = deletedTeamList.size,
                 action = R.string.undo

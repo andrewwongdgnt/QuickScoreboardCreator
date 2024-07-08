@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.content.IntentCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModel
@@ -26,11 +27,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.dgnt.quickScoreboardCreator.common.util.getEnumExtra
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
@@ -47,8 +48,7 @@ import kotlin.reflect.typeOf
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val id = intent.extras?.getInt(ID, -1) ?: -1
-        val scoreboardType = intent.getEnumExtra<ScoreboardType>() ?: ScoreboardType.NONE
+        val scoreboardIdentifier = IntentCompat.getParcelableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java) ?: ScoreboardIdentifier.CustomScoreboard(-1)
         setContent {
             QuickScoreboardCreatorTheme {
                 // A surface container using the 'background' color from the theme
@@ -59,7 +59,7 @@ class ScoreboardActivity : ComponentActivity() {
                         startDestination = NavDestination.Start,
                     ) {
                         navigation<NavDestination.Start>(
-                            startDestination = NavDestination.ScoreboardInteraction(id, scoreboardType)
+                            startDestination = NavDestination.ScoreboardInteraction(scoreboardIdentifier)
                         ) {
                             composable<NavDestination.ScoreboardInteraction>(
                                 typeMap = mapOf(typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java))
@@ -73,8 +73,8 @@ class ScoreboardActivity : ComponentActivity() {
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
-                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.id, uiEvent.type))
-                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.historicalScoreboard, uiEvent.index, uiEvent.id, uiEvent.type))
+                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.scoreboardIdentifier))
+                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.historicalScoreboard, uiEvent.index))
                                             else -> Unit
                                         }
 

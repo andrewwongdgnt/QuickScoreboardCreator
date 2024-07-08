@@ -13,6 +13,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboar
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -72,13 +73,11 @@ class ScoreboardDetailsViewModelTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
         coEvery { insertScoreboardListUseCase.invoke(any()) } answers { listOf(1) }
-        every { resources.getString(ScoreboardType.NONE.titleRes) } returns ""
-        every { resources.getString(ScoreboardType.NONE.descriptionRes) } returns ""
     }
 
     @Test
     fun testInitializingACustomScoreboard() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns 1
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.CustomScoreboard(1)
         coEvery { getScoreboardUseCase(1) } coAnswers { ScoreboardEntity(1, "scoreboard name", "scoreboard desc", ScoreboardIcon.TENNIS) }
         initSut()
 
@@ -93,9 +92,8 @@ class ScoreboardDetailsViewModelTest {
         val inputStream = mockk<InputStream>()
         val scoreboardConfig = mockk<DefaultScoreboardConfig>()
 
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
-        every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.BASKETBALL
-        every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes!!) } returns inputStream
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL)
+        every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream
         every { resources.getString(ScoreboardType.BASKETBALL.titleRes) } returns "Basketball"
         every { resources.getString(ScoreboardType.BASKETBALL.descriptionRes) } returns "Basketball Desc"
         every { scoreboardLoader.invoke(inputStream) } returns scoreboardConfig
@@ -111,8 +109,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testInitializingNoScoreboard() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
-        every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         Assert.assertTrue(sut.title.value.isEmpty())
@@ -124,8 +121,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testValidation() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
-        every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         Assert.assertFalse(sut.valid.value)
@@ -137,8 +133,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testScoreboardIconChange() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
-        every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onIconEdit()
@@ -150,8 +145,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testOnDismiss() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
-        every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onDismiss()
@@ -162,8 +156,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testInsertingNewScoreboard() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
-        every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.NONE
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onTitleChange("new scoreboard")
@@ -187,7 +180,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testEditingAScoreboard() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns 2
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.CustomScoreboard(2)
         coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
         initSut()
 
@@ -212,7 +205,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testDeletingAScoreboard() = runTest {
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns 2
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.CustomScoreboard(2)
         coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
         initSut()
 

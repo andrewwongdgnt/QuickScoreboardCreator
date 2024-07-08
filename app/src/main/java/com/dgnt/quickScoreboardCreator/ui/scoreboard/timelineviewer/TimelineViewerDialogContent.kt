@@ -37,13 +37,11 @@ fun TimelineViewerDialogContent(
     viewModel: TimelineViewerViewModel = hiltViewModel()
 ) {
 
-    val labelInfo by viewModel.labelInfo.collectAsStateWithLifecycle()
     val historicalScoreboard by viewModel.historicalScoreboard.collectAsStateWithLifecycle()
 
     TimelineViewerInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
-        labelInfo,
         historicalScoreboard,
         viewModel::onDismiss,
         viewModel::onSave
@@ -55,7 +53,6 @@ fun TimelineViewerDialogContent(
 private fun TimelineViewerInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    labelInfo: Pair<String?, Int?>,
     historicalScoreboard: HistoricalScoreboard?,
     onDismiss: () -> Unit,
     onSave: () -> Unit,
@@ -109,7 +106,6 @@ private fun `Regular Timeline`() =
     TimelineViewerInnerDialogContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        labelInfo = Pair(null, R.string.quarter),
         historicalScoreboard = HistoricalScoreboard(
             mapOf(
                 0 to HistoricalInterval(

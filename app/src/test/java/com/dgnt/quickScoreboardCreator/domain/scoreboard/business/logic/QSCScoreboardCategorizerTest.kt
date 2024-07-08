@@ -4,6 +4,7 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert
@@ -42,11 +43,11 @@ class QSCScoreboardCategorizerTest {
 
             val customs = it.second
             Assert.assertEquals(5, customs.scoreboardItemDataList.size)
-            Assert.assertEquals(3, customs.scoreboardItemDataList[0].id)
-            Assert.assertEquals(5, customs.scoreboardItemDataList[1].id)
-            Assert.assertEquals(1, customs.scoreboardItemDataList[2].id)
-            Assert.assertEquals(4, customs.scoreboardItemDataList[3].id)
-            Assert.assertEquals(2, customs.scoreboardItemDataList[4].id)
+            Assert.assertEquals(3, (customs.scoreboardItemDataList[0].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
+            Assert.assertEquals(5, (customs.scoreboardItemDataList[1].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
+            Assert.assertEquals(1, (customs.scoreboardItemDataList[2].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
+            Assert.assertEquals(4, (customs.scoreboardItemDataList[3].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
+            Assert.assertEquals(2, (customs.scoreboardItemDataList[4].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
         }
 
 

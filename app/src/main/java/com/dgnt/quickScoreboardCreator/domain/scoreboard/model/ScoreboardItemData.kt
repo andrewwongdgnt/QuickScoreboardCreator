@@ -1,10 +1,9 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.model
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 
 data class ScoreboardItemData(
-    val id: Int,
-    val type: ScoreboardType,
+    val scoreboardIdentifier: ScoreboardIdentifier,
     val title: String,
     val description: String,
     val icon: ScoreboardIcon

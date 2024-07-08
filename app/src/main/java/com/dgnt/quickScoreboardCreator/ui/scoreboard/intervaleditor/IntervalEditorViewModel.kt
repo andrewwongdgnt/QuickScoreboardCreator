@@ -12,6 +12,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -70,10 +71,11 @@ class IntervalEditorViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        savedStateHandle.get<Int>(Arguments.ID)?.takeUnless { it < 0 }?.let { id ->
-            initWithId(id)
-        } ?: savedStateHandle.get<ScoreboardType>(Arguments.TYPE)?.let {
-            initWithScoreboardType(it)
+        savedStateHandle.get<ScoreboardIdentifier>(Arguments.SCOREBOARD_IDENTIFIER)?.let { sId ->
+            when (sId) {
+                is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
+                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.type)
+            }
         }
         savedStateHandle.get<Long>(Arguments.VALUE)?.let {
             currentTimeValue = it
@@ -99,7 +101,7 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _labelInfo.value = null to scoreboardType.intervalLabelRes
-        scoreboardType.rawRes?.let { rawRes ->
+        scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
             intervalList = it.intervalList

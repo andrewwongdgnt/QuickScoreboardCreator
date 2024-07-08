@@ -9,6 +9,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -45,9 +46,9 @@ class ScoreboardListViewModel @Inject constructor(
 
     fun onAdd() = sendUiEvent(UiEvent.ScoreboardDetails())
 
-    fun onEdit(id: Int, type: ScoreboardType) = sendUiEvent(UiEvent.ScoreboardDetails(id, type))
+    fun onEdit(scoreboardIdentifier: ScoreboardIdentifier) = sendUiEvent(UiEvent.ScoreboardDetails(scoreboardIdentifier))
 
-    fun onDelete(id: Int) =                 viewModelScope.launch {
+    fun onDelete(id: Int) = viewModelScope.launch {
         scoreboardEntityList.first().find { entity ->
             entity.id == id
         }?.let {
@@ -55,7 +56,7 @@ class ScoreboardListViewModel @Inject constructor(
             deleteScoreboardUseCase(it)
         }
         sendUiEvent(
-            UiEvent.ShowSnackbar.ShowQuantitySnackbar(
+            UiEvent.SnackBar.QuantitySnackBar(
                 message = R.plurals.deletedScoreboardMsg,
                 quantity = deletedScoreboardList.size,
                 action = R.string.undo
@@ -74,7 +75,7 @@ class ScoreboardListViewModel @Inject constructor(
 
     fun onClearDeletedScoreboardList() = deletedScoreboardList.clear()
 
-    fun onLaunch(id: Int, type: ScoreboardType) = sendUiEvent(UiEvent.LaunchScoreboard(id, type))
+    fun onLaunch(scoreboardIdentifier: ScoreboardIdentifier) = sendUiEvent(UiEvent.LaunchScoreboard(scoreboardIdentifier))
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

@@ -29,19 +29,16 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 @Composable
 fun CardItemContent(
     modifier: Modifier = Modifier,
-    id: Int,
     title: String,
     description: String,
     @DrawableRes iconRes: Int,
-    onClick: (Int) -> Unit,
+    onClick: () -> Unit,
     iconContent: @Composable () -> Unit = { },
 ) {
     ListItem(
         modifier = modifier
             .clip(MaterialTheme.shapes.small)
-            .clickable {
-                onClick(id)
-            },
+            .clickable(onClick = onClick),
         headlineContent = {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -81,7 +78,6 @@ fun CardItemContent(
 @Composable
 private fun `Normal`() =
     CardItemContent(
-        id = 0,
         title = "Dragons",
         description = "Legendary creatures",
         iconRes = TeamIcon.ALIEN.res,
@@ -99,7 +95,6 @@ private fun `Normal`() =
 @Composable
 private fun `Long description`() =
     CardItemContent(
-        id = 0,
         title = "Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
         iconRes = TeamIcon.DRAGON.res,
@@ -117,7 +112,6 @@ private fun `Long description`() =
 @Composable
 private fun `Long description and long description`() =
     CardItemContent(
-        id = 0,
         title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
         iconRes = TeamIcon.DRAGON.res,
@@ -135,7 +129,6 @@ private fun `Long description and long description`() =
 @Composable
 private fun `Cannot Launch`() =
     CardItemContent(
-        id = 0,
         title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
         iconRes = TeamIcon.DRAGON.res,

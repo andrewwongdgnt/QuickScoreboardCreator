@@ -1,6 +1,8 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
+import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
@@ -23,6 +25,8 @@ class QSCScoreboardManagerTest {
 
     @MockK
     private lateinit var winCalculator: WinCalculator
+    @MockK
+    private lateinit var historyCreator: HistoryCreator
 
     @InjectMockKs
     private lateinit var sut: QSCScoreboardManager
@@ -53,6 +57,9 @@ class QSCScoreboardManagerTest {
 
         every { winCalculator.store(any(), any()) } answers { }
         every { winCalculator.calculate(any()) } answers { setOf(0) }
+
+        every { historyCreator.addEntry(any(), any(), any(), any(), any(), any()) } answers { }
+        every { historyCreator.create() } answers { HistoricalScoreboard(mapOf()) }
     }
 
     @Test

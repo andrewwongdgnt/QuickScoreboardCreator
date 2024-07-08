@@ -15,8 +15,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
@@ -137,8 +137,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
-    private var id: Int = -1
-    private var scoreboardType: ScoreboardType = ScoreboardType.NONE
+    private var scoreboardIdentifier: ScoreboardIdentifier? = null
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -152,12 +151,12 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private var secondaryScoreLabelInfoList = listOf<Pair<String?, Int?>>()
 
     init {
-        savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
-            initWithId(id)
-            this.id = id
-        } ?: savedStateHandle.get<ScoreboardType>(TYPE)?.let {
-            initWithScoreboardType(it)
-            this.scoreboardType = it
+        savedStateHandle.get<ScoreboardIdentifier>(SCOREBOARD_IDENTIFIER)?.let { sId ->
+            when (sId) {
+                is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
+                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.type)
+            }
+            scoreboardIdentifier = sId
         }
 
         scoreboardManager.primaryScoresUpdateListener = primaryScoresUpdateListener
@@ -183,7 +182,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _intervalLabelInfo.value = null to scoreboardType.intervalLabelRes
-        scoreboardType.rawRes?.let { rawRes ->
+        scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let { defaultScoreboardConfig ->
             scoreboardManager.apply {
@@ -255,7 +254,9 @@ class ScoreboardInteractionViewModel @Inject constructor(
     fun toIntervalEditor() {
         timerJob?.cancel()
         _timerInProgress.value = false
-        sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, id, scoreboardType))
+        scoreboardIdentifier?.let { sId ->
+            sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, sId))
+        }
     }
 
     fun onIntervalEdit(updatedIntervalData: UpdatedIntervalData) {
@@ -269,7 +270,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     fun toTimelineViewer() {
-        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(), currentInterval.value - 1, id, scoreboardType))
+        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(), currentInterval.value - 1))
     }
 
     override fun onCleared() {

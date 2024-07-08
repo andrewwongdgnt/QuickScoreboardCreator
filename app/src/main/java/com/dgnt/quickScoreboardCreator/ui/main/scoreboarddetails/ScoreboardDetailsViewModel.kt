@@ -13,8 +13,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TYPE
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -67,17 +67,22 @@ class ScoreboardDetailsViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
-            initWithId(id)
-        } ?: savedStateHandle.get<ScoreboardType>(TYPE)?.let {
-            initWithScoreboardType(it)
+        savedStateHandle.get<ScoreboardIdentifier?>(SCOREBOARD_IDENTIFIER)?.let { sId ->
+            when (sId) {
+                is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
+                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.type)
+            }
+        } ?: run {
+            _icon.value = ScoreboardIcon.entries.toTypedArray().let {
+                it[Random.nextInt(it.size)]
+            }
         }
 
     }
 
     private fun initWithId(id: Int) {
         viewModelScope.launch {
-           originalEntity = getScoreboardUseCase(id)?.also {
+            originalEntity = getScoreboardUseCase(id)?.also {
                 _title.value = it.title
                 _description.value = it.description
                 _icon.value = it.icon
@@ -89,15 +94,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _title.value = resources.getString(scoreboardType.titleRes)
         _description.value = resources.getString(scoreboardType.descriptionRes)
-        _icon.value = when (scoreboardType) {
-            ScoreboardType.NONE -> ScoreboardIcon.entries.toTypedArray().let {
-                it[Random.nextInt(it.size)]
-            }
-
-            else -> scoreboardType.icon
-        }
+        _icon.value = scoreboardType.icon
         _isNewEntity.value = true
-        scoreboardType.rawRes?.let { rawRes ->
+        scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
             _winRule.value = it.winRuleType.toWinRule()
@@ -140,7 +139,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _description.value = description
     }
 
-    fun onIconEdit(){
+    fun onIconEdit() {
         _iconChanging.value = true
     }
 

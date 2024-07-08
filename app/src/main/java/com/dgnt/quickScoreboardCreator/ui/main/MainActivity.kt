@@ -27,7 +27,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.dgnt.quickScoreboardCreator.common.util.putExtra
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
@@ -106,11 +106,10 @@ class MainActivity : ComponentActivity() {
                 ScoreboardListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(navDestination = NavDestination.ScoreboardDetails(uiEvent.id, uiEvent.type))
+                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(navDestination = NavDestination.ScoreboardDetails(uiEvent.scoreboardIdentifier))
 
                             is UiEvent.LaunchScoreboard -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
-                                intent.putExtra(ID, uiEvent.id)
-                                intent.putExtra(uiEvent.type)
+                                intent.putExtra(SCOREBOARD_IDENTIFIER, uiEvent.scoreboardIdentifier)
                             })
 
                             else -> Unit

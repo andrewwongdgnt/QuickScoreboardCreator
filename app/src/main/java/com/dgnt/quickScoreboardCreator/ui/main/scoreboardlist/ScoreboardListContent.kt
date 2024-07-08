@@ -44,6 +44,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreb
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CardItemContent
@@ -82,15 +83,15 @@ private fun ScoreboardListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     categorizedScoreboards: Pair<CategorizedScoreboardType, CategorizedScoreboardItemData>,
-    onLaunch: (id: Int, type: ScoreboardType) -> Unit,
+    onLaunch: (ScoreboardIdentifier) -> Unit,
     onAdd: () -> Unit,
-    onEdit: (id: Int, type: ScoreboardType) -> Unit,
+    onEdit: (ScoreboardIdentifier) -> Unit,
     onDelete: (id: Int) -> Unit,
     onUndoDelete: () -> Unit,
     onClearDeletedScoreboardList: () -> Unit,
 ) {
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -99,14 +100,14 @@ private fun ScoreboardListInnerContent(
 
         fun dismissSnackbar(clear: Boolean) {
             mustClearDeletedScoreboardList = clear
-            snackbarHostState.currentSnackbarData?.dismiss()
+            snackBarHostState.currentSnackbarData?.dismiss()
         }
         uiEvent.collect { event ->
             when (event) {
-                is UiEvent.ShowSnackbar.ShowQuantitySnackbar -> {
+                is UiEvent.SnackBar.QuantitySnackBar -> {
                     dismissSnackbar(false)
                     scope.launch {
-                        val result = snackbarHostState.showSnackbar(
+                        val result = snackBarHostState.showSnackbar(
                             message = context.resources.getQuantityString(event.message, event.quantity, event.quantity),
                             actionLabel = context.getString(event.action),
                             withDismissAction = true
@@ -134,7 +135,7 @@ private fun ScoreboardListInnerContent(
     }
     Scaffold(
         snackbarHost = {
-            SnackbarHost(snackbarHostState) { snackbarData ->
+            SnackbarHost(snackBarHostState) { snackbarData ->
                 DefaultSnackbar(snackbarData = snackbarData, onSnackbarDismissed = { mustClearDeletedScoreboardList = true })
             }
         },
@@ -147,14 +148,11 @@ private fun ScoreboardListInnerContent(
             }
         }
     ) { padding ->
-
-
         val categoryList = listOf(
             categorizedScoreboards.first.let {
                 stringResource(R.string.defaultScoreboardConfig) to it.scoreboardTypeList.map { scoreboardType ->
                     ScoreboardItemData(
-                        -1,
-                        scoreboardType,
+                        ScoreboardIdentifier.DefaultScoreboard(scoreboardType),
                         stringResource(scoreboardType.titleRes),
                         stringResource(scoreboardType.descriptionRes),
                         scoreboardType.icon
@@ -190,23 +188,25 @@ private fun ScoreboardListInnerContent(
                     items(
                         items = itemList,
                         key = { item ->
-                            item.id.takeIf { it >= 0 } ?: item.type
+                            when (val sId = item.scoreboardIdentifier) {
+                                is ScoreboardIdentifier.CustomScoreboard -> sId.id
+                                is ScoreboardIdentifier.DefaultScoreboard -> sId.type
+                            }
                         }
                     ) { scoreboard ->
                         val cardItemContent = @Composable {
                             CardItemContent(
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                id = scoreboard.id,
                                 title = scoreboard.title,
                                 description = scoreboard.description,
                                 iconRes = scoreboard.icon.res,
                                 onClick = {
-                                    onLaunch(scoreboard.id, scoreboard.type)
+                                    onLaunch(scoreboard.scoreboardIdentifier)
                                 }
                             ) {
                                 IconButton(onClick = {
-                                    onEdit(scoreboard.id, scoreboard.type)
+                                    onEdit(scoreboard.scoreboardIdentifier)
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
@@ -215,16 +215,17 @@ private fun ScoreboardListInnerContent(
                                 }
                             }
                         }
-                        scoreboard.id.takeIf { it >= 0 }?.let {
-                            SwipeBox(
-                                modifier = Modifier.animateItem(),
-                                onDelete = {
-                                    onDelete(scoreboard.id)
-                                },
-                                content = cardItemContent
-                            )
-                        } ?: run {
-                            cardItemContent()
+                        when (val sId = scoreboard.scoreboardIdentifier) {
+                            is ScoreboardIdentifier.CustomScoreboard ->
+                                SwipeBox(
+                                    modifier = Modifier.animateItem(),
+                                    onDelete = {
+                                        onDelete(sId.id)
+                                    },
+                                    content = cardItemContent
+                                )
+
+                            is ScoreboardIdentifier.DefaultScoreboard -> cardItemContent()
                         }
                     }
                 }
@@ -242,9 +243,9 @@ private fun `Only defaults`() =
         categorizedScoreboards = CategorizedScoreboardType(listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL))
                 to
                 CategorizedScoreboardItemData(emptyList()),
-        onLaunch = { _, _ -> },
+        onLaunch = { _ -> },
         onAdd = {},
-        onEdit = { _, _ -> },
+        onEdit = { _ -> },
         onDelete = {},
         onUndoDelete = {},
         onClearDeletedScoreboardList = {},
@@ -261,14 +262,14 @@ private fun `Defaults and customs`() =
                 to
                 CategorizedScoreboardItemData(
                     listOf(
-                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 1", "My Description 1", ScoreboardIcon.BASKETBALL),
-                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 2", "My Description 2", ScoreboardIcon.TENNIS),
-                        ScoreboardItemData(0, ScoreboardType.NONE, "My Scoreboard 3", "My Description 3 ", ScoreboardIcon.BOXING),
+                        ScoreboardItemData(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL), "My Scoreboard 1", "My Description 1", ScoreboardIcon.BASKETBALL),
+                        ScoreboardItemData(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.TENNIS), "My Scoreboard 2", "My Description 2", ScoreboardIcon.TENNIS),
+                        ScoreboardItemData(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL), "My Scoreboard 3", "My Description 3 ", ScoreboardIcon.BOXING),
                     )
                 ),
-        onLaunch = { _, _ -> },
+        onLaunch = { _ -> },
         onAdd = {},
-        onEdit = { _, _ -> },
+        onEdit = { _ -> },
         onDelete = {},
         onUndoDelete = {},
         onClearDeletedScoreboardList = {},

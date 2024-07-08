@@ -15,6 +15,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
+import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorErrorType
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorViewModel
@@ -112,9 +113,8 @@ class IntervalEditorViewModelTest {
         val inputStream = mockk<InputStream>()
         val scoreboardConfig = mockk<DefaultScoreboardConfig>()
 
-        every { savedStateHandle.get<Int>(Arguments.ID) } returns -1
-        every { savedStateHandle.get<ScoreboardType>(Arguments.TYPE) } returns ScoreboardType.BASKETBALL
-        every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes!!) } returns inputStream
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL)
+        every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream
         every { scoreboardLoader.invoke(inputStream) } returns scoreboardConfig
         every { scoreboardConfig.intervalList } returns mockIntervalList
 
