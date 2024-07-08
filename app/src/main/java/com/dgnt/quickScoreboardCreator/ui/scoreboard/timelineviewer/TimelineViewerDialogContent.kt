@@ -3,15 +3,28 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScore
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreGroup
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import kotlinx.coroutines.flow.Flow
@@ -25,11 +38,13 @@ fun TimelineViewerDialogContent(
 ) {
 
     val labelInfo by viewModel.labelInfo.collectAsStateWithLifecycle()
+    val historicalScoreboard by viewModel.historicalScoreboard.collectAsStateWithLifecycle()
 
     TimelineViewerInnerDialogContent(
         viewModel.uiEvent,
         onUiEvent,
         labelInfo,
+        historicalScoreboard,
         viewModel::onDismiss,
         viewModel::onSave
     )
@@ -41,10 +56,10 @@ private fun TimelineViewerInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     labelInfo: Pair<String?, Int?>,
+    historicalScoreboard: HistoricalScoreboard?,
     onDismiss: () -> Unit,
     onSave: () -> Unit,
 ) {
-
     LaunchedEffect(key1 = true) {
         uiEvent.collect(collector = onUiEvent)
     }
@@ -56,7 +71,27 @@ private fun TimelineViewerInnerDialogContent(
         dismissText = stringResource(id = android.R.string.cancel),
         onDismiss = onDismiss
     ) {
-
+        if (historicalScoreboard == null) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(72.dp)
+                    .padding(5.dp),
+                color = MaterialTheme.colorScheme.secondary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                items(
+                    items = historicalScoreboard.historicalIntervalMap.entries.toList(),
+                    key = { it.hashCode() }
+                ) {
+                    TimelineViewerChart(historicalInterval = it.value)
+                }
+            }
+        }
 
     }
 }
@@ -75,6 +110,25 @@ private fun `Regular Timeline`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         labelInfo = Pair(null, R.string.quarter),
+        historicalScoreboard = HistoricalScoreboard(
+            mapOf(
+                0 to HistoricalInterval(
+                    mapOf(
+                        0 to HistoricalScoreGroup(
+                            primaryScoreList = listOf(
+                                HistoricalScore(0, "0", 720000),
+                                HistoricalScore(1, "1", 66000L),
+                                HistoricalScore(2, "2", 63000L),
+                                HistoricalScore(3, "3", 480000),
+                                HistoricalScore(4, "4", 330000),
+                                HistoricalScore(7, "7", 300000),
+                            ),
+                            secondaryScoreList = listOf()
+                        )
+                    )
+                )
+            )
+        ),
         onDismiss = {},
         onSave = {},
     )

@@ -36,6 +36,9 @@ class TimelineViewerViewModel @Inject constructor(
     private val _labelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
     val labelInfo = _labelInfo.asStateFlow()
 
+    private val _historicalScoreboard = MutableStateFlow<HistoricalScoreboard?>(null)
+    val historicalScoreboard = _historicalScoreboard.asStateFlow()
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -49,7 +52,7 @@ class TimelineViewerViewModel @Inject constructor(
             intervalIndex = it + 1
         }
         savedStateHandle.get<HistoricalScoreboard>(Arguments.HISTORICAL_SCOREBOARD)?.let {
-
+            _historicalScoreboard.value = it
         }
     }
 
