@@ -190,7 +190,7 @@ private fun ScoreboardListInnerContent(
                         key = { item ->
                             when (val sId = item.scoreboardIdentifier) {
                                 is ScoreboardIdentifier.CustomScoreboard -> sId.id
-                                is ScoreboardIdentifier.DefaultScoreboard -> sId.type
+                                is ScoreboardIdentifier.DefaultScoreboard -> sId.scoreboardType
                             }
                         }
                     ) { scoreboard ->

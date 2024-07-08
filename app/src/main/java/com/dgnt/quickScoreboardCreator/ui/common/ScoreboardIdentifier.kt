@@ -14,6 +14,6 @@ sealed interface ScoreboardIdentifier : Parcelable {
     data class CustomScoreboard(val id: Int) : ScoreboardIdentifier
     @Serializable
     @Parcelize
-    data class DefaultScoreboard(val type: ScoreboardType) : ScoreboardIdentifier
+    data class DefaultScoreboard(val scoreboardType: ScoreboardType) : ScoreboardIdentifier
 
 }

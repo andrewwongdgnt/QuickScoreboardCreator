@@ -1,8 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard
 
-import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,27 +19,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
+import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlin.reflect.typeOf
 
 @AndroidEntryPoint
@@ -62,7 +57,9 @@ class ScoreboardActivity : ComponentActivity() {
                             startDestination = NavDestination.ScoreboardInteraction(scoreboardIdentifier)
                         ) {
                             composable<NavDestination.ScoreboardInteraction>(
-                                typeMap = mapOf(typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java))
+                                typeMap = mapOf(
+                                    typeOf<ScoreboardIdentifier>() to parcelableType<ScoreboardIdentifier>()
+                                )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 val updatedTeamData by viewModel.updatedTeamData.collectAsStateWithLifecycle()
@@ -104,7 +101,9 @@ class ScoreboardActivity : ComponentActivity() {
 
                             }
                             dialog<NavDestination.IntervalEditor>(
-                                typeMap = mapOf(typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java))
+                                typeMap = mapOf(
+                                    typeOf<ScoreboardIdentifier>() to parcelableType<ScoreboardIdentifier>()
+                                )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 IntervalEditorDialogContent(
@@ -125,7 +124,6 @@ class ScoreboardActivity : ComponentActivity() {
                             }
                             dialog<NavDestination.TimelineViewer>(
                                 typeMap = mapOf(
-                                    typeOf<ScoreboardType>() to NavType.EnumType(ScoreboardType::class.java),
                                     typeOf<HistoricalScoreboard>() to parcelableType<HistoricalScoreboard>()
                                 )
                             ) {
@@ -174,23 +172,4 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
         navController.getBackStackEntry(navGraphRoute)
     }
     return viewModel(parentEntry)
-}
-
-inline fun <reified T : Parcelable> parcelableType(
-    isNullableAllowed: Boolean = false,
-    json: Json = Json,
-) = object : NavType<T>(isNullableAllowed = isNullableAllowed) {
-    override fun get(bundle: Bundle, key: String) =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bundle.getParcelable(key, T::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            bundle.getParcelable(key)
-        }
-
-    override fun parseValue(value: String): T = json.decodeFromString(value)
-
-    override fun serializeAsValue(value: T): String = json.encodeToString(value)
-
-    override fun put(bundle: Bundle, key: String, value: T) = bundle.putParcelable(key, value)
 }

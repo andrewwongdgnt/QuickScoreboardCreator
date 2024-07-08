@@ -74,7 +74,7 @@ class IntervalEditorViewModel @Inject constructor(
         savedStateHandle.get<ScoreboardIdentifier>(Arguments.SCOREBOARD_IDENTIFIER)?.let { sId ->
             when (sId) {
                 is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
-                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.type)
+                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.scoreboardType)
             }
         }
         savedStateHandle.get<Long>(Arguments.VALUE)?.let {

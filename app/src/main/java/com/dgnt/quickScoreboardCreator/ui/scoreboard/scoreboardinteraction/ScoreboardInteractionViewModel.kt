@@ -154,7 +154,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         savedStateHandle.get<ScoreboardIdentifier>(SCOREBOARD_IDENTIFIER)?.let { sId ->
             when (sId) {
                 is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
-                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.type)
+                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.scoreboardType)
             }
             scoreboardIdentifier = sId
         }
