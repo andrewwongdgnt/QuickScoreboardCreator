@@ -93,13 +93,6 @@ private fun TimelineViewerInnerDialogContent(
     }
 }
 
-@Composable
-private fun Pair<String?, Int?>.format(): String {
-    return first ?: second?.let {
-        stringResource(id = it)
-    } ?: ""
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun `Regular Timeline`() =

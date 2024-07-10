@@ -18,10 +18,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
 import com.dgnt.quickScoreboardCreator.ui.common.composable.AutoSizeText
+import com.dgnt.quickScoreboardCreator.ui.common.composable.value
 
 @Composable
 fun TwoScoreDisplay(
@@ -30,7 +32,7 @@ fun TwoScoreDisplay(
     primaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
-    secondaryScoreLabelInfo: Pair<String?, Int?>,
+    secondaryScoreLabel: Label,
     onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
 ) {
     Column(
@@ -102,7 +104,7 @@ fun TwoScoreDisplay(
                     maxFontSize = maxFontSize
                 )
                 AutoSizeText(
-                    text = secondaryScoreLabelInfo.format(),
+                    text = secondaryScoreLabel.value(),
                     maxTextSize = maxFontSize,
                     maxLines = 1,
                     alignment = Alignment.Center,
@@ -126,12 +128,7 @@ fun TwoScoreDisplay(
     }
 }
 
-@Composable
-private fun Pair<String?, Int?>.format(): String {
-    return first ?: second?.let {
-        stringResource(id = it)
-    } ?: ""
-}
+
 
 @Composable
 private fun ScoreValueContent(
@@ -179,7 +176,7 @@ private fun `Normal scores`() =
             listOf(1),
             listOf(1),
         ),
-        secondaryScoreLabelInfo = Pair(null, R.string.fouls),
+        secondaryScoreLabel = Label.ResourceLabel(R.string.fouls),
         onScoreChange = { _, _, _, _ -> }
     )
 
@@ -200,6 +197,6 @@ private fun `Deuce`() =
             DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
-        secondaryScoreLabelInfo = Pair(null, R.string.blank),
+        secondaryScoreLabel = Label.ResourceLabel(R.string.blank),
         onScoreChange = { _, _, _, _ -> }
     )

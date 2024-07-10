@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.domain.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
@@ -61,8 +62,8 @@ class IntervalEditorViewModel @Inject constructor(
             validate()
         }
 
-    private val _labelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
-    val labelInfo = _labelInfo.asStateFlow()
+    private val _label = MutableStateFlow<Label>(Label.CustomLabel(""))
+    val label = _label.asStateFlow()
 
     private val _errors = MutableStateFlow(emptySet<IntervalEditorErrorType>())
     val errors = _errors.asStateFlow()
@@ -100,7 +101,7 @@ class IntervalEditorViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        _labelInfo.value = null to scoreboardType.intervalLabelRes
+        _label.value = Label.ResourceLabel(scoreboardType.intervalLabelRes)
         scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {

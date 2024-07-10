@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.domain.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
@@ -86,8 +87,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
     val currentInterval: StateFlow<Int> = _currentInterval.asStateFlow()
     private val intervalIndexUpdateListener: (Int) -> Unit = {
         _currentInterval.value = it + 1
-        secondaryScoreLabelInfoList.getOrNull(it)?.let { secondaryScoreLabelInfo ->
-            _secondaryScoreLabelInfo.value = secondaryScoreLabelInfo
+        secondaryScoreLabelList.getOrNull(it)?.let { secondaryScoreLabelInfo ->
+            _secondaryScoreLabel.value = secondaryScoreLabelInfo
         }
         onTimerPause(true)
     }
@@ -142,13 +143,13 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    private val _intervalLabelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
-    val intervalLabelInfo: StateFlow<Pair<String?, Int?>> = _intervalLabelInfo.asStateFlow()
+    private val _intervalLabel = MutableStateFlow<Label>(Label.CustomLabel(""))
+    val intervalLabel = _intervalLabel.asStateFlow()
 
-    private val _secondaryScoreLabelInfo = MutableStateFlow(Pair<String?, Int?>(null, null))
-    val secondaryScoreLabelInfo: StateFlow<Pair<String?, Int?>> = _secondaryScoreLabelInfo.asStateFlow()
+    private val _secondaryScoreLabel = MutableStateFlow<Label>(Label.CustomLabel(""))
+    val secondaryScoreLabel = _secondaryScoreLabel.asStateFlow()
 
-    private var secondaryScoreLabelInfoList = listOf<Pair<String?, Int?>>()
+    private var secondaryScoreLabelList = listOf<Label>()
 
     init {
         savedStateHandle.get<ScoreboardIdentifier>(SCOREBOARD_IDENTIFIER)?.let { sId ->
@@ -181,7 +182,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        _intervalLabelInfo.value = null to scoreboardType.intervalLabelRes
+        _intervalLabel.value = Label.ResourceLabel(scoreboardType.intervalLabelRes)
         scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let { defaultScoreboardConfig ->
@@ -191,8 +192,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
                     it.scoreInfo.toScoreInfo() to it.intervalData.toIntervalData()
                 }
             }
-            secondaryScoreLabelInfoList = defaultScoreboardConfig.intervalList.map {
-                it.scoreInfo.secondaryScoreLabel to scoreboardType.secondaryScoreLabelRes
+            secondaryScoreLabelList = defaultScoreboardConfig.intervalList.map {
+                Label.ResourceLabel(scoreboardType.secondaryScoreLabelRes)
             }
         }
 

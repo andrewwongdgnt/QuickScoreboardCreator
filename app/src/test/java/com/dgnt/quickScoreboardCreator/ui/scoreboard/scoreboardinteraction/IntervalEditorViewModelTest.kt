@@ -150,7 +150,7 @@ class IntervalEditorViewModelTest {
     fun testInitializingADefaultScoreboard() = runTest {
         initDefaultScoreboardConfig()
 
-        Assert.assertEquals(null to R.string.quarter, sut.labelInfo.value)
+        Assert.assertEquals(null to R.string.quarter, sut.label.value)
         Assert.assertTrue(sut.errors.value.isEmpty())
     }
 

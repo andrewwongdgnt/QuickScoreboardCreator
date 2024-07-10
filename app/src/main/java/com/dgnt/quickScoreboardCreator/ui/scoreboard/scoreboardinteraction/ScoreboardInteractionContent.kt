@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
@@ -69,12 +70,12 @@ private fun ScoreboardInteractionVMDataContent(
     val primaryIncrementList by viewModel.primaryIncrementList.collectAsStateWithLifecycle()
     val secondaryDisplayedScoreInfo by viewModel.secondaryDisplayedScoreInfo.collectAsStateWithLifecycle()
     val secondaryIncrementList by viewModel.secondaryIncrementList.collectAsStateWithLifecycle()
-    val secondaryScoreLabelInfo by viewModel.secondaryScoreLabelInfo.collectAsStateWithLifecycle()
+    val secondaryScoreLabelInfo by viewModel.secondaryScoreLabel.collectAsStateWithLifecycle()
     val teamList by viewModel.teamList.collectAsStateWithLifecycle()
     val timeData by viewModel.timeData.collectAsStateWithLifecycle()
     val timerInProgress by viewModel.timerInProgress.collectAsStateWithLifecycle()
     val simpleMode by viewModel.simpleMode.collectAsStateWithLifecycle()
-    val intervalLabelInfo by viewModel.intervalLabelInfo.collectAsStateWithLifecycle()
+    val intervalLabelInfo by viewModel.intervalLabel.collectAsStateWithLifecycle()
     val currentInterval by viewModel.currentInterval.collectAsStateWithLifecycle()
 
     ScoreboardInteractionInnerContent(
@@ -84,7 +85,7 @@ private fun ScoreboardInteractionVMDataContent(
         primaryIncrementList = primaryIncrementList,
         secondaryDisplayedScoreInfo = secondaryDisplayedScoreInfo,
         secondaryIncrementList = secondaryIncrementList,
-        secondaryScoreLabelInfo = secondaryScoreLabelInfo,
+        secondaryScoreLabel = secondaryScoreLabelInfo,
         onScoreChange = viewModel::onScoreChange,
         teamList = teamList,
         toTeamPicker = viewModel::toTeamPicker,
@@ -94,7 +95,7 @@ private fun ScoreboardInteractionVMDataContent(
         onTimerStart = viewModel::onTimerStart,
         simpleMode = simpleMode,
         onToggleModeChange = viewModel::onToggleModeChange,
-        intervalLabelInfo = intervalLabelInfo,
+        intervalLabel = intervalLabelInfo,
         currentInterval = currentInterval,
         toIntervalEditor = viewModel::toIntervalEditor,
         toTimelineViewer = viewModel::toTimelineViewer
@@ -109,7 +110,7 @@ private fun ScoreboardInteractionInnerContent(
     primaryIncrementList: List<List<Int>>,
     secondaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
-    secondaryScoreLabelInfo: Pair<String?, Int?>,
+    secondaryScoreLabel: Label,
     onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
     teamList: List<TeamDisplay>,
     toTeamPicker: (Int) -> Unit,
@@ -119,7 +120,7 @@ private fun ScoreboardInteractionInnerContent(
     onTimerStart: () -> Unit,
     simpleMode: Boolean,
     onToggleModeChange: (Boolean) -> Unit,
-    intervalLabelInfo: Pair<String?, Int?>,
+    intervalLabel: Label,
     currentInterval: Int,
     toIntervalEditor: () -> Unit,
     toTimelineViewer: () -> Unit,
@@ -160,7 +161,7 @@ private fun ScoreboardInteractionInnerContent(
                 primaryDisplayedScoreInfo = primaryDisplayedScoreInfo,
                 secondaryDisplayedScoreInfo = secondaryDisplayedScoreInfo,
                 secondaryIncrementList = secondaryIncrementList,
-                secondaryScoreLabelInfo = secondaryScoreLabelInfo,
+                secondaryScoreLabel = secondaryScoreLabel,
                 onScoreChange = onScoreChange
             )
             Spacer(modifier = Modifier.width(spacerWidth))
@@ -198,7 +199,7 @@ private fun ScoreboardInteractionInnerContent(
             )
             IntervalDisplayContent(
                 modifier = Modifier,
-                intervalLabelInfo = intervalLabelInfo,
+                intervalLabel = intervalLabel,
                 currentInterval = currentInterval
             )
 
@@ -277,7 +278,7 @@ private fun `2 Teams with long names`() =
             listOf(1),
             listOf(1),
         ),
-        secondaryScoreLabelInfo = Pair("S", null),
+        secondaryScoreLabel = Label.CustomLabel("S"),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
@@ -290,7 +291,7 @@ private fun `2 Teams with long names`() =
         onTimerStart = {},
         simpleMode = false,
         onToggleModeChange = { _ -> },
-        intervalLabelInfo = Pair("P", null),
+        intervalLabel = Label.CustomLabel("P"),
         currentInterval = 1,
         toIntervalEditor = {},
         toTimelineViewer = {},
@@ -324,7 +325,7 @@ private fun `2 Teams with short names`() =
             listOf(1),
             listOf(1),
         ),
-        secondaryScoreLabelInfo = Pair(null, R.string.fouls),
+        secondaryScoreLabel = Label.ResourceLabel(R.string.fouls),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
@@ -337,7 +338,7 @@ private fun `2 Teams with short names`() =
         onTimerStart = {},
         simpleMode = true,
         onToggleModeChange = { _ -> },
-        intervalLabelInfo = Pair(null, R.string.quarter),
+        intervalLabel = Label.ResourceLabel(R.string.quarter),
         currentInterval = 1,
         toIntervalEditor = {},
         toTimelineViewer = {},
@@ -365,7 +366,7 @@ private fun `Adv`() =
             DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
-        secondaryScoreLabelInfo = Pair(null, R.string.blank),
+        secondaryScoreLabel = Label.ResourceLabel(R.string.blank),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
@@ -378,7 +379,7 @@ private fun `Adv`() =
         onTimerStart = {},
         simpleMode = true,
         onToggleModeChange = { _ -> },
-        intervalLabelInfo = Pair(null, R.string.set),
+        intervalLabel = Label.ResourceLabel(R.string.set),
         currentInterval = 2,
         toIntervalEditor = {},
         toTimelineViewer = {},
@@ -406,7 +407,7 @@ private fun `Deuce`() =
             DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
-        secondaryScoreLabelInfo = Pair(null, R.string.blank),
+        secondaryScoreLabel = Label.ResourceLabel(R.string.blank),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
             TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
@@ -419,7 +420,7 @@ private fun `Deuce`() =
         onTimerStart = {},
         simpleMode = false,
         onToggleModeChange = { _ -> },
-        intervalLabelInfo = Pair(null, R.string.game),
+        intervalLabel = Label.ResourceLabel(R.string.game),
         currentInterval = 3,
         toIntervalEditor = {},
         toTimelineViewer = {},

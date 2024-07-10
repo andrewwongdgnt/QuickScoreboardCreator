@@ -8,15 +8,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.Label
+import com.dgnt.quickScoreboardCreator.ui.common.composable.value
 
 @Composable
 fun IntervalDisplayContent(
     modifier: Modifier = Modifier,
-    intervalLabelInfo: Pair<String?, Int?>,
+    intervalLabel: Label,
     currentInterval: Int,
 ) {
     Text(
-        text = stringResource(id = R.string.intervalLabel, intervalLabelInfo.format(), currentInterval),
+        text = stringResource(id = R.string.intervalLabel, intervalLabel.value(), currentInterval),
         fontSize = 30.sp,
         textAlign = TextAlign.Center,
         modifier = modifier
@@ -24,19 +26,12 @@ fun IntervalDisplayContent(
 
 }
 
-@Composable
-private fun Pair<String?, Int?>.format(): String {
-    return first ?: second?.let {
-        stringResource(id = it)
-    } ?: ""
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun `Default 1`() =
-    IntervalDisplayContent(intervalLabelInfo = Pair(null, R.string.game), currentInterval = 1)
+    IntervalDisplayContent(intervalLabel = Label.ResourceLabel(R.string.game), currentInterval = 1)
 
 @Preview(showBackground = true)
 @Composable
 private fun `Custom 2`() =
-    IntervalDisplayContent(intervalLabelInfo = Pair("Custom", null), currentInterval = 2)
+    IntervalDisplayContent(intervalLabel = Label.CustomLabel("Custom"), currentInterval = 2)

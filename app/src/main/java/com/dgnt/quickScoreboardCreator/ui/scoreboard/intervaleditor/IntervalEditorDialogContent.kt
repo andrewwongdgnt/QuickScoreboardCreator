@@ -29,9 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
+import com.dgnt.quickScoreboardCreator.ui.common.composable.value
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -44,7 +46,7 @@ fun IntervalEditorDialogContent(
     val minuteString by viewModel.minuteString.collectAsStateWithLifecycle()
     val secondString by viewModel.secondString.collectAsStateWithLifecycle()
     val intervalString by viewModel.intervalString.collectAsStateWithLifecycle()
-    val labelInfo by viewModel.labelInfo.collectAsStateWithLifecycle()
+    val labelInfo by viewModel.label.collectAsStateWithLifecycle()
     val errors by viewModel.errors.collectAsStateWithLifecycle()
 
     IntervalEditorInnerDialogContent(
@@ -74,7 +76,7 @@ private fun IntervalEditorInnerDialogContent(
     onSecondChange: (String) -> Unit,
     intervalString: String,
     onIntervalChange: (String) -> Unit,
-    labelInfo: Pair<String?, Int?>,
+    label: Label,
     errors: Set<IntervalEditorErrorType>,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -168,7 +170,7 @@ private fun IntervalEditorInnerDialogContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = labelInfo.format(),
+                    text = label.value(),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
@@ -190,13 +192,6 @@ private fun IntervalEditorInnerDialogContent(
     }
 }
 
-@Composable
-private fun Pair<String?, Int?>.format(): String {
-    return first ?: second?.let {
-        stringResource(id = it)
-    } ?: ""
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun `12 minutes 8 seconds`() =
@@ -209,7 +204,7 @@ private fun `12 minutes 8 seconds`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        labelInfo = Pair(null, R.string.quarter),
+        label = Label.ResourceLabel(R.string.quarter),
         errors = emptySet(),
         onDismiss = {},
         onConfirm = {},
@@ -227,7 +222,7 @@ private fun `invalid time`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        labelInfo = Pair(null, R.string.quarter),
+        label = Label.ResourceLabel(R.string.quarter),
         errors = setOf(IntervalEditorErrorType.TimeErrorType.Time(12, 0)),
         onDismiss = {},
         onConfirm = {},
@@ -245,7 +240,7 @@ private fun `empty time`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        labelInfo = Pair(null, R.string.quarter),
+        label = Label.ResourceLabel(R.string.quarter),
         errors = setOf(IntervalEditorErrorType.TimeErrorType.EmptyTime),
         onDismiss = {},
         onConfirm = {},
@@ -263,7 +258,7 @@ private fun `zero time`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        labelInfo = Pair(null, R.string.quarter),
+        label = Label.ResourceLabel(R.string.quarter),
         errors = setOf(IntervalEditorErrorType.TimeErrorType.ZeroTime),
         onDismiss = {},
         onConfirm = {},
@@ -281,7 +276,7 @@ private fun `empty interval`() =
         onSecondChange = {},
         intervalString = "",
         onIntervalChange = {},
-        labelInfo = Pair(null, R.string.quarter),
+        label = Label.ResourceLabel(R.string.quarter),
         errors = setOf(IntervalEditorErrorType.IntervalErrorType.EmptyInterval),
         onDismiss = {},
         onConfirm = {},
@@ -299,7 +294,7 @@ private fun `invalid interval`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        labelInfo = Pair(null, R.string.quarter),
+        label = Label.ResourceLabel(R.string.quarter),
         errors = setOf(IntervalEditorErrorType.IntervalErrorType.Interval(22)),
         onDismiss = {},
         onConfirm = {},
