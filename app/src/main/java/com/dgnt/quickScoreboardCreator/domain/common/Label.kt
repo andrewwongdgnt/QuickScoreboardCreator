@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.domain
+package com.dgnt.quickScoreboardCreator.domain.common
 
 import androidx.annotation.StringRes
 

@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.common.util
+package com.dgnt.quickScoreboardCreator.domain.common
 
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ConfigType

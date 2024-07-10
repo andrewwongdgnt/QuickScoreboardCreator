@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.Label
+import com.dgnt.quickScoreboardCreator.domain.common.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData

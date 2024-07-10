@@ -2,7 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.common.composable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.dgnt.quickScoreboardCreator.domain.Label
+import com.dgnt.quickScoreboardCreator.domain.common.Label
 
 @Composable
 fun Label.value() = when(this) {

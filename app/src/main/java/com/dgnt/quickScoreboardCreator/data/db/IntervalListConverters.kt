@@ -1,10 +1,9 @@
 package com.dgnt.quickScoreboardCreator.data.db
 
 import androidx.room.TypeConverter
-import com.dgnt.quickScoreboardCreator.common.util.GsonProvider
-import com.dgnt.quickScoreboardCreator.common.util.fromJson
+import com.dgnt.quickScoreboardCreator.domain.common.GsonProvider
+import com.dgnt.quickScoreboardCreator.domain.common.fromJson
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 
 class IntervalListConverters {

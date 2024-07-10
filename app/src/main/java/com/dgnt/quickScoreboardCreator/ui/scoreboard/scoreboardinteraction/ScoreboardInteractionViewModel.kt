@@ -4,7 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.domain.Label
+import com.dgnt.quickScoreboardCreator.domain.common.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
