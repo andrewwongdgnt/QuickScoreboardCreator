@@ -13,39 +13,39 @@ object Arguments {
 }
 
 @Serializable
-sealed class NavDestination {
+sealed interface NavDestination {
     @Serializable
-    data object ScoreboardList : NavDestination()
+    data object ScoreboardList : NavDestination
 
     @Serializable
-    data object TeamList : NavDestination()
+    data object TeamList : NavDestination
 
     @Serializable
-    data object Contact : NavDestination()
+    data object Contact : NavDestination
 
     @Serializable
     data class ScoreboardDetails(
         @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
         val scoreboardIdentifier: ScoreboardIdentifier?
-    ) : NavDestination()
+    ) : NavDestination
 
     @Serializable
     data class TeamDetails(
         @SerialName(Arguments.ID)
         val id: Int
-    ) : NavDestination()
+    ) : NavDestination
 
     @Serializable
     data class ScoreboardInteraction(
         @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
         val scoreboardIdentifier: ScoreboardIdentifier
-    ) : NavDestination()
+    ) : NavDestination
 
     @Serializable
     data class TeamPicker(
         @SerialName(Arguments.INDEX)
         val index: Int
-    ) : NavDestination()
+    ) : NavDestination
 
     @Serializable
     data class IntervalEditor(
@@ -55,7 +55,7 @@ sealed class NavDestination {
         val index: Int,
         @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
         val scoreboardIdentifier: ScoreboardIdentifier
-    ) : NavDestination()
+    ) : NavDestination
 
     @Serializable
     data class TimelineViewer(
@@ -63,8 +63,8 @@ sealed class NavDestination {
         val historicalScoreboard: HistoricalScoreboard,
         @SerialName(Arguments.INDEX)
         val index: Int,
-    ) : NavDestination()
+    ) : NavDestination
 
     @Serializable
-    data object Start : NavDestination()
+    data object Start : NavDestination
 }
