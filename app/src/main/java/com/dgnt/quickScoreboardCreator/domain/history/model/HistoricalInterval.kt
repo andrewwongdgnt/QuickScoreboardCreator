@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class HistoricalInterval(
+    val intervalLabel: IntervalLabel,
     val historicalScoreGroupList: Map<Int, HistoricalScoreGroup>
 ) : Parcelable

@@ -2,6 +2,8 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
@@ -26,10 +28,10 @@ interface ScoreboardManager {
 
     fun triggerUpdateListeners()
     fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)
-    fun updateTime(value:Long)
+    fun updateTime(value: Long)
     fun updateTimeBy(value: Long)
     fun resetTime()
     fun canTimeAdvance(): Boolean
     fun updateInterval(index: Int)
-    fun createTimeline(): HistoricalScoreboard
+    fun createTimeline(intervalLabel: IntervalLabel, teamList: List<TeamLabel>): HistoricalScoreboard
 }

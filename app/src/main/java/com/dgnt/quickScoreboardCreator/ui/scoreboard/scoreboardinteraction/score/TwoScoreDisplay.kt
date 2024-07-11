@@ -18,11 +18,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.common.Label
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
 import com.dgnt.quickScoreboardCreator.ui.common.composable.AutoSizeText
+import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.composable.value
 
 @Composable

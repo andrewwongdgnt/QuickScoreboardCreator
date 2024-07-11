@@ -25,6 +25,9 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScore
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import kotlinx.coroutines.flow.Flow
@@ -102,8 +105,10 @@ private fun `Regular Timeline`() =
         historicalScoreboard = HistoricalScoreboard(
             mapOf(
                 0 to HistoricalInterval(
+                    IntervalLabel.CustomIntervalLabel("Quarter", 0),
                     mapOf(
                         0 to HistoricalScoreGroup(
+                            teamLabel = TeamLabel.CustomTeamLabel("DGNT", TeamIcon.AXE),
                             primaryScoreList = listOf(
                                 HistoricalScore(0, "0", 720000),
                                 HistoricalScore(1, "1", 66000L),

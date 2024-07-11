@@ -17,6 +17,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUs
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorErrorType
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorViewModel
 import io.mockk.MockKAnnotations
@@ -150,7 +151,7 @@ class IntervalEditorViewModelTest {
     fun testInitializingADefaultScoreboard() = runTest {
         initDefaultScoreboardConfig()
 
-        Assert.assertEquals(null to R.string.quarter, sut.label.value)
+        Assert.assertEquals(Label.ResourceLabel(R.string.quarter), sut.label.value)
         Assert.assertTrue(sut.errors.value.isEmpty())
     }
 

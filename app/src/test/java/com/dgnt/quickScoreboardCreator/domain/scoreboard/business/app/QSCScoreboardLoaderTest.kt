@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app
 
-import com.dgnt.quickScoreboardCreator.domain.common.GsonProvider
+import com.dgnt.quickScoreboardCreator.domain.serializer.GsonProvider
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleConfig

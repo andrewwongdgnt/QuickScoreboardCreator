@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.di
 
-import com.dgnt.quickScoreboardCreator.domain.common.GsonProvider
+import com.dgnt.quickScoreboardCreator.domain.serializer.GsonProvider
 import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.domain.history.business.logic.QSCHistoryCreator
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.QSCScoreboardLoader

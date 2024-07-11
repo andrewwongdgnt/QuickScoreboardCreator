@@ -2,6 +2,8 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 
 
 import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
+import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
@@ -197,8 +199,8 @@ class QSCScoreboardManager @Inject constructor(
         triggerUpdateListeners()
     }
 
-    override fun createTimeline() =
-        historyCreator.create()
+    override fun createTimeline(intervalLabel: IntervalLabel, teamList: List<TeamLabel>) =
+        historyCreator.create(intervalLabel, teamList)
 
     private fun transformPrimaryScores(scoreInfo: ScoreInfo) =
         scoreInfo.dataList.map { it.primary.current }.map {

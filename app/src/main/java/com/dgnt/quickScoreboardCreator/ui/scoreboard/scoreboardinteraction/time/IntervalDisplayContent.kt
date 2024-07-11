@@ -8,7 +8,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.common.Label
+import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.composable.value
 
 @Composable

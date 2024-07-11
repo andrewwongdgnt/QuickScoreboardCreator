@@ -4,7 +4,8 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.domain.common.Label
+import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
@@ -19,6 +20,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
@@ -271,7 +273,17 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     fun toTimelineViewer() {
-        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(), currentInterval.value - 1))
+        val intervalLabel = when (val l = intervalLabel.value) {
+            is Label.CustomLabel -> IntervalLabel.CustomIntervalLabel(l.value)
+            is Label.ResourceLabel -> IntervalLabel.ResourceIntervalLabel(l.res)
+        }
+        val teamList = teamList.value.map {
+            when (it) {
+                is TeamDisplay.UnSelectedTeamDisplay -> TeamLabel.NoTeamLabel
+                is TeamDisplay.SelectedTeamDisplay -> TeamLabel.CustomTeamLabel(it.name, it.icon)
+            }
+        }
+        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(intervalLabel, teamList), currentInterval.value - 1))
     }
 
     override fun onCleared() {

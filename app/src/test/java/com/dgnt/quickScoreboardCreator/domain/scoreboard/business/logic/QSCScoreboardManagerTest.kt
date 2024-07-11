@@ -59,7 +59,7 @@ class QSCScoreboardManagerTest {
         every { winCalculator.calculate(any()) } answers { setOf(0) }
 
         every { historyCreator.addEntry(any(), any(), any(), any(), any(), any()) } answers { }
-        every { historyCreator.create() } answers { HistoricalScoreboard(mapOf()) }
+        every { historyCreator.create(any(), any()) } answers { HistoricalScoreboard(mapOf()) }
     }
 
     @Test
