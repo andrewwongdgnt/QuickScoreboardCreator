@@ -6,10 +6,15 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 
 class QSCHistoryCreator : HistoryCreator {
 
     private val allEntries = mutableListOf<HistoryEntry>()
+    override fun init(intervalList: List<Pair<ScoreInfo, IntervalData>>) {
+        //TODO set something here
+    }
 
     override fun addEntry(
         intervalIndex: Int,

@@ -57,6 +57,9 @@ class QSCScoreboardManager @Inject constructor(
 
     private val currentIntervalData get() = intervalList[currentIntervalIndex].second
 
+    init {
+        historyCreator.init(intervalList)
+    }
 
     override fun triggerUpdateListeners() {
         timeUpdateListener?.invoke(currentIntervalData.current)

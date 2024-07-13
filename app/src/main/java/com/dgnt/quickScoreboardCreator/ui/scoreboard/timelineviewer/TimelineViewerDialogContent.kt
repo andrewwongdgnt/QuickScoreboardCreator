@@ -88,7 +88,7 @@ private fun TimelineViewerInnerDialogContent(
                     items = historicalScoreboard.historicalIntervalMap.entries.toList(),
                     key = { it.hashCode() }
                 ) {
-                    TimelineViewerChart(historicalInterval = it.value)
+                    TimelineViewerChart(historicalInterval = it.value, intervalIndex = it.key)
                 }
             }
         }
