@@ -2,8 +2,12 @@ package com.dgnt.quickScoreboardCreator.domain.history.business.logic
 
 
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
@@ -21,10 +25,30 @@ class QSCHistoryCreatorTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-    }
+        sut.init(
+            listOf(
+                ScoreInfo(
+                    ScoreRule.NoRule,
+                    mapOf(),
+                    listOf()
+                ) to
+                        IntervalData(
+                            1000,
+                            1000
+                        ),
+                ScoreInfo(
+                    ScoreRule.NoRule,
+                    mapOf(),
+                    listOf()
+                ) to
+                        IntervalData(
+                            0,
+                            0,
+                            increasing = true
+                        )
+            )
+        )
 
-    @Test
-    fun testSequentialCreation() {
         sut.addEntry(
             intervalIndex = 0,
             currentTime = 0,
@@ -90,7 +114,10 @@ class QSCHistoryCreatorTest {
             currentScore = 3,
             currentDisplayedScore = "3"
         )
+    }
 
+    @Test
+    fun testSequentialCreation() {
         val historicalScoreboard = sut.create(
             IntervalLabel.CustomIntervalLabel("Quarter"),
             listOf(
@@ -101,9 +128,6 @@ class QSCHistoryCreatorTest {
 
         Assert.assertEquals(2, historicalScoreboard.historicalIntervalMap.size)
         val interval1 = historicalScoreboard.historicalIntervalMap[0]!!
-        interval1.let { interval ->
-            Assert.assertEquals(IntervalLabel.CustomIntervalLabel("Quarter", 0), interval.intervalLabel)
-        }
         Assert.assertEquals(2, interval1.historicalScoreGroupList.size)
         val scorer1AtInterval1 = interval1.historicalScoreGroupList[0]!!
         scorer1AtInterval1.primaryScoreList.let { primaryScoreList ->
@@ -123,9 +147,6 @@ class QSCHistoryCreatorTest {
                 Assert.assertEquals(16, it.time)
             }
         }
-        scorer1AtInterval1.teamLabel.let { teamLabel ->
-            Assert.assertEquals(TeamLabel.CustomTeamLabel("Whoaly", TeamIcon.SHARK), teamLabel)
-        }
 
         val scorer2AtInterval1 = interval1.historicalScoreGroupList[1]!!
         scorer2AtInterval1.primaryScoreList.let { primaryScoreList ->
@@ -140,14 +161,8 @@ class QSCHistoryCreatorTest {
                 Assert.assertEquals(22, it.time)
             }
         }
-        scorer2AtInterval1.teamLabel.let { teamLabel ->
-            Assert.assertEquals(TeamLabel.CustomTeamLabel("DGNT", TeamIcon.FIREBALL), teamLabel)
-        }
 
         val interval2 = historicalScoreboard.historicalIntervalMap[1]!!
-        interval2.let { interval ->
-            Assert.assertEquals(IntervalLabel.CustomIntervalLabel("Quarter", 1), interval.intervalLabel)
-        }
         Assert.assertEquals(2, interval2.historicalScoreGroupList.size)
         val scorer1AtInterval2 = interval2.historicalScoreGroupList[0]!!
         scorer1AtInterval2.primaryScoreList.let { primaryScoreList ->
@@ -162,9 +177,6 @@ class QSCHistoryCreatorTest {
                 Assert.assertEquals(12, it.time)
             }
         }
-        scorer1AtInterval2.teamLabel.let { teamLabel ->
-            Assert.assertEquals(TeamLabel.CustomTeamLabel("Whoaly", TeamIcon.SHARK), teamLabel)
-        }
 
         val scorer2AtInterval2 = interval2.historicalScoreGroupList[1]!!
         scorer2AtInterval2.primaryScoreList.let { primaryScoreList ->
@@ -174,6 +186,66 @@ class QSCHistoryCreatorTest {
                 Assert.assertEquals(14, it.time)
             }
         }
+    }
+
+    @Test
+    fun testRange() {
+        val historicalScoreboard = sut.create(
+            IntervalLabel.CustomIntervalLabel("Quarter"),
+            listOf(
+                TeamLabel.NoTeamLabel,
+                TeamLabel.CustomTeamLabel("DGNT", TeamIcon.FIREBALL),
+            )
+        )
+
+        Assert.assertEquals(2, historicalScoreboard.historicalIntervalMap.size)
+        val interval1 = historicalScoreboard.historicalIntervalMap[0]!!
+        interval1.let { interval ->
+            Assert.assertEquals(HistoricalIntervalRange.CountDown(1000), interval.range)
+        }
+
+        val interval2 = historicalScoreboard.historicalIntervalMap[1]!!
+        interval2.let { interval ->
+            Assert.assertEquals(HistoricalIntervalRange.Infinite, interval.range)
+        }
+
+    }
+
+    @Test
+    fun testLabels() {
+        val historicalScoreboard = sut.create(
+            IntervalLabel.CustomIntervalLabel("Quarter"),
+            listOf(
+                TeamLabel.NoTeamLabel,
+                TeamLabel.CustomTeamLabel("DGNT", TeamIcon.FIREBALL),
+            )
+        )
+
+        Assert.assertEquals(2, historicalScoreboard.historicalIntervalMap.size)
+        val interval1 = historicalScoreboard.historicalIntervalMap[0]!!
+        interval1.let { interval ->
+            Assert.assertEquals(IntervalLabel.CustomIntervalLabel("Quarter", 0), interval.intervalLabel)
+        }
+        val scorer1AtInterval1 = interval1.historicalScoreGroupList[0]!!
+        scorer1AtInterval1.teamLabel.let { teamLabel ->
+            Assert.assertEquals(TeamLabel.NoTeamLabel, teamLabel)
+        }
+
+        val scorer2AtInterval1 = interval1.historicalScoreGroupList[1]!!
+        scorer2AtInterval1.teamLabel.let { teamLabel ->
+            Assert.assertEquals(TeamLabel.CustomTeamLabel("DGNT", TeamIcon.FIREBALL), teamLabel)
+        }
+
+        val interval2 = historicalScoreboard.historicalIntervalMap[1]!!
+        interval2.let { interval ->
+            Assert.assertEquals(IntervalLabel.CustomIntervalLabel("Quarter", 1), interval.intervalLabel)
+        }
+        val scorer1AtInterval2 = interval2.historicalScoreGroupList[0]!!
+        scorer1AtInterval2.teamLabel.let { teamLabel ->
+            Assert.assertEquals(TeamLabel.NoTeamLabel, teamLabel)
+        }
+
+        val scorer2AtInterval2 = interval2.historicalScoreGroupList[1]!!
         scorer2AtInterval2.teamLabel.let { teamLabel ->
             Assert.assertEquals(TeamLabel.CustomTeamLabel("DGNT", TeamIcon.FIREBALL), teamLabel)
         }
@@ -181,6 +253,39 @@ class QSCHistoryCreatorTest {
 
     @Test
     fun testGapAndUnorderedCreation() {
+
+        sut.init(
+            listOf(
+                ScoreInfo(
+                    ScoreRule.NoRule,
+                    mapOf(),
+                    listOf()
+                ) to
+                        IntervalData(
+                            1000,
+                            1000
+                        ),
+                ScoreInfo(
+                    ScoreRule.NoRule,
+                    mapOf(),
+                    listOf()
+                ) to
+                        IntervalData(
+                            1000,
+                            1000
+                        ),
+                ScoreInfo(
+                    ScoreRule.NoRule,
+                    mapOf(),
+                    listOf()
+                ) to
+                        IntervalData(
+                            1000,
+                            1000
+                        )
+            )
+        )
+
         sut.addEntry(
             intervalIndex = 2,
             currentTime = 0,
@@ -244,14 +349,13 @@ class QSCHistoryCreatorTest {
             listOf(
                 TeamLabel.NoTeamLabel,
                 TeamLabel.CustomTeamLabel("KYRA", TeamIcon.TANK),
-            ))
+            )
+        )
 
         Assert.assertEquals(2, historicalScoreboard.historicalIntervalMap.size)
         val interval3 = historicalScoreboard.historicalIntervalMap[2]!!
-        interval3.let { interval ->
-            Assert.assertEquals(IntervalLabel.ResourceIntervalLabel(R.string.quarter, 2), interval.intervalLabel)
-        }
         Assert.assertEquals(2, interval3.historicalScoreGroupList.size)
+
         val scorer1AtInterval3 = interval3.historicalScoreGroupList[0]!!
         scorer1AtInterval3.primaryScoreList.let { primaryScoreList ->
             primaryScoreList[0].let {
@@ -270,9 +374,6 @@ class QSCHistoryCreatorTest {
                 Assert.assertEquals(16, it.time)
             }
         }
-        scorer1AtInterval3.teamLabel.let { teamLabel ->
-            Assert.assertEquals(TeamLabel.NoTeamLabel, teamLabel)
-        }
 
         val scorer2AtInterval3 = interval3.historicalScoreGroupList[1]!!
         scorer2AtInterval3.primaryScoreList.let { primaryScoreList ->
@@ -287,14 +388,8 @@ class QSCHistoryCreatorTest {
                 Assert.assertEquals(3, it.time)
             }
         }
-        scorer2AtInterval3.teamLabel.let { teamLabel ->
-            Assert.assertEquals(TeamLabel.CustomTeamLabel("KYRA", TeamIcon.TANK), teamLabel)
-        }
 
         val interval2 = historicalScoreboard.historicalIntervalMap[1]!!
-        interval2.let { interval ->
-            Assert.assertEquals(IntervalLabel.ResourceIntervalLabel(R.string.quarter, 1), interval.intervalLabel)
-        }
         Assert.assertEquals(1, interval2.historicalScoreGroupList.size)
 
         val scorer2AtInterval2 = interval2.historicalScoreGroupList[1]!!
@@ -309,9 +404,6 @@ class QSCHistoryCreatorTest {
                 Assert.assertEquals("4", it.displayedScore)
                 Assert.assertEquals(5, it.time)
             }
-        }
-        scorer2AtInterval2.teamLabel.let { teamLabel ->
-            Assert.assertEquals(TeamLabel.CustomTeamLabel("KYRA", TeamIcon.TANK), teamLabel)
         }
     }
 

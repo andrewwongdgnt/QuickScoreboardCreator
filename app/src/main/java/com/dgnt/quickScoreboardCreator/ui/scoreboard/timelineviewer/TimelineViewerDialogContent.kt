@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScore
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
@@ -105,6 +106,7 @@ private fun `Regular Timeline`() =
         historicalScoreboard = HistoricalScoreboard(
             mapOf(
                 0 to HistoricalInterval(
+                    range = HistoricalIntervalRange.CountDown(72000),
                     IntervalLabel.CustomIntervalLabel("Quarter", 0),
                     mapOf(
                         0 to HistoricalScoreGroup(
