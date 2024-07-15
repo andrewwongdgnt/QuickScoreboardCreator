@@ -50,6 +50,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -98,6 +99,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     //TODO chart library here
+    implementation(libs.mpandroidchart)
 
     //junit
     testImplementation(libs.junit)

@@ -24,6 +24,10 @@ class QSCScoreboardManager @Inject constructor(
     override var winRule: WinRule = WinRule.Count
 
     override var intervalList: List<Pair<ScoreInfo, IntervalData>> = listOf()
+        set(value) {
+            historyCreator.init(value)
+            field = value
+        }
 
     private var currentIntervalIndex: Int = 0
 
@@ -57,9 +61,6 @@ class QSCScoreboardManager @Inject constructor(
 
     private val currentIntervalData get() = intervalList[currentIntervalIndex].second
 
-    init {
-        historyCreator.init(intervalList)
-    }
 
     override fun triggerUpdateListeners() {
         timeUpdateListener?.invoke(currentIntervalData.current)

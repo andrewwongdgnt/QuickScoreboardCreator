@@ -34,7 +34,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerDialogContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.reflect.typeOf
@@ -122,12 +122,12 @@ class ScoreboardActivity : ComponentActivity() {
                                 )
 
                             }
-                            dialog<NavDestination.TimelineViewer>(
+                            composable<NavDestination.TimelineViewer>(
                                 typeMap = mapOf(
                                     typeOf<HistoricalScoreboard>() to parcelableType<HistoricalScoreboard>()
                                 )
                             ) {
-                                TimelineViewerDialogContent(
+                                TimelineViewerContent(
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
                                             UiEvent.Done -> navController.navigateUp()

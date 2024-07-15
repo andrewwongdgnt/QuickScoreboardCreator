@@ -17,6 +17,7 @@ kotlinxCoroutines = "1.7.3"
 lifecycleRuntimeKtx = "2.8.0"
 mockitoCore = "2.23.0"
 mockk = "1.13.10"
+mpandroidchart = "v3.1.0"
 room = "2.6.1"
 runtimeLivedata = "1.6.7"
 composeNavigation = "2.8.0-beta01"
@@ -57,6 +58,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 

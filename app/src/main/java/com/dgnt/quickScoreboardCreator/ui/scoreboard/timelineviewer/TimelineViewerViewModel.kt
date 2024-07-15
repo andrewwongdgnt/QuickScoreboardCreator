@@ -3,6 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -22,8 +23,10 @@ class TimelineViewerViewModel @Inject constructor(
 
     private var intervalIndex = 1
 
-    private val _historicalScoreboard = MutableStateFlow<HistoricalScoreboard?>(null)
-    val historicalScoreboard = _historicalScoreboard.asStateFlow()
+    private var historicalScoreboard: HistoricalScoreboard? = null
+
+    private var _historicalInterval = MutableStateFlow<HistoricalInterval?>(null)
+    val historicalInterval = _historicalInterval.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -31,16 +34,18 @@ class TimelineViewerViewModel @Inject constructor(
     init {
 
         savedStateHandle.get<Int>(Arguments.INDEX)?.let {
-            intervalIndex = it + 1
+            intervalIndex = it
         }
         savedStateHandle.get<HistoricalScoreboard>(Arguments.HISTORICAL_SCOREBOARD)?.let {
-            _historicalScoreboard.value = it
+            historicalScoreboard = it
+            _historicalInterval.value = historicalScoreboard?.historicalIntervalMap?.get(intervalIndex)
+
         }
     }
 
     fun onDismiss() = sendUiEvent(UiEvent.Done)
 
-    fun onSave(){
+    fun onSave() {
         sendUiEvent(UiEvent.Done)
     }
 
