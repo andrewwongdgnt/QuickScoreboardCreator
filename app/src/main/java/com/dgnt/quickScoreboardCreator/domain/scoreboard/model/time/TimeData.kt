@@ -7,8 +7,8 @@ data class TimeData(
     val second: Int,
     val centiSecond: Int,
 ) {
-    fun formatTime(): String {
-        return if (minute == 0)
+    fun formatTime(forceMin: Boolean = false): String {
+        return if (minute == 0 && !forceMin)
             String.format(Locale.ROOT, "%d.%d", second, centiSecond)
         else
             String.format(Locale.ROOT, "%02d:%02d", minute, second)

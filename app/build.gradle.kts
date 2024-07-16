@@ -95,10 +95,10 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
 
-    // Kotlin Extensions and Coroutines support for Room
+    //Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
 
-    //TODO chart library here
+    //chart library
     implementation(libs.mpandroidchart)
 
     //junit
