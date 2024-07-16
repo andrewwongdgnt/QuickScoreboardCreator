@@ -71,6 +71,8 @@
     <string name="emptyIntervalMsg">Must enter a value</string>
     <!-- Timeline Viewer -->
     <string name="timelineViewerTitle">Timeline</string>
+    <string name="nextInterval">Next %1$s</string>
+    <string name="prevInterval">Prev %1$s</string>
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->
@@ -90,4 +92,5 @@
     <string name="simpleMode">Simple</string>
     <string name="advanceMode">Advance</string>
     <string name="save">Save</string>
+    <string name="more">More</string>
 </resources>

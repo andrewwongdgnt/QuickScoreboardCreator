@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.TreeSet
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +22,7 @@ class TimelineViewerViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private var intervalIndex = 1
+    private var intervalIndex = 0
 
     private var historicalScoreboard: HistoricalScoreboard? = null
 
@@ -38,15 +39,41 @@ class TimelineViewerViewModel @Inject constructor(
         }
         savedStateHandle.get<HistoricalScoreboard>(Arguments.HISTORICAL_SCOREBOARD)?.let {
             historicalScoreboard = it
-            _historicalInterval.value = historicalScoreboard?.historicalIntervalMap?.get(intervalIndex)
-
+            setTimeline(intervalIndex)
         }
     }
 
     fun onDismiss() = sendUiEvent(UiEvent.Done)
 
     fun onSave() {
-        sendUiEvent(UiEvent.Done)
+        //TODO do some saving here
+    }
+
+    fun onNewInterval(next: Boolean) {
+        historicalScoreboard?.let {
+            val sortedSet = TreeSet(it.historicalIntervalMap.keys.toSortedSet())
+            if (sortedSet.size > 1) {
+                if (next) {
+                    if (intervalIndex == sortedSet.last())
+                        sortedSet.first()
+                    else
+                        sortedSet.tailSet(intervalIndex, false).first()
+                } else {
+                    if (intervalIndex == sortedSet.first())
+                        sortedSet.last()
+                    else
+                        sortedSet.headSet(intervalIndex, false).last()
+                }.let { intervalIndex ->
+                    setTimeline(intervalIndex)
+                }
+
+            }
+        }
+    }
+
+    private fun setTimeline(intervalIndex: Int) {
+        this.intervalIndex = intervalIndex
+        _historicalInterval.value = historicalScoreboard?.historicalIntervalMap?.get(intervalIndex)
     }
 
     private fun sendUiEvent(event: UiEvent) {
