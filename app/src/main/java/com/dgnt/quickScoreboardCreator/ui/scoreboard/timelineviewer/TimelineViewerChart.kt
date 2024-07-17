@@ -112,6 +112,7 @@ fun TimelineViewerChart(
                 position = XAxis.XAxisPosition.BOTTOM
                 textSize = commonTextSize
                 textColor = commonTextColor
+                setLabelCount(5, true)
             }
             chart.axisLeft.apply {
                 textSize = commonTextSize
