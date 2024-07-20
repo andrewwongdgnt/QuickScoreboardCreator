@@ -8,14 +8,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-sealed class IntervalLabel(val index: Int) : Parcelable {
-    @Serializable
-    @Parcelize
-    data class CustomIntervalLabel(val value: String, val i: Int = -1) : IntervalLabel(i)
+sealed interface IntervalLabel : Parcelable {
+
+    val index: Int
 
     @Serializable
     @Parcelize
-    data class ResourceIntervalLabel(@StringRes val res: Int, val i: Int = -1) : IntervalLabel(i)
+    data class CustomIntervalLabel(val value: String, override val index: Int = -1) : IntervalLabel
+
+    @Serializable
+    @Parcelize
+    data class ResourceIntervalLabel(@StringRes val res: Int, override val index: Int = -1) : IntervalLabel
 
     fun duplicateWithIndex(index: Int) =
         when (this) {

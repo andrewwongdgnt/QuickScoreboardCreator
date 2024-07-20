@@ -142,6 +142,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private var scoreboardIdentifier: ScoreboardIdentifier? = null
 
+    private var timelineViewerTitle = ""
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -178,7 +180,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private fun initWithId(id: Int) {
         viewModelScope.launch {
             getScoreboardUseCase(id)?.let {
-
+                timelineViewerTitle = it.title
             }
         }
     }
@@ -197,6 +199,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             secondaryScoreLabelList = defaultScoreboardConfig.intervalList.map {
                 Label.ResourceLabel(scoreboardType.secondaryScoreLabelRes)
             }
+            timelineViewerTitle = resources.getString(defaultScoreboardConfig.scoreboardType.titleRes)
         }
 
     }
@@ -283,7 +286,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 is TeamDisplay.SelectedTeamDisplay -> TeamLabel.CustomTeamLabel(it.name, it.icon)
             }
         }
-        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(intervalLabel, teamList), currentInterval.value - 1))
+        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(intervalLabel, teamList), currentInterval.value - 1, timelineViewerTitle))
     }
 
     override fun onCleared() {

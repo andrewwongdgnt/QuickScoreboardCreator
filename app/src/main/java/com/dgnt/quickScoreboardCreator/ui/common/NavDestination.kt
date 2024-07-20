@@ -8,6 +8,7 @@ object Arguments {
     const val SCOREBOARD_IDENTIFIER = "scoreboardIdentifier"
     const val ID = "id"
     const val INDEX = "index"
+    const val TITLE = "title"
     const val VALUE = "value"
     const val HISTORICAL_SCOREBOARD = "historicalScoreboard"
 }
@@ -63,6 +64,8 @@ sealed interface NavDestination {
         val historicalScoreboard: HistoricalScoreboard,
         @SerialName(Arguments.INDEX)
         val index: Int,
+        @SerialName(Arguments.TITLE)
+        val title: String,
     ) : NavDestination
 
     @Serializable

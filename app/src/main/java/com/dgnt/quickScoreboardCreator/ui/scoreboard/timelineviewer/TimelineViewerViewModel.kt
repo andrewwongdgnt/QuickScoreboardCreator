@@ -13,16 +13,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 import java.util.TreeSet
 import javax.inject.Inject
 
 @HiltViewModel
 class TimelineViewerViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
 
     private var intervalIndex = 0
+
+    private var defaultTitle = ""
 
     private var historicalScoreboard: HistoricalScoreboard? = null
 
@@ -32,8 +35,13 @@ class TimelineViewerViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    private val lastLookedAt = DateTime.now()
+
     init {
 
+        savedStateHandle.get<String>(Arguments.TITLE)?.let {
+            defaultTitle = it
+        }
         savedStateHandle.get<Int>(Arguments.INDEX)?.let {
             intervalIndex = it
         }
@@ -45,8 +53,11 @@ class TimelineViewerViewModel @Inject constructor(
 
     fun onDismiss() = sendUiEvent(UiEvent.Done)
 
-    fun onSave() {
-        //TODO do some saving here
+    fun onSave()  {
+        historicalScoreboard?.let { historicalScoreboard ->
+
+            //TODO send ui event to open dialog to save the data
+        }
     }
 
     fun onNewInterval(next: Boolean) {

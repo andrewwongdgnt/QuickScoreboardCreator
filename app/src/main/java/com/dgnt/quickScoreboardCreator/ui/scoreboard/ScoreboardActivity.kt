@@ -71,7 +71,7 @@ class ScoreboardActivity : ComponentActivity() {
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
                                             is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.scoreboardIdentifier))
-                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.historicalScoreboard, uiEvent.index))
+                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.historicalScoreboard, uiEvent.index, uiEvent.title))
                                             else -> Unit
                                         }
 
