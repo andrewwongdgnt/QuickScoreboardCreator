@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.domain.serializer
+package com.dgnt.quickScoreboardCreator.core.gson
 
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ConfigType

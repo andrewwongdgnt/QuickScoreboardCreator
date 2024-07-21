@@ -70,9 +70,10 @@
     <string name="invalidIntervalMsg">Must be between 1 and %1$d</string>
     <string name="emptyIntervalMsg">Must enter a value</string>
     <!-- Timeline Viewer -->
-    <string name="timelineViewerTitle">Timeline</string>
     <string name="nextInterval">Next %1$s</string>
     <string name="prevInterval">Prev %1$s</string>
+    <!-- Timeline Saver -->
+    <string name="timelineSaverTitle">Input a title</string>
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->

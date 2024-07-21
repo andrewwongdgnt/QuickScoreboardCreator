@@ -1,8 +1,8 @@
 package com.dgnt.quickScoreboardCreator.data.db
 
 import androidx.room.TypeConverter
-import com.dgnt.quickScoreboardCreator.domain.serializer.GsonProvider
-import com.dgnt.quickScoreboardCreator.domain.serializer.fromJson
+import com.dgnt.quickScoreboardCreator.core.gson.GsonProvider
+import com.dgnt.quickScoreboardCreator.core.gson.fromJson
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 

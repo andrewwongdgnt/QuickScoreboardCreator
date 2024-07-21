@@ -9,6 +9,7 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
@@ -143,6 +144,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private var scoreboardIdentifier: ScoreboardIdentifier? = null
 
     private var timelineViewerTitle = ""
+    private var timelineViewerIcon = ScoreboardIcon.BASKETBALL
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -181,12 +183,15 @@ class ScoreboardInteractionViewModel @Inject constructor(
         viewModelScope.launch {
             getScoreboardUseCase(id)?.let {
                 timelineViewerTitle = it.title
+                timelineViewerIcon = it.icon
             }
         }
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _intervalLabel.value = Label.ResourceLabel(scoreboardType.intervalLabelRes)
+        timelineViewerTitle = resources.getString(scoreboardType.titleRes)
+        timelineViewerIcon = scoreboardType.icon
         scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let { defaultScoreboardConfig ->
@@ -199,7 +204,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
             secondaryScoreLabelList = defaultScoreboardConfig.intervalList.map {
                 Label.ResourceLabel(scoreboardType.secondaryScoreLabelRes)
             }
-            timelineViewerTitle = resources.getString(defaultScoreboardConfig.scoreboardType.titleRes)
         }
 
     }
@@ -286,7 +290,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 is TeamDisplay.SelectedTeamDisplay -> TeamLabel.CustomTeamLabel(it.name, it.icon)
             }
         }
-        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(intervalLabel, teamList), currentInterval.value - 1, timelineViewerTitle))
+        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(intervalLabel, teamList), currentInterval.value - 1, timelineViewerTitle, timelineViewerIcon))
     }
 
     override fun onCleared() {

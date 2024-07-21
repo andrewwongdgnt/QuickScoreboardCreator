@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
 import com.dgnt.quickScoreboardCreator.ui.common.composable.AutoSizeText
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
@@ -153,7 +154,7 @@ private fun ScoreValueContent(
 
 }
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `Normal scores`() =
     TwoScoreDisplay(
@@ -180,7 +181,7 @@ private fun `Normal scores`() =
         onScoreChange = { _, _, _, _ -> }
     )
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `Deuce`() =
     TwoScoreDisplay(

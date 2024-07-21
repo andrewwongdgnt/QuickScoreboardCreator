@@ -28,6 +28,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberTimeline
@@ -250,7 +251,7 @@ private fun ScoreboardInteractionInnerContent(
 
 }
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `2 Teams with long names`() =
     ScoreboardInteractionInnerContent(
@@ -297,7 +298,7 @@ private fun `2 Teams with long names`() =
         toTimelineViewer = {},
     )
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `2 Teams with short names`() =
     ScoreboardInteractionInnerContent(
@@ -344,7 +345,7 @@ private fun `2 Teams with short names`() =
         toTimelineViewer = {},
     )
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `Adv`() =
     ScoreboardInteractionInnerContent(
@@ -385,7 +386,7 @@ private fun `Adv`() =
         toTimelineViewer = {},
     )
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `Deuce`() =
     ScoreboardInteractionInnerContent(

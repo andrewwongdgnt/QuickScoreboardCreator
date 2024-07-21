@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoringButton
 
 @Composable
@@ -38,7 +39,7 @@ fun ScoreControl(
 }
 
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `advance left orientation`() =
     ScoreControl(
@@ -47,7 +48,7 @@ private fun `advance left orientation`() =
         onIncrement = { _, _ -> }
     )
 
-@PreviewScreenSizes
+@PreviewLandscape
 @Composable
 private fun `simple left orientation`() =
     ScoreControl(

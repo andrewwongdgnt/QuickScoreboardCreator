@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import java.util.TreeSet
 import javax.inject.Inject
 
@@ -27,6 +27,9 @@ class TimelineViewerViewModel @Inject constructor(
 
     private var defaultTitle = ""
 
+    private var _icon = MutableStateFlow<ScoreboardIcon?>(null)
+    val icon = _icon.asStateFlow()
+
     private var historicalScoreboard: HistoricalScoreboard? = null
 
     private var _historicalInterval = MutableStateFlow<HistoricalInterval?>(null)
@@ -35,12 +38,14 @@ class TimelineViewerViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    private val lastLookedAt = DateTime.now()
 
     init {
 
         savedStateHandle.get<String>(Arguments.TITLE)?.let {
             defaultTitle = it
+        }
+        savedStateHandle.get<ScoreboardIcon>(Arguments.ICON)?.let {
+            _icon.value = it
         }
         savedStateHandle.get<Int>(Arguments.INDEX)?.let {
             intervalIndex = it
@@ -53,11 +58,11 @@ class TimelineViewerViewModel @Inject constructor(
 
     fun onDismiss() = sendUiEvent(UiEvent.Done)
 
-    fun onSave()  {
-        historicalScoreboard?.let { historicalScoreboard ->
+    fun onSave() {
+        val icon = icon.value ?: return
+        val historicalScoreboard = historicalScoreboard ?: return
 
-            //TODO send ui event to open dialog to save the data
-        }
+        sendUiEvent(UiEvent.TimelineSaver(historicalScoreboard, defaultTitle, icon))
     }
 
     fun onNewInterval(next: Boolean) {

@@ -37,6 +37,7 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.OverflowMenu
 import kotlinx.coroutines.flow.Flow
@@ -153,10 +154,7 @@ private fun TimelineViewerInnerContent(
 }
 
 
-@Preview(
-    showSystemUi = true,
-    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
-)
+@PreviewLandscape
 @Composable
 private fun `Loading Timeline`() =
     TimelineViewerInnerContent(
