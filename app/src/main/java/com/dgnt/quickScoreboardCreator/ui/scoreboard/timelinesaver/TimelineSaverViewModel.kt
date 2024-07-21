@@ -3,7 +3,9 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelinesaver
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
+import com.dgnt.quickScoreboardCreator.domain.common.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
@@ -21,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TimelineSaverViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val mapper: Mapper<HistoricalScoreboard, HistoricalScoreboardData>,
     private val insertHistoryListUseCase: InsertHistoryListUseCase
 ) : ViewModel() {
 
@@ -59,15 +62,18 @@ class TimelineSaverViewModel @Inject constructor(
 
     fun onSave() = viewModelScope.launch {
         historicalScoreboard?.let { historicalScoreboard ->
-            insertHistoryListUseCase(listOf(
-                HistoryEntity(
-                    title = title.value,
-                    icon = ScoreboardIcon.SOCCER,
-                    lastLookedAt = lastLookedAt,
-                    historicalScoreboard = historicalScoreboard
+            insertHistoryListUseCase(
+                listOf(
+                    HistoryEntity(
+                        title = title.value,
+                        icon = ScoreboardIcon.SOCCER,
+                        lastLookedAt = lastLookedAt,
+                        historicalScoreboard = mapper.map(historicalScoreboard)
+                    )
                 )
-            ))
+            )
         }
+        sendUiEvent(UiEvent.Done)
     }
 
     private fun sendUiEvent(event: UiEvent) {

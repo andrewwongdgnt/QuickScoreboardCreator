@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.history.model
 
 import android.os.Parcelable
-import androidx.annotation.StringRes
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -18,12 +18,12 @@ sealed interface IntervalLabel : Parcelable {
 
     @Serializable
     @Parcelize
-    data class ResourceIntervalLabel(@StringRes val res: Int, override val index: Int = -1) : IntervalLabel
+    data class ScoreboardTypeIntervalLabel(val scoreboardType: ScoreboardType, override val index: Int = -1) : IntervalLabel
 
     fun duplicateWithIndex(index: Int) =
         when (this) {
             is CustomIntervalLabel -> CustomIntervalLabel(this.value, index)
-            is ResourceIntervalLabel -> ResourceIntervalLabel(this.res, index)
+            is ScoreboardTypeIntervalLabel -> ScoreboardTypeIntervalLabel(this.scoreboardType, index)
         }
 
 }

@@ -120,6 +120,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         }
     }
 
+    private var scoreboardType: ScoreboardType? = null
     /**
      * Winners by team index
      */
@@ -189,6 +190,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
+        this.scoreboardType = scoreboardType
         _intervalLabel.value = Label.ResourceLabel(scoreboardType.intervalLabelRes)
         timelineViewerTitle = resources.getString(scoreboardType.titleRes)
         timelineViewerIcon = scoreboardType.icon
@@ -282,7 +284,9 @@ class ScoreboardInteractionViewModel @Inject constructor(
     fun toTimelineViewer() {
         val intervalLabel = when (val l = intervalLabel.value) {
             is Label.CustomLabel -> IntervalLabel.CustomIntervalLabel(l.value)
-            is Label.ResourceLabel -> IntervalLabel.ResourceIntervalLabel(l.res)
+            else -> scoreboardType?.let {
+                IntervalLabel.ScoreboardTypeIntervalLabel(it)
+            } ?: IntervalLabel.CustomIntervalLabel("")
         }
         val teamList = teamList.value.map {
             when (it) {

@@ -5,6 +5,7 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
@@ -345,7 +346,7 @@ class QSCHistoryCreatorTest {
         )
 
         val historicalScoreboard = sut.create(
-            IntervalLabel.ResourceIntervalLabel(R.string.quarter),
+            IntervalLabel.ScoreboardTypeIntervalLabel(ScoreboardType.BASKETBALL),
             listOf(
                 TeamLabel.NoTeamLabel,
                 TeamLabel.CustomTeamLabel("KYRA", TeamIcon.TANK),

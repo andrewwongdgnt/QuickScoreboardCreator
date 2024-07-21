@@ -80,7 +80,7 @@ private fun TimelineViewerInnerContent(
             val intervalLabel = historicalInterval?.let {
                 when (val label = historicalInterval.intervalLabel) {
                     is IntervalLabel.CustomIntervalLabel -> label.value
-                    is IntervalLabel.ResourceIntervalLabel -> stringResource(id = label.res)
+                    is IntervalLabel.ScoreboardTypeIntervalLabel -> stringResource(id = label.scoreboardType.intervalLabelRes)
                 }
             } ?: ""
             val intervalLabelString = historicalInterval?.let {
