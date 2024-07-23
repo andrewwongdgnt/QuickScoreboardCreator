@@ -26,7 +26,7 @@ class QSCWinCalculatorTest {
 
         val mockScoreInfoList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -40,7 +40,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -54,7 +54,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -81,7 +81,7 @@ class QSCWinCalculatorTest {
 
         val mockScoreInfoList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -95,7 +95,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -109,7 +109,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -135,7 +135,7 @@ class QSCWinCalculatorTest {
     fun testWinnerByCount() {
         val mockScoreInfoList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -149,7 +149,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -163,7 +163,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -189,7 +189,7 @@ class QSCWinCalculatorTest {
     fun testTieByCount() {
         val mockScoreInfoList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -203,7 +203,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -217,7 +217,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -243,7 +243,7 @@ class QSCWinCalculatorTest {
     fun testWinnerBySum() {
         val mockScoreInfoList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -257,7 +257,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -271,7 +271,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -297,7 +297,7 @@ class QSCWinCalculatorTest {
     fun testTieBySum() {
         val mockScoreInfoList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -311,7 +311,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -325,7 +325,7 @@ class QSCWinCalculatorTest {
                 )
             ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(

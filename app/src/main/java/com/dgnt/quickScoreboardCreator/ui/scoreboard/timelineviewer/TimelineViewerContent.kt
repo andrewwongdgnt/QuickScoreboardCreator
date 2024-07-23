@@ -79,8 +79,8 @@ private fun TimelineViewerInnerContent(
         topBar = {
             val intervalLabel = historicalInterval?.let {
                 when (val label = historicalInterval.intervalLabel) {
-                    is IntervalLabel.CustomIntervalLabel -> label.value
-                    is IntervalLabel.ScoreboardTypeIntervalLabel -> stringResource(id = label.scoreboardType.intervalLabelRes)
+                    is IntervalLabel.Custom -> label.value
+                    is IntervalLabel.ScoreboardType -> stringResource(id = label.scoreboardType.intervalLabelRes)
                 }
             } ?: ""
             val intervalLabelString = historicalInterval?.let {
@@ -177,10 +177,10 @@ private fun `Infinite Timeline`() =
         onUiEvent = {},
         historicalInterval = HistoricalInterval(
             range = HistoricalIntervalRange.Infinite,
-            IntervalLabel.CustomIntervalLabel("Game", 0),
+            IntervalLabel.Custom("Game", 0),
             mapOf(
                 0 to HistoricalScoreGroup(
-                    teamLabel = TeamLabel.CustomTeamLabel("DGNT", TeamIcon.AXE),
+                    teamLabel = TeamLabel.Custom("DGNT", TeamIcon.AXE),
                     primaryScoreList = listOf(
                         HistoricalScore(0, "0", 0),
                         HistoricalScore(1, "1", 1000),
@@ -190,7 +190,7 @@ private fun `Infinite Timeline`() =
                     secondaryScoreList = listOf()
                 ),
                 1 to HistoricalScoreGroup(
-                    teamLabel = TeamLabel.NoTeamLabel,
+                    teamLabel = TeamLabel.None,
                     primaryScoreList = listOf(
                         HistoricalScore(0, "0", 0),
                         HistoricalScore(1, "1", 2000),
@@ -218,10 +218,10 @@ private fun `Countdown Timeline`() =
         onUiEvent = {},
         historicalInterval = HistoricalInterval(
             range = HistoricalIntervalRange.CountDown(72000),
-            IntervalLabel.CustomIntervalLabel("Quarter", 0),
+            IntervalLabel.Custom("Quarter", 0),
             mapOf(
                 0 to HistoricalScoreGroup(
-                    teamLabel = TeamLabel.CustomTeamLabel("DGNT", TeamIcon.AXE),
+                    teamLabel = TeamLabel.Custom("DGNT", TeamIcon.AXE),
                     primaryScoreList = listOf(
                         HistoricalScore(0, "0", 720000),
                         HistoricalScore(1, "1", 66000L),

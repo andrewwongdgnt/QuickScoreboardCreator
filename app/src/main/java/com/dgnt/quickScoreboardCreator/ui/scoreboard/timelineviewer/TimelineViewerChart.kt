@@ -47,8 +47,8 @@ fun TimelineViewerChart(
 
                 }.let { entries ->
                     val label = when (val tl = historicalScore.teamLabel) {
-                        is TeamLabel.CustomTeamLabel -> tl.name
-                        TeamLabel.NoTeamLabel -> localContext.getString(R.string.genericTeamTitle, scoreIndex + 1)
+                        is TeamLabel.Custom -> tl.name
+                        TeamLabel.None -> localContext.getString(R.string.genericTeamTitle, scoreIndex + 1)
                     }
 
 

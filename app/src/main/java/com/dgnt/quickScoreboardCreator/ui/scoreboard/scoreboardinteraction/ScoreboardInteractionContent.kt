@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -259,8 +258,8 @@ private fun `2 Teams with long names`() =
         onUiEvent = {},
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
-                DisplayedScore.CustomDisplayedScore("10"),
-                DisplayedScore.CustomDisplayedScore("21"),
+                DisplayedScore.Custom("10"),
+                DisplayedScore.Custom("21"),
             ),
             DisplayedScore.Blank
         ),
@@ -270,8 +269,8 @@ private fun `2 Teams with long names`() =
         ),
         secondaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
-                DisplayedScore.CustomDisplayedScore("1"),
-                DisplayedScore.CustomDisplayedScore("0"),
+                DisplayedScore.Custom("1"),
+                DisplayedScore.Custom("0"),
             ),
             DisplayedScore.Blank
         ),
@@ -279,11 +278,11 @@ private fun `2 Teams with long names`() =
             listOf(1),
             listOf(1),
         ),
-        secondaryScoreLabel = Label.CustomLabel("S"),
+        secondaryScoreLabel = Label.Custom("S"),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers Tigers Tigers Tigers Tigers", TeamIcon.TIGER)
+            TeamDisplay.Selected("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
+            TeamDisplay.Selected("Tigers Tigers Tigers Tigers Tigers", TeamIcon.TIGER)
         ),
         toTeamPicker = { _ -> },
         timeData = TimeData(12, 2, 4),
@@ -292,7 +291,7 @@ private fun `2 Teams with long names`() =
         onTimerStart = {},
         simpleMode = false,
         onToggleModeChange = { _ -> },
-        intervalLabel = Label.CustomLabel("P"),
+        intervalLabel = Label.Custom("P"),
         currentInterval = 1,
         toIntervalEditor = {},
         toTimelineViewer = {},
@@ -306,8 +305,8 @@ private fun `2 Teams with short names`() =
         onUiEvent = {},
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
-                DisplayedScore.CustomDisplayedScore("10"),
-                DisplayedScore.CustomDisplayedScore("261"),
+                DisplayedScore.Custom("10"),
+                DisplayedScore.Custom("261"),
             ),
             DisplayedScore.Blank
         ),
@@ -317,8 +316,8 @@ private fun `2 Teams with short names`() =
         ),
         secondaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
-                DisplayedScore.CustomDisplayedScore("1"),
-                DisplayedScore.CustomDisplayedScore("0"),
+                DisplayedScore.Custom("1"),
+                DisplayedScore.Custom("0"),
             ),
             DisplayedScore.Blank
         ),
@@ -326,11 +325,11 @@ private fun `2 Teams with short names`() =
             listOf(1),
             listOf(1),
         ),
-        secondaryScoreLabel = Label.ResourceLabel(R.string.fouls),
+        secondaryScoreLabel = Label.Resource(R.string.fouls),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
+            TeamDisplay.Selected("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.Selected("Tigers", TeamIcon.TIGER)
         ),
         toTeamPicker = { _ -> },
         timeData = TimeData(12, 2, 4),
@@ -339,7 +338,7 @@ private fun `2 Teams with short names`() =
         onTimerStart = {},
         simpleMode = true,
         onToggleModeChange = { _ -> },
-        intervalLabel = Label.ResourceLabel(R.string.quarter),
+        intervalLabel = Label.Resource(R.string.quarter),
         currentInterval = 1,
         toIntervalEditor = {},
         toTimelineViewer = {},
@@ -367,11 +366,11 @@ private fun `Adv`() =
             DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
-        secondaryScoreLabel = Label.ResourceLabel(R.string.blank),
+        secondaryScoreLabel = Label.Resource(R.string.blank),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
+            TeamDisplay.Selected("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.Selected("Tigers", TeamIcon.TIGER)
         ),
         toTeamPicker = { _ -> },
         timeData = TimeData(12, 2, 4),
@@ -380,7 +379,7 @@ private fun `Adv`() =
         onTimerStart = {},
         simpleMode = true,
         onToggleModeChange = { _ -> },
-        intervalLabel = Label.ResourceLabel(R.string.set),
+        intervalLabel = Label.Resource(R.string.set),
         currentInterval = 2,
         toIntervalEditor = {},
         toTimelineViewer = {},
@@ -408,11 +407,11 @@ private fun `Deuce`() =
             DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
-        secondaryScoreLabel = Label.ResourceLabel(R.string.blank),
+        secondaryScoreLabel = Label.Resource(R.string.blank),
         onScoreChange = { _, _, _, _ -> },
         teamList = listOf(
-            TeamDisplay.SelectedTeamDisplay("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.SelectedTeamDisplay("Tigers", TeamIcon.TIGER)
+            TeamDisplay.Selected("Gorillas", TeamIcon.GORILLA),
+            TeamDisplay.Selected("Tigers", TeamIcon.TIGER)
         ),
         toTeamPicker = { _ -> },
         timeData = TimeData(12, 2, 4),
@@ -421,7 +420,7 @@ private fun `Deuce`() =
         onTimerStart = {},
         simpleMode = false,
         onToggleModeChange = { _ -> },
-        intervalLabel = Label.ResourceLabel(R.string.game),
+        intervalLabel = Label.Resource(R.string.game),
         currentInterval = 3,
         toIntervalEditor = {},
         toTimelineViewer = {},

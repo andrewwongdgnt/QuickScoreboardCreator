@@ -46,7 +46,7 @@ import kotlin.reflect.typeOf
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val scoreboardIdentifier = IntentCompat.getParcelableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java) ?: ScoreboardIdentifier.CustomScoreboard(-1)
+        val scoreboardIdentifier = IntentCompat.getParcelableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java) ?: ScoreboardIdentifier.Custom(-1)
         setContent {
             QuickScoreboardCreatorTheme {
                 // A surface container using the 'background' color from the theme

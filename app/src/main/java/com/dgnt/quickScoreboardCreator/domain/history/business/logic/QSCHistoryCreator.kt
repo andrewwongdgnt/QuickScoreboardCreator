@@ -55,7 +55,7 @@ class QSCHistoryCreator : HistoryCreator {
                             HistoricalScore(it.currentScore, it.currentDisplayedScore, it.currentTime)
                         }
                         HistoricalScoreGroup(
-                            teamList.getOrNull(scoreIndex) ?: TeamLabel.NoTeamLabel,
+                            teamList.getOrNull(scoreIndex) ?: TeamLabel.None,
                             historyEntries.value.filter { it.isPrimary }.map(mapHistoryEntry),
                             historyEntries.value.filterNot { it.isPrimary }.sortedBy { it.currentTime }.map(mapHistoryEntry)
                         )

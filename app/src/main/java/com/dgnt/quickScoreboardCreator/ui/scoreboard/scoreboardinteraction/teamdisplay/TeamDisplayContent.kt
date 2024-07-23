@@ -50,11 +50,11 @@ fun TeamDisplayContent(
             teamDisplay = teamDisplay
         )
         val textValue = when (teamDisplay) {
-            is TeamDisplay.SelectedTeamDisplay -> {
+            is TeamDisplay.Selected -> {
                 teamDisplay.name
             }
 
-            is TeamDisplay.UnSelectedTeamDisplay -> {
+            is TeamDisplay.UnSelected -> {
                 if (simpleMode)
                     stringResource(R.string.genericTeamTitle, teamNumber)
                 else
@@ -82,10 +82,10 @@ private fun ImageContent(
 ) {
     val imageModifier = modifier
         .requiredSize(56.dp)
-        .alpha(if (simpleMode && teamDisplay is TeamDisplay.UnSelectedTeamDisplay) 0f else 100f)
+        .alpha(if (simpleMode && teamDisplay is TeamDisplay.UnSelected) 0f else 100f)
 
     when (teamDisplay) {
-        is TeamDisplay.SelectedTeamDisplay -> {
+        is TeamDisplay.Selected -> {
             Image(
                 painter = painterResource(teamDisplay.icon.res),
                 null,
@@ -93,7 +93,7 @@ private fun ImageContent(
             )
         }
 
-        is TeamDisplay.UnSelectedTeamDisplay -> {
+        is TeamDisplay.UnSelected -> {
 
             Image(
                 imageVector = Icons.Default.Edit,
@@ -111,7 +111,7 @@ private fun ImageContent(
 private fun `Advance Team display`() =
     TeamDisplayContent(
         simpleMode = false,
-        teamDisplay = TeamDisplay.SelectedTeamDisplay(
+        teamDisplay = TeamDisplay.Selected(
             "GORILLA",
             TeamIcon.GORILLA
         ),
@@ -124,7 +124,7 @@ private fun `Advance Team display`() =
 private fun `Simple Team display`() =
     TeamDisplayContent(
         simpleMode = true,
-        teamDisplay = TeamDisplay.SelectedTeamDisplay(
+        teamDisplay = TeamDisplay.Selected(
             "GORILLA",
             TeamIcon.GORILLA
         ),
@@ -137,7 +137,7 @@ private fun `Simple Team display`() =
 private fun `Advance No team display`() =
     TeamDisplayContent(
         simpleMode = false,
-        teamDisplay = TeamDisplay.UnSelectedTeamDisplay,
+        teamDisplay = TeamDisplay.UnSelected,
         teamNumber = 1,
         onEditClick = {}
     )
@@ -147,7 +147,7 @@ private fun `Advance No team display`() =
 private fun `Simple No team display`() =
     TeamDisplayContent(
         simpleMode = true,
-        teamDisplay = TeamDisplay.UnSelectedTeamDisplay,
+        teamDisplay = TeamDisplay.UnSelected,
         teamNumber = 1,
         onEditClick = {}
     )

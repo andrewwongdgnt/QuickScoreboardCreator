@@ -25,6 +25,7 @@ class QSCScoreboardManagerTest {
 
     @MockK
     private lateinit var winCalculator: WinCalculator
+
     @MockK
     private lateinit var historyCreator: HistoryCreator
 
@@ -58,6 +59,7 @@ class QSCScoreboardManagerTest {
         every { winCalculator.store(any(), any()) } answers { }
         every { winCalculator.calculate(any()) } answers { setOf(0) }
 
+        every { historyCreator.init(any()) } answers { }
         every { historyCreator.addEntry(any(), any(), any(), any(), any(), any()) } answers { }
         every { historyCreator.create(any(), any()) } answers { HistoricalScoreboard(mapOf()) }
     }
@@ -67,7 +69,7 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -91,8 +93,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("2"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("2"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -106,8 +108,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("5"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("5"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -122,8 +124,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("5"),
-                            DisplayedScore.CustomDisplayedScore("3"),
+                            DisplayedScore.Custom("5"),
+                            DisplayedScore.Custom("3"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -138,8 +140,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("5"),
-                            DisplayedScore.CustomDisplayedScore("6"),
+                            DisplayedScore.Custom("5"),
+                            DisplayedScore.Custom("6"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -155,7 +157,7 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -179,8 +181,8 @@ class QSCScoreboardManagerTest {
                 sut.secondaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("1"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("1"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -195,8 +197,8 @@ class QSCScoreboardManagerTest {
                 sut.secondaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("1"),
-                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.Custom("1"),
+                            DisplayedScore.Custom("1"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -211,7 +213,7 @@ class QSCScoreboardManagerTest {
         sut.winRule = WinRule.Final
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -228,7 +230,7 @@ class QSCScoreboardManagerTest {
                         4, 4
                     ),
             ScoreInfo(
-                ScoreRule.NoRule,
+                ScoreRule.None,
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -257,8 +259,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("2"),
-                            DisplayedScore.CustomDisplayedScore("3"),
+                            DisplayedScore.Custom("2"),
+                            DisplayedScore.Custom("3"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -285,7 +287,7 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
+                ScoreRule.Trigger.Max(2),
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -303,7 +305,7 @@ class QSCScoreboardManagerTest {
                     ),
 
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
+                ScoreRule.Trigger.Max(2),
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -321,7 +323,7 @@ class QSCScoreboardManagerTest {
                     ),
 
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.MaxScoreRule(2),
+                ScoreRule.Trigger.Max(2),
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -345,8 +347,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("1"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("1"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -360,8 +362,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("2"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("2"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -375,8 +377,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("0"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("0"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -402,8 +404,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("0"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("0"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -429,7 +431,7 @@ class QSCScoreboardManagerTest {
 
         sut.intervalList = listOf(
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
+                ScoreRule.Trigger.DeuceAdvantage(2),
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -447,7 +449,7 @@ class QSCScoreboardManagerTest {
                     ),
 
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
+                ScoreRule.Trigger.DeuceAdvantage(2),
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -464,7 +466,7 @@ class QSCScoreboardManagerTest {
                         0, 0
                     ),
             ScoreInfo(
-                ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(2),
+                ScoreRule.Trigger.DeuceAdvantage(2),
                 mapOf(),
                 listOf(
                     ScoreGroup(
@@ -487,8 +489,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("1"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("1"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -503,8 +505,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("2"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("2"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -518,8 +520,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("2"),
-                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.Custom("2"),
+                            DisplayedScore.Custom("1"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -596,8 +598,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("1"),
-                            DisplayedScore.CustomDisplayedScore("1"),
+                            DisplayedScore.Custom("1"),
+                            DisplayedScore.Custom("1"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -622,8 +624,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("1"),
-                            DisplayedScore.CustomDisplayedScore("2"),
+                            DisplayedScore.Custom("1"),
+                            DisplayedScore.Custom("2"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )
@@ -638,8 +640,8 @@ class QSCScoreboardManagerTest {
                 sut.primaryScoresUpdateListener?.invoke(
                     DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.CustomDisplayedScore("0"),
-                            DisplayedScore.CustomDisplayedScore("0"),
+                            DisplayedScore.Custom("0"),
+                            DisplayedScore.Custom("0"),
                         ),
                         overallDisplayedScore = DisplayedScore.Blank
                     )

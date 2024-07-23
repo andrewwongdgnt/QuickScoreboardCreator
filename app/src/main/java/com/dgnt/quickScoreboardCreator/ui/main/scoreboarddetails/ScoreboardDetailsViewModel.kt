@@ -69,8 +69,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
     init {
         savedStateHandle.get<ScoreboardIdentifier?>(SCOREBOARD_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
-                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.scoreboardType)
+                is ScoreboardIdentifier.Custom -> initWithId(sId.id)
+                is ScoreboardIdentifier.Default -> initWithScoreboardType(sId.scoreboardType)
             }
         } ?: run {
             _icon.value = ScoreboardIcon.entries.toTypedArray().let {

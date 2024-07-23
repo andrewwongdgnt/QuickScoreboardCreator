@@ -43,11 +43,11 @@ class QSCScoreboardCategorizerTest {
 
             val customs = it.second
             Assert.assertEquals(5, customs.scoreboardItemDataList.size)
-            Assert.assertEquals(3, (customs.scoreboardItemDataList[0].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
-            Assert.assertEquals(5, (customs.scoreboardItemDataList[1].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
-            Assert.assertEquals(1, (customs.scoreboardItemDataList[2].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
-            Assert.assertEquals(4, (customs.scoreboardItemDataList[3].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
-            Assert.assertEquals(2, (customs.scoreboardItemDataList[4].scoreboardIdentifier as ScoreboardIdentifier.CustomScoreboard).id)
+            Assert.assertEquals(3, (customs.scoreboardItemDataList[0].scoreboardIdentifier as ScoreboardIdentifier.Custom).id)
+            Assert.assertEquals(5, (customs.scoreboardItemDataList[1].scoreboardIdentifier as ScoreboardIdentifier.Custom).id)
+            Assert.assertEquals(1, (customs.scoreboardItemDataList[2].scoreboardIdentifier as ScoreboardIdentifier.Custom).id)
+            Assert.assertEquals(4, (customs.scoreboardItemDataList[3].scoreboardIdentifier as ScoreboardIdentifier.Custom).id)
+            Assert.assertEquals(2, (customs.scoreboardItemDataList[4].scoreboardIdentifier as ScoreboardIdentifier.Custom).id)
         }
 
 

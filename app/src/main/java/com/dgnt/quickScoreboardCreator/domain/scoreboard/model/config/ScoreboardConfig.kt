@@ -45,9 +45,9 @@ data class ScoreRuleConfig(
 ) {
     fun toScoreRule() =
         when (type) {
-            ScoreRuleType.NO_RULE -> ScoreRule.NoRule
-            ScoreRuleType.MAX_RULE -> ScoreRule.ScoreRuleTrigger.MaxScoreRule(trigger)
-            ScoreRuleType.DEUCE_ADVANTAGE -> ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule(trigger)
+            ScoreRuleType.NO_RULE -> ScoreRule.None
+            ScoreRuleType.MAX_RULE -> ScoreRule.Trigger.Max(trigger)
+            ScoreRuleType.DEUCE_ADVANTAGE -> ScoreRule.Trigger.DeuceAdvantage(trigger)
         }
 }
 

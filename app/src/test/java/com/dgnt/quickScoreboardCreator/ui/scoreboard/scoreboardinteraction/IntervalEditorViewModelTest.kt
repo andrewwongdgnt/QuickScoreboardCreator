@@ -114,7 +114,7 @@ class IntervalEditorViewModelTest {
         val inputStream = mockk<InputStream>()
         val scoreboardConfig = mockk<DefaultScoreboardConfig>()
 
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL)
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL)
         every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream
         every { scoreboardLoader.invoke(inputStream) } returns scoreboardConfig
         every { scoreboardConfig.intervalList } returns mockIntervalList
@@ -151,7 +151,7 @@ class IntervalEditorViewModelTest {
     fun testInitializingADefaultScoreboard() = runTest {
         initDefaultScoreboardConfig()
 
-        Assert.assertEquals(Label.ResourceLabel(R.string.quarter), sut.label.value)
+        Assert.assertEquals(Label.Resource(R.string.quarter), sut.label.value)
         Assert.assertTrue(sut.errors.value.isEmpty())
     }
 
@@ -210,7 +210,7 @@ class IntervalEditorViewModelTest {
         Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
         Assert.assertEquals("1", sut.intervalString.value)
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.TimeErrorType.Time(interval1TimeData.minute, interval1TimeData.second), sut.errors.value.first())
+        Assert.assertEquals(IntervalEditorErrorType.Time.Invalid(interval1TimeData.minute, interval1TimeData.second), sut.errors.value.first())
     }
 
     @Test
@@ -222,7 +222,7 @@ class IntervalEditorViewModelTest {
         Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
         Assert.assertEquals("1", sut.intervalString.value)
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.TimeErrorType.ZeroTime, sut.errors.value.first())
+        Assert.assertEquals(IntervalEditorErrorType.Time.Zero, sut.errors.value.first())
     }
 
     @Test
@@ -233,7 +233,7 @@ class IntervalEditorViewModelTest {
         Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
         Assert.assertEquals("313", sut.intervalString.value)
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.IntervalErrorType.Interval(3), sut.errors.value.first())
+        Assert.assertEquals(IntervalEditorErrorType.Interval.Invalid(3), sut.errors.value.first())
     }
 
     @Test
@@ -243,7 +243,7 @@ class IntervalEditorViewModelTest {
         sut.onMinuteChange("13")
         sut.onIntervalChange("313")
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.IntervalErrorType.Interval(3), sut.errors.value.first())
+        Assert.assertEquals(IntervalEditorErrorType.Interval.Invalid(3), sut.errors.value.first())
     }
 
     @Test
@@ -264,8 +264,8 @@ class IntervalEditorViewModelTest {
         Assert.assertTrue(sut.minuteString.value.isEmpty())
         Assert.assertTrue(sut.intervalString.value.isEmpty())
         Assert.assertEquals(2, sut.errors.value.size)
-        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.TimeErrorType.EmptyTime))
-        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.IntervalErrorType.EmptyInterval))
+        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.Time.Empty))
+        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.Interval.Empty))
     }
 
     /**
@@ -279,7 +279,7 @@ class IntervalEditorViewModelTest {
         sut.onMinuteChange("0")
         sut.onIntervalChange("0")
         Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.IntervalErrorType.Interval(3)))
+        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.Interval.Invalid(3)))
     }
 
     @Test

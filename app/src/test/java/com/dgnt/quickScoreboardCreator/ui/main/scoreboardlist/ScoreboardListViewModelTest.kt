@@ -64,13 +64,13 @@ class ScoreboardListViewModelTest {
         ) to CategorizedScoreboardItemData(
             listOf(
                 ScoreboardItemData(
-                    ScoreboardIdentifier.CustomScoreboard(1),
+                    ScoreboardIdentifier.Custom(1),
                     title = "A team name",
                     description = "team desc",
                     icon = ScoreboardIcon.TENNIS
                 ),
                 ScoreboardItemData(
-                    ScoreboardIdentifier.CustomScoreboard(2),
+                    ScoreboardIdentifier.Custom(2),
                     title = "Next team name",
                     description = "team desc",
                     icon = ScoreboardIcon.TENNIS
@@ -112,8 +112,8 @@ class ScoreboardListViewModelTest {
 
     @Test
     fun testOnEdit() = runTest {
-        sut.onEdit(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.TENNIS))
-        Assert.assertEquals(UiEvent.ScoreboardDetails(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.TENNIS)), sut.uiEvent.first())
+        sut.onEdit(ScoreboardIdentifier.Default(ScoreboardType.TENNIS))
+        Assert.assertEquals(UiEvent.ScoreboardDetails(ScoreboardIdentifier.Default(ScoreboardType.TENNIS)), sut.uiEvent.first())
     }
 
     @Test
@@ -167,7 +167,7 @@ class ScoreboardListViewModelTest {
 
     @Test
     fun testOnLaunch() = runTest {
-        sut.onLaunch(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.TENNIS))
-        Assert.assertEquals(UiEvent.LaunchScoreboard(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.TENNIS)), sut.uiEvent.first())
+        sut.onLaunch(ScoreboardIdentifier.Default(ScoreboardType.TENNIS))
+        Assert.assertEquals(UiEvent.LaunchScoreboard(ScoreboardIdentifier.Default(ScoreboardType.TENNIS)), sut.uiEvent.first())
     }
 }

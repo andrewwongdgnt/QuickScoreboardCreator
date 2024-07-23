@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -139,7 +138,7 @@ private fun ScoreValueContent(
 ) {
     val displayedValue = when (displayedScore) {
         DisplayedScore.Advantage -> stringResource(id = R.string.advantageDisplay)
-        is DisplayedScore.CustomDisplayedScore -> displayedScore.display
+        is DisplayedScore.Custom -> displayedScore.display
         DisplayedScore.Deuce -> stringResource(id = R.string.deuceDisplay)
         DisplayedScore.Blank -> SpecialScoreConstants.NOTHING
     }
@@ -161,15 +160,15 @@ private fun `Normal scores`() =
         simpleMode = false,
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
-                DisplayedScore.CustomDisplayedScore("10"),
-                DisplayedScore.CustomDisplayedScore("10"),
+                DisplayedScore.Custom("10"),
+                DisplayedScore.Custom("10"),
             ),
             DisplayedScore.Blank
         ),
         secondaryDisplayedScoreInfo = DisplayedScoreInfo(
             listOf(
-                DisplayedScore.CustomDisplayedScore("1"),
-                DisplayedScore.CustomDisplayedScore("1"),
+                DisplayedScore.Custom("1"),
+                DisplayedScore.Custom("1"),
             ),
             DisplayedScore.Blank
         ),
@@ -177,7 +176,7 @@ private fun `Normal scores`() =
             listOf(1),
             listOf(1),
         ),
-        secondaryScoreLabel = Label.ResourceLabel(R.string.fouls),
+        secondaryScoreLabel = Label.Resource(R.string.fouls),
         onScoreChange = { _, _, _, _ -> }
     )
 
@@ -198,6 +197,6 @@ private fun `Deuce`() =
             DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
-        secondaryScoreLabel = Label.ResourceLabel(R.string.blank),
+        secondaryScoreLabel = Label.Resource(R.string.blank),
         onScoreChange = { _, _, _, _ -> }
     )

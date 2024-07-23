@@ -107,7 +107,7 @@ class QSCScoreboardManager @Inject constructor(
         )
 
         if (isPrimary) {
-            if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.MaxScoreRule && newScore > scoreInfo.scoreRule.trigger) {
+            if (scoreInfo.scoreRule is ScoreRule.Trigger.Max && newScore > scoreInfo.scoreRule.trigger) {
                 proceedToNextInterval()
                 return
             }
@@ -118,7 +118,7 @@ class QSCScoreboardManager @Inject constructor(
             }
 
             // this means one of the team is below the trigger and one is above
-            if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.any { it.primary.current > scoreInfo.scoreRule.trigger } && scoreInfo.dataList.any { it.primary.current < scoreInfo.scoreRule.trigger }) {
+            if (scoreInfo.scoreRule is ScoreRule.Trigger.DeuceAdvantage && currentTeamSize == 2 && scoreInfo.dataList.any { it.primary.current > scoreInfo.scoreRule.trigger } && scoreInfo.dataList.any { it.primary.current < scoreInfo.scoreRule.trigger }) {
                 proceedToNextInterval()
                 return
             }
@@ -141,7 +141,7 @@ class QSCScoreboardManager @Inject constructor(
             else
                 DisplayedScoreInfo(listOf(DisplayedScore.Blank, DisplayedScore.Advantage), DisplayedScore.Blank)
         } ?: run {
-            val mappedScores = transformPrimaryScores(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
+            val mappedScores = transformPrimaryScores(scoreInfo).map { DisplayedScore.Custom(it) }
             return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
         }
     }
@@ -149,7 +149,7 @@ class QSCScoreboardManager @Inject constructor(
     private fun getSecondaryScores(): DisplayedScoreInfo {
         val scoreInfo = currentScoreInfo
 
-        val mappedScores = transformSecondaryScores(scoreInfo).map { DisplayedScore.CustomDisplayedScore(it) }
+        val mappedScores = transformSecondaryScores(scoreInfo).map { DisplayedScore.Custom(it) }
         return DisplayedScoreInfo(mappedScores, DisplayedScore.Blank)
 
     }
@@ -212,7 +212,7 @@ class QSCScoreboardManager @Inject constructor(
         }
 
     private fun get2ScoresForDeuceAdv(scoreInfo: ScoreInfo): Pair<Int, Int>? {
-        return if (scoreInfo.scoreRule is ScoreRule.ScoreRuleTrigger.DeuceAdvantageRule && currentTeamSize == 2 && scoreInfo.dataList.all { it.primary.current >= scoreInfo.scoreRule.trigger })
+        return if (scoreInfo.scoreRule is ScoreRule.Trigger.DeuceAdvantage && currentTeamSize == 2 && scoreInfo.dataList.all { it.primary.current >= scoreInfo.scoreRule.trigger })
             scoreInfo.dataList[0].primary.current to scoreInfo.dataList[1].primary.current
         else
             return null

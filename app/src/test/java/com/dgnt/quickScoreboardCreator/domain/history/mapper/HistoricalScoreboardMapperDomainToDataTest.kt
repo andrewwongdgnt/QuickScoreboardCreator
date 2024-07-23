@@ -32,10 +32,10 @@ class HistoricalScoreboardMapperDomainToDataTest {
                 mapOf(
                     0 to HistoricalInterval(
                         range = HistoricalIntervalRange.CountDown(72000),
-                        intervalLabel = IntervalLabel.CustomIntervalLabel("Quarter", 0),
+                        intervalLabel = IntervalLabel.Custom("Quarter", 0),
                         historicalScoreGroupList = mapOf(
                             0 to HistoricalScoreGroup(
-                                teamLabel = TeamLabel.CustomTeamLabel("DGNT", TeamIcon.AXE),
+                                teamLabel = TeamLabel.Custom("DGNT", TeamIcon.AXE),
                                 primaryScoreList = listOf(
                                     HistoricalScore(0, "0", 720000),
                                     HistoricalScore(1, "1", 660000),
@@ -49,7 +49,7 @@ class HistoricalScoreboardMapperDomainToDataTest {
                                 )
                             ),
                             1 to HistoricalScoreGroup(
-                                teamLabel = TeamLabel.NoTeamLabel,
+                                teamLabel = TeamLabel.None,
                                 primaryScoreList = listOf(
                                     HistoricalScore(0, "0", 0),
                                     HistoricalScore(1, "1", 2000),
@@ -63,7 +63,7 @@ class HistoricalScoreboardMapperDomainToDataTest {
                     ),
                     1 to HistoricalInterval(
                         range = HistoricalIntervalRange.Infinite,
-                        intervalLabel = IntervalLabel.ScoreboardTypeIntervalLabel(ScoreboardType.SPIKEBALL, 1),
+                        intervalLabel = IntervalLabel.ScoreboardType(ScoreboardType.SPIKEBALL, 1),
                         historicalScoreGroupList = mapOf()
                     )
                 )

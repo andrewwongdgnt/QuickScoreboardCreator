@@ -16,46 +16,46 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 
-class HistoricalScoreboardMapperDomainToData : Mapper<HistoricalScoreboard, HistoricalScoreboardData> {
+class HistoricalScoreboardMapperDataToDomain : Mapper<HistoricalScoreboardData, HistoricalScoreboard> {
 
 
-    override fun map(from: HistoricalScoreboard) = from.toData()
-    private fun HistoricalScoreboard.toData() = HistoricalScoreboardData(
+    override fun map(from: HistoricalScoreboardData) = from.toDomain()
+    private fun HistoricalScoreboardData.toDomain() = HistoricalScoreboard(
         historicalIntervalMap = historicalIntervalMap.mapValues {
-            it.value.toData()
+            it.value.toDomain()
         }
     )
 
-    private fun HistoricalInterval.toData() = HistoricalIntervalData(
-        range = range.toData(),
-        intervalLabel = intervalLabel.toData(),
+    private fun HistoricalIntervalData.toDomain() = HistoricalInterval(
+        range = range.toDomain(),
+        intervalLabel = intervalLabel.toDomain(),
         historicalScoreGroupList = historicalScoreGroupList.mapValues {
-            it.value.toData()
+            it.value.toDomain()
         }
     )
 
-    private fun HistoricalIntervalRange.toData() = when (this) {
-        is HistoricalIntervalRange.CountDown -> HistoricalIntervalRangeData.CountDown(start)
-        HistoricalIntervalRange.Infinite -> HistoricalIntervalRangeData.Infinite
+    private fun HistoricalIntervalRangeData.toDomain() = when (this) {
+        is HistoricalIntervalRangeData.CountDown -> HistoricalIntervalRange.CountDown(start)
+        HistoricalIntervalRangeData.Infinite -> HistoricalIntervalRange.Infinite
     }
 
-    private fun IntervalLabel.toData() = when (this) {
-        is IntervalLabel.Custom -> IntervalLabelData.Custom(value, index)
-        is IntervalLabel.ScoreboardType -> IntervalLabelData.ScoreboardType(scoreboardType, index)
+    private fun IntervalLabelData.toDomain() = when (this) {
+        is IntervalLabelData.Custom -> IntervalLabel.Custom(value, index)
+        is IntervalLabelData.ScoreboardType -> IntervalLabel.ScoreboardType(scoreboardType, index)
     }
 
-    private fun HistoricalScoreGroup.toData() = HistoricalScoreGroupData(
-        teamLabel = teamLabel.toData(),
-        primaryScoreList = primaryScoreList.map { it.toData() },
-        secondaryScoreList = secondaryScoreList.map { it.toData() }
+    private fun HistoricalScoreGroupData.toDomain() = HistoricalScoreGroup(
+        teamLabel = teamLabel.toDomain(),
+        primaryScoreList = primaryScoreList.map { it.toDomain() },
+        secondaryScoreList = secondaryScoreList.map { it.toDomain() }
     )
 
-    private fun TeamLabel.toData() = when (this) {
-        is TeamLabel.Custom -> TeamLabelData.Custom(name, icon)
-        TeamLabel.None -> TeamLabelData.None
+    private fun TeamLabelData.toDomain() = when (this) {
+        is TeamLabelData.Custom -> TeamLabel.Custom(name, icon)
+        TeamLabelData.None -> TeamLabel.None
     }
 
-    private fun HistoricalScore.toData() = HistoricalScoreData(
+    private fun HistoricalScoreData.toDomain() = HistoricalScore(
         score = score,
         displayedScore = displayedScore,
         time = time

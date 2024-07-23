@@ -62,7 +62,7 @@ class IntervalEditorViewModel @Inject constructor(
             validate()
         }
 
-    private val _label = MutableStateFlow<Label>(Label.CustomLabel(""))
+    private val _label = MutableStateFlow<Label>(Label.Custom(""))
     val label = _label.asStateFlow()
 
     private val _errors = MutableStateFlow(emptySet<IntervalEditorErrorType>())
@@ -74,8 +74,8 @@ class IntervalEditorViewModel @Inject constructor(
     init {
         savedStateHandle.get<ScoreboardIdentifier>(Arguments.SCOREBOARD_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
-                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.scoreboardType)
+                is ScoreboardIdentifier.Custom -> initWithId(sId.id)
+                is ScoreboardIdentifier.Default -> initWithScoreboardType(sId.scoreboardType)
             }
         }
         savedStateHandle.get<Long>(Arguments.VALUE)?.let {
@@ -101,7 +101,7 @@ class IntervalEditorViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        _label.value = Label.ResourceLabel(scoreboardType.intervalLabelRes)
+        _label.value = Label.Resource(scoreboardType.intervalLabelRes)
         scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
@@ -171,23 +171,23 @@ class IntervalEditorViewModel @Inject constructor(
     private fun validate() {
         val errors = mutableSetOf<IntervalEditorErrorType>()
         if (minuteString.value.isEmpty() || secondString.value.isEmpty())
-            errors.add(IntervalEditorErrorType.TimeErrorType.EmptyTime)
+            errors.add(IntervalEditorErrorType.Time.Empty)
         if (intervalString.value.isEmpty())
-            errors.add(IntervalEditorErrorType.IntervalErrorType.EmptyInterval)
+            errors.add(IntervalEditorErrorType.Interval.Empty)
 
         val initialTimeValue = initialTimeValue
         val isTimeIncreasing = isTimeIncreasing
         if (initialTimeValue != null && isTimeIncreasing != null && !isTimeIncreasing) {
             if (currentTimeValue > initialTimeValue)
                 timeTransformer.toTimeData(initialTimeValue).let {
-                    errors.add(IntervalEditorErrorType.TimeErrorType.Time(it.minute, it.second))
+                    errors.add(IntervalEditorErrorType.Time.Invalid(it.minute, it.second))
                 }
-            else if (currentTimeValue <= 0 && !errors.contains(IntervalEditorErrorType.TimeErrorType.EmptyTime))
-                errors.add(IntervalEditorErrorType.TimeErrorType.ZeroTime)
+            else if (currentTimeValue <= 0 && !errors.contains(IntervalEditorErrorType.Time.Empty))
+                errors.add(IntervalEditorErrorType.Time.Zero)
         }
 
-        if (!errors.contains(IntervalEditorErrorType.IntervalErrorType.EmptyInterval) && (intervalValue <= 0 || intervalValue > maxInterval)) {
-            errors.add(IntervalEditorErrorType.IntervalErrorType.Interval(maxInterval))
+        if (!errors.contains(IntervalEditorErrorType.Interval.Empty) && (intervalValue <= 0 || intervalValue > maxInterval)) {
+            errors.add(IntervalEditorErrorType.Interval.Invalid(maxInterval))
         }
 
         _errors.value = errors

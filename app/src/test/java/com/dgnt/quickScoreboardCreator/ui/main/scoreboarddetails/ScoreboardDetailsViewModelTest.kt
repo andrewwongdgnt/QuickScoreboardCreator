@@ -77,7 +77,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testInitializingACustomScoreboard() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.CustomScoreboard(1)
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(1)
         coEvery { getScoreboardUseCase(1) } coAnswers { ScoreboardEntity(1, "scoreboard name", "scoreboard desc", ScoreboardIcon.TENNIS) }
         initSut()
 
@@ -92,7 +92,7 @@ class ScoreboardDetailsViewModelTest {
         val inputStream = mockk<InputStream>()
         val scoreboardConfig = mockk<DefaultScoreboardConfig>()
 
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL)
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL)
         every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream
         every { resources.getString(ScoreboardType.BASKETBALL.titleRes) } returns "Basketball"
         every { resources.getString(ScoreboardType.BASKETBALL.descriptionRes) } returns "Basketball Desc"
@@ -180,7 +180,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testEditingAScoreboard() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.CustomScoreboard(2)
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(2)
         coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
         initSut()
 
@@ -205,7 +205,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testDeletingAScoreboard() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.CustomScoreboard(2)
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(2)
         coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
         initSut()
 

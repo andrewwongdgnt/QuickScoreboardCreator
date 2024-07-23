@@ -12,7 +12,7 @@ data class HistoricalIntervalData(
     val historicalScoreGroupList: Map<Int, HistoricalScoreGroupData>
 )
 
-abstract class HistoricalIntervalRangeData {
+sealed class HistoricalIntervalRangeData {
     var type: String = ""
 
     enum class Type {
@@ -33,7 +33,7 @@ abstract class HistoricalIntervalRangeData {
     }
 }
 
-abstract class IntervalLabelData {
+sealed class IntervalLabelData {
 
     var type: String = ""
     var index: Int = -1
@@ -75,7 +75,7 @@ data class HistoricalScoreGroupData(
     val secondaryScoreList: List<HistoricalScoreData>,
 )
 
-abstract class TeamLabelData {
+sealed class TeamLabelData {
     var type: String = ""
 
     enum class Type {

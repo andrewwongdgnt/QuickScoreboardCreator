@@ -99,11 +99,11 @@ private fun IntervalEditorInnerDialogContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val numberFieldWidth = 65.dp
-            (errors.find { it is IntervalEditorErrorType.TimeErrorType })?.let { error ->
+            (errors.find { it is IntervalEditorErrorType.Time })?.let { error ->
                 val errorMsg = when (error) {
-                    is IntervalEditorErrorType.TimeErrorType.Time -> stringResource(id = R.string.invalidTimeMsg, TimeData(error.min, error.second, 0).formatTime())
-                    is IntervalEditorErrorType.TimeErrorType.EmptyTime -> stringResource(R.string.emptyTimeMsg)
-                    is IntervalEditorErrorType.TimeErrorType.ZeroTime -> stringResource(R.string.zeroTimeMsg)
+                    is IntervalEditorErrorType.Time.Invalid -> stringResource(id = R.string.invalidTimeMsg, TimeData(error.min, error.second, 0).formatTime())
+                    is IntervalEditorErrorType.Time.Empty -> stringResource(R.string.emptyTimeMsg)
+                    is IntervalEditorErrorType.Time.Zero -> stringResource(R.string.zeroTimeMsg)
                     else -> null
                 }
                 errorMsg?.let {
@@ -152,10 +152,10 @@ private fun IntervalEditorInnerDialogContent(
 
             }
             Spacer(modifier = Modifier.height(24.dp))
-            (errors.find { it is IntervalEditorErrorType.IntervalErrorType })?.let { error ->
+            (errors.find { it is IntervalEditorErrorType.Interval })?.let { error ->
                 val errorMsg = when (error) {
-                    is IntervalEditorErrorType.IntervalErrorType.Interval -> stringResource(id = R.string.invalidIntervalMsg, error.value)
-                    is IntervalEditorErrorType.IntervalErrorType.EmptyInterval -> stringResource(R.string.emptyIntervalMsg)
+                    is IntervalEditorErrorType.Interval.Invalid -> stringResource(id = R.string.invalidIntervalMsg, error.value)
+                    is IntervalEditorErrorType.Interval.Empty -> stringResource(R.string.emptyIntervalMsg)
                     else -> null
                 }
                 errorMsg?.let {
@@ -204,7 +204,7 @@ private fun `12 minutes 8 seconds`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        label = Label.ResourceLabel(R.string.quarter),
+        label = Label.Resource(R.string.quarter),
         errors = emptySet(),
         onDismiss = {},
         onConfirm = {},
@@ -222,8 +222,8 @@ private fun `invalid time`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        label = Label.ResourceLabel(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.TimeErrorType.Time(12, 0)),
+        label = Label.Resource(R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.Time.Invalid(12, 0)),
         onDismiss = {},
         onConfirm = {},
     )
@@ -240,8 +240,8 @@ private fun `empty time`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        label = Label.ResourceLabel(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.TimeErrorType.EmptyTime),
+        label = Label.Resource(R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.Time.Empty),
         onDismiss = {},
         onConfirm = {},
     )
@@ -258,8 +258,8 @@ private fun `zero time`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        label = Label.ResourceLabel(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.TimeErrorType.ZeroTime),
+        label = Label.Resource(R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.Time.Zero),
         onDismiss = {},
         onConfirm = {},
     )
@@ -276,8 +276,8 @@ private fun `empty interval`() =
         onSecondChange = {},
         intervalString = "",
         onIntervalChange = {},
-        label = Label.ResourceLabel(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.IntervalErrorType.EmptyInterval),
+        label = Label.Resource(R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.Interval.Empty),
         onDismiss = {},
         onConfirm = {},
     )
@@ -294,8 +294,8 @@ private fun `invalid interval`() =
         onSecondChange = {},
         intervalString = "1",
         onIntervalChange = {},
-        label = Label.ResourceLabel(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.IntervalErrorType.Interval(22)),
+        label = Label.Resource(R.string.quarter),
+        errors = setOf(IntervalEditorErrorType.Interval.Invalid(22)),
         onDismiss = {},
         onConfirm = {},
     )

@@ -152,7 +152,7 @@ private fun ScoreboardListInnerContent(
             categorizedScoreboards.first.let {
                 stringResource(R.string.defaultScoreboardConfig) to it.scoreboardTypeList.map { scoreboardType ->
                     ScoreboardItemData(
-                        ScoreboardIdentifier.DefaultScoreboard(scoreboardType),
+                        ScoreboardIdentifier.Default(scoreboardType),
                         stringResource(scoreboardType.titleRes),
                         stringResource(scoreboardType.descriptionRes),
                         scoreboardType.icon
@@ -189,8 +189,8 @@ private fun ScoreboardListInnerContent(
                         items = itemList,
                         key = { item ->
                             when (val sId = item.scoreboardIdentifier) {
-                                is ScoreboardIdentifier.CustomScoreboard -> sId.id
-                                is ScoreboardIdentifier.DefaultScoreboard -> sId.scoreboardType
+                                is ScoreboardIdentifier.Custom -> sId.id
+                                is ScoreboardIdentifier.Default -> sId.scoreboardType
                             }
                         }
                     ) { scoreboard ->
@@ -216,7 +216,7 @@ private fun ScoreboardListInnerContent(
                             }
                         }
                         when (val sId = scoreboard.scoreboardIdentifier) {
-                            is ScoreboardIdentifier.CustomScoreboard ->
+                            is ScoreboardIdentifier.Custom ->
                                 SwipeBox(
                                     modifier = Modifier.animateItem(),
                                     onDelete = {
@@ -225,7 +225,7 @@ private fun ScoreboardListInnerContent(
                                     content = cardItemContent
                                 )
 
-                            is ScoreboardIdentifier.DefaultScoreboard -> cardItemContent()
+                            is ScoreboardIdentifier.Default -> cardItemContent()
                         }
                     }
                 }
@@ -262,9 +262,9 @@ private fun `Defaults and customs`() =
                 to
                 CategorizedScoreboardItemData(
                     listOf(
-                        ScoreboardItemData(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL), "My Scoreboard 1", "My Description 1", ScoreboardIcon.BASKETBALL),
-                        ScoreboardItemData(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.TENNIS), "My Scoreboard 2", "My Description 2", ScoreboardIcon.TENNIS),
-                        ScoreboardItemData(ScoreboardIdentifier.DefaultScoreboard(ScoreboardType.BASKETBALL), "My Scoreboard 3", "My Description 3 ", ScoreboardIcon.BOXING),
+                        ScoreboardItemData(ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL), "My Scoreboard 1", "My Description 1", ScoreboardIcon.BASKETBALL),
+                        ScoreboardItemData(ScoreboardIdentifier.Default(ScoreboardType.TENNIS), "My Scoreboard 2", "My Description 2", ScoreboardIcon.TENNIS),
+                        ScoreboardItemData(ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL), "My Scoreboard 3", "My Description 3 ", ScoreboardIcon.BOXING),
                     )
                 ),
         onLaunch = { _ -> },

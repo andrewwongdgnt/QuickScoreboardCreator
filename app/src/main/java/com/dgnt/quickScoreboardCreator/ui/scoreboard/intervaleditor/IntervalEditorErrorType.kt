@@ -1,15 +1,15 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor
 
 sealed interface IntervalEditorErrorType {
-    sealed interface TimeErrorType : IntervalEditorErrorType {
-        data class Time(val min: Int, val second: Int) : TimeErrorType
-        data object EmptyTime : TimeErrorType
-        data object ZeroTime : TimeErrorType
+    sealed interface Time : IntervalEditorErrorType {
+        data class Invalid(val min: Int, val second: Int) : Time
+        data object Empty : Time
+        data object Zero : Time
     }
 
-    sealed interface IntervalErrorType : IntervalEditorErrorType {
-        data class Interval(val value: Int) : IntervalErrorType
-        data object EmptyInterval : IntervalErrorType
+    sealed interface Interval : IntervalEditorErrorType {
+        data class Invalid(val value: Int) : Interval
+        data object Empty : Interval
     }
 
 }

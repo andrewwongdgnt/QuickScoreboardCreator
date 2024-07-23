@@ -29,9 +29,9 @@ fun IntervalDisplayContent(
 @Preview(showBackground = true)
 @Composable
 private fun `Default 1`() =
-    IntervalDisplayContent(intervalLabel = Label.ResourceLabel(R.string.game), currentInterval = 1)
+    IntervalDisplayContent(intervalLabel = Label.Resource(R.string.game), currentInterval = 1)
 
 @Preview(showBackground = true)
 @Composable
 private fun `Custom 2`() =
-    IntervalDisplayContent(intervalLabel = Label.CustomLabel("Custom"), currentInterval = 2)
+    IntervalDisplayContent(intervalLabel = Label.Custom("Custom"), currentInterval = 2)

@@ -6,12 +6,12 @@ import androidx.compose.ui.res.stringResource
 
 
 sealed interface Label {
-    data class CustomLabel(val value: String) : Label
-    data class ResourceLabel(@StringRes val res: Int) : Label
+    data class Custom(val value: String) : Label
+    data class Resource(@StringRes val res: Int) : Label
 }
 
 @Composable
 fun Label.value() = when (this) {
-    is Label.CustomLabel -> value
-    is Label.ResourceLabel -> stringResource(id = res)
+    is Label.Custom -> value
+    is Label.Resource -> stringResource(id = res)
 }

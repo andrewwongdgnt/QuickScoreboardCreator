@@ -4,8 +4,8 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 
 
 sealed interface TeamDisplay {
-    data object UnSelectedTeamDisplay : TeamDisplay
-    data class SelectedTeamDisplay(
+    data object UnSelected : TeamDisplay
+    data class Selected(
         val name: String,
         val icon: TeamIcon
     ) : TeamDisplay

@@ -11,10 +11,10 @@ import kotlinx.serialization.Serializable
 sealed interface TeamLabel : Parcelable {
     @Serializable
     @Parcelize
-    data object NoTeamLabel : TeamLabel
+    data object None : TeamLabel
     @Serializable
     @Parcelize
-    data class CustomTeamLabel(
+    data class Custom(
         val name: String,
         val icon: TeamIcon
     ) : TeamLabel

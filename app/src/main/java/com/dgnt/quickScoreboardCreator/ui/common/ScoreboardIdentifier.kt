@@ -11,9 +11,9 @@ import kotlinx.serialization.Serializable
 sealed interface ScoreboardIdentifier : Parcelable {
     @Serializable
     @Parcelize
-    data class CustomScoreboard(val id: Int) : ScoreboardIdentifier
+    data class Custom(val id: Int) : ScoreboardIdentifier
     @Serializable
     @Parcelize
-    data class DefaultScoreboard(val scoreboardType: ScoreboardType) : ScoreboardIdentifier
+    data class Default(val scoreboardType: ScoreboardType) : ScoreboardIdentifier
 
 }

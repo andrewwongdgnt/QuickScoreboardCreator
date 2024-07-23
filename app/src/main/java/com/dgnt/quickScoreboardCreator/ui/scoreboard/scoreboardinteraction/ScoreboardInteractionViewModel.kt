@@ -103,7 +103,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     val teamList: StateFlow<List<TeamDisplay>> = _teamList.asStateFlow()
     private val teamSizeUpdateListener: (Int) -> Unit = {
         _teamList.value = (0 until it).map { index ->
-            teamList.value.getOrNull(index) ?: TeamDisplay.UnSelectedTeamDisplay
+            teamList.value.getOrNull(index) ?: TeamDisplay.UnSelected
         }
     }
 
@@ -150,10 +150,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    private val _intervalLabel = MutableStateFlow<Label>(Label.CustomLabel(""))
+    private val _intervalLabel = MutableStateFlow<Label>(Label.Custom(""))
     val intervalLabel = _intervalLabel.asStateFlow()
 
-    private val _secondaryScoreLabel = MutableStateFlow<Label>(Label.CustomLabel(""))
+    private val _secondaryScoreLabel = MutableStateFlow<Label>(Label.Custom(""))
     val secondaryScoreLabel = _secondaryScoreLabel.asStateFlow()
 
     private var secondaryScoreLabelList = listOf<Label>()
@@ -161,8 +161,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
     init {
         savedStateHandle.get<ScoreboardIdentifier>(SCOREBOARD_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is ScoreboardIdentifier.CustomScoreboard -> initWithId(sId.id)
-                is ScoreboardIdentifier.DefaultScoreboard -> initWithScoreboardType(sId.scoreboardType)
+                is ScoreboardIdentifier.Custom -> initWithId(sId.id)
+                is ScoreboardIdentifier.Default -> initWithScoreboardType(sId.scoreboardType)
             }
             scoreboardIdentifier = sId
         }
@@ -191,7 +191,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         this.scoreboardType = scoreboardType
-        _intervalLabel.value = Label.ResourceLabel(scoreboardType.intervalLabelRes)
+        _intervalLabel.value = Label.Resource(scoreboardType.intervalLabelRes)
         timelineViewerTitle = resources.getString(scoreboardType.titleRes)
         timelineViewerIcon = scoreboardType.icon
         scoreboardType.rawRes.let { rawRes ->
@@ -204,7 +204,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 }
             }
             secondaryScoreLabelList = defaultScoreboardConfig.intervalList.map {
-                Label.ResourceLabel(scoreboardType.secondaryScoreLabelRes)
+                Label.Resource(scoreboardType.secondaryScoreLabelRes)
             }
         }
 
@@ -224,7 +224,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
                 if (updatedTeamData.scoreIndex == index) {
                     getTeamUseCase(updatedTeamData.teamId)?.let {
-                        TeamDisplay.SelectedTeamDisplay(it.title, it.icon)
+                        TeamDisplay.Selected(it.title, it.icon)
                     }
                 } else {
                     teamList.value.getOrNull(index)
@@ -283,15 +283,15 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     fun toTimelineViewer() {
         val intervalLabel = when (val l = intervalLabel.value) {
-            is Label.CustomLabel -> IntervalLabel.CustomIntervalLabel(l.value)
+            is Label.Custom -> IntervalLabel.Custom(l.value)
             else -> scoreboardType?.let {
-                IntervalLabel.ScoreboardTypeIntervalLabel(it)
-            } ?: IntervalLabel.CustomIntervalLabel("")
+                IntervalLabel.ScoreboardType(it)
+            } ?: IntervalLabel.Custom("")
         }
         val teamList = teamList.value.map {
             when (it) {
-                is TeamDisplay.UnSelectedTeamDisplay -> TeamLabel.NoTeamLabel
-                is TeamDisplay.SelectedTeamDisplay -> TeamLabel.CustomTeamLabel(it.name, it.icon)
+                is TeamDisplay.UnSelected -> TeamLabel.None
+                is TeamDisplay.Selected -> TeamLabel.Custom(it.name, it.icon)
             }
         }
         sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(intervalLabel, teamList), currentInterval.value - 1, timelineViewerTitle, timelineViewerIcon))
