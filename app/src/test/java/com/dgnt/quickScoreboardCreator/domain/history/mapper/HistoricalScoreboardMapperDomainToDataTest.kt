@@ -150,14 +150,14 @@ class HistoricalScoreboardMapperDomainToDataTest {
                     Assert.assertTrue(historicalScoreGroupData.secondaryScoreList.isEmpty())
                 }
             }
-            val let = historicalScoreboardData.historicalIntervalMap[1]?.let { historicalIntervalData ->
+            historicalScoreboardData.historicalIntervalMap[1]?.let { historicalIntervalData ->
                 Assert.assertEquals(HistoricalIntervalRangeData.Infinite, historicalIntervalData.range)
                 Assert.assertEquals(IntervalLabelData.ScoreboardType(ScoreboardType.SPIKEBALL, 1), historicalIntervalData.intervalLabel)
                 Assert.assertEquals(IntervalLabelData.Type.SCOREBOARD_TYPE.name, historicalIntervalData.intervalLabel.type)
                 Assert.assertEquals(1, historicalIntervalData.intervalLabel.index)
                 Assert.assertTrue(historicalIntervalData.historicalScoreGroupList.isEmpty())
             }
-            let
+
         }
     }
 
