@@ -13,7 +13,7 @@ data class HistoricalIntervalData(
 )
 
 abstract class HistoricalIntervalRangeData {
-    open val type: String = ""
+    var type: String = ""
 
     enum class Type {
         COUNTDOWN,
@@ -21,50 +21,50 @@ abstract class HistoricalIntervalRangeData {
     }
 
     data class CountDown(val start: Long) : HistoricalIntervalRangeData() {
-
-        @Transient
-        override val type: String = Type.COUNTDOWN.name
+        init {
+            type = Type.COUNTDOWN.name
+        }
     }
 
     data object Infinite : HistoricalIntervalRangeData() {
-
-        @Transient
-        override val type: String = Type.INFINITE.name
+        init {
+            type = Type.INFINITE.name
+        }
     }
 }
 
 abstract class IntervalLabelData {
 
-    open val type: String = ""
-    open val index: Int = -1
+    var type: String = ""
+    var index: Int = -1
 
     enum class Type {
         CUSTOM,
         SCOREBOARD_TYPE
     }
 
-
     data class Custom(
         val value: String,
 
         @Transient
-        override val index: Int
+        val i: Int
     ) : IntervalLabelData() {
-
-        @Transient
-        override val type: String = Type.CUSTOM.name
+        init {
+            type = Type.CUSTOM.name
+            index = i
+        }
     }
-
 
     data class ScoreboardType(
         val scoreboardType: com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType,
 
         @Transient
-        override val index: Int
+        val i: Int
     ) : IntervalLabelData() {
-
-        @Transient
-        override val type: String = Type.SCOREBOARD_TYPE.name
+        init {
+            type = Type.SCOREBOARD_TYPE.name
+            index = i
+        }
     }
 
 }
@@ -76,7 +76,7 @@ data class HistoricalScoreGroupData(
 )
 
 abstract class TeamLabelData {
-    open val type: String = ""
+    var type: String = ""
 
     enum class Type {
         NONE,
@@ -84,16 +84,18 @@ abstract class TeamLabelData {
     }
 
     data object None : TeamLabelData() {
-        @Transient
-        override val type = Type.NONE.name
+        init {
+            type = Type.NONE.name
+        }
     }
 
     data class Custom(
         val name: String,
         val icon: TeamIcon
     ) : TeamLabelData() {
-        @Transient
-        override val type = Type.CUSTOM.name
+        init {
+            type = Type.CUSTOM.name
+        }
     }
 }
 

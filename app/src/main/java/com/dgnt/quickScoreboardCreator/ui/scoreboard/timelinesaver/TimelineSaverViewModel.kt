@@ -66,7 +66,7 @@ class TimelineSaverViewModel @Inject constructor(
                 listOf(
                     HistoryEntity(
                         title = title.value,
-                        icon = ScoreboardIcon.SOCCER,
+                        icon = icon.value!!,
                         lastLookedAt = lastLookedAt,
                         historicalScoreboard = mapper.map(historicalScoreboard)
                     )
