@@ -1,5 +1,5 @@
 [versions]
-agp = "8.2.2"
+agp = "8.4.0"
 appacheCommonsLang3 = "3.14.0"
 kotlin = "1.9.0"
 activityCompose = "1.9.0"
