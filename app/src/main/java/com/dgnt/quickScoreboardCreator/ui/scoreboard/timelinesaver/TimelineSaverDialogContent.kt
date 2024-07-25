@@ -24,9 +24,12 @@ import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun TimelineSaverDialogContent(
+    updatedHistoryId: Long?,
     onUiEvent: (UiEvent) -> Unit,
     viewModel: TimelineSaverViewModel = hiltViewModel()
 ) {
+
+    viewModel.onHistoryIdUpdate(updatedHistoryId)
 
     val title by viewModel.title.collectAsStateWithLifecycle()
     val icon by viewModel.icon.collectAsStateWithLifecycle()

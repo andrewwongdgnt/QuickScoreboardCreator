@@ -14,8 +14,9 @@ sealed interface UiEvent {
     data class TeamUpdated(val index: Int, val id: Int) : UiEvent
     data class IntervalEditor(val currentTimeValue: Long, val index: Int, val scoreboardIdentifier: ScoreboardIdentifier) : UiEvent
     data class IntervalUpdated(val timeValue: Long, val index: Int) : UiEvent
-    data class TimelineViewer(val historicalScoreboard: HistoricalScoreboard, val index: Int, val title:String, val icon: ScoreboardIcon) : UiEvent
-    data class TimelineSaver(val historicalScoreboard: HistoricalScoreboard, val title:String, val icon: ScoreboardIcon) : UiEvent
+    data class TimelineViewer(val historicalScoreboard: HistoricalScoreboard, val index: Int, val title: String, val icon: ScoreboardIcon) : UiEvent
+    data class TimelineSaver(val historicalScoreboard: HistoricalScoreboard, val title: String, val icon: ScoreboardIcon) : UiEvent
+    data class TimelineSaved(val historyEntityId: Long) : UiEvent
 
     data object Done : UiEvent
     sealed class SnackBar(

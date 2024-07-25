@@ -121,6 +121,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     private var scoreboardType: ScoreboardType? = null
+
     /**
      * Winners by team index
      */
@@ -219,16 +220,14 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     fun toTeamPicker(index: Int) = sendUiEvent(UiEvent.TeamPicker(index))
 
-    fun onTeamPick(updatedTeamData: UpdatedTeamData) {
-        viewModelScope.launch {
-            _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
-                if (updatedTeamData.scoreIndex == index) {
-                    getTeamUseCase(updatedTeamData.teamId)?.let {
-                        TeamDisplay.Selected(it.title, it.icon)
-                    }
-                } else {
-                    teamList.value.getOrNull(index)
+    fun onTeamPick(updatedTeamData: UpdatedTeamData) = viewModelScope.launch {
+        _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
+            if (updatedTeamData.scoreIndex == index) {
+                getTeamUseCase(updatedTeamData.teamId)?.let {
+                    TeamDisplay.Selected(it.title, it.icon)
                 }
+            } else {
+                teamList.value.getOrNull(index)
             }
         }
     }

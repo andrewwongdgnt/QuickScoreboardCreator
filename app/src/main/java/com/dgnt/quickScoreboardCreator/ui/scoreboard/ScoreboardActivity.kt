@@ -148,9 +148,17 @@ class ScoreboardActivity : ComponentActivity() {
                                     typeOf<ScoreboardIcon>() to NavType.EnumType(ScoreboardIcon::class.java)
                                 )
                             ) { entry ->
-                                TimelineSaverDialogContent(onUiEvent = { uiEvent ->
+                                val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
+                                val updatedHistoryId by viewModel.updatedHistoryId.collectAsStateWithLifecycle()
+                                TimelineSaverDialogContent(
+                                    updatedHistoryId = updatedHistoryId,
+                                    onUiEvent = { uiEvent ->
                                     when (uiEvent) {
                                         UiEvent.Done -> navController.navigateUp()
+                                        is UiEvent.TimelineSaved -> {
+                                            viewModel.onHistoryIdUpdate(uiEvent.historyEntityId)
+                                            navController.navigateUp()
+                                        }
                                         else -> Unit
                                     }
                                 })

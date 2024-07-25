@@ -12,12 +12,19 @@ class ScoreboardActivityViewModel : ViewModel() {
     private val _updatedIntervalData = MutableStateFlow<UpdatedIntervalData?>(null)
     val updatedIntervalData: StateFlow<UpdatedIntervalData?> = _updatedIntervalData.asStateFlow()
 
+    private val _updatedHistoryId = MutableStateFlow<Long?>(null)
+    val updatedHistoryId: StateFlow<Long?> = _updatedHistoryId.asStateFlow()
+
     fun onIntervalDataUpdate(updatedIntervalData: UpdatedIntervalData?) {
         _updatedIntervalData.value = updatedIntervalData
     }
 
     fun onTeamDataUpdate(updatedTeamData: UpdatedTeamData?) {
         _updatedTeamData.value = updatedTeamData
+    }
+
+    fun onHistoryIdUpdate(updatedHistoryId: Long) {
+        _updatedHistoryId.value = updatedHistoryId
     }
 
 }

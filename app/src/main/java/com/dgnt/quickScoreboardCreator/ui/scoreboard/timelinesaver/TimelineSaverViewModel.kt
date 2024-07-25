@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardDat
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
 import com.dgnt.quickScoreboardCreator.domain.common.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class TimelineSaverViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val mapper: Mapper<HistoricalScoreboard, HistoricalScoreboardData>,
-    private val insertHistoryListUseCase: InsertHistoryListUseCase
+    private val insertHistoryUseCase: InsertHistoryUseCase
 ) : ViewModel() {
 
     private var _title = MutableStateFlow("")
@@ -34,6 +34,8 @@ class TimelineSaverViewModel @Inject constructor(
     val icon = _icon.asStateFlow()
 
     private var historicalScoreboard: HistoricalScoreboard? = null
+
+    private var historyId: Long? = null
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -58,22 +60,28 @@ class TimelineSaverViewModel @Inject constructor(
         _title.value = title
     }
 
+    fun onHistoryIdUpdate(updatedHistoryId: Long?) {
+        historyId = updatedHistoryId
+    }
+
     fun onDismiss() = sendUiEvent(UiEvent.Done)
 
     fun onSave() = viewModelScope.launch {
         historicalScoreboard?.let { historicalScoreboard ->
-            insertHistoryListUseCase(
-                listOf(
-                    HistoryEntity(
-                        title = title.value,
-                        icon = icon.value!!,
-                        lastLookedAt = lastLookedAt,
-                        historicalScoreboard = mapper.map(historicalScoreboard)
-                    )
+            val id = insertHistoryUseCase(
+                HistoryEntity(
+                    id = historyId,
+                    title = title.value,
+                    icon = icon.value!!,
+                    lastLookedAt = lastLookedAt,
+                    historicalScoreboard = mapper.map(historicalScoreboard)
                 )
             )
+            sendUiEvent(UiEvent.TimelineSaved(id))
+        } ?: run {
+            sendUiEvent(UiEvent.Done)
         }
-        sendUiEvent(UiEvent.Done)
+
     }
 
     private fun sendUiEvent(event: UiEvent) {
