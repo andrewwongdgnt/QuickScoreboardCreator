@@ -24,6 +24,9 @@ sealed interface NavDestination {
     data object TeamList : NavDestination
 
     @Serializable
+    data object HistoryList : NavDestination
+
+    @Serializable
     data object Contact : NavDestination
 
     @Serializable

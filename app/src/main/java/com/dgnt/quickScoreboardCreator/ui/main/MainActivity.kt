@@ -31,6 +31,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
+import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamdetails.TeamDetailsDialogContent
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             QuickScoreboardCreatorTheme {
-                val navItemLists = listOf(NavItem.ScoreboardList, NavItem.TeamList, NavItem.Contact)
+                val navItemLists = listOf(NavItem.ScoreboardList, NavItem.TeamList, NavItem.HistoryList, NavItem.Contact)
 
                 val navController = rememberNavController()
 
@@ -148,6 +149,17 @@ class MainActivity : ComponentActivity() {
                             UiEvent.Done -> navController.navigateUp()
                             else -> Unit
                         }
+                    }
+                )
+            }
+            composable<NavDestination.HistoryList> {
+                HistoryListContent(
+                    onUiEvent = { uiEvent ->
+                        when (uiEvent) {
+//                            is UiEvent.HistoryDetails -> navController.commonNavigate(navDestination = NavDestination.HistoryDetails(uiEvent.id))
+                            else -> Unit
+                        }
+
                     }
                 )
             }

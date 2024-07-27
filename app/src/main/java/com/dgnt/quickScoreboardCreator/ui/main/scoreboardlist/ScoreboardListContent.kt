@@ -210,7 +210,7 @@ private fun ScoreboardListInnerContent(
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
-                                        contentDescription = stringResource(R.string.launch)
+                                        contentDescription = stringResource(R.string.edit)
                                     )
                                 }
                             }

@@ -1,6 +1,7 @@
 [versions]
 agp = "8.4.0"
 appacheCommonsLang3 = "3.14.0"
+icu4j = "3.4.4"
 kotlin = "1.9.0"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
@@ -51,6 +52,7 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
 joda-time = { module = "joda-time:joda-time", version.ref = "jodaTime" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }

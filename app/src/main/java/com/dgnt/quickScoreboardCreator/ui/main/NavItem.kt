@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.Timeline
 
 
 sealed class NavItem(
@@ -21,6 +22,7 @@ sealed class NavItem(
 ) {
     data object ScoreboardList : NavItem(R.string.scoreboardListNavTitle, Icons.Filled.Home, Icons.Outlined.Home, NavDestination.ScoreboardList)
     data object TeamList : NavItem(R.string.teamListNavTitle, Icons.Filled.Person, Icons.Outlined.Person, NavDestination.TeamList)
+    data object HistoryList : NavItem(R.string.historyListNavTitle, Icons.Filled.Timeline, Icons.Filled.Timeline, NavDestination.HistoryList)
     data object Contact : NavItem(R.string.contactNavTitle, Icons.Filled.Email, Icons.Outlined.Email, NavDestination.Contact)
 }
 

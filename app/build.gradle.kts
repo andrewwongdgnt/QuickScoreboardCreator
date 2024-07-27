@@ -101,6 +101,9 @@ dependencies {
     //chart library
     implementation(libs.mpandroidchart)
 
+    //ICU
+    implementation(libs.icu4j)
+
     //junit
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

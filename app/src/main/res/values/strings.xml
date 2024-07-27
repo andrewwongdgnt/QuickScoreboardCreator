@@ -43,6 +43,12 @@
         <item quantity="one">%d team deleted</item>
         <item quantity="other">%d teams deleted</item>
     </plurals>
+    <!-- History List -->
+    <string name="historyListNavTitle">My sessions</string>
+    <plurals name="deletedHistoryMsg">
+        <item quantity="one">%d session deleted</item>
+        <item quantity="other">%d sessions deleted</item>
+    </plurals>
     <!-- Team Details -->
     <string name="teamDetailsTitle">Team details</string>
     <!-- Team Icon -->

@@ -10,6 +10,7 @@ sealed interface UiEvent {
     data class LaunchScoreboard(val scoreboardIdentifier: ScoreboardIdentifier) : UiEvent
     data class ScoreboardDetails(val scoreboardIdentifier: ScoreboardIdentifier? = null) : UiEvent
     data class TeamDetails(val id: Int = -1) : UiEvent
+    data class HistoryDetails(val id: Long = -1) : UiEvent
     data class TeamPicker(val index: Int) : UiEvent
     data class TeamUpdated(val index: Int, val id: Int) : UiEvent
     data class IntervalEditor(val currentTimeValue: Long, val index: Int, val scoreboardIdentifier: ScoreboardIdentifier) : UiEvent
