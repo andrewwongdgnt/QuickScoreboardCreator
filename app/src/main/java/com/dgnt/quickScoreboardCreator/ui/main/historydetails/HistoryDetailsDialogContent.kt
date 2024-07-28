@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelinesaver
+package com.dgnt.quickScoreboardCreator.ui.main.historydetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.emptyFlow
 fun TimelineSaverDialogContent(
     updatedHistoryId: Long?,
     onUiEvent: (UiEvent) -> Unit,
-    viewModel: TimelineSaverViewModel = hiltViewModel()
+    viewModel: HistoryDetailsViewModel = hiltViewModel()
 ) {
 
     viewModel.onHistoryIdUpdate(updatedHistoryId)
@@ -40,7 +40,7 @@ fun TimelineSaverDialogContent(
         icon = icon,
         onTitleChange = viewModel::onTitleChange,
         onDismiss = viewModel::onDismiss,
-        onSave = viewModel::onSave
+        onSave = viewModel::onConfirm
     )
 }
 

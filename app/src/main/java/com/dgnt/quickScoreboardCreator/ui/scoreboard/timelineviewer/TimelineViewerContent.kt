@@ -57,7 +57,6 @@ fun TimelineViewerContent(
         onUiEvent,
         historicalInterval,
         viewModel::onDismiss,
-        viewModel::onSave,
         viewModel::onNewInterval
     )
 
@@ -69,7 +68,6 @@ private fun TimelineViewerInnerContent(
     onUiEvent: (UiEvent) -> Unit,
     historicalInterval: HistoricalInterval?,
     onDismiss: () -> Unit,
-    onSave: () -> Unit,
     onNewInterval: (Boolean) -> Unit
 ) {
     LaunchedEffect(key1 = true) {
@@ -113,8 +111,6 @@ private fun TimelineViewerInnerContent(
                                     to stringResource(id = R.string.nextInterval, intervalLabel),
                             { onNewInterval(false) }
                                     to stringResource(id = R.string.prevInterval, intervalLabel),
-                            onSave
-                                    to stringResource(id = R.string.save)
                         )
                     )
                 },
@@ -162,7 +158,6 @@ private fun `Loading Timeline`() =
         onUiEvent = {},
         historicalInterval = null,
         onDismiss = {},
-        onSave = {},
         onNewInterval = {},
     )
 
@@ -203,7 +198,6 @@ private fun `Infinite Timeline`() =
             )
         ),
         onDismiss = {},
-        onSave = {},
         onNewInterval = {},
     )
 
@@ -235,7 +229,6 @@ private fun `Countdown Timeline`() =
             )
         ),
         onDismiss = {},
-        onSave = {},
         onNewInterval = {},
     )
 

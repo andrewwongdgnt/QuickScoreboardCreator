@@ -65,15 +65,14 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun initWithId(id: Int) {
-        viewModelScope.launch {
-            originalEntity = getTeamUseCase(id)?.also {
-                _title.value = it.title
-                _description.value = it.description
-                _icon.value = it.icon
-                _isNewEntity.value = false
-            }
+    private fun initWithId(id: Int) = viewModelScope.launch {
+        originalEntity = getTeamUseCase(id)?.also {
+            _title.value = it.title
+            _description.value = it.description
+            _icon.value = it.icon
+            _isNewEntity.value = false
         }
+
     }
 
     fun onConfirm() {

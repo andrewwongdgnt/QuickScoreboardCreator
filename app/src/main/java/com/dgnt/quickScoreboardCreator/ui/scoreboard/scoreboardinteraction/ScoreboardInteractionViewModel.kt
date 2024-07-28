@@ -4,8 +4,13 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
+import com.dgnt.quickScoreboardCreator.domain.common.mapper.Mapper
+import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
@@ -34,6 +39,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,9 +47,11 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val resources: Resources,
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val getTeamUseCase: GetTeamUseCase,
+    private val insertHistoryUseCase: InsertHistoryUseCase,
     private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
+    private val historyScoreboardDataMapper: Mapper<HistoricalScoreboard, HistoricalScoreboardData>,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -280,7 +288,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         }
     }
 
-    fun toTimelineViewer() {
+    fun toTimelineViewer() = viewModelScope.launch {
         val intervalLabel = when (val l = intervalLabel.value) {
             is Label.Custom -> IntervalLabel.Custom(l.value)
             else -> scoreboardType?.let {
@@ -293,7 +301,19 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 is TeamDisplay.Selected -> TeamLabel.Custom(it.name, it.icon)
             }
         }
-        sendUiEvent(UiEvent.TimelineViewer(scoreboardManager.createTimeline(intervalLabel, teamList), currentInterval.value - 1, timelineViewerTitle, timelineViewerIcon))
+        val historicalScoreboard = scoreboardManager.createTimeline(intervalLabel, teamList)
+
+        insertHistoryUseCase(
+            HistoryEntity(
+                title = timelineViewerTitle,
+                icon = timelineViewerIcon,
+                lastModified = DateTime.now(),
+                historicalScoreboard = historyScoreboardDataMapper.map(historicalScoreboard),
+                temporary = true
+            )
+        ).let {
+            sendUiEvent(UiEvent.TimelineViewer(it.toInt(), currentInterval.value - 1))
+        }
     }
 
     override fun onCleared() {

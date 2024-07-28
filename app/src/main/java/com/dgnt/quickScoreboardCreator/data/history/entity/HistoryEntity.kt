@@ -8,11 +8,13 @@ import org.joda.time.DateTime
 
 @Entity
 data class HistoryEntity(
-    @PrimaryKey val id: Long? = null,
+    @PrimaryKey val id: Int? = null,
     val title: String,
     val icon: ScoreboardIcon,
-    val lastLookedAt: DateTime,
-    val historicalScoreboard: HistoricalScoreboardData
+    val lastModified: DateTime,
+    val createdAt: DateTime = DateTime.now(),
+    val historicalScoreboard: HistoricalScoreboardData,
+    val temporary: Boolean,
 )
 
 

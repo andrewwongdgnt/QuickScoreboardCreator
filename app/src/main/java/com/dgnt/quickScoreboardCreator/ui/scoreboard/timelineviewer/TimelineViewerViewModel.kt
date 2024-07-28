@@ -3,8 +3,11 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.domain.common.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.domain.history.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
@@ -20,12 +23,13 @@ import javax.inject.Inject
 @HiltViewModel
 class TimelineViewerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+    private val getHistoryUseCase: GetHistoryUseCase,
+    private val historyScoreboardDomainMapper: Mapper<HistoricalScoreboardData, HistoricalScoreboard>,
+
+    ) : ViewModel() {
 
 
     private var intervalIndex = 0
-
-    private var defaultTitle = ""
 
     private var _icon = MutableStateFlow<ScoreboardIcon?>(null)
     val icon = _icon.asStateFlow()
@@ -41,29 +45,24 @@ class TimelineViewerViewModel @Inject constructor(
 
     init {
 
-        savedStateHandle.get<String>(Arguments.TITLE)?.let {
-            defaultTitle = it
-        }
-        savedStateHandle.get<ScoreboardIcon>(Arguments.ICON)?.let {
-            _icon.value = it
-        }
         savedStateHandle.get<Int>(Arguments.INDEX)?.let {
             intervalIndex = it
         }
-        savedStateHandle.get<HistoricalScoreboard>(Arguments.HISTORICAL_SCOREBOARD)?.let {
-            historicalScoreboard = it
-            setTimeline(intervalIndex)
+        savedStateHandle.get<Int>(Arguments.ID)?.let {
+            initWithId(it)
         }
     }
 
-    fun onDismiss() = sendUiEvent(UiEvent.Done)
-
-    fun onSave() {
-        val icon = icon.value ?: return
-        val historicalScoreboard = historicalScoreboard ?: return
-
-        sendUiEvent(UiEvent.TimelineSaver(historicalScoreboard, defaultTitle, icon))
+    private fun initWithId(id: Int) = viewModelScope.launch {
+        getHistoryUseCase(id)?.let {
+            _icon.value = it.icon
+            historicalScoreboard = historyScoreboardDomainMapper.map(it.historicalScoreboard)
+            historicalScoreboard
+        }?.let {
+            setTimeline(intervalIndex, it)
+        }
     }
+    fun onDismiss() = sendUiEvent(UiEvent.Done)
 
     fun onNewInterval(next: Boolean) {
         historicalScoreboard?.let {
@@ -80,16 +79,16 @@ class TimelineViewerViewModel @Inject constructor(
                     else
                         sortedSet.headSet(intervalIndex, false).last()
                 }.let { intervalIndex ->
-                    setTimeline(intervalIndex)
+                    setTimeline(intervalIndex, it)
                 }
 
             }
         }
     }
 
-    private fun setTimeline(intervalIndex: Int) {
+    private fun setTimeline(intervalIndex: Int, historicalScoreboard: HistoricalScoreboard) {
         this.intervalIndex = intervalIndex
-        _historicalInterval.value = historicalScoreboard?.historicalIntervalMap?.get(intervalIndex)
+        _historicalInterval.value = historicalScoreboard.historicalIntervalMap[intervalIndex]
     }
 
     private fun sendUiEvent(event: UiEvent) {

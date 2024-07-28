@@ -1,7 +1,5 @@
 package com.dgnt.quickScoreboardCreator.ui.common
 
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,7 +10,6 @@ object Arguments {
     const val TITLE = "title"
     const val ICON = "icon"
     const val VALUE = "value"
-    const val HISTORICAL_SCOREBOARD = "historicalScoreboard"
 }
 
 @Serializable
@@ -42,6 +39,12 @@ sealed interface NavDestination {
     ) : NavDestination
 
     @Serializable
+    data class HistoryDetails(
+        @SerialName(Arguments.ID)
+        val id: Long,
+    ) : NavDestination
+
+    @Serializable
     data class ScoreboardInteraction(
         @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
         val scoreboardIdentifier: ScoreboardIdentifier
@@ -65,24 +68,10 @@ sealed interface NavDestination {
 
     @Serializable
     data class TimelineViewer(
-        @SerialName(Arguments.HISTORICAL_SCOREBOARD)
-        val historicalScoreboard: HistoricalScoreboard,
+        @SerialName(Arguments.ID)
+        val id: Int,
         @SerialName(Arguments.INDEX)
         val index: Int,
-        @SerialName(Arguments.TITLE)
-        val title: String,
-        @SerialName(Arguments.ICON)
-        val icon: ScoreboardIcon,
-    ) : NavDestination
-
-    @Serializable
-    data class TimelineSaver(
-        @SerialName(Arguments.HISTORICAL_SCOREBOARD)
-        val historicalScoreboard: HistoricalScoreboard,
-        @SerialName(Arguments.TITLE)
-        val title: String,
-        @SerialName(Arguments.ICON)
-        val icon: ScoreboardIcon,
     ) : NavDestination
 
     @Serializable

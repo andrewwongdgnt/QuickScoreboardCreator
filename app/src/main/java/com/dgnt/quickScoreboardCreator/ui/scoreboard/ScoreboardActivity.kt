@@ -19,14 +19,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
@@ -36,7 +33,6 @@ import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelinesaver.TimelineSaverDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerContent
 import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,7 +70,7 @@ class ScoreboardActivity : ComponentActivity() {
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
                                             is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.scoreboardIdentifier))
-                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.historicalScoreboard, uiEvent.index, uiEvent.title, uiEvent.icon))
+                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.id, uiEvent.index))
                                             else -> Unit
                                         }
 
@@ -125,43 +121,15 @@ class ScoreboardActivity : ComponentActivity() {
                                 )
 
                             }
-                            composable<NavDestination.TimelineViewer>(
-                                typeMap = mapOf(
-                                    typeOf<HistoricalScoreboard>() to parcelableType<HistoricalScoreboard>(),
-                                    typeOf<ScoreboardIcon>() to NavType.EnumType(ScoreboardIcon::class.java)
-                                )
-                            ) {
+                            composable<NavDestination.TimelineViewer> {
                                 TimelineViewerContent(
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
                                             UiEvent.Done -> navController.navigateUp()
-                                            is UiEvent.TimelineSaver -> navController.commonNavigate(navDestination = NavDestination.TimelineSaver(uiEvent.historicalScoreboard, uiEvent.title, uiEvent.icon))
                                             else -> Unit
                                         }
                                     },
                                 )
-
-                            }
-                            dialog<NavDestination.TimelineSaver>(
-                                typeMap = mapOf(
-                                    typeOf<HistoricalScoreboard>() to parcelableType<HistoricalScoreboard>(),
-                                    typeOf<ScoreboardIcon>() to NavType.EnumType(ScoreboardIcon::class.java)
-                                )
-                            ) { entry ->
-                                val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
-                                val updatedHistoryId by viewModel.updatedHistoryId.collectAsStateWithLifecycle()
-                                TimelineSaverDialogContent(
-                                    updatedHistoryId = updatedHistoryId,
-                                    onUiEvent = { uiEvent ->
-                                    when (uiEvent) {
-                                        UiEvent.Done -> navController.navigateUp()
-                                        is UiEvent.TimelineSaved -> {
-                                            viewModel.onHistoryIdUpdate(uiEvent.historyEntityId)
-                                            navController.navigateUp()
-                                        }
-                                        else -> Unit
-                                    }
-                                })
 
                             }
                         }

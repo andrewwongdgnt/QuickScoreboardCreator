@@ -4,8 +4,9 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import org.joda.time.DateTime
 
 data class HistoryItemData(
-    val id: Long,
+    val id: Int,
     val title: String,
     val icon: ScoreboardIcon,
-    val lastLookedAt: DateTime,
+    val lastModified: DateTime,
+    val createdAt: DateTime,
 )
