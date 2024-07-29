@@ -78,8 +78,8 @@
     <!-- Timeline Viewer -->
     <string name="nextInterval">Next %1$s</string>
     <string name="prevInterval">Prev %1$s</string>
-    <!-- Timeline Saver -->
-    <string name="timelineSaverTitle">Input a title</string>
+    <!-- History Details -->
+    <string name="historyDetailsTitle">Session details</string>
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->

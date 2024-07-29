@@ -138,7 +138,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
         isHistoryTemporary = false
         viewModelScope.launch {
-            insertHistory()
+            historyEntityId = insertHistory()
         }
     }
 

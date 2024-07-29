@@ -41,7 +41,7 @@ sealed interface NavDestination {
     @Serializable
     data class HistoryDetails(
         @SerialName(Arguments.ID)
-        val id: Long,
+        val id: Int,
     ) : NavDestination
 
     @Serializable

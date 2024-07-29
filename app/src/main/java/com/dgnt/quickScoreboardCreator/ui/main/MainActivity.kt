@@ -31,6 +31,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
+import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
@@ -156,10 +157,20 @@ class MainActivity : ComponentActivity() {
                 HistoryListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-//                            is UiEvent.HistoryDetails -> navController.commonNavigate(navDestination = NavDestination.HistoryDetails(uiEvent.id))
+                            is UiEvent.HistoryDetails -> navController.commonNavigate(navDestination = NavDestination.HistoryDetails(uiEvent.id))
                             else -> Unit
                         }
 
+                    }
+                )
+            }
+            dialog<NavDestination.HistoryDetails> {
+                HistoryDetailsDialogContent(
+                    onUiEvent = { uiEvent ->
+                        when (uiEvent) {
+                            UiEvent.Done -> navController.navigateUp()
+                            else -> Unit
+                        }
                     }
                 )
             }
