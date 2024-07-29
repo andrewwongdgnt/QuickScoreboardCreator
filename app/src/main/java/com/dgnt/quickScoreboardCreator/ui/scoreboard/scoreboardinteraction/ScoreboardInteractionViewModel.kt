@@ -135,6 +135,11 @@ class ScoreboardInteractionViewModel @Inject constructor(
      */
     private val winnersUpdateListener: (Set<Int>) -> Unit = {
         //TODO handle winners
+
+        isHistoryTemporary = false
+        viewModelScope.launch {
+            insertHistory()
+        }
     }
 
     private val intervalOnEndListener: (IntervalEndSoundType) -> Unit = { soundType ->
@@ -157,6 +162,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private var timelineViewerIcon = ScoreboardIcon.BASKETBALL
 
     private var historyEntityId: Int? = null
+    private var isHistoryTemporary = true
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -291,6 +297,13 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     fun toTimelineViewer() = viewModelScope.launch {
+        insertHistory().let {
+            historyEntityId = it
+            sendUiEvent(UiEvent.TimelineViewer(it, currentInterval.value - 1))
+        }
+    }
+
+    private suspend fun insertHistory(): Int {
         val intervalLabel = when (val l = intervalLabel.value) {
             is Label.Custom -> IntervalLabel.Custom(l.value)
             else -> scoreboardType?.let {
@@ -305,19 +318,16 @@ class ScoreboardInteractionViewModel @Inject constructor(
         }
         val historicalScoreboard = scoreboardManager.createTimeline(intervalLabel, teamList)
 
-        insertHistoryUseCase(
+        return insertHistoryUseCase(
             HistoryEntity(
                 id = historyEntityId,
                 title = timelineViewerTitle,
                 icon = timelineViewerIcon,
                 lastModified = DateTime.now(),
                 historicalScoreboard = historyScoreboardDataMapper.map(historicalScoreboard),
-                temporary = true
+                temporary = isHistoryTemporary
             )
-        ).let {
-            historyEntityId = it.toInt()
-            sendUiEvent(UiEvent.TimelineViewer(it.toInt(), currentInterval.value - 1))
-        }
+        ).toInt()
     }
 
     override fun onCleared() {
