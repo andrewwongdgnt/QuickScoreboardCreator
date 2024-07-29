@@ -156,6 +156,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private var timelineViewerTitle = ""
     private var timelineViewerIcon = ScoreboardIcon.BASKETBALL
 
+    private var historyEntityId: Int? = null
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -305,6 +307,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
         insertHistoryUseCase(
             HistoryEntity(
+                id = historyEntityId,
                 title = timelineViewerTitle,
                 icon = timelineViewerIcon,
                 lastModified = DateTime.now(),
@@ -312,6 +315,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 temporary = true
             )
         ).let {
+            historyEntityId = it.toInt()
             sendUiEvent(UiEvent.TimelineViewer(it.toInt(), currentInterval.value - 1))
         }
     }
