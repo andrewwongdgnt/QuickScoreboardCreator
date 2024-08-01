@@ -1,5 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 
+import android.view.View
+import android.widget.TextView
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,12 +16,15 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.ui.theme.TimelineViewerTeamColors
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.EntryXComparator
+import com.github.mikephil.charting.utils.MPPointF
 import org.joda.time.Duration
 
 @Composable
@@ -43,7 +48,8 @@ fun TimelineViewerChart(
                         is HistoricalIntervalRange.CountDown -> (range.start - it.time).toFloat()
                         HistoricalIntervalRange.Infinite -> it.time.toFloat()
                     }
-                    Entry(time, it.score.toFloat())
+                    val lineColor = TimelineViewerTeamColors[scoreIndex % TimelineViewerTeamColors.size].toArgb()
+                    Entry(time, it.score.toFloat(), lineColor)
 
                 }.let { entries ->
                     val label = when (val tl = historicalScore.teamLabel) {
@@ -51,15 +57,15 @@ fun TimelineViewerChart(
                         TeamLabel.None -> localContext.getString(R.string.genericTeamTitle, scoreIndex + 1)
                     }
 
-
                     LineDataSet(entries.sortedWith(EntryXComparator()), label).apply {
-                        val lineColor = TimelineViewerTeamColors[scoreIndex % TimelineViewerTeamColors.size].toArgb()
                         setDrawCircles(true)
                         setDrawValues(false)
                         circleRadius = 5f
-                        color = lineColor
-                        circleHoleColor = lineColor
-                        setCircleColor(lineColor)
+                        (values.firstOrNull()?.data as? Int)?.let { lineColor ->
+                            color = lineColor
+                            circleHoleColor = lineColor
+                            setCircleColor(lineColor)
+                        }
 
                     }
                 }
@@ -87,6 +93,24 @@ fun TimelineViewerChart(
                         return TimeData(minutes.toInt(), seconds.toInt(), centiSeconds.toInt()).formatTime(true)
                     }
                 }
+            }
+
+            chart.marker = object : MarkerView(localContext, R.layout.timeline_marker_view) {
+                private var mOffset: MPPointF? = null
+
+                override fun refreshContent(e: Entry, highlight: Highlight) {
+                    (findViewById<View>(R.id.tvContent) as TextView).apply {
+                        text = "${e.y.toInt()}"
+                        (e.data as? Int)?.let {
+                            setTextColor(it)
+                        }
+                    }
+                }
+
+                override fun getOffset(): MPPointF {
+                    return super.getOffset()
+                }
+
             }
             chart.invalidate()
         },
@@ -119,7 +143,6 @@ fun TimelineViewerChart(
                 textColor = commonTextColor
             }
             chart.axisRight.isEnabled = false
-
 
             // Refresh and return the chart
             chart.invalidate()
