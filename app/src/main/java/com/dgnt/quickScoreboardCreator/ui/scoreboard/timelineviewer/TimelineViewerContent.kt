@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.CircularProgressIndicator
@@ -104,6 +105,15 @@ private fun TimelineViewerInnerContent(
                 id = R.string.intervalLabel, intervalLabel, historicalInterval.intervalLabel.index + 1
 
             )
+            Image(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.back),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .clickable(onClick = onDismiss)
+                    .padding(10.dp)
+            )
             Row(
                 modifier = Modifier
                     .align(Alignment.TopCenter),
@@ -114,9 +124,9 @@ private fun TimelineViewerInnerContent(
                     contentDescription = stringResource(R.string.prevInterval),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                     modifier = Modifier
-                        .clickable(onClick = {
+                        .clickable {
                             onNewInterval(false)
-                        })
+                        }
                 )
                 Text(
                     modifier = Modifier
@@ -129,9 +139,9 @@ private fun TimelineViewerInnerContent(
                     contentDescription = stringResource(R.string.nextInterval),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                     modifier = Modifier
-                        .clickable(onClick = {
+                        .clickable {
                             onNewInterval(true)
-                        })
+                        }
                 )
             }
         }
