@@ -60,6 +60,7 @@ fun TimelineViewerChart(
                     LineDataSet(entries.sortedWith(EntryXComparator()), label).apply {
                         setDrawCircles(true)
                         setDrawValues(false)
+                        setDrawVerticalHighlightIndicator(false)
                         circleRadius = 5f
                         (values.firstOrNull()?.data as? Int)?.let { lineColor ->
                             color = lineColor
@@ -96,10 +97,10 @@ fun TimelineViewerChart(
             }
 
             chart.marker = object : MarkerView(localContext, R.layout.timeline_marker_view) {
-                private var mOffset: MPPointF? = null
+                private var textContent = findViewById<View>(R.id.tvContent) as? TextView
 
                 override fun refreshContent(e: Entry, highlight: Highlight) {
-                    (findViewById<View>(R.id.tvContent) as TextView).apply {
+                    textContent?.apply {
                         text = "${e.y.toInt()}"
                         (e.data as? Int)?.let {
                             setTextColor(it)
@@ -108,7 +109,12 @@ fun TimelineViewerChart(
                 }
 
                 override fun getOffset(): MPPointF {
-                    return super.getOffset()
+                    return textContent?.let { tv ->
+                        tv.measure(0, 0) //must call measure!
+                        MPPointF(-(tv.measuredWidth / 2).toFloat(), -tv.measuredHeight.toFloat()*1.25f)
+                    } ?: super.getOffset()
+
+
                 }
 
             }
