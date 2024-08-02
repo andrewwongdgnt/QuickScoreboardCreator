@@ -2,6 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 
 import android.view.View
 import android.widget.TextView
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.ui.theme.TimelineViewerTeamColors
+import com.dgnt.quickScoreboardCreator.ui.theme.getTimelineViewerTeamColor
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
@@ -35,6 +36,7 @@ fun TimelineViewerChart(
     val commonTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
     val commonTextSize = 20f
     val localContext = LocalContext.current
+    val isDarkTheme = isSystemInDarkTheme()
     AndroidView(
         modifier = modifier
             .fillMaxWidth(),
@@ -48,7 +50,7 @@ fun TimelineViewerChart(
                         is HistoricalIntervalRange.CountDown -> (range.start - it.time).toFloat()
                         HistoricalIntervalRange.Infinite -> it.time.toFloat()
                     }
-                    val lineColor = TimelineViewerTeamColors[scoreIndex % TimelineViewerTeamColors.size].toArgb()
+                    val lineColor = getTimelineViewerTeamColor(scoreIndex, isDarkTheme).toArgb()
                     Entry(time, it.score.toFloat(), lineColor)
 
                 }.let { entries ->
