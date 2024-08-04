@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
+package com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor
 
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
