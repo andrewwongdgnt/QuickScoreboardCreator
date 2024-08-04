@@ -15,15 +15,16 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboar
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -55,6 +56,9 @@ class ScoreboardDetailsViewModelTest {
     @MockK
     private lateinit var savedStateHandle: SavedStateHandle
 
+    @MockK
+    private lateinit var uiEventHandler: UiEventHandler
+
     private lateinit var sut: ScoreboardDetailsViewModel
 
     private fun initSut() {
@@ -65,6 +69,7 @@ class ScoreboardDetailsViewModelTest {
             deleteScoreboardUseCase,
             scoreboardLoader,
             savedStateHandle,
+            uiEventHandler
         )
     }
 
@@ -149,9 +154,9 @@ class ScoreboardDetailsViewModelTest {
         initSut()
 
         sut.onDismiss()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
-        sut.onConfirm()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
     }
 
     @Test
@@ -163,7 +168,9 @@ class ScoreboardDetailsViewModelTest {
         sut.onDescriptionChange("new scoreboard desc")
         sut.onIconChange(ScoreboardIcon.SOCCER)
         sut.onConfirm()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
         coVerify(exactly = 1) {
             insertScoreboardListUseCase.invoke(
                 listOf(
@@ -188,7 +195,9 @@ class ScoreboardDetailsViewModelTest {
         sut.onDescriptionChange("new scoreboard desc")
         sut.onIconChange(ScoreboardIcon.BOXING)
         sut.onConfirm()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
         coVerify(exactly = 1) {
             insertScoreboardListUseCase.invoke(
                 listOf(
@@ -210,7 +219,9 @@ class ScoreboardDetailsViewModelTest {
         initSut()
 
         sut.onDelete()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
         coVerify(exactly = 1) {
             deleteScoreboardUseCase.invoke(
                 ScoreboardEntity(

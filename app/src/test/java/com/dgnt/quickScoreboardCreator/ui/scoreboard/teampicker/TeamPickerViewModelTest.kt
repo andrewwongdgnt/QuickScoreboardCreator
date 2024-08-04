@@ -9,18 +9,18 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -37,6 +37,9 @@ class TeamPickerViewModelTest {
 
     @MockK
     private lateinit var savedStateHandle: SavedStateHandle
+
+    @MockK
+    private lateinit var uiEventHandler: UiEventHandler
 
     private lateinit var sut: TeamPickerViewModel
 
@@ -89,19 +92,24 @@ class TeamPickerViewModelTest {
             teamCategorizer,
             getTeamListUseCase,
             savedStateHandle,
+            uiEventHandler
         )
     }
 
     @Test
     fun testOnDismiss() = runTest {
         sut.onDismiss()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
     }
 
     @Test
     fun testTeamPicked() = runTest {
         sut.onTeamPicked(2)
-        Assert.assertEquals(UiEvent.TeamUpdated(1, 2), sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.TeamUpdated(1, 2))
+        }
     }
 
 }

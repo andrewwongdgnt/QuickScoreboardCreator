@@ -30,7 +30,7 @@ class IntervalEditorViewModel @Inject constructor(
     private val timeTransformer: TimeTransformer,
     private val scoreboardLoader: ScoreboardLoader,
     savedStateHandle: SavedStateHandle,
-    private val uiEventHandler: UiEventHandler
+    uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
     private val _minuteString = MutableStateFlow("")

@@ -24,7 +24,7 @@ class ScoreboardListViewModel @Inject constructor(
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
     private val scoreboardCategorizer: ScoreboardCategorizer,
-    private val uiEventHandler: UiEventHandler
+    uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val scoreboardEntityList = getScoreboardListUseCase()
     val categorizedScoreboards = scoreboardEntityList.map { scoreboardEntityList ->

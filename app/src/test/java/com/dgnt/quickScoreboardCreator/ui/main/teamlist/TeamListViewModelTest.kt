@@ -10,20 +10,20 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -43,6 +43,9 @@ class TeamListViewModelTest {
 
     @MockK
     private lateinit var teamCategorizer: TeamCategorizer
+
+    @MockK
+    private lateinit var uiEventHandler: UiEventHandler
 
     private lateinit var sut: TeamListViewModel
 
@@ -102,40 +105,49 @@ class TeamListViewModelTest {
             getTeamListUseCase,
             insertTeamListUseCase,
             deleteTeamUseCase,
-            teamCategorizer
+            teamCategorizer,
+            uiEventHandler
         )
     }
 
     @Test
     fun testOnAdd() = runTest {
         sut.onAdd()
-        Assert.assertEquals(UiEvent.TeamDetails(), sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.TeamDetails())
+        }
     }
 
     @Test
     fun testOnEdit() = runTest {
         sut.onEdit(1)
-        Assert.assertEquals(UiEvent.TeamDetails(1), sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.TeamDetails(1))
+        }
     }
 
     @Test
     fun testOnDeleteAndUndo() = runTest {
         sut.onDelete(1)
-        Assert.assertEquals(
-            UiEvent.SnackBar.QuantitySnackBar(
-                message = R.plurals.deletedTeamMsg,
-                quantity = 1,
-                action = R.string.undo
-            ), sut.uiEvent.first()
-        )
+        verify(exactly = 1) {
+            sut.sendUiEvent(
+                UiEvent.SnackBar.QuantitySnackBar(
+                    message = R.plurals.deletedTeamMsg,
+                    quantity = 1,
+                    action = R.string.undo
+                )
+            )
+        }
         sut.onDelete(2)
-        Assert.assertEquals(
-            UiEvent.SnackBar.QuantitySnackBar(
-                message = R.plurals.deletedTeamMsg,
-                quantity = 2,
-                action = R.string.undo
-            ), sut.uiEvent.first()
-        )
+        verify(exactly = 1) {
+            sut.sendUiEvent(
+                UiEvent.SnackBar.QuantitySnackBar(
+                    message = R.plurals.deletedTeamMsg,
+                    quantity = 2,
+                    action = R.string.undo
+                )
+            )
+        }
         sut.onUndoDelete()
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[0]) }
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[1]) }
@@ -145,21 +157,25 @@ class TeamListViewModelTest {
     @Test
     fun testNoUndo() = runTest {
         sut.onDelete(1)
-        Assert.assertEquals(
-            UiEvent.SnackBar.QuantitySnackBar(
-                message = R.plurals.deletedTeamMsg,
-                quantity = 1,
-                action = R.string.undo
-            ), sut.uiEvent.first()
-        )
+        verify(exactly = 1) {
+            sut.sendUiEvent(
+                UiEvent.SnackBar.QuantitySnackBar(
+                    message = R.plurals.deletedTeamMsg,
+                    quantity = 1,
+                    action = R.string.undo
+                )
+            )
+        }
         sut.onDelete(2)
-        Assert.assertEquals(
-            UiEvent.SnackBar.QuantitySnackBar(
-                message = R.plurals.deletedTeamMsg,
-                quantity = 2,
-                action = R.string.undo
-            ), sut.uiEvent.first()
-        )
+        verify(exactly = 1) {
+            sut.sendUiEvent(
+                UiEvent.SnackBar.QuantitySnackBar(
+                    message = R.plurals.deletedTeamMsg,
+                    quantity = 2,
+                    action = R.string.undo
+                )
+            )
+        }
         sut.onClearDeletedTeamList()
         sut.onUndoDelete()
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[0]) }

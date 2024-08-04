@@ -8,14 +8,15 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -40,6 +41,9 @@ class TeamDetailsViewModelTest {
     @MockK
     private lateinit var savedStateHandle: SavedStateHandle
 
+    @MockK
+    private lateinit var uiEventHandler: UiEventHandler
+
     private lateinit var sut: TeamDetailsViewModel
 
     private fun initSut() {
@@ -47,6 +51,7 @@ class TeamDetailsViewModelTest {
             insertTeamListUseCase,
             getTeamUseCase,
             deleteTeamUseCase,
+            uiEventHandler,
             savedStateHandle,
         )
     }
@@ -111,9 +116,9 @@ class TeamDetailsViewModelTest {
         initSut()
 
         sut.onDismiss()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
-        sut.onConfirm()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
     }
 
     @Test
@@ -125,7 +130,9 @@ class TeamDetailsViewModelTest {
         sut.onDescriptionChange("new team desc")
         sut.onIconChange(TeamIcon.DRAGON)
         sut.onConfirm()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
         coVerify(exactly = 1) {
             insertTeamListUseCase.invoke(
                 listOf(
@@ -150,7 +157,9 @@ class TeamDetailsViewModelTest {
         sut.onDescriptionChange("new team desc")
         sut.onIconChange(TeamIcon.DRAGON)
         sut.onConfirm()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
         coVerify(exactly = 1) {
             insertTeamListUseCase.invoke(
                 listOf(
@@ -172,7 +181,9 @@ class TeamDetailsViewModelTest {
         initSut()
 
         sut.onDelete()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
         coVerify(exactly = 1) {
             deleteTeamUseCase.invoke(
                 TeamEntity(

@@ -18,12 +18,14 @@ import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorErrorType
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -54,6 +56,9 @@ class IntervalEditorViewModelTest {
 
     @MockK
     private lateinit var savedStateHandle: SavedStateHandle
+
+    @MockK
+    private lateinit var uiEventHandler: UiEventHandler
 
     private lateinit var sut: IntervalEditorViewModel
 
@@ -107,6 +112,7 @@ class IntervalEditorViewModelTest {
             timeTransformer,
             scoreboardLoader,
             savedStateHandle,
+            uiEventHandler
         )
     }
 
@@ -159,14 +165,18 @@ class IntervalEditorViewModelTest {
     fun testOnDismiss() = runTest {
         initDefaultScoreboardConfig()
         sut.onDismiss()
-        Assert.assertEquals(UiEvent.Done, sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.Done)
+        }
     }
 
     @Test
     fun testOnConfirmInitialValues() = runTest {
         initDefaultScoreboardConfig()
         sut.onConfirm()
-        Assert.assertEquals(UiEvent.IntervalUpdated(mockInitialCurrentTimeValue, mockInitialCurrentIntervalIndex), sut.uiEvent.first())
+        verify(exactly = 1) {
+            sut.sendUiEvent(UiEvent.IntervalUpdated(mockInitialCurrentTimeValue, mockInitialCurrentIntervalIndex))
+        }
     }
 
     @Test

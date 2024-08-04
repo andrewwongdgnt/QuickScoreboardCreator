@@ -22,7 +22,7 @@ class TeamListViewModel @Inject constructor(
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val deleteTeamUseCase: DeleteTeamUseCase,
     private val teamCategorizer: TeamCategorizer,
-    private val uiEventHandler: UiEventHandler
+    uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val teamEntityList = getTeamListUseCase()
     val categorizedTeamList = teamEntityList.map {

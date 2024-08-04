@@ -16,7 +16,7 @@ class TeamPickerViewModel @Inject constructor(
     teamCategorizer: TeamCategorizer,
     getTeamListUseCase: GetTeamListUseCase,
     savedStateHandle: SavedStateHandle,
-    private val uiEventHandler: UiEventHandler
+    uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val teamEntityList = getTeamListUseCase()
     val categorizedTeamList = teamEntityList.map {

@@ -27,7 +27,7 @@ class TeamDetailsViewModel @Inject constructor(
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val getTeamUseCase: GetTeamUseCase,
     private val deleteTeamUseCase: DeleteTeamUseCase,
-    private val uiEventHandler: UiEventHandler,
+    uiEventHandler: UiEventHandler,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
