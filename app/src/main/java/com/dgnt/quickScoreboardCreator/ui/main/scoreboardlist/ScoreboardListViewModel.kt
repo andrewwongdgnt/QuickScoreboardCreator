@@ -10,12 +10,11 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboar
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +24,8 @@ class ScoreboardListViewModel @Inject constructor(
     private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
     private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
     private val scoreboardCategorizer: ScoreboardCategorizer,
-) : ViewModel() {
+    private val uiEventHandler: UiEventHandler
+) : ViewModel(), UiEventHandler by uiEventHandler {
     private val scoreboardEntityList = getScoreboardListUseCase()
     val categorizedScoreboards = scoreboardEntityList.map { scoreboardEntityList ->
         scoreboardCategorizer(
@@ -38,9 +38,6 @@ class ScoreboardListViewModel @Inject constructor(
             scoreboardEntityList
         )
     }
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     private var deletedScoreboardList: MutableList<ScoreboardEntity> = mutableListOf()
 
@@ -77,9 +74,4 @@ class ScoreboardListViewModel @Inject constructor(
 
     fun onLaunch(scoreboardIdentifier: ScoreboardIdentifier) = sendUiEvent(UiEvent.LaunchScoreboard(scoreboardIdentifier))
 
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
-    }
 }

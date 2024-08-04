@@ -13,13 +13,12 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
@@ -30,8 +29,9 @@ class IntervalEditorViewModel @Inject constructor(
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val timeTransformer: TimeTransformer,
     private val scoreboardLoader: ScoreboardLoader,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    private val uiEventHandler: UiEventHandler
+) : ViewModel(), UiEventHandler by uiEventHandler {
 
     private val _minuteString = MutableStateFlow("")
     val minuteString = _minuteString.asStateFlow()
@@ -67,9 +67,6 @@ class IntervalEditorViewModel @Inject constructor(
 
     private val _errors = MutableStateFlow(emptySet<IntervalEditorErrorType>())
     val errors = _errors.asStateFlow()
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         savedStateHandle.get<ScoreboardIdentifier>(Arguments.SCOREBOARD_IDENTIFIER)?.let { sId ->
@@ -191,11 +188,5 @@ class IntervalEditorViewModel @Inject constructor(
         }
 
         _errors.value = errors
-    }
-
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
     }
 }

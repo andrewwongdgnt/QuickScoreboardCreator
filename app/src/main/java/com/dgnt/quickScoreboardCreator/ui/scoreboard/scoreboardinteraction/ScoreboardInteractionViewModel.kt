@@ -25,19 +25,18 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUs
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -52,8 +51,9 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
     private val historyScoreboardDataMapper: Mapper<HistoricalScoreboard, HistoricalScoreboardData>,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    private val uiEventHandler: UiEventHandler
+) : ViewModel(), UiEventHandler by uiEventHandler {
 
     /**
      * Primary Display score
@@ -163,9 +163,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private var historyEntityId: Int? = null
     private var isHistoryTemporary = true
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     private val _intervalLabel = MutableStateFlow<Label>(Label.Custom(""))
     val intervalLabel = _intervalLabel.asStateFlow()
@@ -333,11 +330,5 @@ class ScoreboardInteractionViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         timerJob?.cancel()
-    }
-
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
     }
 }

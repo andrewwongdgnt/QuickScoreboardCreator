@@ -19,7 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker

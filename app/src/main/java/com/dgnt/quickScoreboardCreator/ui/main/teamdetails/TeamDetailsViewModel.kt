@@ -9,15 +9,14 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,8 +27,9 @@ class TeamDetailsViewModel @Inject constructor(
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val getTeamUseCase: GetTeamUseCase,
     private val deleteTeamUseCase: DeleteTeamUseCase,
+    private val uiEventHandler: UiEventHandler,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : ViewModel(), UiEventHandler by uiEventHandler {
 
     private var originalEntity: TeamEntity? = null
 
@@ -51,9 +51,6 @@ class TeamDetailsViewModel @Inject constructor(
     val valid: StateFlow<Boolean> = title.map {
         it.isNotBlank()
     }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
@@ -120,9 +117,4 @@ class TeamDetailsViewModel @Inject constructor(
         _iconChanging.value = false
     }
 
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
-    }
 }

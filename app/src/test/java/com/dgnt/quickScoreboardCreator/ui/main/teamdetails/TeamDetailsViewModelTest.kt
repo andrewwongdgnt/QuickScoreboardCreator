@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify

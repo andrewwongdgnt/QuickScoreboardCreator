@@ -10,6 +10,8 @@ import com.dgnt.quickScoreboardCreator.data.team.repository.QSCTeamRepository
 import com.dgnt.quickScoreboardCreator.domain.history.repository.HistoryRepository
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.repository.ScoreboardRepository
 import com.dgnt.quickScoreboardCreator.domain.team.repository.TeamRepository
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.QSCUiEventHandler
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,5 +50,9 @@ object AppModule {
     @Singleton
     fun provideHistoryRepository(db: QSCDatabase): HistoryRepository =
         QSCHistoryRepository(db.historyDao)
+
+    @Provides
+    fun provideUiEventHandler(): UiEventHandler =
+        QSCUiEventHandler()
 
 }

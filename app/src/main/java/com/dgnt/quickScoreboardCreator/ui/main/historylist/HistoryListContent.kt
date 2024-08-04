@@ -38,7 +38,7 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.CategorizedHistoryIt
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoryItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.DateDisplayUtil.getDayOfMonthSuffix
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.SwipeBox

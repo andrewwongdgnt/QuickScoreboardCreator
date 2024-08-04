@@ -8,7 +8,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every

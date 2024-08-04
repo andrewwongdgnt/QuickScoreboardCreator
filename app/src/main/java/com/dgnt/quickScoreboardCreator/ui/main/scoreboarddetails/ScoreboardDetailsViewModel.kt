@@ -15,15 +15,14 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUs
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,8 +35,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
     private val scoreboardLoader: ScoreboardLoader,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    private val uiEventHandler: UiEventHandler
+) : ViewModel(), UiEventHandler by uiEventHandler {
 
     private var originalEntity: ScoreboardEntity? = null
 
@@ -62,9 +62,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
     val valid: StateFlow<Boolean> = title.map {
         it.isNotBlank()
     }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         savedStateHandle.get<ScoreboardIdentifier?>(SCOREBOARD_IDENTIFIER)?.let { sId ->
@@ -144,11 +141,5 @@ class ScoreboardDetailsViewModel @Inject constructor(
     fun onIconChange(icon: ScoreboardIcon) {
         _icon.value = icon
         _iconChanging.value = false
-    }
-
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
     }
 }

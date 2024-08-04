@@ -28,7 +28,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberTimeline
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData

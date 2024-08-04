@@ -10,12 +10,11 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.domain.history.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.TreeSet
 import javax.inject.Inject
@@ -25,8 +24,8 @@ class TimelineViewerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getHistoryUseCase: GetHistoryUseCase,
     private val historyScoreboardDomainMapper: Mapper<HistoricalScoreboardData, HistoricalScoreboard>,
-
-    ) : ViewModel() {
+    private val uiEventHandler: UiEventHandler
+) : ViewModel(), UiEventHandler by uiEventHandler {
 
 
     private var intervalIndex = 0
@@ -38,9 +37,6 @@ class TimelineViewerViewModel @Inject constructor(
 
     private var _historicalInterval = MutableStateFlow<HistoricalInterval?>(null)
     val historicalInterval = _historicalInterval.asStateFlow()
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
 
     init {
@@ -62,6 +58,7 @@ class TimelineViewerViewModel @Inject constructor(
             setTimeline(intervalIndex, it)
         }
     }
+
     fun onDismiss() = sendUiEvent(UiEvent.Done)
 
     fun onNewInterval(next: Boolean) {
@@ -89,11 +86,5 @@ class TimelineViewerViewModel @Inject constructor(
     private fun setTimeline(intervalIndex: Int, historicalScoreboard: HistoricalScoreboard) {
         this.intervalIndex = intervalIndex
         _historicalInterval.value = historicalScoreboard.historicalIntervalMap[intervalIndex]
-    }
-
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
     }
 }

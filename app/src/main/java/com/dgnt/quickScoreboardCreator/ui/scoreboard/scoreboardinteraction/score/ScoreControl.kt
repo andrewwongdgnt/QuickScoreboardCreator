@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoringButton

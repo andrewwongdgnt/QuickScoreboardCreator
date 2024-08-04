@@ -8,12 +8,11 @@ import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCate
 import com.dgnt.quickScoreboardCreator.domain.history.usecase.DeleteHistoryUseCase
 import com.dgnt.quickScoreboardCreator.domain.history.usecase.GetHistoryListUseCase
 import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryListUseCase
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,14 +22,12 @@ class HistoryListViewModel @Inject constructor(
     private val insertHistoryListUseCase: InsertHistoryListUseCase,
     private val deleteHistoryUseCase: DeleteHistoryUseCase,
     private val historyCategorizer: HistoryCategorizer,
-) : ViewModel() {
+    private val uiEventHandler: UiEventHandler
+) : ViewModel(), UiEventHandler by uiEventHandler {
     private val historyEntityList = getHistoryListUseCase()
     val categorizedHistoryList = historyEntityList.map {
         historyCategorizer(it)
     }
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
 
     private var deletedHistoryList: MutableList<HistoryEntity> = mutableListOf()
 
@@ -67,9 +64,4 @@ class HistoryListViewModel @Inject constructor(
 
     fun onClearDeletedHistoryList() = deletedHistoryList.clear()
 
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
-    }
 }

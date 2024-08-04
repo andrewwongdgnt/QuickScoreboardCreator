@@ -12,7 +12,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboar
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify

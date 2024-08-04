@@ -16,7 +16,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorErrorType
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorViewModel
