@@ -55,6 +55,7 @@ class HistoryListViewModelTest {
         HistoryEntity(
             id = 1,
             title = "Basketball",
+            description = "BBall",
             icon = ScoreboardIcon.BASKETBALL,
             lastModified = DateTime(2024, 1, 15, 12, 10),
             createdAt = DateTime(2024, 1, 15, 12, 10),
@@ -64,6 +65,7 @@ class HistoryListViewModelTest {
         HistoryEntity(
             id = 2,
             title = "Spikeball",
+            description = "ss",
             icon = ScoreboardIcon.TENNIS,
             lastModified = DateTime(2024, 2, 14, 11, 0),
             createdAt = DateTime(2024, 2, 14, 11, 0),
@@ -75,15 +77,15 @@ class HistoryListViewModelTest {
         CategorizedHistoryItemData(
             DateTime(2024, 6, 1, 0, 0),
             listOf(
-                HistoryItemData(1, "Tennis", ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
-                HistoryItemData(2, "Tennis", ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
+                HistoryItemData(1, "Tennis", "22",ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
+                HistoryItemData(2, "Tennis", "3443",ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
             )
         ),
         CategorizedHistoryItemData(
             DateTime(2024, 5, 1, 0, 0),
             listOf(
-                HistoryItemData(4, "Basketball NBA", ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
-                HistoryItemData(7, "Hockey NHL", ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
+                HistoryItemData(4, "Basketball NBA", "something",ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
+                HistoryItemData(7, "Hockey NHL", "something again", ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
             )
         )
     )

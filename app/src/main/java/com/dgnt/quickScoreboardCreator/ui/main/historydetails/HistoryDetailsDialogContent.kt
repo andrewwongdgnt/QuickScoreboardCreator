@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,10 +20,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -33,6 +34,7 @@ fun HistoryDetailsDialogContent(
 ) {
     val valid by viewModel.valid.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
+    val description by viewModel.description.collectAsStateWithLifecycle()
     val icon by viewModel.icon.collectAsStateWithLifecycle()
     val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
     HistoryDetailsInnerDialogContent(
@@ -40,6 +42,8 @@ fun HistoryDetailsDialogContent(
         onUiEvent = onUiEvent,
         title = title,
         onTitleChange = viewModel::onTitleChange,
+        description = description,
+        onDescriptionChange = viewModel::onDescriptionChange,
         icon = icon,
         onIconChange = viewModel::onIconChange,
         iconChanging = iconChanging,
@@ -57,6 +61,8 @@ private fun HistoryDetailsInnerDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     title: String,
     onTitleChange: (String) -> Unit,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
     icon: ScoreboardIcon?,
     onIconChange: (ScoreboardIcon) -> Unit,
     iconChanging: Boolean,
@@ -92,9 +98,19 @@ private fun HistoryDetailsInnerDialogContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = title,
-                onValueChange = onTitleChange
+                onValueChange = onTitleChange,
+                placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = description,
+                onValueChange = onDescriptionChange,
+                placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = false,
+                maxLines = 5
             )
             Spacer(modifier = Modifier.height(16.dp))
             if (iconChanging)
@@ -119,6 +135,8 @@ private fun `New Icon Selection`() {
         onUiEvent = {},
         title = "my title",
         onTitleChange = {},
+        description = "description 222",
+        onDescriptionChange = {},
         icon = ScoreboardIcon.HOCKEY,
         onIconChange = {},
         iconChanging = true,
@@ -136,8 +154,10 @@ private fun `Loading Icon`() =
     HistoryDetailsInnerDialogContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        title = "333",
+        title = "",
         onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
         icon = null,
         onIconChange = {},
         iconChanging = false,

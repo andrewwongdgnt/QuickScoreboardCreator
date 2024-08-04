@@ -36,6 +36,9 @@ class HistoryDetailsViewModel @Inject constructor(
     private var _title = MutableStateFlow("")
     val title = _title.asStateFlow()
 
+    private val _description = MutableStateFlow("")
+    val description: StateFlow<String> = _description.asStateFlow()
+
     private var _icon = MutableStateFlow<ScoreboardIcon?>(null)
     val icon = _icon.asStateFlow()
 
@@ -55,6 +58,7 @@ class HistoryDetailsViewModel @Inject constructor(
     private fun initWithId(it: Int) = viewModelScope.launch {
         originalEntity = getHistoryUseCase(it)?.also {
             _title.value = it.title
+            _description.value = it.description
             _icon.value = it.icon
         }
     }
@@ -63,6 +67,9 @@ class HistoryDetailsViewModel @Inject constructor(
         _title.value = title
     }
 
+    fun onDescriptionChange(description: String) {
+        _description.value = description
+    }
 
     fun onDismiss() = sendUiEvent(UiEvent.Done)
 
@@ -90,6 +97,7 @@ class HistoryDetailsViewModel @Inject constructor(
                     HistoryEntity(
                         id = originalEntity?.id,
                         title = title.value,
+                        description = description.value,
                         icon = icon.value!!,
                         lastModified = DateTime.now(),
                         createdAt = originalEntity?.createdAt ?: DateTime.now(),

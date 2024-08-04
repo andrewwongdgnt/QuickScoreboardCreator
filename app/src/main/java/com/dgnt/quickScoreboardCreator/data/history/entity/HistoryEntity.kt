@@ -10,6 +10,7 @@ import org.joda.time.DateTime
 data class HistoryEntity(
     @PrimaryKey val id: Int? = null,
     val title: String,
+    val description: String,
     val icon: ScoreboardIcon,
     val lastModified: DateTime,
     val createdAt: DateTime = DateTime.now(),

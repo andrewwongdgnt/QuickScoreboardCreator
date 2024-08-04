@@ -27,8 +27,8 @@ class QSCHistoryCategorizerTest {
 
         sut(
             listOf(
-                HistoryEntity(id = 1, title = "Basketball", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 1, 15, 12, 10), createdAt = DateTime(2024, 1, 15, 12, 10), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
-                HistoryEntity(id = 2, title = "Spikeball", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 2, 14, 11, 0), createdAt = DateTime(2024, 2, 14, 11, 0), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
+                HistoryEntity(id = 1, title = "Basketball", description = "34", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 1, 15, 12, 10), createdAt = DateTime(2024, 1, 15, 12, 10), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
+                HistoryEntity(id = 2, title = "Spikeball", description = "34", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 2, 14, 11, 0), createdAt = DateTime(2024, 2, 14, 11, 0), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
             )
         ).let {
             Assert.assertEquals(2, it.size)
@@ -48,10 +48,10 @@ class QSCHistoryCategorizerTest {
 
         sut(
             listOf(
-                HistoryEntity(id = 1, title = "Basketball", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 1, 4, 12, 10), createdAt = DateTime(2024, 1, 4, 12, 10), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
-                HistoryEntity(id = 2, title = "Spikeball", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 2, 16, 11, 0), createdAt = DateTime(2024, 2, 16, 11, 0), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
-                HistoryEntity(id = 3, title = "Volleyball", icon = ScoreboardIcon.VOLLEYBALL, lastModified = DateTime(2024, 1, 19, 12, 10), createdAt = DateTime(2024, 1, 19, 12, 10), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
-                HistoryEntity(id = 4, title = "Tennis", icon = ScoreboardIcon.TENNIS, lastModified = DateTime(2024, 2, 1, 5, 13),createdAt = DateTime(2024, 2, 1, 5, 13), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
+                HistoryEntity(id = 1, title = "Basketball", description = "34", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 1, 4, 12, 10), createdAt = DateTime(2024, 1, 4, 12, 10), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
+                HistoryEntity(id = 2, title = "Spikeball", description = "34", icon = ScoreboardIcon.BASKETBALL, lastModified = DateTime(2024, 2, 16, 11, 0), createdAt = DateTime(2024, 2, 16, 11, 0), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
+                HistoryEntity(id = 3, title = "Volleyball", description = "34", icon = ScoreboardIcon.VOLLEYBALL, lastModified = DateTime(2024, 1, 19, 12, 10), createdAt = DateTime(2024, 1, 19, 12, 10), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
+                HistoryEntity(id = 4, title = "Tennis", description = "34", icon = ScoreboardIcon.TENNIS, lastModified = DateTime(2024, 2, 1, 5, 13),createdAt = DateTime(2024, 2, 1, 5, 13), historicalScoreboard = HistoricalScoreboardData(mapOf()), temporary = false),
             )
         ).let {
             Assert.assertEquals(2, it.size)

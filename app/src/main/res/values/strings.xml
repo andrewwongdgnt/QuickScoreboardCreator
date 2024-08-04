@@ -83,7 +83,8 @@
     <!-- Team Picker -->
     <string name="teamPickerTitle">Select a team</string>
     <!-- Common -->
-    <string name="titlePlaceholder">Name*</string>
+    <string name="namePlaceholder">Name*</string>
+    <string name="titlePlaceholder">Title*</string>
     <string name="descriptionPlaceholder">Description</string>
     <string name="delete">Delete</string>
     <string name="longClickDeleteMsg">Hold to delete</string>

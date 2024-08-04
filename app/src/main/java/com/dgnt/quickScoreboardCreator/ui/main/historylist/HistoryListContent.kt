@@ -38,10 +38,10 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.CategorizedHistoryIt
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoryItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.DateDisplayUtil.getDayOfMonthSuffix
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -172,26 +172,27 @@ private fun CategorizedHistoryListContent(
                 items(
                     items = itemList,
                     key = { it.id }
-                ) { team ->
+                ) { history ->
 
                     SwipeBox(
                         modifier = Modifier.animateItem(),
                         onDelete = {
-                            onDelete.invoke(team.id)
+                            onDelete.invoke(history.id)
                         },
                         content = {
                             CardItemContent(
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                title = team.title,
-                                description = "${getDayOfMonthSuffix(team.lastModified.dayOfMonth)}, ${team.lastModified.toString(DateTimeFormat.forPattern("h:mm a"))}",
-                                iconRes = team.icon.res,
+                                title = history.title,
+                                description = history.description,
+                                iconRes = history.icon.res,
+                                supportingText = "${getDayOfMonthSuffix(history.lastModified.dayOfMonth)}, ${history.lastModified.toString(DateTimeFormat.forPattern("h:mm a"))}",
                                 onClick = {
-                                    onLaunch(team.id)
+                                    onLaunch(history.id)
                                 }
                             ) {
                                 IconButton(onClick = {
-                                    onEdit(team.id)
+                                    onEdit(history.id)
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
@@ -231,23 +232,23 @@ private fun `Some histories`() =
             CategorizedHistoryItemData(
                 DateTime(2024, 6, 1, 0, 0),
                 listOf(
-                    HistoryItemData(1, "Tennis", ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
-                    HistoryItemData(2, "Tennis", ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
+                    HistoryItemData(1, "Tennis", "tennis_description",ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
+                    HistoryItemData(2, "Tennis","another banger", ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
                 )
             ),
             CategorizedHistoryItemData(
                 DateTime(2024, 5, 1, 0, 0),
                 listOf(
-                    HistoryItemData(4, "Basketball NBA", ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
-                    HistoryItemData(7, "Hockey NHL", ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
+                    HistoryItemData(4, "Basketball NBA","cool", ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
+                    HistoryItemData(7, "Hockey NHL", "",ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
                 )
             ),
             CategorizedHistoryItemData(
                 DateTime(2024, 1, 1, 0, 0),
                 listOf(
-                    HistoryItemData(8, "Pick up bball", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 31, 16, 14), DateTime(2024, 1, 31, 16, 14)),
-                    HistoryItemData(55, "Pick up bball", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 22, 16, 14), DateTime(2024, 1, 22, 16, 14)),
-                    HistoryItemData(83, "Pick up bball", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 21, 16, 14), DateTime(2024, 1, 21, 16, 14)),
+                    HistoryItemData(8, "Pick up bball","f", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 31, 16, 14), DateTime(2024, 1, 31, 16, 14)),
+                    HistoryItemData(55, "Pick up bball","f2", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 22, 16, 14), DateTime(2024, 1, 22, 16, 14)),
+                    HistoryItemData(83, "Pick up bball","f", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 21, 16, 14), DateTime(2024, 1, 21, 16, 14)),
                 )
             )
 

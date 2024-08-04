@@ -319,6 +319,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
             HistoryEntity(
                 id = historyEntityId,
                 title = timelineViewerTitle,
+                description = "",
                 icon = timelineViewerIcon,
                 lastModified = DateTime.now(),
                 historicalScoreboard = historyScoreboardDataMapper.map(historicalScoreboard),

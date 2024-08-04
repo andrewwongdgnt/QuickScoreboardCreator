@@ -3,6 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.common.composable.carditem
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -33,6 +34,7 @@ fun CardItemContent(
     description: String,
     @DrawableRes iconRes: Int,
     onClick: () -> Unit,
+    supportingText: String? = null,
     iconContent: @Composable () -> Unit = { },
 ) {
     ListItem(
@@ -63,13 +65,25 @@ fun CardItemContent(
             )
         },
         leadingContent = {
-            Image(
-                painterResource(iconRes),
-                null,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .width(48.dp)
-            )
+            Column {
+                Image(
+                    painterResource(iconRes),
+                    null,
+                    modifier = Modifier
+                        .width(48.dp)
+                )
+                supportingText?.let {
+                    Text(
+                        text = supportingText,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .padding(top = 4.dp),
+                        fontStyle = FontStyle.Italic,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
     )
 }
@@ -82,6 +96,7 @@ private fun `Normal`() =
         description = "Legendary creatures",
         iconRes = TeamIcon.ALIEN.res,
         onClick = {},
+        supportingText = "6th, 2:30 PM"
     ) {
         IconButton(onClick = { }) {
             Icon(
@@ -98,7 +113,8 @@ private fun `Long description`() =
         title = "Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
         iconRes = TeamIcon.DRAGON.res,
-        onClick = {}
+        onClick = {},
+        supportingText = "6th, 2:30 PM"
     ) {
         IconButton(onClick = { }) {
             Icon(

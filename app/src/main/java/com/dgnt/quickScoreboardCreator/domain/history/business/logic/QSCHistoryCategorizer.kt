@@ -10,7 +10,7 @@ class QSCHistoryCategorizer : HistoryCategorizer {
         historyEntityList.mapNotNull { e ->
             e.id?.let { id ->
                 HistoryItemData(
-                    id, e.title, e.icon, e.lastModified, e.createdAt
+                    id, e.title, e.description, e.icon, e.lastModified, e.createdAt
                 )
             }
         }.let { historyList ->
