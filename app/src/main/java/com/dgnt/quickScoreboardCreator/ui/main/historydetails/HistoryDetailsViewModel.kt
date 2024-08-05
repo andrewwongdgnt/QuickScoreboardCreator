@@ -24,11 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryDetailsViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val insertHistoryUseCase: InsertHistoryUseCase,
     private val getHistoryUseCase: GetHistoryUseCase,
     private val deleteHistoryUseCase: DeleteHistoryUseCase,
-    private val uiEventHandler: UiEventHandler
+    private val uiEventHandler: UiEventHandler,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
     private var originalEntity: HistoryEntity? = null
