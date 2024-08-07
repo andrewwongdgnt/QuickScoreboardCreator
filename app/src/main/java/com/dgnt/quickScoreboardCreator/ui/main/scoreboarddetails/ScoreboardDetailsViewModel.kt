@@ -12,7 +12,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
@@ -31,7 +31,7 @@ import kotlin.random.Random
 @HiltViewModel
 class ScoreboardDetailsViewModel @Inject constructor(
     private val resources: Resources,
-    private val insertScoreboardListUseCase: InsertScoreboardListUseCase,
+    private val insertScoreboardUseCase: InsertScoreboardUseCase,
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
     private val scoreboardLoader: ScoreboardLoader,
@@ -101,14 +101,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
     fun onConfirm() {
         if (valid.value) {
             viewModelScope.launch {
-                insertScoreboardListUseCase(
-                    listOf(
-                        ScoreboardEntity(
-                            id = originalEntity?.id,
-                            title = title.value,
-                            description = description.value,
-                            icon = icon.value!!
-                        )
+                insertScoreboardUseCase(
+                    ScoreboardEntity(
+                        id = originalEntity?.id,
+                        title = title.value,
+                        description = description.value,
+                        icon = icon.value!!
                     )
                 )
             }

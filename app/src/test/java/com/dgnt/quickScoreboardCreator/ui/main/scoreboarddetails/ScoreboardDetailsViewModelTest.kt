@@ -11,7 +11,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleTyp
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
@@ -45,7 +45,7 @@ class ScoreboardDetailsViewModelTest {
     private lateinit var scoreboardLoader: ScoreboardLoader
 
     @MockK
-    private lateinit var insertScoreboardListUseCase: InsertScoreboardListUseCase
+    private lateinit var insertScoreboardUseCase: InsertScoreboardUseCase
 
     @MockK
     private lateinit var getScoreboardUseCase: GetScoreboardUseCase
@@ -64,7 +64,7 @@ class ScoreboardDetailsViewModelTest {
     private fun initSut() {
         sut = ScoreboardDetailsViewModel(
             resources,
-            insertScoreboardListUseCase,
+            insertScoreboardUseCase,
             getScoreboardUseCase,
             deleteScoreboardUseCase,
             scoreboardLoader,
@@ -77,7 +77,7 @@ class ScoreboardDetailsViewModelTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
-        coEvery { insertScoreboardListUseCase.invoke(any()) } answers { listOf(1) }
+        coEvery { insertScoreboardUseCase.invoke(any()) } answers { 1 }
     }
 
     @Test
@@ -172,14 +172,12 @@ class ScoreboardDetailsViewModelTest {
             sut.sendUiEvent(UiEvent.Done)
         }
         coVerify(exactly = 1) {
-            insertScoreboardListUseCase.invoke(
-                listOf(
-                    ScoreboardEntity(
-                        id = null,
-                        title = "new scoreboard",
-                        description = "new scoreboard desc",
-                        icon = ScoreboardIcon.SOCCER
-                    )
+            insertScoreboardUseCase.invoke(
+                ScoreboardEntity(
+                    id = null,
+                    title = "new scoreboard",
+                    description = "new scoreboard desc",
+                    icon = ScoreboardIcon.SOCCER
                 )
             )
         }
@@ -199,14 +197,12 @@ class ScoreboardDetailsViewModelTest {
             sut.sendUiEvent(UiEvent.Done)
         }
         coVerify(exactly = 1) {
-            insertScoreboardListUseCase.invoke(
-                listOf(
-                    ScoreboardEntity(
-                        id = 2,
-                        title = "new scoreboard",
-                        description = "new scoreboard desc",
-                        icon = ScoreboardIcon.BOXING
-                    )
+            insertScoreboardUseCase.invoke(
+                ScoreboardEntity(
+                    id = 2,
+                    title = "new scoreboard",
+                    description = "new scoreboard desc",
+                    icon = ScoreboardIcon.BOXING
                 )
             )
         }

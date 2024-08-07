@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
-import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
+import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
@@ -24,7 +24,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class TeamDetailsViewModel @Inject constructor(
-    private val insertTeamListUseCase: InsertTeamListUseCase,
+    private val insertTeamUseCase: InsertTeamUseCase,
     private val getTeamUseCase: GetTeamUseCase,
     private val deleteTeamUseCase: DeleteTeamUseCase,
     uiEventHandler: UiEventHandler,
@@ -75,14 +75,12 @@ class TeamDetailsViewModel @Inject constructor(
     fun onConfirm() {
         if (valid.value) {
             viewModelScope.launch {
-                insertTeamListUseCase(
-                    listOf(
-                        TeamEntity(
-                            id = originalEntity?.id,
-                            title = title.value,
-                            description = description.value,
-                            icon = icon.value!!
-                        )
+                insertTeamUseCase(
+                    TeamEntity(
+                        id = originalEntity?.id,
+                        title = title.value,
+                        description = description.value,
+                        icon = icon.value!!
                     )
                 )
             }

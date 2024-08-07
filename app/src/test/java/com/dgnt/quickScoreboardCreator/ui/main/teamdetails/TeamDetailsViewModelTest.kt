@@ -5,7 +5,7 @@ import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
-import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamListUseCase
+import com.dgnt.quickScoreboardCreator.domain.team.usecase.InsertTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
@@ -30,7 +30,7 @@ class TeamDetailsViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @MockK
-    private lateinit var insertTeamListUseCase: InsertTeamListUseCase
+    private lateinit var insertTeamUseCase: InsertTeamUseCase
 
     @MockK
     private lateinit var getTeamUseCase: GetTeamUseCase
@@ -48,7 +48,7 @@ class TeamDetailsViewModelTest {
 
     private fun initSut() {
         sut = TeamDetailsViewModel(
-            insertTeamListUseCase,
+            insertTeamUseCase,
             getTeamUseCase,
             deleteTeamUseCase,
             uiEventHandler,
@@ -60,7 +60,7 @@ class TeamDetailsViewModelTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
-        coEvery { insertTeamListUseCase(any()) } coAnswers { listOf(1) }
+        coEvery { insertTeamUseCase(any()) } coAnswers { 1 }
     }
 
     @Test
@@ -134,14 +134,12 @@ class TeamDetailsViewModelTest {
             sut.sendUiEvent(UiEvent.Done)
         }
         coVerify(exactly = 1) {
-            insertTeamListUseCase.invoke(
-                listOf(
-                    TeamEntity(
-                        id = null,
-                        title = "new team",
-                        description = "new team desc",
-                        icon = TeamIcon.DRAGON
-                    )
+            insertTeamUseCase.invoke(
+                TeamEntity(
+                    id = null,
+                    title = "new team",
+                    description = "new team desc",
+                    icon = TeamIcon.DRAGON
                 )
             )
         }
@@ -161,14 +159,12 @@ class TeamDetailsViewModelTest {
             sut.sendUiEvent(UiEvent.Done)
         }
         coVerify(exactly = 1) {
-            insertTeamListUseCase.invoke(
-                listOf(
-                    TeamEntity(
-                        id = 2,
-                        title = "new team",
-                        description = "new team desc",
-                        icon = TeamIcon.DRAGON
-                    )
+            insertTeamUseCase.invoke(
+                TeamEntity(
+                    id = 2,
+                    title = "new team",
+                    description = "new team desc",
+                    icon = TeamIcon.DRAGON
                 )
             )
         }
