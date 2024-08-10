@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
@@ -100,7 +100,7 @@ class IntervalEditorViewModel @Inject constructor(
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _label.value = Label.Resource(scoreboardType.intervalLabelRes)
         scoreboardType.rawRes.let { rawRes ->
-            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
+            scoreboardLoader(resources.openRawResource(rawRes)) as ScoreboardConfig.DefaultScoreboardConfig?
         }?.let {
             intervalList = it.intervalList
             maxInterval = it.intervalList.size

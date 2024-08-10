@@ -1,10 +1,9 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app
 
 import com.dgnt.quickScoreboardCreator.core.gson.GsonProvider
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
 import org.junit.Assert
@@ -25,7 +24,7 @@ class QSCScoreboardLoaderTest {
     fun testLoadDefault() {
         val exampleDefault = javaClass.classLoader?.getResourceAsStream("example_default.json")?.let { ins ->
             sut(ins)
-        } as DefaultScoreboardConfig
+        } as ScoreboardConfig.DefaultScoreboardConfig
 
         Assert.assertEquals(ScoreboardType.BASKETBALL, exampleDefault.scoreboardType)
         Assert.assertEquals(WinRuleType.FINAL, exampleDefault.winRuleType)
@@ -55,7 +54,7 @@ class QSCScoreboardLoaderTest {
     fun testLoadCustom() {
         val exampleCustom = javaClass.classLoader?.getResourceAsStream("example_custom.json")?.let { ins ->
             sut(ins)
-        } as CustomScoreboardConfig
+        } as ScoreboardConfig.CustomScoreboardConfig
 
         Assert.assertEquals("Spike Ball", exampleCustom.title)
         Assert.assertEquals("Covid sport", exampleCustom.description)

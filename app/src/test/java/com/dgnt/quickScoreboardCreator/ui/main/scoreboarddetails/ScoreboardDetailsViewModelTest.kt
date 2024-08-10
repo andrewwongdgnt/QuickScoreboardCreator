@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -95,7 +95,7 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testInitializingADefaultScoreboard() = runTest {
         val inputStream = mockk<InputStream>()
-        val scoreboardConfig = mockk<DefaultScoreboardConfig>()
+        val scoreboardConfig = mockk<ScoreboardConfig.DefaultScoreboardConfig>()
 
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL)
         every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream

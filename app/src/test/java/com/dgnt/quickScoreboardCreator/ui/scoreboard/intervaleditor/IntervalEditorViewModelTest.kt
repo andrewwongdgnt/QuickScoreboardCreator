@@ -5,22 +5,20 @@ import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalDataConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreInfoConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreRuleType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorErrorType
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -28,7 +26,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -118,7 +115,7 @@ class IntervalEditorViewModelTest {
 
     private fun initDefaultScoreboardConfig() {
         val inputStream = mockk<InputStream>()
-        val scoreboardConfig = mockk<DefaultScoreboardConfig>()
+        val scoreboardConfig = mockk<ScoreboardConfig.DefaultScoreboardConfig>()
 
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL)
         every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream

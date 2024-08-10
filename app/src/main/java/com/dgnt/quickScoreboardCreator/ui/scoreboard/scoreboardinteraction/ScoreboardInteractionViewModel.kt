@@ -15,8 +15,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
@@ -209,7 +209,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         timelineViewerTitle = resources.getString(scoreboardType.titleRes)
         timelineViewerIcon = scoreboardType.icon
         scoreboardType.rawRes.let { rawRes ->
-            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
+            scoreboardLoader(resources.openRawResource(rawRes)) as ScoreboardConfig.DefaultScoreboardConfig?
         }?.let { defaultScoreboardConfig ->
             scoreboardManager.apply {
                 winRule = defaultScoreboardConfig.winRuleType.toWinRule()

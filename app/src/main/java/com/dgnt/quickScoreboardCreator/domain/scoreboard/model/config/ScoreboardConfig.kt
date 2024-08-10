@@ -1,16 +1,45 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config
 
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 
-abstract class ScoreboardConfig {
-    val type: String = ""
+sealed class ScoreboardConfig {
+    var type: String = ""
     val winRuleType: WinRuleType = WinRuleType.FINAL
     var intervalList: List<IntervalConfig> = emptyList()
     val repeatRule: List<RepeatRuleConfig> = emptyList()
+
+    enum class Type {
+        DEFAULT,
+        CUSTOM
+    }
+
+    data class DefaultScoreboardConfig(
+
+        val scoreboardType: ScoreboardType
+
+    ) : ScoreboardConfig() {
+        init {
+            type = Type.DEFAULT.name
+        }
+    }
+
+    data class CustomScoreboardConfig(
+
+        val title: String,
+        val description: String,
+        val icon: ScoreboardIcon,
+        val intervalLabel: String,
+
+        ) : ScoreboardConfig(){
+        init {
+            type = Type.CUSTOM.name
+        }
+    }
 }
 
 data class IntervalConfig(

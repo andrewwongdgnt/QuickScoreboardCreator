@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
@@ -92,7 +92,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _icon.value = scoreboardType.icon
         _isNewEntity.value = true
         scoreboardType.rawRes.let { rawRes ->
-            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
+            scoreboardLoader(resources.openRawResource(rawRes)) as ScoreboardConfig.DefaultScoreboardConfig?
         }?.let {
             _winRule.value = it.winRuleType.toWinRule()
         }
