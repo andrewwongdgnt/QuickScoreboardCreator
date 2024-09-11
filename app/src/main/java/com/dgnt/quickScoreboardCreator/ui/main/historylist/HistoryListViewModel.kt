@@ -32,10 +32,8 @@ class HistoryListViewModel @Inject constructor(
     private var deletedHistoryList: MutableList<HistoryEntity> = mutableListOf()
 
     fun onEdit(id: Int) = sendUiEvent(UiEvent.HistoryDetails(id))
-    fun onLaunch(id: Int) {
 
-        //TODO launch timeline viewer
-    }
+    fun onLaunch(id: Int) = sendUiEvent(UiEvent.TimelineViewer(id, 0))
 
     fun onDelete(id: Int) = viewModelScope.launch {
         historyEntityList.first().find { entity ->

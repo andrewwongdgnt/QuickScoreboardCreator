@@ -2,6 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard
 
 import android.os.Bundle
 import android.view.WindowInsetsController
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,12 +25,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
@@ -42,7 +46,23 @@ import kotlin.reflect.typeOf
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val scoreboardIdentifier = IntentCompat.getParcelableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java) ?: ScoreboardIdentifier.Custom(-1)
+        val startDestination = IntentCompat.getParcelableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java)?.let { scoreboardIdentifier ->
+            //TODO temporary logic flow because we can't handle custom scoreboards yet
+            if (scoreboardIdentifier is ScoreboardIdentifier.Custom) {
+                finish()
+                Toast.makeText(this, getString(R.string.defaultInvalid), Toast.LENGTH_LONG).show()
+                return
+            }
+            NavDestination.ScoreboardInteraction(scoreboardIdentifier)
+        } ?: IntentCompat.getParcelableExtra(intent, TIMELINE_VIEWER_IDENTIFIER, TimelineViewerIdentifier::class.java)?.let { timelineViewerIdentifier ->
+            NavDestination.TimelineViewer(timelineViewerIdentifier.id, timelineViewerIdentifier.index)
+        } ?: run {
+            finish()
+            Toast.makeText(this, getString(R.string.defaultInvalid), Toast.LENGTH_LONG).show()
+            return
+        }
+
+
         setContent {
             QuickScoreboardCreatorTheme {
                 // A surface container using the 'background' color from the theme
@@ -53,7 +73,7 @@ class ScoreboardActivity : ComponentActivity() {
                         startDestination = NavDestination.Start,
                     ) {
                         navigation<NavDestination.Start>(
-                            startDestination = NavDestination.ScoreboardInteraction(scoreboardIdentifier)
+                            startDestination = startDestination
                         ) {
                             composable<NavDestination.ScoreboardInteraction>(
                                 typeMap = mapOf(

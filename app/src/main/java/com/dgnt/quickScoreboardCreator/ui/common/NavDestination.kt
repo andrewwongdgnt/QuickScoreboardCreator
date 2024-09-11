@@ -5,10 +5,9 @@ import kotlinx.serialization.Serializable
 
 object Arguments {
     const val SCOREBOARD_IDENTIFIER = "scoreboardIdentifier"
+    const val TIMELINE_VIEWER_IDENTIFIER = "timelineViewerIdentifier"
     const val ID = "id"
     const val INDEX = "index"
-    const val TITLE = "title"
-    const val ICON = "icon"
     const val VALUE = "value"
 }
 

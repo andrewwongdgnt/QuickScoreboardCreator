@@ -102,4 +102,6 @@
     <string name="save">Save</string>
     <string name="more">More</string>
     <string name="back">Back</string>
+    <!-- Error messages -->
+    <string name="defaultInvalid">Something went wrong</string>
 </resources>

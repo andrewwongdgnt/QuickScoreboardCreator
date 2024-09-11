@@ -25,11 +25,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
@@ -158,6 +160,9 @@ class MainActivity : ComponentActivity() {
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
                             is UiEvent.HistoryDetails -> navController.commonNavigate(navDestination = NavDestination.HistoryDetails(uiEvent.id))
+                            is UiEvent.TimelineViewer -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
+                                intent.putExtra(TIMELINE_VIEWER_IDENTIFIER, TimelineViewerIdentifier(uiEvent.id, uiEvent.index))
+                            })
                             else -> Unit
                         }
 
