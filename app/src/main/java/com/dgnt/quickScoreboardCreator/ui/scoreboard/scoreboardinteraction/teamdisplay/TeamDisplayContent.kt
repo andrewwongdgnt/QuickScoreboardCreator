@@ -67,7 +67,7 @@ fun TeamDisplayContent(
             maxLines = 1,
             textAlign = TextAlign.Start,
             modifier = Modifier
-                .basicMarquee(delayMillis = 1000)
+                .basicMarquee(initialDelayMillis = 1000)
                 .align(Alignment.CenterVertically)
         )
 
