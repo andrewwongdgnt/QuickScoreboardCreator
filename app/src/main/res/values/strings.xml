@@ -46,12 +46,14 @@
         <item quantity="one">%d team deleted</item>
         <item quantity="other">%d teams deleted</item>
     </plurals>
+    <string name="noTeams">No teams have been created</string>
     <!-- History List -->
     <string name="historyListNavTitle">My sessions</string>
     <plurals name="deletedHistoryMsg">
         <item quantity="one">%d session deleted</item>
         <item quantity="other">%d sessions deleted</item>
     </plurals>
+    <string name="noHistory">No sessions found</string>
     <!-- Team Details -->
     <string name="teamDetailsTitle">Team details</string>
     <!-- Team Icon -->
@@ -108,5 +110,4 @@
     <string name="moreInfo">more information</string>
     <!-- Error messages -->
     <string name="defaultInvalid">Something went wrong</string>
-    <string name="noTeams">No teams have been created</string>
 </resources>

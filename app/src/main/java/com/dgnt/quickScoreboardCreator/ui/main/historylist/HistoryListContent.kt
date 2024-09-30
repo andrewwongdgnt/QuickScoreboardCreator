@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -128,15 +130,24 @@ private fun HistoryListInnerContent(
         }
     ) { padding ->
 
-        CategorizedHistoryListContent(
-            modifier = Modifier
-                .padding(padding)
-                .padding(bottom = 100.dp),
-            onLaunch = onLaunch,
-            onEdit = onEdit,
-            onDelete = onDelete,
-            categorizedHistoryList = categorizedHistoryList
-        )
+        if (categorizedHistoryList.isEmpty())
+            Text(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center),
+                text = stringResource(R.string.noHistory),
+                style = MaterialTheme.typography.titleLarge,
+            )
+        else
+            CategorizedHistoryListContent(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(bottom = 100.dp),
+                onLaunch = onLaunch,
+                onEdit = onEdit,
+                onDelete = onDelete,
+                categorizedHistoryList = categorizedHistoryList
+            )
     }
 }
 
@@ -232,23 +243,23 @@ private fun `Some histories`() =
             CategorizedHistoryItemData(
                 DateTime(2024, 6, 1, 0, 0),
                 listOf(
-                    HistoryItemData(1, "Tennis", "tennis_description",ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
-                    HistoryItemData(2, "Tennis","another banger", ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
+                    HistoryItemData(1, "Tennis", "tennis_description", ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
+                    HistoryItemData(2, "Tennis", "another banger", ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
                 )
             ),
             CategorizedHistoryItemData(
                 DateTime(2024, 5, 1, 0, 0),
                 listOf(
-                    HistoryItemData(4, "Basketball NBA","cool", ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
-                    HistoryItemData(7, "Hockey NHL", "",ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
+                    HistoryItemData(4, "Basketball NBA", "cool", ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
+                    HistoryItemData(7, "Hockey NHL", "", ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
                 )
             ),
             CategorizedHistoryItemData(
                 DateTime(2024, 1, 1, 0, 0),
                 listOf(
-                    HistoryItemData(8, "Pick up bball","f", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 31, 16, 14), DateTime(2024, 1, 31, 16, 14)),
-                    HistoryItemData(55, "Pick up bball","f2", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 22, 16, 14), DateTime(2024, 1, 22, 16, 14)),
-                    HistoryItemData(83, "Pick up bball","f", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 21, 16, 14), DateTime(2024, 1, 21, 16, 14)),
+                    HistoryItemData(8, "Pick up bball", "f", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 31, 16, 14), DateTime(2024, 1, 31, 16, 14)),
+                    HistoryItemData(55, "Pick up bball", "f2", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 22, 16, 14), DateTime(2024, 1, 22, 16, 14)),
+                    HistoryItemData(83, "Pick up bball", "f", ScoreboardIcon.BASKETBALL, DateTime(2024, 1, 21, 16, 14), DateTime(2024, 1, 21, 16, 14)),
                 )
             )
 
