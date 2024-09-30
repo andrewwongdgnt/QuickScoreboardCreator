@@ -45,10 +45,10 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -78,6 +78,7 @@ fun ScoreboardListContent(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScoreboardListInnerContent(
     uiEvent: Flow<UiEvent>,
