@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.MultipleOptionsPicker
@@ -85,7 +86,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     icon: ScoreboardIcon?,
     onIconChange: (ScoreboardIcon) -> Unit,
     iconChanging: Boolean,
-    onIconEdit: () -> Unit,
+    onIconEdit: (Boolean) -> Unit,
     valid: Boolean,
     isNewEntity: Boolean,
     onDelete: () -> Unit,
@@ -113,9 +114,17 @@ private fun ScoreboardDetailsInnerDialogContent(
         onDismiss = onDismiss
     ) {
         if (iconChanging)
-            ScoreboardIconPicker(
-                onIconChange = onIconChange
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                BackButton { onIconEdit(false) }
+                Spacer(modifier = Modifier.height(8.dp))
+                ScoreboardIconPicker(
+                    onIconChange = onIconChange
+                )
+            }
         else
             Column(
                 modifier = Modifier
@@ -161,7 +170,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 Spacer(modifier = Modifier.height(16.dp))
                 IconDisplay(
                     iconRes = icon?.res,
-                    onClick = onIconEdit
+                    onClick = { onIconEdit(true) }
                 )
 
             }

@@ -106,8 +106,8 @@ class TeamDetailsViewModel @Inject constructor(
         _description.value = description
     }
 
-    fun onIconEdit() {
-        _iconChanging.value = true
+    fun onIconEdit(changing: Boolean = true) {
+        _iconChanging.value = changing
     }
 
     fun onIconChange(icon: TeamIcon) {

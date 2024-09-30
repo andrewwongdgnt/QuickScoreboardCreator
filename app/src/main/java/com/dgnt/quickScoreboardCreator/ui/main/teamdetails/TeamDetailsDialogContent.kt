@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.header
@@ -86,7 +87,7 @@ private fun TeamDetailsInnerDialogContent(
     icon: TeamIcon?,
     onIconChange: (TeamIcon) -> Unit,
     iconChanging: Boolean,
-    onIconEdit: () -> Unit,
+    onIconEdit: (Boolean) -> Unit,
     valid: Boolean,
     isNewEntity: Boolean,
     onDelete: () -> Unit,
@@ -114,36 +115,44 @@ private fun TeamDetailsInnerDialogContent(
         onDismiss = onDismiss
     ) {
         if (iconChanging) {
-            val group = TeamIcon.entries.groupBy { it.group }
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(45.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
             ) {
-                group.onEachIndexed { index, entry ->
-                    val iconGroup = entry.key
-                    val icons = entry.value
-                    header {
-                        Text(
-                            stringResource(id = iconGroup.res),
-                            modifier = if (index > 0) Modifier.padding(
-                                start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
-                            ) else Modifier
-                        )
+                BackButton { onIconEdit(false) }
+                Spacer(modifier = Modifier.height(8.dp))
+                val group = TeamIcon.entries.groupBy { it.group }
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(45.dp)
+                ) {
+                    group.onEachIndexed { index, entry ->
+                        val iconGroup = entry.key
+                        val icons = entry.value
+                        header {
+                            Text(
+                                stringResource(id = iconGroup.res),
+                                modifier = if (index > 0) Modifier.padding(
+                                    start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
+                                ) else Modifier
+                            )
+                        }
+                        items(icons.toTypedArray()) { icon ->
+                            Image(
+                                painterResource(icon.res),
+                                null,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clickable {
+                                        onIconChange(icon)
+                                    }
+                            )
+                        }
                     }
-                    items(icons.toTypedArray()) { icon ->
-                        Image(
-                            painterResource(icon.res),
-                            null,
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .clickable {
-                                    onIconChange(icon)
-                                }
-                        )
-                    }
-                }
 
+                }
             }
-        } else {
+        } else
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -169,11 +178,11 @@ private fun TeamDetailsInnerDialogContent(
 
                 IconDisplay(
                     iconRes = icon?.res,
-                    onClick = onIconEdit
+                    onClick = { onIconEdit(true) }
                 )
 
             }
-        }
+
     }
 
 

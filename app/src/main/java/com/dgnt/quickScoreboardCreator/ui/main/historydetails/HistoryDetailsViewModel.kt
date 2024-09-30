@@ -81,8 +81,8 @@ class HistoryDetailsViewModel @Inject constructor(
         sendUiEvent(UiEvent.Done)
     }
 
-    fun onIconEdit() {
-        _iconChanging.value = true
+    fun onIconEdit(changing: Boolean = true) {
+        _iconChanging.value = changing
     }
 
     fun onIconChange(icon: ScoreboardIcon) {

@@ -1,10 +1,18 @@
 package com.dgnt.quickScoreboardCreator.ui.main.historydetails
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -20,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
@@ -66,7 +75,7 @@ private fun HistoryDetailsInnerDialogContent(
     icon: ScoreboardIcon?,
     onIconChange: (ScoreboardIcon) -> Unit,
     iconChanging: Boolean,
-    onIconEdit: () -> Unit,
+    onIconEdit: (Boolean) -> Unit,
     valid: Boolean,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
@@ -92,37 +101,48 @@ private fun HistoryDetailsInnerDialogContent(
         onDismiss = onDismiss
 
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = title,
-                onValueChange = onTitleChange,
-                placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = description,
-                onValueChange = onDescriptionChange,
-                placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = false,
-                maxLines = 5
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            if (iconChanging)
+        if (iconChanging)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                BackButton { onIconEdit(false) }
+                Spacer(modifier = Modifier.height(8.dp))
                 ScoreboardIconPicker(
                     onIconChange = onIconChange
                 )
-            else
+            }
+        else
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextField(
+                    value = title,
+                    onValueChange = onTitleChange,
+                    placeholder = { Text(text = stringResource(R.string.titlePlaceholder)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = description,
+                    onValueChange = onDescriptionChange,
+                    placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = false,
+                    maxLines = 5
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+
                 IconDisplay(
                     iconRes = icon?.res,
-                    onClick = onIconEdit
+                    onClick = { onIconEdit(true) }
                 )
-        }
+            }
 
     }
 }
