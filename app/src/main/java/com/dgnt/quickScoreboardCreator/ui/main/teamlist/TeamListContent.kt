@@ -1,14 +1,18 @@
 package com.dgnt.quickScoreboardCreator.ui.main.teamlist
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -27,9 +32,9 @@ import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CategorizedTeamListContent
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -122,14 +127,23 @@ private fun TeamListInnerContent(
         }
     ) { padding ->
 
-        CategorizedTeamListContent(
-            modifier = Modifier
-                .padding(padding)
-                .padding(bottom = 100.dp),
-            onItemClick = onEdit,
-            onItemDelete = onDelete,
-            categorizedTeamList = categorizedTeamList
-        )
+        if (categorizedTeamList.isEmpty())
+            Text(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center),
+                text = stringResource(R.string.noTeams),
+                style = MaterialTheme.typography.titleLarge,
+            )
+        else
+            CategorizedTeamListContent(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(bottom = 100.dp),
+                onItemClick = onEdit,
+                onItemDelete = onDelete,
+                categorizedTeamList = categorizedTeamList
+            )
     }
 }
 
