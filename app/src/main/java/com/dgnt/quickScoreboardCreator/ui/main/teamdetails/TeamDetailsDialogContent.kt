@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,10 +36,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.header
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -111,63 +113,66 @@ private fun TeamDetailsInnerDialogContent(
         dismissText = stringResource(id = android.R.string.cancel),
         onDismiss = onDismiss
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = title,
-                onValueChange = onTitleChange,
-                placeholder = { Text(text = stringResource(R.string.namePlaceholder)) },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = description,
-                onValueChange = onDescriptionChange,
-                placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = false,
-                maxLines = 5
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            if (iconChanging) {
-                val group = TeamIcon.entries.groupBy { it.group }
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(45.dp)
-                ) {
-                    group.onEachIndexed { index, entry ->
-                        val iconGroup = entry.key
-                        val icons = entry.value
-                        header {
-                            Text(
-                                stringResource(id = iconGroup.res),
-                                modifier = if (index > 0) Modifier.padding(
-                                    start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
-                                ) else Modifier
-                            )
-                        }
-                        items(icons.toTypedArray()) { icon ->
-                            Image(
-                                painterResource(icon.res),
-                                null,
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .clickable {
-                                        onIconChange(icon)
-                                    }
-                            )
-                        }
+        if (iconChanging) {
+            val group = TeamIcon.entries.groupBy { it.group }
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(45.dp)
+            ) {
+                group.onEachIndexed { index, entry ->
+                    val iconGroup = entry.key
+                    val icons = entry.value
+                    header {
+                        Text(
+                            stringResource(id = iconGroup.res),
+                            modifier = if (index > 0) Modifier.padding(
+                                start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
+                            ) else Modifier
+                        )
                     }
-
+                    items(icons.toTypedArray()) { icon ->
+                        Image(
+                            painterResource(icon.res),
+                            null,
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .clickable {
+                                    onIconChange(icon)
+                                }
+                        )
+                    }
                 }
-            } else
+
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextField(
+                    value = title,
+                    onValueChange = onTitleChange,
+                    placeholder = { Text(text = stringResource(R.string.namePlaceholder)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = description,
+                    onValueChange = onDescriptionChange,
+                    placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = false,
+                    maxLines = 5
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
                 IconDisplay(
                     iconRes = icon?.res,
                     onClick = onIconEdit
                 )
 
+            }
         }
     }
 

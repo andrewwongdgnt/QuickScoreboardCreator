@@ -83,11 +83,12 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testInitializingACustomScoreboard() = runTest {
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(1)
-        coEvery { getScoreboardUseCase(1) } coAnswers { ScoreboardEntity(1, "scoreboard name", "scoreboard desc", ScoreboardIcon.TENNIS) }
+        coEvery { getScoreboardUseCase(1) } coAnswers { ScoreboardEntity(1, "scoreboard name", "scoreboard desc", winRule = WinRule.Count, ScoreboardIcon.TENNIS) }
         initSut()
 
         Assert.assertEquals("scoreboard name", sut.title.value)
         Assert.assertEquals("scoreboard desc", sut.description.value)
+        Assert.assertEquals(WinRule.Count, sut.winRule.value)
         Assert.assertEquals(ScoreboardIcon.TENNIS, sut.icon.value)
         Assert.assertTrue(sut.valid.value)
     }
@@ -120,7 +121,7 @@ class ScoreboardDetailsViewModelTest {
         Assert.assertTrue(sut.title.value.isEmpty())
         Assert.assertTrue(sut.description.value.isEmpty())
         Assert.assertNotNull(sut.icon.value)
-        Assert.assertEquals(WinRule.Count, sut.winRule.value)
+        Assert.assertEquals(WinRule.Final, sut.winRule.value)
         Assert.assertFalse(sut.valid.value)
     }
 
@@ -166,6 +167,7 @@ class ScoreboardDetailsViewModelTest {
 
         sut.onTitleChange("new scoreboard")
         sut.onDescriptionChange("new scoreboard desc")
+        sut.onWinRuleChange(WinRule.Sum)
         sut.onIconChange(ScoreboardIcon.SOCCER)
         sut.onConfirm()
         verify(exactly = 1) {
@@ -177,6 +179,7 @@ class ScoreboardDetailsViewModelTest {
                     id = null,
                     title = "new scoreboard",
                     description = "new scoreboard desc",
+                    winRule = WinRule.Sum,
                     icon = ScoreboardIcon.SOCCER
                 )
             )
@@ -186,11 +189,12 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testEditingAScoreboard() = runTest {
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(2)
-        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
+        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2",WinRule.Sum, ScoreboardIcon.TENNIS) }
         initSut()
 
         sut.onTitleChange("new scoreboard")
         sut.onDescriptionChange("new scoreboard desc")
+        sut.onWinRuleChange(WinRule.Final)
         sut.onIconChange(ScoreboardIcon.BOXING)
         sut.onConfirm()
         verify(exactly = 1) {
@@ -202,6 +206,7 @@ class ScoreboardDetailsViewModelTest {
                     id = 2,
                     title = "new scoreboard",
                     description = "new scoreboard desc",
+                    winRule = WinRule.Final,
                     icon = ScoreboardIcon.BOXING
                 )
             )
@@ -211,7 +216,7 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testDeletingAScoreboard() = runTest {
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(2)
-        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.TENNIS) }
+        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", winRule = WinRule.Count, ScoreboardIcon.TENNIS) }
         initSut()
 
         sut.onDelete()
@@ -224,6 +229,7 @@ class ScoreboardDetailsViewModelTest {
                     id = 2,
                     title = "scoreboard name 2",
                     description = "scoreboard desc 2",
+                    winRule = WinRule.Count,
                     icon = ScoreboardIcon.TENNIS
                 )
 

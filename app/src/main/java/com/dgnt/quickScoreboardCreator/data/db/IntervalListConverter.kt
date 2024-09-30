@@ -6,7 +6,7 @@ import com.dgnt.quickScoreboardCreator.core.gson.fromJson
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 
-class IntervalListConverters {
+class IntervalListConverter {
     @TypeConverter
     fun fromJson(json: String): List<Pair<ScoreInfo, IntervalData>> {
         return try {

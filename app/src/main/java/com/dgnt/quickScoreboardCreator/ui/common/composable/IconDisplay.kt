@@ -73,6 +73,7 @@ fun IconDisplay(
                     }
             )
         }
+        Spacer(modifier = Modifier.height(24.dp))
     } else
         CircularProgressIndicator(
             modifier = Modifier

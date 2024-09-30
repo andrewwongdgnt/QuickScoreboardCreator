@@ -28,7 +28,10 @@
     <string name="whistle">Whistle</string>
     <!-- Scoreboard Details -->
     <string name="scoreboardDetailsTitle">Scoreboard details</string>
-    <string name="scoreCarriesOver">Do the scores carry over to next round</string>
+    <string name="winRule">Win Rule</string>
+    <string name="winRuleSum">Sum</string>
+    <string name="winRuleCount">Count</string>
+    <string name="winRuleFinal">Final</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
@@ -102,6 +105,7 @@
     <string name="save">Save</string>
     <string name="more">More</string>
     <string name="back">Back</string>
+    <string name="moreInfo">more information</string>
     <!-- Error messages -->
     <string name="defaultInvalid">Something went wrong</string>
 </resources>

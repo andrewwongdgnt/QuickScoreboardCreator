@@ -8,6 +8,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreb
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
@@ -53,8 +54,8 @@ class ScoreboardListViewModelTest {
     private lateinit var sut: ScoreboardListViewModel
 
     private val mockScoreboardList = listOf(
-        ScoreboardEntity(1, "scoreboard name", "scoreboard desc", ScoreboardIcon.SOCCER),
-        ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", ScoreboardIcon.SOCCER)
+        ScoreboardEntity(1, "scoreboard name", "scoreboard desc", WinRule.Count, ScoreboardIcon.SOCCER),
+        ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", WinRule.Count, ScoreboardIcon.SOCCER)
     )
     private lateinit var mockFlowScoreboardList: Flow<List<ScoreboardEntity>>
     private val mockCategorizedScoreboardList =

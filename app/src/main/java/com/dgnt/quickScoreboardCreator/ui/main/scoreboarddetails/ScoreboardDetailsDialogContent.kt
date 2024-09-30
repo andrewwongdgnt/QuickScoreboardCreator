@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,10 +28,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
+import com.dgnt.quickScoreboardCreator.ui.common.composable.MultipleOptionsPicker
+import com.dgnt.quickScoreboardCreator.ui.common.composable.OptionData
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -41,6 +46,7 @@ fun ScoreboardDetailsDialogContent(
     val valid by viewModel.valid.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
     val description by viewModel.description.collectAsStateWithLifecycle()
+    val winRule by viewModel.winRule.collectAsStateWithLifecycle()
     val icon by viewModel.icon.collectAsStateWithLifecycle()
     val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
     val isNewEntity by viewModel.isNewEntity.collectAsStateWithLifecycle()
@@ -52,6 +58,8 @@ fun ScoreboardDetailsDialogContent(
         onTitleChange = viewModel::onTitleChange,
         description = description,
         onDescriptionChange = viewModel::onDescriptionChange,
+        winRule = winRule,
+        onWinRuleChange = viewModel::onWinRuleChange,
         icon = icon,
         onIconChange = viewModel::onIconChange,
         iconChanging = iconChanging,
@@ -72,6 +80,8 @@ private fun ScoreboardDetailsInnerDialogContent(
     onTitleChange: (String) -> Unit,
     description: String,
     onDescriptionChange: (String) -> Unit,
+    winRule: WinRule,
+    onWinRuleChange: (WinRule) -> Unit,
     icon: ScoreboardIcon?,
     onIconChange: (ScoreboardIcon) -> Unit,
     iconChanging: Boolean,
@@ -102,38 +112,59 @@ private fun ScoreboardDetailsInnerDialogContent(
         dismissText = stringResource(id = android.R.string.cancel),
         onDismiss = onDismiss
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = title,
-                onValueChange = onTitleChange,
-                placeholder = { Text(text = stringResource(R.string.namePlaceholder)) },
-                modifier = Modifier.fillMaxWidth()
+        if (iconChanging)
+            ScoreboardIconPicker(
+                onIconChange = onIconChange
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = description,
-                onValueChange = onDescriptionChange,
-                placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = false,
-                maxLines = 5
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            if (iconChanging)
-                ScoreboardIconPicker(
-                    onIconChange = onIconChange
+        else
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextField(
+                    value = title,
+                    onValueChange = onTitleChange,
+                    placeholder = { Text(text = stringResource(R.string.namePlaceholder)) },
+                    modifier = Modifier.fillMaxWidth()
                 )
-            else
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = description,
+                    onValueChange = onDescriptionChange,
+                    placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = false,
+                    maxLines = 5
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                MultipleOptionsPicker(
+                    header = stringResource(id = R.string.winRule),
+                    options = listOf(
+                        OptionData(
+                            label = stringResource(id = R.string.winRuleFinal),
+                            data = WinRule.Final
+                        ),
+                        OptionData(
+                            label = stringResource(id = R.string.winRuleCount),
+                            data = WinRule.Count
+                        ),
+                        OptionData(
+                            label = stringResource(id = R.string.winRuleSum),
+                            data = WinRule.Sum
+                        ),
+                    ),
+                    selectedOption = winRule,
+                    onOptionSelected = onWinRuleChange
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 IconDisplay(
                     iconRes = icon?.res,
                     onClick = onIconEdit
                 )
 
-        }
+            }
     }
 
 }
@@ -148,6 +179,8 @@ private fun `New Icon Selection`() =
         onTitleChange = {},
         description = "",
         onDescriptionChange = {},
+        winRule = WinRule.Sum,
+        onWinRuleChange = {},
         icon = null,
         onIconChange = {},
         iconChanging = true,
@@ -169,6 +202,8 @@ private fun `Basketball`() =
         onTitleChange = {},
         description = "",
         onDescriptionChange = {},
+        winRule = WinRule.Sum,
+        onWinRuleChange = {},
         icon = ScoreboardIcon.BASKETBALL,
         onIconChange = {},
         iconChanging = false,
@@ -190,6 +225,8 @@ private fun `Hockey`() =
         onTitleChange = {},
         description = "",
         onDescriptionChange = {},
+        winRule = WinRule.Sum,
+        onWinRuleChange = {},
         icon = ScoreboardIcon.HOCKEY,
         onIconChange = {},
         iconChanging = false,
@@ -211,6 +248,8 @@ private fun `Loading Icon`() =
         onTitleChange = {},
         description = "",
         onDescriptionChange = {},
+        winRule = WinRule.Count,
+        onWinRuleChange = {},
         icon = null,
         onIconChange = {},
         iconChanging = false,

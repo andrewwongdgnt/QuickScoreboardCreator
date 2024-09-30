@@ -14,7 +14,7 @@ import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
     entities = [ScoreboardEntity::class, TeamEntity::class, HistoryEntity::class],
     version = 1
 )
-@TypeConverters(DateTimeConverter::class, IntervalListConverters::class, HistoricalScoreboardDataConverter::class)
+@TypeConverters(WinRuleConverter::class, DateTimeConverter::class, IntervalListConverter::class, HistoricalScoreboardDataConverter::class)
 abstract class QSCDatabase : RoomDatabase() {
     abstract val scoreboardDao: ScoreboardDao
     abstract val teamDao: TeamDao

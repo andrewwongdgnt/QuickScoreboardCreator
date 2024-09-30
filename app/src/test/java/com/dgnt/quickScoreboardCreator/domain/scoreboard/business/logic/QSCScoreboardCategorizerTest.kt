@@ -4,6 +4,7 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
@@ -28,11 +29,11 @@ class QSCScoreboardCategorizerTest {
         sut(
             listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL),
             listOf(
-                ScoreboardEntity(id = 1, title = "gg", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 2, title = "ZZ", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 3, title = "a", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 4, title = "RRR", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 5, title = "CC", description = "GG Desc", icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 1, title = "gg", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 2, title = "ZZ", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 3, title = "a", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 4, title = "RRR", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 5, title = "CC", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
             )
         ).let {
             val defaults = it.first
@@ -52,7 +53,6 @@ class QSCScoreboardCategorizerTest {
 
 
     }
-
 
 
 }

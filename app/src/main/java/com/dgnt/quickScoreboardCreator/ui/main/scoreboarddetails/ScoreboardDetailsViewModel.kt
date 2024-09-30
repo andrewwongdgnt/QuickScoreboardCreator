@@ -56,7 +56,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private val _isNewEntity = MutableStateFlow(true)
     val isNewEntity = _isNewEntity.asStateFlow()
 
-    private val _winRule = MutableStateFlow<WinRule>(WinRule.Count)
+    private val _winRule = MutableStateFlow<WinRule>(WinRule.Final)
     val winRule = _winRule.asStateFlow()
 
     val valid: StateFlow<Boolean> = title.map {
@@ -81,6 +81,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         originalEntity = getScoreboardUseCase(id)?.also {
             _title.value = it.title
             _description.value = it.description
+            _winRule.value = it.winRule
             _icon.value = it.icon
             _isNewEntity.value = false
         }
@@ -106,6 +107,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
                         id = originalEntity?.id,
                         title = title.value,
                         description = description.value,
+                        winRule = winRule.value,
                         icon = icon.value!!
                     )
                 )
@@ -130,6 +132,10 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     fun onDescriptionChange(description: String) {
         _description.value = description
+    }
+
+    fun onWinRuleChange(winRule: WinRule) {
+        _winRule.value = winRule
     }
 
     fun onIconEdit() {
