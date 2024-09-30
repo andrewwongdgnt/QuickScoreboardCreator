@@ -29,9 +29,9 @@
     <!-- Scoreboard Details -->
     <string name="scoreboardDetailsTitle">Scoreboard details</string>
     <string name="winRule">Win Rule</string>
-    <string name="winRuleSum">Sum</string>
-    <string name="winRuleCount">Count</string>
-    <string name="winRuleFinal">Final</string>
+    <string name="winRuleSum">Sum (Winner determined by summing up all the scores of each round)</string>
+    <string name="winRuleCount">Count (Winner determined by counting the number of rounds won)</string>
+    <string name="winRuleFinal">Final (Winner determined by the final score)</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
@@ -108,4 +108,5 @@
     <string name="moreInfo">more information</string>
     <!-- Error messages -->
     <string name="defaultInvalid">Something went wrong</string>
+    <string name="noTeams">No teams have been created</string>
 </resources>
