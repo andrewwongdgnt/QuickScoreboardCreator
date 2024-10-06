@@ -4,11 +4,15 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.core.swap
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
@@ -58,6 +62,27 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     private val _winRule = MutableStateFlow<WinRule>(WinRule.Final)
     val winRule = _winRule.asStateFlow()
+
+    private val _intervalList = MutableStateFlow(
+        listOf(
+            generateGenericIntervalInfo()
+        )
+    )
+
+    private fun generateGenericIntervalInfo() =
+        ScoreInfo(
+            scoreRule = ScoreRule.None,
+            scoreToDisplayScoreMap = mapOf(),
+            dataList = listOf()
+        ) to
+                IntervalData(
+                    current = 0,
+                    initial = 0,
+                    increasing = false
+                )
+
+
+    val intervalList = _intervalList.asStateFlow()
 
     val valid: StateFlow<Boolean> = title.map {
         it.isNotBlank()
@@ -145,5 +170,38 @@ class ScoreboardDetailsViewModel @Inject constructor(
     fun onIconChange(icon: ScoreboardIcon) {
         _icon.value = icon
         _iconChanging.value = false
+    }
+
+    fun onIntervalAdd(index: Int) {
+        val intervalListValue = intervalList.value.toMutableList()
+        intervalListValue.add(index, generateGenericIntervalInfo())
+        _intervalList.value = intervalListValue
+
+    }
+
+    fun onIntervalRemove(index: Int) {
+        if (index == 0)
+            return
+
+        val intervalListValue = intervalList.value.toMutableList()
+        if (index in 0 until intervalListValue.size) {
+            intervalListValue.removeAt(index)
+            _intervalList.value = intervalListValue
+        }
+
+    }
+
+    fun onIntervalMove(up: Boolean, index: Int) {
+        val intervalListValue = intervalList.value.toMutableList()
+
+        // prevent out of bound movements
+        if ((up && index == 0) || (!up && index == intervalListValue.lastIndex))
+            return
+
+        if (index in 0 until intervalListValue.size) {
+            val otherIndex = if (up) index - 1 else index + 1
+            intervalListValue.swap(index, otherIndex)
+            _intervalList.value = intervalListValue
+        }
     }
 }
