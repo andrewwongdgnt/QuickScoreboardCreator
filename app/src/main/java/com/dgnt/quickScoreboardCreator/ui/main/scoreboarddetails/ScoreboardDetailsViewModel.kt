@@ -172,9 +172,13 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _iconChanging.value = false
     }
 
-    fun onIntervalAdd(index: Int) {
+    fun onIntervalAdd(index: Int? = null) {
         val intervalListValue = intervalList.value.toMutableList()
-        intervalListValue.add(index, generateGenericIntervalInfo())
+        if (index == null) {
+            intervalListValue.add(generateGenericIntervalInfo())
+        } else if (index in 0..intervalListValue.size) {
+            intervalListValue.add(index, generateGenericIntervalInfo())
+        }
         _intervalList.value = intervalListValue
 
     }
@@ -203,5 +207,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
             intervalListValue.swap(index, otherIndex)
             _intervalList.value = intervalListValue
         }
+    }
+
+    fun onIntervalEdit(index: Int) {
+        //TODO add code here
     }
 }

@@ -8,6 +8,9 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
@@ -189,7 +192,7 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testEditingAScoreboard() = runTest {
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(2)
-        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2",WinRule.Sum, ScoreboardIcon.TENNIS) }
+        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", WinRule.Sum, ScoreboardIcon.TENNIS) }
         initSut()
 
         sut.onTitleChange("new scoreboard")
@@ -235,6 +238,100 @@ class ScoreboardDetailsViewModelTest {
 
             )
         }
+    }
+
+    @Test
+    fun testInitialInterval() = runTest {
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
+        initSut()
+
+
+        Assert.assertEquals(
+            listOf(
+                ScoreInfo(
+                    scoreRule = ScoreRule.None,
+                    scoreToDisplayScoreMap = mapOf(),
+                    dataList = listOf()
+                ) to
+                        IntervalData(
+                            current = 0,
+                            initial = 0,
+                            increasing = false
+                        )
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
+    fun testAddingAnInterval() = runTest {
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
+        initSut()
+
+        sut.onIntervalAdd()
+        Assert.assertEquals(
+            listOf(
+                ScoreInfo(
+                    scoreRule = ScoreRule.None,
+                    scoreToDisplayScoreMap = mapOf(),
+                    dataList = listOf()
+                ) to
+                        IntervalData(
+                            current = 0,
+                            initial = 0,
+                            increasing = false
+                        ),
+
+                ScoreInfo(
+                    scoreRule = ScoreRule.None,
+                    scoreToDisplayScoreMap = mapOf(),
+                    dataList = listOf()
+                ) to
+                        IntervalData(
+                            current = 0,
+                            initial = 0,
+                            increasing = false
+                        )
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
+    fun testRemovingAnInterval() = runTest {
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
+        initSut()
+
+        sut.onIntervalRemove(0)
+        Assert.assertEquals(
+            listOf(
+                  ScoreInfo(
+                    scoreRule = ScoreRule.None,
+                    scoreToDisplayScoreMap = mapOf(),
+                    dataList = listOf()
+                ) to
+                        IntervalData(
+                            current = 0,
+                            initial = 0,
+                            increasing = false
+                        )
+            ), sut.intervalList.value
+        )
+
+        sut.onIntervalAdd()
+        sut.onIntervalRemove(1)
+        Assert.assertEquals(
+            listOf(
+                ScoreInfo(
+                    scoreRule = ScoreRule.None,
+                    scoreToDisplayScoreMap = mapOf(),
+                    dataList = listOf()
+                ) to
+                        IntervalData(
+                            current = 0,
+                            initial = 0,
+                            increasing = false
+                        )
+            ), sut.intervalList.value
+        )
     }
 
 }
