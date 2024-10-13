@@ -30,10 +30,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
+import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
 import com.dgnt.quickScoreboardCreator.ui.common.composable.value
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -115,42 +116,13 @@ private fun IntervalEditorInnerDialogContent(
                 }
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextField(
-                    value = minuteString,
-                    onValueChange = {
-                        if (it.length <= 3)
-                            onMinuteChange(it)
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true,
-                    textStyle = LocalTextStyle.current.copy(
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.width(numberFieldWidth)
-                )
-                Text(
-                    text = ":",
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
-                TextField(
-                    value = secondString,
-                    onValueChange = {
-                        if (it.length <= 2)
-                            onSecondChange(it)
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true,
-                    textStyle = LocalTextStyle.current.copy(
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.width(numberFieldWidth)
-                )
-
-            }
+            TimeLimitPicker(
+                minuteString = minuteString,
+                onMinuteChange = onMinuteChange,
+                secondString = secondString,
+                onSecondChange = onSecondChange,
+                numberFieldWidth = numberFieldWidth
+            )
             Spacer(modifier = Modifier.height(24.dp))
             (errors.find { it is IntervalEditorErrorType.Interval })?.let { error ->
                 val errorMsg = when (error) {

@@ -2,8 +2,8 @@
 
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
-
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -28,13 +29,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
+import com.dgnt.quickScoreboardCreator.ui.common.composable.LabelSwitch
 import com.dgnt.quickScoreboardCreator.ui.common.composable.MultipleOptionsPicker
 import com.dgnt.quickScoreboardCreator.ui.common.composable.OptionData
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
+import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -51,6 +57,7 @@ fun ScoreboardDetailsDialogContent(
     val icon by viewModel.icon.collectAsStateWithLifecycle()
     val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
     val isNewEntity by viewModel.isNewEntity.collectAsStateWithLifecycle()
+    val intervalList by viewModel.intervalList.collectAsStateWithLifecycle()
 
     ScoreboardDetailsInnerDialogContent(
         uiEvent = viewModel.uiEvent,
@@ -65,6 +72,7 @@ fun ScoreboardDetailsDialogContent(
         onIconChange = viewModel::onIconChange,
         iconChanging = iconChanging,
         onIconEdit = viewModel::onIconEdit,
+        intervalList = intervalList,
         valid = valid,
         isNewEntity = isNewEntity,
         onDelete = viewModel::onDelete,
@@ -89,6 +97,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIconEdit: (Boolean) -> Unit,
     valid: Boolean,
     isNewEntity: Boolean,
+    intervalList: List<Pair<ScoreInfo, IntervalData>>,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -132,50 +141,127 @@ private fun ScoreboardDetailsInnerDialogContent(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextField(
-                    value = title,
-                    onValueChange = onTitleChange,
-                    placeholder = { Text(text = stringResource(R.string.namePlaceholder)) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    value = description,
-                    onValueChange = onDescriptionChange,
-                    placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = false,
-                    maxLines = 5
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                MultipleOptionsPicker(
-                    header = stringResource(id = R.string.winRule),
-                    options = listOf(
-                        OptionData(
-                            label = stringResource(id = R.string.winRuleFinal),
-                            data = WinRule.Final
-                        ),
-                        OptionData(
-                            label = stringResource(id = R.string.winRuleCount),
-                            data = WinRule.Count
-                        ),
-                        OptionData(
-                            label = stringResource(id = R.string.winRuleSum),
-                            data = WinRule.Sum
-                        ),
-                    ),
-                    selectedOption = winRule,
-                    onOptionSelected = onWinRuleChange
+                TitleAndDescription(
+                    title = title,
+                    onTitleChange = onTitleChange,
+                    description = description,
+                    onDescriptionChange = onDescriptionChange,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IconDisplay(
                     iconRes = icon?.res,
                     onClick = { onIconEdit(true) }
                 )
+                Spacer(modifier = Modifier.height(16.dp))
+                WinRulePicker(
+                    winRule = winRule,
+                    onWinRuleChange = onWinRuleChange
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                IntervalList(
+                    intervalList = intervalList
+                )
 
             }
     }
 
+}
+
+@Composable
+private fun TitleAndDescription(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
+) {
+    TextField(
+        value = title,
+        onValueChange = onTitleChange,
+        placeholder = { Text(text = stringResource(R.string.namePlaceholder)) },
+        modifier = Modifier.fillMaxWidth()
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    TextField(
+        value = description,
+        onValueChange = onDescriptionChange,
+        placeholder = { Text(text = stringResource(R.string.descriptionPlaceholder)) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = false,
+        maxLines = 5
+    )
+}
+
+@Composable
+private fun WinRulePicker(
+    winRule: WinRule,
+    onWinRuleChange: (WinRule) -> Unit
+) {
+    MultipleOptionsPicker(
+        header = stringResource(id = R.string.winRule),
+        options = listOf(
+            OptionData(
+                label = stringResource(id = R.string.winRuleFinal),
+                data = WinRule.Final
+            ),
+            OptionData(
+                label = stringResource(id = R.string.winRuleCount),
+                data = WinRule.Count
+            ),
+            OptionData(
+                label = stringResource(id = R.string.winRuleSum),
+                data = WinRule.Sum
+            ),
+        ),
+        selectedOption = winRule,
+        onOptionSelected = onWinRuleChange
+    )
+}
+
+@Composable
+private fun IntervalList(
+    modifier: Modifier = Modifier,
+    intervalList: List<Pair<ScoreInfo, IntervalData>>
+) {
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center
+    ) {
+        intervalList.forEachIndexed { index, interval ->
+
+            Text(text = stringResource(id = R.string.rulesForInterval, index + 1), style = MaterialTheme.typography.titleMedium)
+
+            val scoreInfo = interval.first
+            val intervalData = interval.second
+
+            LabelSwitch(
+                label = stringResource(id = R.string.hasTimeLimit),
+                checked = !intervalData.increasing,
+                onCheckedChange = {
+
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            if (!intervalData.increasing) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier.fillMaxWidth()
+                ) {
+                    Text(text = stringResource(id = R.string.decreasingTimeMsg))
+                    TimeLimitPicker(
+                        minuteString = "9",
+                        onMinuteChange = { },
+                        secondString = "00",
+                        onSecondChange = { }
+                    )
+                }
+
+            }
+
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -194,6 +280,7 @@ private fun `New Icon Selection`() =
         onIconChange = {},
         iconChanging = true,
         onIconEdit = {},
+        intervalList = listOf(),
         valid = true,
         isNewEntity = true,
         onDelete = {},
@@ -217,6 +304,7 @@ private fun `Basketball`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalList = listOf(),
         valid = true,
         isNewEntity = false,
         onDelete = {},
@@ -240,6 +328,7 @@ private fun `Hockey`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalList = listOf(),
         valid = true,
         isNewEntity = true,
         onDelete = {},
@@ -263,6 +352,43 @@ private fun `Loading Icon`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalList = listOf(),
+        valid = true,
+        isNewEntity = true,
+        onDelete = {},
+        onDismiss = {},
+        onConfirm = {},
+    )
+
+
+@Preview(showBackground = true)
+@Composable
+private fun `One default interval`() =
+    ScoreboardDetailsInnerDialogContent(
+        uiEvent = emptyFlow(),
+        onUiEvent = {},
+        title = "",
+        onTitleChange = {},
+        description = "",
+        onDescriptionChange = {},
+        winRule = WinRule.Sum,
+        onWinRuleChange = {},
+        icon = ScoreboardIcon.HOCKEY,
+        onIconChange = {},
+        iconChanging = false,
+        onIconEdit = {},
+        intervalList = listOf(
+            ScoreInfo(
+                scoreRule = ScoreRule.None,
+                scoreToDisplayScoreMap = mapOf(),
+                dataList = listOf()
+            ) to
+                    IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    )
+        ),
         valid = true,
         isNewEntity = true,
         onDelete = {},

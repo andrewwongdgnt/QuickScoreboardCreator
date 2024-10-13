@@ -68,20 +68,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
             generateGenericIntervalInfo()
         )
     )
-
-    private fun generateGenericIntervalInfo() =
-        ScoreInfo(
-            scoreRule = ScoreRule.None,
-            scoreToDisplayScoreMap = mapOf(),
-            dataList = listOf()
-        ) to
-                IntervalData(
-                    current = 0,
-                    initial = 0,
-                    increasing = false
-                )
-
-
     val intervalList = _intervalList.asStateFlow()
 
     val valid: StateFlow<Boolean> = title.map {
@@ -212,4 +198,16 @@ class ScoreboardDetailsViewModel @Inject constructor(
     fun onIntervalEdit(index: Int) {
         //TODO add code here
     }
+
+    private fun generateGenericIntervalInfo() =
+        ScoreInfo(
+            scoreRule = ScoreRule.None,
+            scoreToDisplayScoreMap = mapOf(),
+            dataList = listOf()
+        ) to
+                IntervalData(
+                    current = 0,
+                    initial = 0,
+                    increasing = false
+                )
 }
