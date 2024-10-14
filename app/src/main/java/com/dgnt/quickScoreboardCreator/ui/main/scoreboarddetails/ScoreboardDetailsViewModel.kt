@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.core.swap
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
@@ -14,6 +15,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.Interval
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardUseCase
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -39,6 +42,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
     private val scoreboardLoader: ScoreboardLoader,
+    private val timeTransformer: TimeTransformer,
     savedStateHandle: SavedStateHandle,
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
@@ -170,10 +174,10 @@ class ScoreboardDetailsViewModel @Inject constructor(
     }
 
     fun onIntervalRemove(index: Int) {
-        if (index == 0)
-            return
 
         val intervalListValue = intervalList.value.toMutableList()
+        if (intervalListValue.size == 1)
+            return
         if (index in 0 until intervalListValue.size) {
             intervalListValue.removeAt(index)
             _intervalList.value = intervalListValue
@@ -195,19 +199,95 @@ class ScoreboardDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onIntervalEdit(index: Int) {
-        //TODO add code here
+    fun onIntervalEditForTimeIsIncreasing(index: Int, timeIsIncreasing: Boolean) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            updateIntervalData(
+                index, IntervalData(
+                    current = intervalEditingInfo.intervalData.current,
+                    initial = intervalEditingInfo.intervalData.initial,
+                    increasing = timeIsIncreasing
+                )
+            )
+        }
+
+    fun onIntervalEditForMinute(index: Int, value: String) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            val second = timeTransformer.toTimeData(intervalEditingInfo.intervalData.initial).second
+            val minute = getFilteredValue(value)?.toIntOrNull() ?: 0
+
+            updateIntervalData(
+                index, IntervalData(
+                    current = intervalEditingInfo.intervalData.current,
+                    initial = timeTransformer.fromTimeData(
+                        TimeData(minute, second, 0)
+                    ),
+                    increasing = intervalEditingInfo.intervalData.increasing
+                )
+            )
+            updateTimeRepresentationPair(
+                index, Pair(
+                    getFilteredValue(value) ?: "",
+                    second.toString()
+                )
+            )
+        }
+
+    fun onIntervalEditForSecond(index: Int, value: String) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            val second = getFilteredValue(value)?.toIntOrNull() ?: 0
+            val minute = timeTransformer.toTimeData(intervalEditingInfo.intervalData.initial).minute
+
+            updateIntervalData(
+                index, IntervalData(
+                    current = intervalEditingInfo.intervalData.current,
+                    initial = timeTransformer.fromTimeData(
+                        TimeData(minute, second, 0)
+                    ),
+                    increasing = intervalEditingInfo.intervalData.increasing
+                )
+            )
+            updateTimeRepresentationPair(
+                index, Pair(
+                    minute.toString(),
+                    getFilteredValue(value) ?: ""
+                )
+            )
+        }
+
+    private fun updateIntervalData(index: Int, intervalData: IntervalData) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(intervalData = intervalData)
+        _intervalList.value = newList
     }
 
+    private fun updateTimeRepresentationPair(index: Int, timeRepresentationPair: Pair<String, String>) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(timeRepresentationPair = timeRepresentationPair)
+        _intervalList.value = newList
+    }
+
+
     private fun generateGenericIntervalInfo() =
-        ScoreInfo(
-            scoreRule = ScoreRule.None,
-            scoreToDisplayScoreMap = mapOf(),
-            dataList = listOf()
-        ) to
-                IntervalData(
-                    current = 0,
-                    initial = 0,
-                    increasing = false
-                )
+        IntervalEditingInfo(
+            scoreInfo = ScoreInfo(
+                scoreRule = ScoreRule.None,
+                scoreToDisplayScoreMap = mapOf(),
+                dataList = listOf()
+            ),
+            intervalData = IntervalData(
+                current = 0,
+                initial = 0,
+                increasing = false
+            ),
+            timeRepresentationPair = timeTransformer.toTimeData(0).let {
+                Pair(it.minute.toString(), it.second.toString())
+            }
+        )
+
+    private fun getFilteredValue(value: String) = if (value.isEmpty())
+        ""
+    else if (StringUtils.isNumeric(value))
+        value
+    else
+        null
 }

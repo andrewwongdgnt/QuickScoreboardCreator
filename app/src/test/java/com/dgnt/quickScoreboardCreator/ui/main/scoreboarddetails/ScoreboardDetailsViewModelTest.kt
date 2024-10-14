@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
@@ -12,6 +13,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.Interval
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardUseCase
@@ -62,6 +64,9 @@ class ScoreboardDetailsViewModelTest {
     @MockK
     private lateinit var uiEventHandler: UiEventHandler
 
+    @MockK
+    private lateinit var timeTransformer: TimeTransformer
+
     private lateinit var sut: ScoreboardDetailsViewModel
 
     private fun initSut() {
@@ -71,6 +76,7 @@ class ScoreboardDetailsViewModelTest {
             getScoreboardUseCase,
             deleteScoreboardUseCase,
             scoreboardLoader,
+            timeTransformer,
             savedStateHandle,
             uiEventHandler
         )
@@ -81,6 +87,8 @@ class ScoreboardDetailsViewModelTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
         coEvery { insertScoreboardUseCase.invoke(any()) } answers { 1 }
+        every { timeTransformer.toTimeData(0) } answers { TimeData(0, 0, 0) }
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
     }
 
     @Test
@@ -118,7 +126,6 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testInitializingNoScoreboard() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         Assert.assertTrue(sut.title.value.isEmpty())
@@ -130,7 +137,6 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testValidation() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         Assert.assertFalse(sut.valid.value)
@@ -142,7 +148,6 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testScoreboardIconChange() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onIconEdit()
@@ -154,7 +159,6 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testOnDismiss() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onDismiss()
@@ -165,7 +169,6 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testInsertingNewScoreboard() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onTitleChange("new scoreboard")
@@ -242,77 +245,85 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testInitialInterval() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
 
         Assert.assertEquals(
             listOf(
-                ScoreInfo(
-                    scoreRule = ScoreRule.None,
-                    scoreToDisplayScoreMap = mapOf(),
-                    dataList = listOf()
-                ) to
-                        IntervalData(
-                            current = 0,
-                            initial = 0,
-                            increasing = false
-                        )
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0")
+                ),
             ), sut.intervalList.value
         )
     }
 
     @Test
     fun testAddingAnInterval() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onIntervalAdd()
         Assert.assertEquals(
             listOf(
-                ScoreInfo(
-                    scoreRule = ScoreRule.None,
-                    scoreToDisplayScoreMap = mapOf(),
-                    dataList = listOf()
-                ) to
-                        IntervalData(
-                            current = 0,
-                            initial = 0,
-                            increasing = false
-                        ),
-
-                ScoreInfo(
-                    scoreRule = ScoreRule.None,
-                    scoreToDisplayScoreMap = mapOf(),
-                    dataList = listOf()
-                ) to
-                        IntervalData(
-                            current = 0,
-                            initial = 0,
-                            increasing = false
-                        )
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0")
+                ),
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0")
+                )
             ), sut.intervalList.value
         )
     }
 
     @Test
     fun testRemovingAnInterval() = runTest {
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
         initSut()
 
         sut.onIntervalRemove(0)
         Assert.assertEquals(
             listOf(
-                  ScoreInfo(
-                    scoreRule = ScoreRule.None,
-                    scoreToDisplayScoreMap = mapOf(),
-                    dataList = listOf()
-                ) to
-                        IntervalData(
-                            current = 0,
-                            initial = 0,
-                            increasing = false
-                        )
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0")
+                ),
             ), sut.intervalList.value
         )
 
@@ -320,18 +331,67 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalRemove(1)
         Assert.assertEquals(
             listOf(
-                ScoreInfo(
-                    scoreRule = ScoreRule.None,
-                    scoreToDisplayScoreMap = mapOf(),
-                    dataList = listOf()
-                ) to
-                        IntervalData(
-                            current = 0,
-                            initial = 0,
-                            increasing = false
-                        )
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0")
+                ),
             ), sut.intervalList.value
         )
     }
 
+    @Test
+    fun testEditingIsTimeIncreasing() = runTest {
+        initSut()
+        sut.onIntervalEditForTimeIsIncreasing(0, true)
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = true
+                    ),
+                    timeRepresentationPair = Pair("0", "0")
+                ),
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
+    fun testEditingMinute() = runTest {
+        every { timeTransformer.fromTimeData(TimeData(8,0,0)) } answers { 480000 }
+        initSut()
+        sut.onIntervalEditForMinute(0, "8")
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 480000,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("8", "0")
+                ),
+            ), sut.intervalList.value
+        )
+    }
 }

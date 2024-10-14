@@ -73,6 +73,9 @@ fun ScoreboardDetailsDialogContent(
         iconChanging = iconChanging,
         onIconEdit = viewModel::onIconEdit,
         intervalList = intervalList,
+        onIntervalEditForTimeIsIncreasing = viewModel::onIntervalEditForTimeIsIncreasing,
+        onIntervalEditForMinute = viewModel::onIntervalEditForMinute,
+        onIntervalEditForSecond = viewModel::onIntervalEditForSecond,
         valid = valid,
         isNewEntity = isNewEntity,
         onDelete = viewModel::onDelete,
@@ -95,9 +98,12 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIconChange: (ScoreboardIcon) -> Unit,
     iconChanging: Boolean,
     onIconEdit: (Boolean) -> Unit,
+    onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
+    onIntervalEditForMinute: (Int, String) -> Unit,
+    onIntervalEditForSecond: (Int, String) -> Unit,
     valid: Boolean,
     isNewEntity: Boolean,
-    intervalList: List<Pair<ScoreInfo, IntervalData>>,
+    intervalList: List<IntervalEditingInfo>,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -159,7 +165,10 @@ private fun ScoreboardDetailsInnerDialogContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalList(
-                    intervalList = intervalList
+                    intervalList = intervalList,
+                    onIntervalEditForTimeIsIncreasing = onIntervalEditForTimeIsIncreasing,
+                    onIntervalEditForMinute =onIntervalEditForMinute,
+                    onIntervalEditForSecond =onIntervalEditForSecond
                 )
 
             }
@@ -220,7 +229,10 @@ private fun WinRulePicker(
 @Composable
 private fun IntervalList(
     modifier: Modifier = Modifier,
-    intervalList: List<Pair<ScoreInfo, IntervalData>>
+    intervalList: List<IntervalEditingInfo>,
+    onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
+    onIntervalEditForMinute: (Int, String) -> Unit,
+    onIntervalEditForSecond: (Int, String) -> Unit,
 ) {
 
     Column(
@@ -228,18 +240,18 @@ private fun IntervalList(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        intervalList.forEachIndexed { index, interval ->
+        intervalList.forEachIndexed { index, intervalEditingInfo ->
 
             Text(text = stringResource(id = R.string.rulesForInterval, index + 1), style = MaterialTheme.typography.titleMedium)
 
-            val scoreInfo = interval.first
-            val intervalData = interval.second
+            val scoreInfo = intervalEditingInfo.scoreInfo
+            val intervalData = intervalEditingInfo.intervalData
 
             LabelSwitch(
                 label = stringResource(id = R.string.hasTimeLimit),
                 checked = !intervalData.increasing,
                 onCheckedChange = {
-
+                    onIntervalEditForTimeIsIncreasing(index, it)
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -251,10 +263,10 @@ private fun IntervalList(
                 ) {
                     Text(text = stringResource(id = R.string.decreasingTimeMsg))
                     TimeLimitPicker(
-                        minuteString = "9",
-                        onMinuteChange = { },
-                        secondString = "00",
-                        onSecondChange = { }
+                        minuteString = intervalEditingInfo.timeRepresentationPair.first,
+                        onMinuteChange = { onIntervalEditForMinute (index, it)},
+                        secondString = intervalEditingInfo.timeRepresentationPair.second,
+                        onSecondChange = { onIntervalEditForSecond(index, it)}
                     )
                 }
 
@@ -280,9 +292,12 @@ private fun `New Icon Selection`() =
         onIconChange = {},
         iconChanging = true,
         onIconEdit = {},
-        intervalList = listOf(),
+        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForMinute = { _, _ -> },
+        onIntervalEditForSecond = { _, _ -> },
         valid = true,
         isNewEntity = true,
+        intervalList = listOf(),
         onDelete = {},
         onDismiss = {},
         onConfirm = {},
@@ -304,9 +319,12 @@ private fun `Basketball`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        intervalList = listOf(),
+        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForMinute = { _, _ -> },
+        onIntervalEditForSecond = { _, _ -> },
         valid = true,
         isNewEntity = false,
+        intervalList = listOf(),
         onDelete = {},
         onDismiss = {},
         onConfirm = {},
@@ -328,9 +346,12 @@ private fun `Hockey`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        intervalList = listOf(),
+        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForMinute = { _, _ -> },
+        onIntervalEditForSecond = { _, _ -> },
         valid = true,
         isNewEntity = true,
+        intervalList = listOf(),
         onDelete = {},
         onDismiss = {},
         onConfirm = {},
@@ -352,9 +373,12 @@ private fun `Loading Icon`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        intervalList = listOf(),
+        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForMinute = { _, _ -> },
+        onIntervalEditForSecond = { _, _ -> },
         valid = true,
         isNewEntity = true,
+        intervalList = listOf(),
         onDelete = {},
         onDismiss = {},
         onConfirm = {},
@@ -377,20 +401,27 @@ private fun `One default interval`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        intervalList = listOf(
-            ScoreInfo(
-                scoreRule = ScoreRule.None,
-                scoreToDisplayScoreMap = mapOf(),
-                dataList = listOf()
-            ) to
-                    IntervalData(
-                        current = 0,
-                        initial = 0,
-                        increasing = false
-                    )
-        ),
+        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForMinute = { _, _ -> },
+        onIntervalEditForSecond = { _, _ -> },
         valid = true,
         isNewEntity = true,
+        intervalList = listOf(
+            IntervalEditingInfo(
+                scoreInfo =  ScoreInfo(
+                    scoreRule = ScoreRule.None,
+                    scoreToDisplayScoreMap = mapOf(),
+                    dataList = listOf()
+                ),
+                intervalData = IntervalData(
+                    current = 0,
+                    initial = 0,
+                    increasing = false
+                ),
+
+               timeRepresentationPair =  Pair("9", "24")
+            ),
+        ),
         onDelete = {},
         onDismiss = {},
         onConfirm = {},
