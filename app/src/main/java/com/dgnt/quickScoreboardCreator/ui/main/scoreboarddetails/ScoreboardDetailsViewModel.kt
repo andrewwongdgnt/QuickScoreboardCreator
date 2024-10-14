@@ -202,9 +202,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
     fun onIntervalEditForTimeIsIncreasing(index: Int, timeIsIncreasing: Boolean) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
             updateIntervalData(
-                index, IntervalData(
-                    current = intervalEditingInfo.intervalData.current,
-                    initial = intervalEditingInfo.intervalData.initial,
+                index, intervalEditingInfo.intervalData.copy(
                     increasing = timeIsIncreasing
                 )
             )
@@ -216,12 +214,10 @@ class ScoreboardDetailsViewModel @Inject constructor(
             val minute = getFilteredValue(value)?.toIntOrNull() ?: 0
 
             updateIntervalData(
-                index, IntervalData(
-                    current = intervalEditingInfo.intervalData.current,
+                index,  intervalEditingInfo.intervalData.copy(
                     initial = timeTransformer.fromTimeData(
                         TimeData(minute, second, 0)
-                    ),
-                    increasing = intervalEditingInfo.intervalData.increasing
+                    )
                 )
             )
             updateTimeRepresentationPair(
@@ -238,12 +234,10 @@ class ScoreboardDetailsViewModel @Inject constructor(
             val minute = timeTransformer.toTimeData(intervalEditingInfo.intervalData.initial).minute
 
             updateIntervalData(
-                index, IntervalData(
-                    current = intervalEditingInfo.intervalData.current,
+                index,  intervalEditingInfo.intervalData.copy(
                     initial = timeTransformer.fromTimeData(
                         TimeData(minute, second, 0)
-                    ),
-                    increasing = intervalEditingInfo.intervalData.increasing
+                    )
                 )
             )
             updateTimeRepresentationPair(

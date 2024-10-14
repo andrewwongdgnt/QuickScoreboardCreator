@@ -251,7 +251,7 @@ private fun IntervalList(
                 label = stringResource(id = R.string.hasTimeLimit),
                 checked = !intervalData.increasing,
                 onCheckedChange = {
-                    onIntervalEditForTimeIsIncreasing(index, it)
+                    onIntervalEditForTimeIsIncreasing(index, !it)
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
