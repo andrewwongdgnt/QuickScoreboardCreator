@@ -2,8 +2,8 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score
 
 sealed interface ScoreRule {
     sealed class Trigger(val trigger: Int): ScoreRule {
-        class Max(trigger: Int) : Trigger(trigger)
-        class DeuceAdvantage(trigger: Int) : Trigger(trigger)
+        data class Max(private val _trigger: Int) : Trigger(_trigger)
+        data class DeuceAdvantage(private val _trigger: Int) : Trigger(_trigger)
     }
 
     data object None : ScoreRule

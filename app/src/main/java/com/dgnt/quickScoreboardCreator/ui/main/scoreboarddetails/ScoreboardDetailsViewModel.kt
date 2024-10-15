@@ -248,6 +248,21 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
+    fun onIntervalEditForScoreRule(index: Int, scoreRule: ScoreRule) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            updateScoreInfo(
+                index, intervalEditingInfo.scoreInfo.copy(
+                    scoreRule = scoreRule
+                )
+            )
+        }
+
+    private fun updateScoreInfo(index: Int, scoreInfo: ScoreInfo) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(scoreInfo = scoreInfo)
+        _intervalList.value = newList
+    }
+
     private fun updateIntervalData(index: Int, intervalData: IntervalData) {
         val newList = intervalList.value.toMutableList()
         newList[index] = newList[index].copy(intervalData = intervalData)

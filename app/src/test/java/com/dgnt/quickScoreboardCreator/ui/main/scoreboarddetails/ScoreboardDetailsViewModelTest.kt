@@ -394,4 +394,51 @@ class ScoreboardDetailsViewModelTest {
             ), sut.intervalList.value
         )
     }
+
+    @Test
+    fun testEditingSecond() = runTest {
+        every { timeTransformer.fromTimeData(TimeData(0,9,0)) } answers { 9000 }
+        initSut()
+        sut.onIntervalEditForSecond(0, "9")
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 9000,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "9")
+                ),
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
+    fun testEditingScoreRule() = runTest {
+        initSut()
+        sut.onIntervalEditForScoreRule(0, ScoreRule.Trigger.DeuceAdvantage(22))
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.Trigger.DeuceAdvantage(22),
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0")
+                ),
+            ), sut.intervalList.value
+        )
+    }
 }
