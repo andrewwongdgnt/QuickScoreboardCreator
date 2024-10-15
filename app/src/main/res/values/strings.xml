@@ -35,6 +35,8 @@
     <string name="rulesForInterval">Rules for round %1$s</string>
     <string name="hasTimeLimit">Allow time limit</string>
     <string name="decreasingTimeMsg">Time decreases from this value</string>
+    <string name="maxScore">Max score:</string>
+    <string name="allowDeuceAdvantage">Allow Deuce / Advantage</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">

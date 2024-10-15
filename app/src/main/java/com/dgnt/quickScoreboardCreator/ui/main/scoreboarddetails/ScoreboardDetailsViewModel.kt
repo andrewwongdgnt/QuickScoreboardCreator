@@ -214,7 +214,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             val minute = getFilteredValue(value)?.toIntOrNull() ?: 0
 
             updateIntervalData(
-                index,  intervalEditingInfo.intervalData.copy(
+                index, intervalEditingInfo.intervalData.copy(
                     initial = timeTransformer.fromTimeData(
                         TimeData(minute, second, 0)
                     )
@@ -234,7 +234,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             val minute = timeTransformer.toTimeData(intervalEditingInfo.intervalData.initial).minute
 
             updateIntervalData(
-                index,  intervalEditingInfo.intervalData.copy(
+                index, intervalEditingInfo.intervalData.copy(
                     initial = timeTransformer.fromTimeData(
                         TimeData(minute, second, 0)
                     )
@@ -248,11 +248,17 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
-    fun onIntervalEditForScoreRule(index: Int, scoreRule: ScoreRule) =
+    fun onIntervalEditForMaxScoreInput(index: Int, value: String) =
+        updateMaxScoreInput(
+            index, getFilteredValue(value) ?: ""
+        )
+
+    fun onIntervalEditForAllowDeuceAdv(index: Int, allow: Boolean) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            val maxScore = getFilteredValue(intervalEditingInfo.maxScoreInput)?.toIntOrNull() ?: 0
             updateScoreInfo(
                 index, intervalEditingInfo.scoreInfo.copy(
-                    scoreRule = scoreRule
+                    scoreRule = if (allow) ScoreRule.Trigger.DeuceAdvantage(maxScore) else ScoreRule.Trigger.Max(maxScore)
                 )
             )
         }
@@ -275,6 +281,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _intervalList.value = newList
     }
 
+    private fun updateMaxScoreInput(index: Int, maxScore: String) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(maxScoreInput = maxScore)
+        _intervalList.value = newList
+    }
+
 
     private fun generateGenericIntervalInfo() =
         IntervalEditingInfo(
@@ -290,7 +302,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
             ),
             timeRepresentationPair = timeTransformer.toTimeData(0).let {
                 Pair(it.minute.toString(), it.second.toString())
-            }
+            },
+            maxScoreInput = ""
         )
 
     private fun getFilteredValue(value: String) = if (value.isEmpty())

@@ -5,10 +5,13 @@ package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -23,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -76,6 +80,8 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForTimeIsIncreasing = viewModel::onIntervalEditForTimeIsIncreasing,
         onIntervalEditForMinute = viewModel::onIntervalEditForMinute,
         onIntervalEditForSecond = viewModel::onIntervalEditForSecond,
+        onIntervalEditForAllowDeuceAdv = viewModel::onIntervalEditForAllowDeuceAdv,
+        onIntervalEditForMaxScoreInput = viewModel::onIntervalEditForMaxScoreInput,
         valid = valid,
         isNewEntity = isNewEntity,
         onDelete = viewModel::onDelete,
@@ -101,6 +107,8 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
     onIntervalEditForSecond: (Int, String) -> Unit,
+    onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
+    onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
     valid: Boolean,
     isNewEntity: Boolean,
     intervalList: List<IntervalEditingInfo>,
@@ -167,8 +175,10 @@ private fun ScoreboardDetailsInnerDialogContent(
                 IntervalList(
                     intervalList = intervalList,
                     onIntervalEditForTimeIsIncreasing = onIntervalEditForTimeIsIncreasing,
-                    onIntervalEditForMinute =onIntervalEditForMinute,
-                    onIntervalEditForSecond =onIntervalEditForSecond
+                    onIntervalEditForMinute = onIntervalEditForMinute,
+                    onIntervalEditForSecond = onIntervalEditForSecond,
+                    onIntervalEditForAllowDeuceAdv = onIntervalEditForAllowDeuceAdv,
+                    onIntervalEditForMaxScoreInput = onIntervalEditForMaxScoreInput,
                 )
 
             }
@@ -233,6 +243,8 @@ private fun IntervalList(
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
     onIntervalEditForSecond: (Int, String) -> Unit,
+    onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
+    onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
 ) {
 
     Column(
@@ -257,6 +269,7 @@ private fun IntervalList(
             )
 
             if (!intervalData.increasing) {
+                val numberFieldWidth = 65.dp
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier.fillMaxWidth()
@@ -264,9 +277,40 @@ private fun IntervalList(
                     Text(text = stringResource(id = R.string.decreasingTimeMsg))
                     TimeLimitPicker(
                         minuteString = intervalEditingInfo.timeRepresentationPair.first,
-                        onMinuteChange = { onIntervalEditForMinute (index, it)},
+                        onMinuteChange = { onIntervalEditForMinute(index, it) },
                         secondString = intervalEditingInfo.timeRepresentationPair.second,
-                        onSecondChange = { onIntervalEditForSecond(index, it)}
+                        onSecondChange = { onIntervalEditForSecond(index, it) },
+                        numberFieldWidth = numberFieldWidth
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                LabelSwitch(
+                    label = stringResource(id = R.string.allowDeuceAdvantage),
+                    checked = scoreInfo.scoreRule is ScoreRule.Trigger.DeuceAdvantage,
+                    onCheckedChange = {
+                        onIntervalEditForAllowDeuceAdv(index, it)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = modifier
+                ) {
+                    Text(
+                        modifier = modifier.weight(1f),
+                        text = stringResource(id = R.string.maxScore)
+                    )
+
+                    TextField(
+                        value = intervalEditingInfo.maxScoreInput,
+                        onValueChange = {
+                            onIntervalEditForMaxScoreInput(index, it)
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
+                        modifier = modifier.width(numberFieldWidth)
                     )
                 }
 
@@ -292,9 +336,11 @@ private fun `New Icon Selection`() =
         onIconChange = {},
         iconChanging = true,
         onIconEdit = {},
-        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
+        onIntervalEditForAllowDeuceAdv = { _, _ -> },
+        onIntervalEditForMaxScoreInput = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(),
@@ -319,9 +365,11 @@ private fun `Basketball`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
+        onIntervalEditForAllowDeuceAdv = { _, _ -> },
+        onIntervalEditForMaxScoreInput = { _, _ -> },
         valid = true,
         isNewEntity = false,
         intervalList = listOf(),
@@ -346,9 +394,11 @@ private fun `Hockey`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
+        onIntervalEditForAllowDeuceAdv = { _, _ -> },
+        onIntervalEditForMaxScoreInput = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(),
@@ -373,9 +423,11 @@ private fun `Loading Icon`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
+        onIntervalEditForAllowDeuceAdv = { _, _ -> },
+        onIntervalEditForMaxScoreInput = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(),
@@ -401,14 +453,16 @@ private fun `One default interval`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        onIntervalEditForTimeIsIncreasing = { _,_-> },
+        onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
+        onIntervalEditForAllowDeuceAdv = { _, _ -> },
+        onIntervalEditForMaxScoreInput = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(
             IntervalEditingInfo(
-                scoreInfo =  ScoreInfo(
+                scoreInfo = ScoreInfo(
                     scoreRule = ScoreRule.None,
                     scoreToDisplayScoreMap = mapOf(),
                     dataList = listOf()
@@ -418,8 +472,8 @@ private fun `One default interval`() =
                     initial = 0,
                     increasing = false
                 ),
-
-               timeRepresentationPair =  Pair("9", "24")
+                timeRepresentationPair = Pair("9", "24"),
+                maxScoreInput = "33"
             ),
         ),
         onDelete = {},

@@ -247,7 +247,6 @@ class ScoreboardDetailsViewModelTest {
     fun testInitialInterval() = runTest {
         initSut()
 
-
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -261,7 +260,8 @@ class ScoreboardDetailsViewModelTest {
                         initial = 0,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("0", "0")
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
                 ),
             ), sut.intervalList.value
         )
@@ -285,7 +285,8 @@ class ScoreboardDetailsViewModelTest {
                         initial = 0,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("0", "0")
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -298,7 +299,8 @@ class ScoreboardDetailsViewModelTest {
                         initial = 0,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("0", "0")
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
                 )
             ), sut.intervalList.value
         )
@@ -322,7 +324,8 @@ class ScoreboardDetailsViewModelTest {
                         initial = 0,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("0", "0")
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
                 ),
             ), sut.intervalList.value
         )
@@ -342,7 +345,8 @@ class ScoreboardDetailsViewModelTest {
                         initial = 0,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("0", "0")
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
                 ),
             ), sut.intervalList.value
         )
@@ -365,7 +369,8 @@ class ScoreboardDetailsViewModelTest {
                         initial = 0,
                         increasing = true
                     ),
-                    timeRepresentationPair = Pair("0", "0")
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
                 ),
             ), sut.intervalList.value
         )
@@ -389,7 +394,8 @@ class ScoreboardDetailsViewModelTest {
                         initial = 480000,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("8", "0")
+                    timeRepresentationPair = Pair("8", "0"),
+                    maxScoreInput = ""
                 ),
             ), sut.intervalList.value
         )
@@ -413,21 +419,22 @@ class ScoreboardDetailsViewModelTest {
                         initial = 9000,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("0", "9")
+                    timeRepresentationPair = Pair("0", "9"),
+                    maxScoreInput = ""
                 ),
             ), sut.intervalList.value
         )
     }
 
     @Test
-    fun testEditingScoreRule() = runTest {
+    fun testEditingForAllowDeuceAdv() = runTest {
         initSut()
-        sut.onIntervalEditForScoreRule(0, ScoreRule.Trigger.DeuceAdvantage(22))
+        sut.onIntervalEditForAllowDeuceAdv(0, true)
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.Trigger.DeuceAdvantage(22),
+                        scoreRule = ScoreRule.Trigger.DeuceAdvantage(0),
                         scoreToDisplayScoreMap = mapOf(),
                         dataList = listOf()
                     ),
@@ -436,7 +443,82 @@ class ScoreboardDetailsViewModelTest {
                         initial = 0,
                         increasing = false
                     ),
-                    timeRepresentationPair = Pair("0", "0")
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
+    fun testEditingForMaxScoreInput() = runTest {
+        initSut()
+        sut.onIntervalEditForMaxScoreInput(0, "77")
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = "77"
+                ),
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
+    fun testEditingForMaxScoreInputWithDeuce() = runTest {
+        initSut()
+        sut.onIntervalEditForMaxScoreInput(0, "77")
+        sut.onIntervalEditForAllowDeuceAdv(0, true)
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.Trigger.DeuceAdvantage(77),
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = "77"
+                ),
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
+    fun testEditingForMaxScoreInputWithJustMax() = runTest {
+        initSut()
+        sut.onIntervalEditForMaxScoreInput(0, "20")
+        sut.onIntervalEditForAllowDeuceAdv(0, false)
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.Trigger.Max(20),
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = "20"
                 ),
             ), sut.intervalList.value
         )
