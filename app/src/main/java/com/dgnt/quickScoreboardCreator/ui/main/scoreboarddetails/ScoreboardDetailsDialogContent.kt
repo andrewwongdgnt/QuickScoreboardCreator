@@ -192,7 +192,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalList(
-                    modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp),
+                    modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp * intervalList.size),
                     intervalList = intervalList,
                     onIntervalEditForTimeIsIncreasing = onIntervalEditForTimeIsIncreasing,
                     onIntervalEditForMinute = onIntervalEditForMinute,
