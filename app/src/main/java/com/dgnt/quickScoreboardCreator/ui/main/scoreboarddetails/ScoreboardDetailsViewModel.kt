@@ -174,7 +174,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
     }
 
     fun onIntervalRemove(index: Int) {
-
         val intervalListValue = intervalList.value.toMutableList()
         if (intervalListValue.size == 1)
             return

@@ -353,6 +353,150 @@ class ScoreboardDetailsViewModelTest {
     }
 
     @Test
+    fun testMovingAnInterval() = runTest {
+        initSut()
+
+        sut.onIntervalAdd()
+        sut.onIntervalEditForTimeIsIncreasing(0, true)
+        sut.onIntervalEditForTimeIsIncreasing(1, false)
+        sut.onIntervalMove(true, 1)
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = true
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+            ), sut.intervalList.value
+        )
+
+        sut.onIntervalMove(false, 0)
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = true
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+            ), sut.intervalList.value
+        )
+
+        sut.onIntervalMove(true, 0)
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = true
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+            ), sut.intervalList.value
+        )
+
+        sut.onIntervalMove(false, 1)
+        Assert.assertEquals(
+            listOf(
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = true
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        dataList = listOf()
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = ""
+                ),
+            ), sut.intervalList.value
+        )
+    }
+
+    @Test
     fun testEditingIsTimeIncreasing() = runTest {
         initSut()
         sut.onIntervalEditForTimeIsIncreasing(0, true)
