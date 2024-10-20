@@ -337,8 +337,8 @@ private fun IntervalList(
                 modifier = Modifier.fillMaxWidth(),
             )
 
+            val numberFieldWidth = 65.dp
             if (!intervalData.increasing) {
-                val numberFieldWidth = 65.dp
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -352,7 +352,7 @@ private fun IntervalList(
                         numberFieldWidth = numberFieldWidth
                     )
                 }
-
+            } else {
                 Spacer(modifier = Modifier.height(16.dp))
                 LabelSwitch(
                     label = stringResource(id = R.string.allowDeuceAdvantage),
