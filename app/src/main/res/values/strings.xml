@@ -114,6 +114,8 @@
     <string name="more">More</string>
     <string name="back">Back</string>
     <string name="moreInfo">more information</string>
+    <string name="up">Up</string>
+    <string name="down">Down</string>
     <!-- Error messages -->
     <string name="defaultInvalid">Something went wrong</string>
 </resources>

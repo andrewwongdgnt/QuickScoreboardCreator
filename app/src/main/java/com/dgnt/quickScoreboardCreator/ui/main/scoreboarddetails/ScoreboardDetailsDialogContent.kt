@@ -3,20 +3,29 @@
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -84,6 +94,8 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForAllowDeuceAdv = viewModel::onIntervalEditForAllowDeuceAdv,
         onIntervalEditForMaxScoreInput = viewModel::onIntervalEditForMaxScoreInput,
         onIntervalAdd = viewModel::onIntervalAdd,
+        onIntervalRemove = viewModel::onIntervalRemove,
+        onIntervalMove = viewModel::onIntervalMove,
         valid = valid,
         isNewEntity = isNewEntity,
         onDelete = viewModel::onDelete,
@@ -112,6 +124,8 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
     onIntervalAdd: (Int?) -> Unit,
+    onIntervalRemove: (Int) -> Unit,
+    onIntervalMove: (Boolean, Int) -> Unit,
     valid: Boolean,
     isNewEntity: Boolean,
     intervalList: List<IntervalEditingInfo>,
@@ -176,12 +190,15 @@ private fun ScoreboardDetailsInnerDialogContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalList(
+                    modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp),
                     intervalList = intervalList,
                     onIntervalEditForTimeIsIncreasing = onIntervalEditForTimeIsIncreasing,
                     onIntervalEditForMinute = onIntervalEditForMinute,
                     onIntervalEditForSecond = onIntervalEditForSecond,
                     onIntervalEditForAllowDeuceAdv = onIntervalEditForAllowDeuceAdv,
                     onIntervalEditForMaxScoreInput = onIntervalEditForMaxScoreInput,
+                    onIntervalRemove = onIntervalRemove,
+                    onIntervalMove = onIntervalMove
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
@@ -247,6 +264,7 @@ private fun WinRulePicker(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun IntervalList(
     modifier: Modifier = Modifier,
@@ -256,16 +274,45 @@ private fun IntervalList(
     onIntervalEditForSecond: (Int, String) -> Unit,
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
+    onIntervalRemove: (Int) -> Unit,
+    onIntervalMove: (Boolean, Int) -> Unit,
 ) {
 
-    Column(
+    LazyColumn(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        intervalList.forEachIndexed { index, intervalEditingInfo ->
+        itemsIndexed(intervalList) { index, intervalEditingInfo ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(text = stringResource(id = R.string.rulesForInterval, index + 1), style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.weight(1f))
+                if (intervalList.size > 1) {
+                    IconButton(onClick = { onIntervalMove(true, index) }) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowUp,
+                            contentDescription = stringResource(R.string.up)
+                        )
+                    }
+                    IconButton(onClick = { onIntervalMove(false, index) }) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = stringResource(R.string.up)
+                        )
+                    }
+                    val context = LocalContext.current
+                    Icon(modifier = Modifier.combinedClickable(
+                        onClick = { Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show() },
+                        onLongClick = { onIntervalRemove(index) }
+                    ),
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete)
+                    )
 
-            Text(text = stringResource(id = R.string.rulesForInterval, index + 1), style = MaterialTheme.typography.titleMedium)
+                }
+            }
 
             val scoreInfo = intervalEditingInfo.scoreInfo
             val intervalData = intervalEditingInfo.intervalData
@@ -283,7 +330,7 @@ private fun IntervalList(
                 val numberFieldWidth = 65.dp
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = stringResource(id = R.string.decreasingTimeMsg))
                     TimeLimitPicker(
@@ -307,10 +354,9 @@ private fun IntervalList(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier
                 ) {
                     Text(
-                        modifier = modifier.weight(1f),
+                        modifier = Modifier.weight(1f),
                         text = stringResource(id = R.string.maxScore)
                     )
 
@@ -321,7 +367,7 @@ private fun IntervalList(
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
-                        modifier = modifier.width(numberFieldWidth)
+                        modifier = Modifier.width(numberFieldWidth)
                     )
                 }
 
@@ -353,6 +399,8 @@ private fun `New Icon Selection`() =
         onIntervalEditForAllowDeuceAdv = { _, _ -> },
         onIntervalEditForMaxScoreInput = { _, _ -> },
         onIntervalAdd = { _ -> },
+        onIntervalRemove = { _ -> },
+        onIntervalMove = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(),
@@ -383,6 +431,8 @@ private fun `Basketball`() =
         onIntervalEditForAllowDeuceAdv = { _, _ -> },
         onIntervalEditForMaxScoreInput = { _, _ -> },
         onIntervalAdd = { _ -> },
+        onIntervalRemove = { _ -> },
+        onIntervalMove = { _, _ -> },
         valid = true,
         isNewEntity = false,
         intervalList = listOf(),
@@ -413,6 +463,8 @@ private fun `Hockey`() =
         onIntervalEditForAllowDeuceAdv = { _, _ -> },
         onIntervalEditForMaxScoreInput = { _, _ -> },
         onIntervalAdd = { _ -> },
+        onIntervalRemove = { _ -> },
+        onIntervalMove = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(),
@@ -443,6 +495,8 @@ private fun `Loading Icon`() =
         onIntervalEditForAllowDeuceAdv = { _, _ -> },
         onIntervalEditForMaxScoreInput = { _, _ -> },
         onIntervalAdd = { _ -> },
+        onIntervalRemove = { _ -> },
+        onIntervalMove = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(),
@@ -474,6 +528,8 @@ private fun `One default interval`() =
         onIntervalEditForAllowDeuceAdv = { _, _ -> },
         onIntervalEditForMaxScoreInput = { _, _ -> },
         onIntervalAdd = { _ -> },
+        onIntervalRemove = { _ -> },
+        onIntervalMove = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(
@@ -498,7 +554,6 @@ private fun `One default interval`() =
     )
 
 
-
 @Preview(showBackground = true)
 @Composable
 private fun `One interval`() =
@@ -521,6 +576,8 @@ private fun `One interval`() =
         onIntervalEditForAllowDeuceAdv = { _, _ -> },
         onIntervalEditForMaxScoreInput = { _, _ -> },
         onIntervalAdd = { _ -> },
+        onIntervalRemove = { _ -> },
+        onIntervalMove = { _, _ -> },
         valid = true,
         isNewEntity = true,
         intervalList = listOf(
