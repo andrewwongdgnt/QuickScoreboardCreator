@@ -111,6 +111,18 @@ class ScoreboardDetailsViewModel @Inject constructor(
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
             _winRule.value = it.winRuleType.toWinRule()
+
+            _intervalList.value = it.intervalList.map { interval ->
+                //TODO should make a mapper for this
+                IntervalEditingInfo(
+                    scoreInfo = interval.scoreInfo.toScoreInfo(),
+                    intervalData = interval.intervalData.toIntervalData(),
+                    timeRepresentationPair = timeTransformer.toTimeData(interval.intervalData.initial).run {
+                        Pair(minute.toString(), second.toString())
+                    },
+                    maxScoreInput = interval.scoreInfo.scoreRule.trigger.toString()
+                )
+            }
         }
     }
 

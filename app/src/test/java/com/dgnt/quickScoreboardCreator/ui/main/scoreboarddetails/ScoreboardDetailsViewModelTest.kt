@@ -115,6 +115,8 @@ class ScoreboardDetailsViewModelTest {
         every { resources.getString(ScoreboardType.BASKETBALL.descriptionRes) } returns "Basketball Desc"
         every { scoreboardLoader.invoke(inputStream) } returns scoreboardConfig
         every { scoreboardConfig.winRuleType } returns WinRuleType.COUNT
+        //TODO add actual list and then add some assertions
+        every { scoreboardConfig.intervalList } returns listOf()
         initSut()
 
         Assert.assertEquals("Basketball", sut.title.value)
