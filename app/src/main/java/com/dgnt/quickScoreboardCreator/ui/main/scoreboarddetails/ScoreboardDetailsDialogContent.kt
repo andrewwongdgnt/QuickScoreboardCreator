@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -20,10 +21,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -56,6 +56,8 @@ import com.dgnt.quickScoreboardCreator.ui.common.composable.MultipleOptionsPicke
 import com.dgnt.quickScoreboardCreator.ui.common.composable.OptionData
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
 import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleDown
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleUp
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -284,24 +286,33 @@ private fun IntervalList(
         verticalArrangement = Arrangement.Center
     ) {
         itemsIndexed(intervalList) { index, intervalEditingInfo ->
+            val dividerColor = MaterialTheme.colorScheme.onBackground
+            HorizontalDivider(
+                color = dividerColor,
+                modifier = Modifier
+                    .padding(vertical = 6.dp)
+                    .fillMaxWidth(),
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = stringResource(id = R.string.rulesForInterval, index + 1), style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
                 if (intervalList.size > 1) {
-                    IconButton(onClick = { onIntervalMove(true, index) }) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = stringResource(R.string.up)
-                        )
-                    }
-                    IconButton(onClick = { onIntervalMove(false, index) }) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = stringResource(R.string.up)
-                        )
-                    }
+                    if (index > 0)
+                        IconButton(onClick = { onIntervalMove(true, index) }) {
+                            Icon(
+                                imageVector = TriangleUp,
+                                contentDescription = stringResource(R.string.up)
+                            )
+                        }
+                    if (index < intervalList.lastIndex)
+                        IconButton(onClick = { onIntervalMove(false, index) }) {
+                            Icon(
+                                imageVector = TriangleDown,
+                                contentDescription = stringResource(R.string.up)
+                            )
+                        }
                     val context = LocalContext.current
                     Icon(modifier = Modifier.combinedClickable(
                         onClick = { Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show() },
@@ -372,6 +383,7 @@ private fun IntervalList(
                 }
 
             }
+
 
         }
     }
