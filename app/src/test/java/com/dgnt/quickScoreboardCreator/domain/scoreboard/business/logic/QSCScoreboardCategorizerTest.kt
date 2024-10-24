@@ -29,11 +29,11 @@ class QSCScoreboardCategorizerTest {
         sut(
             listOf(ScoreboardType.BASKETBALL, ScoreboardType.HOCKEY, ScoreboardType.SPIKEBALL),
             listOf(
-                ScoreboardEntity(id = 1, title = "gg", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 2, title = "ZZ", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 3, title = "a", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 4, title = "RRR", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
-                ScoreboardEntity(id = 5, title = "CC", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS),
+                ScoreboardEntity(id = 1, title = "gg", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS, intervalLabel = "game"),
+                ScoreboardEntity(id = 2, title = "ZZ", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS, intervalLabel = "game"),
+                ScoreboardEntity(id = 3, title = "a", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS, intervalLabel = "game"),
+                ScoreboardEntity(id = 4, title = "RRR", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS, intervalLabel = "game"),
+                ScoreboardEntity(id = 5, title = "CC", description = "GG Desc", winRule = WinRule.Count, icon = ScoreboardIcon.TENNIS, intervalLabel = "game"),
             )
         ).let {
             val defaults = it.first

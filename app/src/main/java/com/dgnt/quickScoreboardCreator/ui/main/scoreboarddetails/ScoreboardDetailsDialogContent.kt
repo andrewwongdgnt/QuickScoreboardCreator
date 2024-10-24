@@ -73,6 +73,7 @@ fun ScoreboardDetailsDialogContent(
     val winRule by viewModel.winRule.collectAsStateWithLifecycle()
     val icon by viewModel.icon.collectAsStateWithLifecycle()
     val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
+    val intervalLabel by viewModel.intervalLabel.collectAsStateWithLifecycle()
     val isNewEntity by viewModel.isNewEntity.collectAsStateWithLifecycle()
     val intervalList by viewModel.intervalList.collectAsStateWithLifecycle()
 
@@ -89,6 +90,8 @@ fun ScoreboardDetailsDialogContent(
         onIconChange = viewModel::onIconChange,
         iconChanging = iconChanging,
         onIconEdit = viewModel::onIconEdit,
+        intervalLabel = intervalLabel,
+        onIntervalLabelChange = viewModel::onIntervalLabelChange,
         intervalList = intervalList,
         onIntervalEditForTimeIsIncreasing = viewModel::onIntervalEditForTimeIsIncreasing,
         onIntervalEditForMinute = viewModel::onIntervalEditForMinute,
@@ -120,6 +123,8 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIconChange: (ScoreboardIcon) -> Unit,
     iconChanging: Boolean,
     onIconEdit: (Boolean) -> Unit,
+    intervalLabel: String,
+    onIntervalLabelChange: (String) -> Unit,
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
     onIntervalEditForSecond: (Int, String) -> Unit,
@@ -189,6 +194,11 @@ private fun ScoreboardDetailsInnerDialogContent(
                 WinRulePicker(
                     winRule = winRule,
                     onWinRuleChange = onWinRuleChange
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                IntervalLabelEditor(
+                    intervalLabel = intervalLabel,
+                    onIntervalLabelChange = onIntervalLabelChange
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalList(
@@ -263,6 +273,19 @@ private fun WinRulePicker(
         ),
         selectedOption = winRule,
         onOptionSelected = onWinRuleChange
+    )
+}
+
+@Composable
+private fun IntervalLabelEditor(
+    intervalLabel: String,
+    onIntervalLabelChange: (String) -> Unit,
+) {
+    TextField(
+        value = intervalLabel,
+        onValueChange = onIntervalLabelChange,
+        placeholder = { Text(text = stringResource(R.string.intervalLabelPlaceholder)) },
+        modifier = Modifier.fillMaxWidth()
     )
 }
 
@@ -405,6 +428,8 @@ private fun `New Icon Selection`() =
         onIconChange = {},
         iconChanging = true,
         onIconEdit = {},
+        intervalLabel = "",
+        onIntervalLabelChange = {},
         onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
@@ -437,6 +462,8 @@ private fun `Basketball`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalLabel = "Quarter",
+        onIntervalLabelChange = {},
         onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
@@ -469,6 +496,8 @@ private fun `Hockey`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalLabel = "Period",
+        onIntervalLabelChange = {},
         onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
@@ -501,6 +530,8 @@ private fun `Loading Icon`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalLabel = "",
+        onIntervalLabelChange = {},
         onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
@@ -534,6 +565,8 @@ private fun `One default interval`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalLabel = "Round",
+        onIntervalLabelChange = {},
         onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },
@@ -582,6 +615,8 @@ private fun `One interval`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
+        intervalLabel = "Period",
+        onIntervalLabelChange = {},
         onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },
         onIntervalEditForSecond = { _, _ -> },

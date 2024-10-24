@@ -11,6 +11,7 @@ data class ScoreboardEntity(
     val title: String,
     val description: String,
     val winRule: WinRule,
-    val icon: ScoreboardIcon
+    val icon: ScoreboardIcon,
+    val intervalLabel: String
 //    val intervalListL: List<Pair<ScoreInfo, IntervalData>>
 )

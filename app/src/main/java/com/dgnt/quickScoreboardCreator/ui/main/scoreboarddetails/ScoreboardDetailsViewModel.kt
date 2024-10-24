@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
@@ -61,6 +61,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private val _iconChanging = MutableStateFlow(false)
     val iconChanging: StateFlow<Boolean> = _iconChanging.asStateFlow()
 
+    private val _intervalLabel = MutableStateFlow("")
+    val intervalLabel = _intervalLabel.asStateFlow()
+
     private val _isNewEntity = MutableStateFlow(true)
     val isNewEntity = _isNewEntity.asStateFlow()
 
@@ -74,8 +77,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
     )
     val intervalList = _intervalList.asStateFlow()
 
-    val valid: StateFlow<Boolean> = title.map {
-        it.isNotBlank()
+    val valid: StateFlow<Boolean> = combine(title, intervalLabel) { title, intervalLabel ->
+        title.isNotBlank() && intervalLabel.isNotBlank()
     }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     init {
@@ -98,6 +101,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             _description.value = it.description
             _winRule.value = it.winRule
             _icon.value = it.icon
+            _intervalLabel.value = it.intervalLabel
             _isNewEntity.value = false
         }
     }
@@ -106,6 +110,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _title.value = resources.getString(scoreboardType.titleRes)
         _description.value = resources.getString(scoreboardType.descriptionRes)
         _icon.value = scoreboardType.icon
+        _intervalLabel.value = resources.getString(scoreboardType.intervalLabelRes)
         _isNewEntity.value = true
         scoreboardType.rawRes.let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
@@ -135,7 +140,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
                         title = title.value,
                         description = description.value,
                         winRule = winRule.value,
-                        icon = icon.value!!
+                        icon = icon.value!!,
+                        intervalLabel = intervalLabel.value
                     )
                 )
             }
@@ -172,6 +178,10 @@ class ScoreboardDetailsViewModel @Inject constructor(
     fun onIconChange(icon: ScoreboardIcon) {
         _icon.value = icon
         _iconChanging.value = false
+    }
+
+    fun onIntervalLabelChange(intervalLabel: String) {
+        _intervalLabel.value = intervalLabel
     }
 
     fun onIntervalAdd(index: Int? = null) {

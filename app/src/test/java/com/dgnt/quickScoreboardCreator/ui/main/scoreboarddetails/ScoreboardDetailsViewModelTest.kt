@@ -94,13 +94,23 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testInitializingACustomScoreboard() = runTest {
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(1)
-        coEvery { getScoreboardUseCase(1) } coAnswers { ScoreboardEntity(1, "scoreboard name", "scoreboard desc", winRule = WinRule.Count, ScoreboardIcon.TENNIS) }
+        coEvery { getScoreboardUseCase(1) } coAnswers {
+            ScoreboardEntity(
+                id = 1,
+                title = "scoreboard name",
+                description = "scoreboard desc",
+                winRule = WinRule.Count,
+                intervalLabel = "scoreboard interval",
+                icon = ScoreboardIcon.TENNIS
+            )
+        }
         initSut()
 
         Assert.assertEquals("scoreboard name", sut.title.value)
         Assert.assertEquals("scoreboard desc", sut.description.value)
         Assert.assertEquals(WinRule.Count, sut.winRule.value)
         Assert.assertEquals(ScoreboardIcon.TENNIS, sut.icon.value)
+        Assert.assertEquals("scoreboard interval", sut.intervalLabel.value)
         Assert.assertTrue(sut.valid.value)
     }
 
@@ -113,6 +123,7 @@ class ScoreboardDetailsViewModelTest {
         every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream
         every { resources.getString(ScoreboardType.BASKETBALL.titleRes) } returns "Basketball"
         every { resources.getString(ScoreboardType.BASKETBALL.descriptionRes) } returns "Basketball Desc"
+        every { resources.getString(ScoreboardType.BASKETBALL.intervalLabelRes) } returns "Basketball Interval Label"
         every { scoreboardLoader.invoke(inputStream) } returns scoreboardConfig
         every { scoreboardConfig.winRuleType } returns WinRuleType.COUNT
         //TODO add actual list and then add some assertions
@@ -122,6 +133,7 @@ class ScoreboardDetailsViewModelTest {
         Assert.assertEquals("Basketball", sut.title.value)
         Assert.assertEquals("Basketball Desc", sut.description.value)
         Assert.assertEquals(ScoreboardIcon.BASKETBALL, sut.icon.value)
+        Assert.assertEquals("Basketball Interval Label", sut.intervalLabel.value)
         Assert.assertEquals(WinRule.Count, sut.winRule.value)
         Assert.assertTrue(sut.valid.value)
     }
@@ -145,6 +157,8 @@ class ScoreboardDetailsViewModelTest {
         sut.onDescriptionChange("Some value")
         Assert.assertFalse(sut.valid.value)
         sut.onTitleChange("Some value")
+        Assert.assertFalse(sut.valid.value)
+        sut.onIntervalLabelChange("Some value")
         Assert.assertTrue(sut.valid.value)
     }
 
@@ -177,6 +191,7 @@ class ScoreboardDetailsViewModelTest {
         sut.onDescriptionChange("new scoreboard desc")
         sut.onWinRuleChange(WinRule.Sum)
         sut.onIconChange(ScoreboardIcon.SOCCER)
+        sut.onIntervalLabelChange("new interval label")
         sut.onConfirm()
         verify(exactly = 1) {
             sut.sendUiEvent(UiEvent.Done)
@@ -188,7 +203,8 @@ class ScoreboardDetailsViewModelTest {
                     title = "new scoreboard",
                     description = "new scoreboard desc",
                     winRule = WinRule.Sum,
-                    icon = ScoreboardIcon.SOCCER
+                    icon = ScoreboardIcon.SOCCER,
+                    intervalLabel = "new interval label"
                 )
             )
         }
@@ -197,13 +213,23 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testEditingAScoreboard() = runTest {
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(2)
-        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", WinRule.Sum, ScoreboardIcon.TENNIS) }
+        coEvery { getScoreboardUseCase(2) } coAnswers {
+            ScoreboardEntity(
+                id = 2,
+                title = "scoreboard name 2",
+                description = "scoreboard desc 2",
+                winRule = WinRule.Sum,
+                icon = ScoreboardIcon.TENNIS,
+                intervalLabel = "scoreboard interval label 2"
+            )
+        }
         initSut()
 
         sut.onTitleChange("new scoreboard")
         sut.onDescriptionChange("new scoreboard desc")
         sut.onWinRuleChange(WinRule.Final)
         sut.onIconChange(ScoreboardIcon.BOXING)
+        sut.onIntervalLabelChange("new interval label")
         sut.onConfirm()
         verify(exactly = 1) {
             sut.sendUiEvent(UiEvent.Done)
@@ -215,7 +241,8 @@ class ScoreboardDetailsViewModelTest {
                     title = "new scoreboard",
                     description = "new scoreboard desc",
                     winRule = WinRule.Final,
-                    icon = ScoreboardIcon.BOXING
+                    icon = ScoreboardIcon.BOXING,
+                    intervalLabel = "new interval label"
                 )
             )
         }
@@ -224,7 +251,16 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testDeletingAScoreboard() = runTest {
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Custom(2)
-        coEvery { getScoreboardUseCase(2) } coAnswers { ScoreboardEntity(2, "scoreboard name 2", "scoreboard desc 2", winRule = WinRule.Count, ScoreboardIcon.TENNIS) }
+        coEvery { getScoreboardUseCase(2) } coAnswers {
+            ScoreboardEntity(
+                id = 2,
+                title = "scoreboard name 2",
+                description = "scoreboard desc 2",
+                winRule = WinRule.Count,
+                icon = ScoreboardIcon.TENNIS,
+                intervalLabel = "scoreboard interval label 2",
+            )
+        }
         initSut()
 
         sut.onDelete()
@@ -238,7 +274,8 @@ class ScoreboardDetailsViewModelTest {
                     title = "scoreboard name 2",
                     description = "scoreboard desc 2",
                     winRule = WinRule.Count,
-                    icon = ScoreboardIcon.TENNIS
+                    icon = ScoreboardIcon.TENNIS,
+                    intervalLabel = "scoreboard interval label 2",
                 )
 
             )
@@ -524,7 +561,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testEditingMinute() = runTest {
-        every { timeTransformer.fromTimeData(TimeData(8,0,0)) } answers { 480000 }
+        every { timeTransformer.fromTimeData(TimeData(8, 0, 0)) } answers { 480000 }
         initSut()
         sut.onIntervalEditForMinute(0, "8")
         Assert.assertEquals(
@@ -549,7 +586,7 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testEditingSecond() = runTest {
-        every { timeTransformer.fromTimeData(TimeData(0,9,0)) } answers { 9000 }
+        every { timeTransformer.fromTimeData(TimeData(0, 9, 0)) } answers { 9000 }
         initSut()
         sut.onIntervalEditForSecond(0, "9")
         Assert.assertEquals(

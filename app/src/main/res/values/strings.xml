@@ -28,6 +28,7 @@
     <string name="whistle">Whistle</string>
     <!-- Scoreboard Details -->
     <string name="scoreboardDetailsTitle">Scoreboard details</string>
+    <string name="intervalLabelPlaceholder">Label for each round*</string>
     <string name="winRule">Win Rule</string>
     <string name="winRuleSum">Sum (Winner determined by summing up all the scores of each round)</string>
     <string name="winRuleCount">Count (Winner determined by counting the number of rounds won)</string>
