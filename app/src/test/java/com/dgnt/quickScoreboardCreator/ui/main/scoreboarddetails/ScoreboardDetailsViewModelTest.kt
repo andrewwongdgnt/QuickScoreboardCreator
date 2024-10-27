@@ -7,6 +7,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
@@ -534,6 +535,31 @@ class ScoreboardDetailsViewModelTest {
             ), sut.intervalList.value
         )
     }
+
+    @Test
+    fun testEditingSoundEffect() = runTest {
+            initSut()
+            sut.onIntervalEditForSoundEffect(0, IntervalEndSoundType.LOW_BUZZER)
+            Assert.assertEquals(
+                listOf(
+                    IntervalEditingInfo(
+                        scoreInfo = ScoreInfo(
+                            scoreRule = ScoreRule.None,
+                            scoreToDisplayScoreMap = mapOf(),
+                            dataList = listOf()
+                        ),
+                        intervalData = IntervalData(
+                            current = 0,
+                            initial = 0,
+                            increasing = false,
+                            soundEffect = IntervalEndSoundType.LOW_BUZZER
+                        ),
+                        timeRepresentationPair = Pair("0", "0"),
+                        maxScoreInput = ""
+                    ),
+                ), sut.intervalList.value
+            )
+        }
 
     @Test
     fun testEditingIsTimeIncreasing() = runTest {

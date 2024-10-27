@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
@@ -93,6 +94,7 @@ fun ScoreboardDetailsDialogContent(
         intervalLabel = intervalLabel,
         onIntervalLabelChange = viewModel::onIntervalLabelChange,
         intervalList = intervalList,
+        onIntervalEditForSoundEffect = viewModel::onIntervalEditForSoundEffect,
         onIntervalEditForTimeIsIncreasing = viewModel::onIntervalEditForTimeIsIncreasing,
         onIntervalEditForMinute = viewModel::onIntervalEditForMinute,
         onIntervalEditForSecond = viewModel::onIntervalEditForSecond,
@@ -125,6 +127,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIconEdit: (Boolean) -> Unit,
     intervalLabel: String,
     onIntervalLabelChange: (String) -> Unit,
+    onIntervalEditForSoundEffect: (Int, IntervalEndSoundType) -> Unit,
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
     onIntervalEditForSecond: (Int, String) -> Unit,
@@ -205,6 +208,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                     modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp * intervalList.size),
                     intervalLabel = intervalLabel,
                     intervalList = intervalList,
+                    onIntervalEditForSoundEffect = onIntervalEditForSoundEffect,
                     onIntervalEditForTimeIsIncreasing = onIntervalEditForTimeIsIncreasing,
                     onIntervalEditForMinute = onIntervalEditForMinute,
                     onIntervalEditForSecond = onIntervalEditForSecond,
@@ -296,6 +300,7 @@ private fun IntervalList(
     modifier: Modifier = Modifier,
     intervalLabel: String,
     intervalList: List<IntervalEditingInfo>,
+    onIntervalEditForSoundEffect: (Int, IntervalEndSoundType) -> Unit,
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
     onIntervalEditForSecond: (Int, String) -> Unit,
@@ -352,6 +357,19 @@ private fun IntervalList(
 
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            MultipleOptionsPicker(
+                header = stringResource(id = R.string.winSoundEffect),
+                options = IntervalEndSoundType.entries.map {
+                    OptionData(
+                        label = stringResource(id = it.titleRes),
+                        data = it
+                    )
+                },
+                selectedOption = intervalEditingInfo.intervalData.soundEffect,
+                onOptionSelected = { onIntervalEditForSoundEffect(index, it) }
+            )
 
             val scoreInfo = intervalEditingInfo.scoreInfo
             val intervalData = intervalEditingInfo.intervalData
@@ -417,171 +435,108 @@ private fun IntervalList(
     }
 }
 
+@Composable
+private fun ScoreboardDetailsInnerDialogContentForPreview(
+    uiEvent: Flow<UiEvent> = emptyFlow(),
+    onUiEvent: (UiEvent) -> Unit = {},
+    title: String = "",
+    onTitleChange: (String) -> Unit = {},
+    description: String = "",
+    onDescriptionChange: (String) -> Unit = {},
+    winRule: WinRule = WinRule.Final,
+    onWinRuleChange: (WinRule) -> Unit = {},
+    icon: ScoreboardIcon? = ScoreboardIcon.HOCKEY,
+    onIconChange: (ScoreboardIcon) -> Unit = {},
+    iconChanging: Boolean = false,
+    onIconEdit: (Boolean) -> Unit = {},
+    intervalLabel: String = "Period",
+    onIntervalLabelChange: (String) -> Unit = {},
+    onIntervalEditForSoundEffect: (Int, IntervalEndSoundType) -> Unit = { _, _ -> },
+    onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit = { _, _ -> },
+    onIntervalEditForMinute: (Int, String) -> Unit = { _, _ -> },
+    onIntervalEditForSecond: (Int, String) -> Unit = { _, _ -> },
+    onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit = { _, _ -> },
+    onIntervalEditForMaxScoreInput: (Int, String) -> Unit = { _, _ -> },
+    onIntervalAdd: (Int?) -> Unit = { _ -> },
+    onIntervalRemove: (Int) -> Unit = { _ -> },
+    onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
+    valid: Boolean = true,
+    isNewEntity: Boolean = true,
+    intervalList: List<IntervalEditingInfo> = listOf(),
+    onDelete: () -> Unit = {},
+    onDismiss: () -> Unit = {},
+    onConfirm: () -> Unit = {},
+) {
+    ScoreboardDetailsInnerDialogContent(
+        uiEvent,
+        onUiEvent,
+        title,
+        onTitleChange,
+        description,
+        onDescriptionChange,
+        winRule,
+        onWinRuleChange,
+        icon,
+        onIconChange,
+        iconChanging,
+        onIconEdit,
+        intervalLabel,
+        onIntervalLabelChange,
+        onIntervalEditForSoundEffect,
+        onIntervalEditForTimeIsIncreasing,
+        onIntervalEditForMinute,
+        onIntervalEditForSecond,
+        onIntervalEditForAllowDeuceAdv,
+        onIntervalEditForMaxScoreInput,
+        onIntervalAdd,
+        onIntervalRemove,
+        onIntervalMove,
+        valid,
+        isNewEntity,
+        intervalList,
+        onDelete,
+        onDismiss,
+        onConfirm,
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun `New Icon Selection`() =
-    ScoreboardDetailsInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        title = "",
-        onTitleChange = {},
-        description = "",
-        onDescriptionChange = {},
-        winRule = WinRule.Sum,
-        onWinRuleChange = {},
-        icon = null,
-        onIconChange = {},
+    ScoreboardDetailsInnerDialogContentForPreview(
         iconChanging = true,
-        onIconEdit = {},
-        intervalLabel = "",
-        onIntervalLabelChange = {},
-        onIntervalEditForTimeIsIncreasing = { _, _ -> },
-        onIntervalEditForMinute = { _, _ -> },
-        onIntervalEditForSecond = { _, _ -> },
-        onIntervalEditForAllowDeuceAdv = { _, _ -> },
-        onIntervalEditForMaxScoreInput = { _, _ -> },
-        onIntervalAdd = { _ -> },
-        onIntervalRemove = { _ -> },
-        onIntervalMove = { _, _ -> },
-        valid = true,
-        isNewEntity = true,
-        intervalList = listOf(),
-        onDelete = {},
-        onDismiss = {},
-        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Basketball`() =
-    ScoreboardDetailsInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        title = "",
-        onTitleChange = {},
-        description = "",
-        onDescriptionChange = {},
-        winRule = WinRule.Sum,
-        onWinRuleChange = {},
+    ScoreboardDetailsInnerDialogContentForPreview(
         icon = ScoreboardIcon.BASKETBALL,
-        onIconChange = {},
-        iconChanging = false,
-        onIconEdit = {},
         intervalLabel = "Quarter",
-        onIntervalLabelChange = {},
-        onIntervalEditForTimeIsIncreasing = { _, _ -> },
-        onIntervalEditForMinute = { _, _ -> },
-        onIntervalEditForSecond = { _, _ -> },
-        onIntervalEditForAllowDeuceAdv = { _, _ -> },
-        onIntervalEditForMaxScoreInput = { _, _ -> },
-        onIntervalAdd = { _ -> },
-        onIntervalRemove = { _ -> },
-        onIntervalMove = { _, _ -> },
-        valid = true,
         isNewEntity = false,
-        intervalList = listOf(),
-        onDelete = {},
-        onDismiss = {},
-        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Hockey`() =
-    ScoreboardDetailsInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        title = "",
-        onTitleChange = {},
-        description = "",
-        onDescriptionChange = {},
-        winRule = WinRule.Sum,
-        onWinRuleChange = {},
+    ScoreboardDetailsInnerDialogContentForPreview(
         icon = ScoreboardIcon.HOCKEY,
-        onIconChange = {},
-        iconChanging = false,
-        onIconEdit = {},
         intervalLabel = "Period",
-        onIntervalLabelChange = {},
-        onIntervalEditForTimeIsIncreasing = { _, _ -> },
-        onIntervalEditForMinute = { _, _ -> },
-        onIntervalEditForSecond = { _, _ -> },
-        onIntervalEditForAllowDeuceAdv = { _, _ -> },
-        onIntervalEditForMaxScoreInput = { _, _ -> },
-        onIntervalAdd = { _ -> },
-        onIntervalRemove = { _ -> },
-        onIntervalMove = { _, _ -> },
-        valid = true,
-        isNewEntity = true,
-        intervalList = listOf(),
-        onDelete = {},
-        onDismiss = {},
-        onConfirm = {},
     )
 
 @Preview(showBackground = true)
 @Composable
 private fun `Loading Icon`() =
-    ScoreboardDetailsInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        title = "",
-        onTitleChange = {},
-        description = "",
-        onDescriptionChange = {},
-        winRule = WinRule.Count,
-        onWinRuleChange = {},
+    ScoreboardDetailsInnerDialogContentForPreview(
         icon = null,
-        onIconChange = {},
-        iconChanging = false,
-        onIconEdit = {},
-        intervalLabel = "",
-        onIntervalLabelChange = {},
-        onIntervalEditForTimeIsIncreasing = { _, _ -> },
-        onIntervalEditForMinute = { _, _ -> },
-        onIntervalEditForSecond = { _, _ -> },
-        onIntervalEditForAllowDeuceAdv = { _, _ -> },
-        onIntervalEditForMaxScoreInput = { _, _ -> },
-        onIntervalAdd = { _ -> },
-        onIntervalRemove = { _ -> },
-        onIntervalMove = { _, _ -> },
-        valid = true,
-        isNewEntity = true,
-        intervalList = listOf(),
-        onDelete = {},
-        onDismiss = {},
-        onConfirm = {},
     )
 
 
 @Preview(showBackground = true)
 @Composable
 private fun `One default interval`() =
-    ScoreboardDetailsInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        title = "",
-        onTitleChange = {},
-        description = "",
-        onDescriptionChange = {},
-        winRule = WinRule.Sum,
-        onWinRuleChange = {},
-        icon = ScoreboardIcon.HOCKEY,
-        onIconChange = {},
-        iconChanging = false,
-        onIconEdit = {},
+    ScoreboardDetailsInnerDialogContentForPreview(
         intervalLabel = "Round",
-        onIntervalLabelChange = {},
-        onIntervalEditForTimeIsIncreasing = { _, _ -> },
-        onIntervalEditForMinute = { _, _ -> },
-        onIntervalEditForSecond = { _, _ -> },
-        onIntervalEditForAllowDeuceAdv = { _, _ -> },
-        onIntervalEditForMaxScoreInput = { _, _ -> },
-        onIntervalAdd = { _ -> },
-        onIntervalRemove = { _ -> },
-        onIntervalMove = { _, _ -> },
-        valid = true,
-        isNewEntity = true,
         intervalList = listOf(
             IntervalEditingInfo(
                 scoreInfo = ScoreInfo(
@@ -597,58 +552,5 @@ private fun `One default interval`() =
                 timeRepresentationPair = Pair("9", "24"),
                 maxScoreInput = "33"
             ),
-        ),
-        onDelete = {},
-        onDismiss = {},
-        onConfirm = {},
-    )
-
-
-@Preview(showBackground = true)
-@Composable
-private fun `One interval`() =
-    ScoreboardDetailsInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        title = "",
-        onTitleChange = {},
-        description = "",
-        onDescriptionChange = {},
-        winRule = WinRule.Sum,
-        onWinRuleChange = {},
-        icon = ScoreboardIcon.HOCKEY,
-        onIconChange = {},
-        iconChanging = false,
-        onIconEdit = {},
-        intervalLabel = "",
-        onIntervalLabelChange = {},
-        onIntervalEditForTimeIsIncreasing = { _, _ -> },
-        onIntervalEditForMinute = { _, _ -> },
-        onIntervalEditForSecond = { _, _ -> },
-        onIntervalEditForAllowDeuceAdv = { _, _ -> },
-        onIntervalEditForMaxScoreInput = { _, _ -> },
-        onIntervalAdd = { _ -> },
-        onIntervalRemove = { _ -> },
-        onIntervalMove = { _, _ -> },
-        valid = true,
-        isNewEntity = true,
-        intervalList = listOf(
-            IntervalEditingInfo(
-                scoreInfo = ScoreInfo(
-                    scoreRule = ScoreRule.None,
-                    scoreToDisplayScoreMap = mapOf(),
-                    dataList = listOf()
-                ),
-                intervalData = IntervalData(
-                    current = 0,
-                    initial = 0,
-                    increasing = true
-                ),
-                timeRepresentationPair = Pair("9", "24"),
-                maxScoreInput = "33"
-            ),
-        ),
-        onDelete = {},
-        onDismiss = {},
-        onConfirm = {},
+        )
     )

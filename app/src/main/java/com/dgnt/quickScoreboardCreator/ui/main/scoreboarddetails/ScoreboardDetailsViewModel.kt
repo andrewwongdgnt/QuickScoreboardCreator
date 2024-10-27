@@ -10,6 +10,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
@@ -219,6 +220,15 @@ class ScoreboardDetailsViewModel @Inject constructor(
             _intervalList.value = intervalListValue
         }
     }
+
+    fun onIntervalEditForSoundEffect(index: Int, soundEffect: IntervalEndSoundType) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            updateIntervalData(
+                index, intervalEditingInfo.intervalData.copy(
+                    soundEffect = soundEffect
+                )
+            )
+        }
 
     fun onIntervalEditForTimeIsIncreasing(index: Int, timeIsIncreasing: Boolean) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->

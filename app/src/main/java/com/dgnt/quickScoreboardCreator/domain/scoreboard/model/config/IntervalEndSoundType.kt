@@ -6,7 +6,7 @@ import com.dgnt.quickScoreboardCreator.R
 
 enum class IntervalEndSoundType(
     @RawRes val rawRes: Int? = null,
-    @StringRes val titleRes: Int=R.string.blank
+    @StringRes val titleRes: Int = R.string.none
 ) {
     NONE,
     BELL(R.raw.bell, R.string.bell),

@@ -35,6 +35,7 @@
     <string name="winRuleFinal">Final (Winner determined by the final score)</string>
     <string name="rulesForInterval">Rules for %1$s %2$d</string>
     <string name="defaultIntervalLabel">Round</string>
+    <string name="winSoundEffect">Sound effect for winning</string>
     <string name="hasTimeLimit">Allow time limit</string>
     <string name="decreasingTimeMsg">Time decreases from this value</string>
     <string name="maxScore">Max score:</string>
@@ -118,6 +119,7 @@
     <string name="moreInfo">more information</string>
     <string name="up">Up</string>
     <string name="down">Down</string>
+    <string name="none">None</string>
     <!-- Error messages -->
     <string name="defaultInvalid">Something went wrong</string>
 </resources>
