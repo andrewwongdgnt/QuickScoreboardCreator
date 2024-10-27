@@ -203,6 +203,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalList(
                     modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp * intervalList.size),
+                    intervalLabel = intervalLabel,
                     intervalList = intervalList,
                     onIntervalEditForTimeIsIncreasing = onIntervalEditForTimeIsIncreasing,
                     onIntervalEditForMinute = onIntervalEditForMinute,
@@ -293,6 +294,7 @@ private fun IntervalLabelEditor(
 @Composable
 private fun IntervalList(
     modifier: Modifier = Modifier,
+    intervalLabel: String,
     intervalList: List<IntervalEditingInfo>,
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
@@ -319,8 +321,11 @@ private fun IntervalList(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = stringResource(id = R.string.rulesForInterval, index + 1), style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.weight(1f))
+                val defaultIntervalLabel = stringResource(id = R.string.defaultIntervalLabel)
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(id = R.string.rulesForInterval, intervalLabel.takeIf { it.isNotEmpty() } ?: defaultIntervalLabel, index + 1),
+                    style = MaterialTheme.typography.titleMedium)
                 if (intervalList.size > 1) {
                     if (index > 0)
                         IconButton(onClick = { onIntervalMove(true, index) }) {
@@ -333,7 +338,7 @@ private fun IntervalList(
                         IconButton(onClick = { onIntervalMove(false, index) }) {
                             Icon(
                                 imageVector = TriangleDown,
-                                contentDescription = stringResource(R.string.up)
+                                contentDescription = stringResource(R.string.down)
                             )
                         }
                     val context = LocalContext.current
@@ -615,7 +620,7 @@ private fun `One interval`() =
         onIconChange = {},
         iconChanging = false,
         onIconEdit = {},
-        intervalLabel = "Period",
+        intervalLabel = "",
         onIntervalLabelChange = {},
         onIntervalEditForTimeIsIncreasing = { _, _ -> },
         onIntervalEditForMinute = { _, _ -> },

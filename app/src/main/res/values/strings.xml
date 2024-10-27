@@ -33,7 +33,8 @@
     <string name="winRuleSum">Sum (Winner determined by summing up all the scores of each round)</string>
     <string name="winRuleCount">Count (Winner determined by counting the number of rounds won)</string>
     <string name="winRuleFinal">Final (Winner determined by the final score)</string>
-    <string name="rulesForInterval">Rules for round %1$s</string>
+    <string name="rulesForInterval">Rules for %1$s %2$d</string>
+    <string name="defaultIntervalLabel">Round</string>
     <string name="hasTimeLimit">Allow time limit</string>
     <string name="decreasingTimeMsg">Time decreases from this value</string>
     <string name="maxScore">Max score:</string>
