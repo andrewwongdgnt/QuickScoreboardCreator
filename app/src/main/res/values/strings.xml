@@ -122,4 +122,6 @@
     <string name="none">None</string>
     <!-- Error messages -->
     <string name="defaultInvalid">Something went wrong</string>
+    <!-- Content description only -->
+    <string name="dropDownIndicator">Drop down indicator</string>
 </resources>

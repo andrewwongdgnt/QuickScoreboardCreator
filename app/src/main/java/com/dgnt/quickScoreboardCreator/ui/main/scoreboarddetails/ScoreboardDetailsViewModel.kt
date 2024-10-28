@@ -10,9 +10,9 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -221,7 +221,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onIntervalEditForSoundEffect(index: Int, soundEffect: IntervalEndSoundType) =
+    fun onIntervalEditForSoundEffect(index: Int, soundEffect: IntervalEndSound) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
             updateIntervalData(
                 index, intervalEditingInfo.intervalData.copy(

@@ -44,8 +44,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -59,6 +59,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
 import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleDown
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleUp
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -127,7 +128,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIconEdit: (Boolean) -> Unit,
     intervalLabel: String,
     onIntervalLabelChange: (String) -> Unit,
-    onIntervalEditForSoundEffect: (Int, IntervalEndSoundType) -> Unit,
+    onIntervalEditForSoundEffect: (Int, IntervalEndSound) -> Unit,
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
     onIntervalEditForSecond: (Int, String) -> Unit,
@@ -300,7 +301,7 @@ private fun IntervalList(
     modifier: Modifier = Modifier,
     intervalLabel: String,
     intervalList: List<IntervalEditingInfo>,
-    onIntervalEditForSoundEffect: (Int, IntervalEndSoundType) -> Unit,
+    onIntervalEditForSoundEffect: (Int, IntervalEndSound) -> Unit,
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
     onIntervalEditForMinute: (Int, String) -> Unit,
     onIntervalEditForSecond: (Int, String) -> Unit,
@@ -361,12 +362,32 @@ private fun IntervalList(
             Spacer(modifier = Modifier.height(16.dp))
             MultipleOptionsPicker(
                 header = stringResource(id = R.string.winSoundEffect),
-                options = IntervalEndSoundType.entries.map {
+                options = listOf(
                     OptionData(
-                        label = stringResource(id = it.titleRes),
-                        data = it
-                    )
-                },
+                        label = stringResource(id = IntervalEndSound.None.titleRes()),
+                        data = IntervalEndSound.None
+                    ),
+                    OptionData(
+                        label = stringResource(id = IntervalEndSound.Bell.titleRes()),
+                        data = IntervalEndSound.Bell
+                    ),
+                    OptionData(
+                        label = stringResource(id = IntervalEndSound.Buzzer.titleRes()),
+                        data = IntervalEndSound.Buzzer
+                    ),
+                    OptionData(
+                        label = stringResource(id = IntervalEndSound.LowBuzzer.titleRes()),
+                        data = IntervalEndSound.LowBuzzer
+                    ),
+                    OptionData(
+                        label = stringResource(id = IntervalEndSound.Horn.titleRes()),
+                        data = IntervalEndSound.Horn
+                    ),
+                    OptionData(
+                        label = stringResource(id = IntervalEndSound.Whistle.titleRes()),
+                        data = IntervalEndSound.Whistle
+                    ),
+                ),
                 selectedOption = intervalEditingInfo.intervalData.soundEffect,
                 onOptionSelected = { onIntervalEditForSoundEffect(index, it) }
             )
@@ -451,7 +472,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIconEdit: (Boolean) -> Unit = {},
     intervalLabel: String = "Period",
     onIntervalLabelChange: (String) -> Unit = {},
-    onIntervalEditForSoundEffect: (Int, IntervalEndSoundType) -> Unit = { _, _ -> },
+    onIntervalEditForSoundEffect: (Int, IntervalEndSound) -> Unit = { _, _ -> },
     onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit = { _, _ -> },
     onIntervalEditForMinute: (Int, String) -> Unit = { _, _ -> },
     onIntervalEditForSecond: (Int, String) -> Unit = { _, _ -> },

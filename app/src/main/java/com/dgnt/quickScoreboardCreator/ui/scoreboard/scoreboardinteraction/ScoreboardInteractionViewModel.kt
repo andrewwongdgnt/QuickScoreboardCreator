@@ -16,8 +16,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.Scoreboa
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
@@ -26,6 +26,7 @@ import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
@@ -142,8 +143,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
         }
     }
 
-    private val intervalOnEndListener: (IntervalEndSoundType) -> Unit = { soundType ->
-        soundType.rawRes?.let {
+    private val intervalOnEndListener: (IntervalEndSound) -> Unit = { sound ->
+        sound.soundEffectRes()?.let {
             sendUiEvent(UiEvent.PlaySound(it))
         }
     }

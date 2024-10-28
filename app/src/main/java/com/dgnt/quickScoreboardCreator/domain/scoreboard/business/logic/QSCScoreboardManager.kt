@@ -6,6 +6,7 @@ import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -52,7 +53,7 @@ class QSCScoreboardManager @Inject constructor(
 
     override var winnersUpdateListener: ((Set<Int>) -> Unit)? = null
 
-    override var intervalOnEndListener: ((IntervalEndSoundType) -> Unit)? = null
+    override var intervalOnEndListener: ((IntervalEndSound) -> Unit)? = null
 
     override val currentTeamSize: Int
         get() = currentScoreInfo.dataList.size

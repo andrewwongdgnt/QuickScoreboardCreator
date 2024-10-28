@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config
 
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
@@ -84,6 +85,6 @@ data class IntervalDataConfig(
             initial,
             initial,
             increasing,
-            soundEffect ?: IntervalEndSoundType.NONE
+            soundEffect?.toIntervalEndSound() ?: IntervalEndSound.None
         )
 }

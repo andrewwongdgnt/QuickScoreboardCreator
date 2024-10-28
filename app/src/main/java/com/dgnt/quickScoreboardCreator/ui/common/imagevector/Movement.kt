@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val TriangleUp: ImageVector
+val TriangleUp: ImageVector
     get() {
         if (_TriangleUp != null) {
             return _TriangleUp!!
@@ -47,7 +47,7 @@ public val TriangleUp: ImageVector
 
 private var _TriangleUp: ImageVector? = null
 
-public val TriangleDown: ImageVector
+val TriangleDown: ImageVector
     get() {
         if (_TriangleDown != null) {
             return _TriangleDown!!

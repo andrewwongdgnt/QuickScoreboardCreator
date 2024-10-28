@@ -7,10 +7,10 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -539,7 +539,7 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testEditingSoundEffect() = runTest {
             initSut()
-            sut.onIntervalEditForSoundEffect(0, IntervalEndSoundType.LOW_BUZZER)
+            sut.onIntervalEditForSoundEffect(0, IntervalEndSound.LowBuzzer)
             Assert.assertEquals(
                 listOf(
                     IntervalEditingInfo(
@@ -552,7 +552,7 @@ class ScoreboardDetailsViewModelTest {
                             current = 0,
                             initial = 0,
                             increasing = false,
-                            soundEffect = IntervalEndSoundType.LOW_BUZZER
+                            soundEffect = IntervalEndSound.LowBuzzer
                         ),
                         timeRepresentationPair = Pair("0", "0"),
                         maxScoreInput = ""
