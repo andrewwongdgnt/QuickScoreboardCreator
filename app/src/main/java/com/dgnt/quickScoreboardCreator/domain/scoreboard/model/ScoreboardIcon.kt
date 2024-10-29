@@ -9,6 +9,7 @@ enum class ScoreboardIcon(@DrawableRes val res: Int) {
     HOCKEY(R.drawable.hockey),
     SOCCER(R.drawable.soccer),
     TENNIS(R.drawable.tennis),
+    SPIKEBALL(R.drawable.spikeball),
     VOLLEYBALL(R.drawable.volleyball),
 
 }

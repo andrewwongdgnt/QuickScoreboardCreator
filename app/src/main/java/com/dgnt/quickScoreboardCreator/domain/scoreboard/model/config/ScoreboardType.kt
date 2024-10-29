@@ -15,6 +15,6 @@ enum class ScoreboardType(
 ) {
     BASKETBALL(R.raw.basketball, R.string.basketball, R.string.basketball_description, ScoreboardIcon.BASKETBALL, R.string.quarter, R.string.fouls),
     HOCKEY(R.raw.hockey, R.string.hockey, R.string.hockey_description, ScoreboardIcon.HOCKEY, R.string.period, R.string.penalties),
-    SPIKEBALL(R.raw.spikeball, R.string.spikeball, R.string.spikeball_description, ScoreboardIcon.BASKETBALL, R.string.game),
+    SPIKEBALL(R.raw.spikeball, R.string.spikeball, R.string.spikeball_description, ScoreboardIcon.SPIKEBALL, R.string.game),
     TENNIS(R.raw.tennis, R.string.tennis, R.string.tennis_description, ScoreboardIcon.TENNIS, R.string.game),
 }
