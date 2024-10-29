@@ -43,6 +43,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.DateDisplayUtil.getDayOfMonthSu
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -196,7 +197,7 @@ private fun CategorizedHistoryListContent(
                                     .fillMaxWidth(),
                                 title = history.title,
                                 description = history.description,
-                                iconRes = history.icon.res,
+                                iconRes = history.icon.iconRes(),
                                 supportingText = "${getDayOfMonthSuffix(history.lastModified.dayOfMonth)}, ${history.lastModified.toString(DateTimeFormat.forPattern("h:mm a"))}",
                                 onClick = {
                                     onLaunch(history.id)

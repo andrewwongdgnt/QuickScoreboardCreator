@@ -48,6 +48,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -201,7 +202,7 @@ private fun ScoreboardListInnerContent(
                                     .fillMaxWidth(),
                                 title = scoreboard.title,
                                 description = scoreboard.description,
-                                iconRes = scoreboard.icon.res,
+                                iconRes = scoreboard.icon.iconRes(),
                                 onClick = {
                                     onLaunch(scoreboard.scoreboardIdentifier)
                                 }

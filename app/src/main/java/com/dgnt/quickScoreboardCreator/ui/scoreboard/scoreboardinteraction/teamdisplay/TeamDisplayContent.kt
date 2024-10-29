@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 
 
 @Composable
@@ -87,7 +88,7 @@ private fun ImageContent(
     when (teamDisplay) {
         is TeamDisplay.Selected -> {
             Image(
-                painter = painterResource(teamDisplay.icon.res),
+                painter = painterResource(teamDisplay.icon.iconRes()),
                 null,
                 modifier = imageModifier
             )

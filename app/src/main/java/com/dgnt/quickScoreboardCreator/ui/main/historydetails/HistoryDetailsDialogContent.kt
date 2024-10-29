@@ -28,6 +28,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -136,7 +137,7 @@ private fun HistoryDetailsInnerDialogContent(
 
 
                 IconDisplay(
-                    iconRes = icon?.res,
+                    iconRes = icon?.iconRes(),
                     onClick = { onIconEdit(true) }
                 )
             }

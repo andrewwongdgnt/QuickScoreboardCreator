@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.header
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 
 @Composable
 fun ScoreboardIconPicker(
@@ -30,7 +31,7 @@ fun ScoreboardIconPicker(
         }
         items(ScoreboardIcon.entries.toTypedArray()) { icon ->
             Image(
-                painterResource(icon.res),
+                painterResource(icon.iconRes()),
                 null,
                 modifier = Modifier
                     .padding(2.dp)

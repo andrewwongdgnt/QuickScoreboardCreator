@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -54,7 +55,7 @@ fun CategorizedTeamListContent(
                                 .fillMaxWidth(),
                             title = team.title,
                             description = team.description,
-                            iconRes = team.icon.res,
+                            iconRes = team.icon.iconRes(),
                             onClick = {
                                 onItemClick(team.id)
                             }

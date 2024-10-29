@@ -61,6 +61,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.Speaker
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleDown
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleUp
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
@@ -194,7 +195,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IconDisplay(
-                    iconRes = icon?.res,
+                    iconRes = icon?.iconRes(),
                     onClick = { onIconEdit(true) }
                 )
                 Spacer(modifier = Modifier.height(16.dp))

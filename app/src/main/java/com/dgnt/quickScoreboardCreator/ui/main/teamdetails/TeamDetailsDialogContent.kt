@@ -40,6 +40,8 @@ import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.header
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -131,7 +133,7 @@ private fun TeamDetailsInnerDialogContent(
                         val icons = entry.value
                         header {
                             Text(
-                                stringResource(id = iconGroup.res),
+                                stringResource(id = iconGroup.titleRes()),
                                 modifier = if (index > 0) Modifier.padding(
                                     start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
                                 ) else Modifier
@@ -139,7 +141,7 @@ private fun TeamDetailsInnerDialogContent(
                         }
                         items(icons.toTypedArray()) { icon ->
                             Image(
-                                painterResource(icon.res),
+                                painterResource(icon.iconRes()),
                                 null,
                                 modifier = Modifier
                                     .padding(2.dp)
@@ -177,7 +179,7 @@ private fun TeamDetailsInnerDialogContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 IconDisplay(
-                    iconRes = icon?.res,
+                    iconRes = icon?.iconRes(),
                     onClick = { onIconEdit(true) }
                 )
 

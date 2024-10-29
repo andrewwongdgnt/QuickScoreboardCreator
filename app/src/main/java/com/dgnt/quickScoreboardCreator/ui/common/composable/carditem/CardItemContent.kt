@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 
 @Composable
 fun CardItemContent(
@@ -94,7 +95,7 @@ private fun `Normal`() =
     CardItemContent(
         title = "Dragons",
         description = "Legendary creatures",
-        iconRes = TeamIcon.ALIEN.res,
+        iconRes = TeamIcon.ALIEN.iconRes(),
         onClick = {},
         supportingText = "6th, 2:30 PM"
     ) {
@@ -112,7 +113,7 @@ private fun `Long description`() =
     CardItemContent(
         title = "Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
-        iconRes = TeamIcon.DRAGON.res,
+        iconRes = TeamIcon.DRAGON.iconRes(),
         onClick = {},
         supportingText = "6th, 2:30 PM"
     ) {
@@ -130,7 +131,7 @@ private fun `Long description and long description`() =
     CardItemContent(
         title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
-        iconRes = TeamIcon.DRAGON.res,
+        iconRes = TeamIcon.DRAGON.iconRes(),
         onClick = {}
     ) {
         IconButton(onClick = { }) {
@@ -147,6 +148,6 @@ private fun `Cannot Launch`() =
     CardItemContent(
         title = "Dragons Dragons Dragons Dragons Dragons Dragons Dragons Dragons",
         description = "Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures Legendary creatures",
-        iconRes = TeamIcon.DRAGON.res,
+        iconRes = TeamIcon.DRAGON.iconRes(),
         onClick = {}
     )
