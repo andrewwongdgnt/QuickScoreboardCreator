@@ -40,7 +40,6 @@
     <string name="decreasingTimeMsg">Time decreases from this value</string>
     <string name="maxScore">Max score:</string>
     <string name="allowDeuceAdvantage">Allow Deuce / Advantage</string>
-    <string name="addRound">Add round</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
@@ -124,4 +123,9 @@
     <string name="defaultInvalid">Something went wrong</string>
     <!-- Content description only -->
     <string name="dropDownIndicator">Drop down indicator</string>
+    <string name="bellSoundEffect">Bell sound effect preview</string>
+    <string name="buzzerSoundEffect">Buzzer sound effect preview</string>
+    <string name="lowBuzzerSoundEffect">Low buzzer sound effect preview</string>
+    <string name="hornSoundEffect">Horn sound effect preview</string>
+    <string name="whistleSoundEffect">Whistle sound effect preview</string>
 </resources>

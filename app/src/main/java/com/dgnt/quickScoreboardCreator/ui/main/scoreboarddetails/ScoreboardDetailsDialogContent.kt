@@ -2,6 +2,7 @@
 
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
+import android.media.MediaPlayer
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -57,8 +58,10 @@ import com.dgnt.quickScoreboardCreator.ui.common.composable.MultipleOptionsPicke
 import com.dgnt.quickScoreboardCreator.ui.common.composable.OptionData
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
 import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
+import com.dgnt.quickScoreboardCreator.ui.common.imagevector.Speaker
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleDown
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleUp
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
@@ -224,7 +227,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = { onIntervalAdd(null) }) {
-                        Text(text = stringResource(R.string.addRound))
+                        Text(text = stringResource(R.string.add))
                     }
                 }
             }
@@ -311,6 +314,7 @@ private fun IntervalList(
     onIntervalMove: (Boolean, Int) -> Unit,
 ) {
 
+    val context = LocalContext.current
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
@@ -347,7 +351,6 @@ private fun IntervalList(
                                 contentDescription = stringResource(R.string.down)
                             )
                         }
-                    val context = LocalContext.current
                     Icon(modifier = Modifier.combinedClickable(
                         onClick = { Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show() },
                         onLongClick = { onIntervalRemove(index) }
@@ -359,9 +362,22 @@ private fun IntervalList(
                 }
             }
 
+            val playSoundEffect: (Int?) -> Unit = { rawRes ->
+                rawRes?.let {
+                    val mMediaPlayer = MediaPlayer.create(context, it)
+                    mMediaPlayer.start()
+                }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
             MultipleOptionsPicker(
                 header = stringResource(id = R.string.winSoundEffect),
+                headerIconPair = intervalEditingInfo.intervalData.soundEffect.takeUnless { it == IntervalEndSound.None }?.let {
+                    Speaker to ""
+                },
+                onHeaderIconClick = {
+                    playSoundEffect(intervalEditingInfo.intervalData.soundEffect.soundEffectRes())
+                },
                 options = listOf(
                     OptionData(
                         label = stringResource(id = IntervalEndSound.None.titleRes()),
@@ -369,23 +385,33 @@ private fun IntervalList(
                     ),
                     OptionData(
                         label = stringResource(id = IntervalEndSound.Bell.titleRes()),
-                        data = IntervalEndSound.Bell
+                        data = IntervalEndSound.Bell,
+                        iconPair = Speaker to stringResource(id = R.string.bellSoundEffect),
+                        onIconClick = { playSoundEffect(IntervalEndSound.Bell.soundEffectRes()) }
                     ),
                     OptionData(
                         label = stringResource(id = IntervalEndSound.Buzzer.titleRes()),
-                        data = IntervalEndSound.Buzzer
+                        data = IntervalEndSound.Buzzer,
+                        iconPair = Speaker to stringResource(id = R.string.buzzerSoundEffect),
+                        onIconClick = { playSoundEffect(IntervalEndSound.Buzzer.soundEffectRes()) }
                     ),
                     OptionData(
                         label = stringResource(id = IntervalEndSound.LowBuzzer.titleRes()),
-                        data = IntervalEndSound.LowBuzzer
+                        data = IntervalEndSound.LowBuzzer,
+                        iconPair = Speaker to stringResource(id = R.string.lowBuzzerSoundEffect),
+                        onIconClick = { playSoundEffect(IntervalEndSound.LowBuzzer.soundEffectRes()) }
                     ),
                     OptionData(
                         label = stringResource(id = IntervalEndSound.Horn.titleRes()),
-                        data = IntervalEndSound.Horn
+                        data = IntervalEndSound.Horn,
+                        iconPair = Speaker to stringResource(id = R.string.hornSoundEffect),
+                        onIconClick = { playSoundEffect(IntervalEndSound.Horn.soundEffectRes()) }
                     ),
                     OptionData(
                         label = stringResource(id = IntervalEndSound.Whistle.titleRes()),
-                        data = IntervalEndSound.Whistle
+                        data = IntervalEndSound.Whistle,
+                        iconPair = Speaker to stringResource(id = R.string.whistleSoundEffect),
+                        onIconClick = { playSoundEffect(IntervalEndSound.Whistle.soundEffectRes()) }
                     ),
                 ),
                 selectedOption = intervalEditingInfo.intervalData.soundEffect,
