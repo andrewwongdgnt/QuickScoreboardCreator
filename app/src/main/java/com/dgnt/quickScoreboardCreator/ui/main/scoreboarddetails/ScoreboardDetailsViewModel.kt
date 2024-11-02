@@ -13,6 +13,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultSco
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -294,6 +296,24 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
+    fun onIntervalEditForPlayerCount(index: Int, playerCount: Int) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            val dataList = intervalEditingInfo.scoreInfo.dataList
+            val newDataList = if (playerCount < dataList.size) {
+                dataList.subList(0, playerCount)
+            } else if (playerCount > dataList.size) {
+                dataList + (0 until (playerCount - dataList.size)).map {
+                    generateDefaultScoreGroup()
+                }
+            } else
+                dataList
+            updateScoreInfo(
+                index, intervalEditingInfo.scoreInfo.copy(
+                    dataList = newDataList
+                )
+            )
+        }
+
     private fun updateScoreInfo(index: Int, scoreInfo: ScoreInfo) {
         val newList = intervalList.value.toMutableList()
         newList[index] = newList[index].copy(scoreInfo = scoreInfo)
@@ -318,13 +338,14 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _intervalList.value = newList
     }
 
-
     private fun generateGenericIntervalInfo() =
         IntervalEditingInfo(
             scoreInfo = ScoreInfo(
                 scoreRule = ScoreRule.None,
                 scoreToDisplayScoreMap = mapOf(),
-                dataList = listOf()
+                dataList = listOf(
+                    generateDefaultScoreGroup()
+                )
             ),
             intervalData = IntervalData(
                 current = 0,
@@ -334,8 +355,17 @@ class ScoreboardDetailsViewModel @Inject constructor(
             timeRepresentationPair = timeTransformer.toTimeData(0).let {
                 Pair(it.minute.toString(), it.second.toString())
             },
-            maxScoreInput = ""
+            maxScoreInput = "",
         )
+
+    private fun generateDefaultScoreGroup() = ScoreGroup(
+        primary = ScoreData(
+            current = 0,
+            initial = 0,
+            increments = listOf(1)
+        ),
+        secondary = null
+    )
 
     private fun getFilteredValue(value: String) = if (value.isEmpty())
         ""

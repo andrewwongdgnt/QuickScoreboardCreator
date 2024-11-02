@@ -105,6 +105,7 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForSecond = viewModel::onIntervalEditForSecond,
         onIntervalEditForAllowDeuceAdv = viewModel::onIntervalEditForAllowDeuceAdv,
         onIntervalEditForMaxScoreInput = viewModel::onIntervalEditForMaxScoreInput,
+        onIntervalEditForPlayerCount = viewModel::onIntervalEditForPlayerCount,
         onIntervalAdd = viewModel::onIntervalAdd,
         onIntervalRemove = viewModel::onIntervalRemove,
         onIntervalMove = viewModel::onIntervalMove,
@@ -138,6 +139,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForSecond: (Int, String) -> Unit,
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
+    onIntervalEditForPlayerCount: (Int, Int) -> Unit,
     onIntervalAdd: (Int?) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
@@ -219,6 +221,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                     onIntervalEditForSecond = onIntervalEditForSecond,
                     onIntervalEditForAllowDeuceAdv = onIntervalEditForAllowDeuceAdv,
                     onIntervalEditForMaxScoreInput = onIntervalEditForMaxScoreInput,
+                    onIntervalEditForPlayerCount = onIntervalEditForPlayerCount,
                     onIntervalRemove = onIntervalRemove,
                     onIntervalMove = onIntervalMove
                 )
@@ -311,6 +314,7 @@ private fun IntervalList(
     onIntervalEditForSecond: (Int, String) -> Unit,
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
+    onIntervalEditForPlayerCount: (Int, Int) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
 ) {
@@ -322,6 +326,10 @@ private fun IntervalList(
         verticalArrangement = Arrangement.Center
     ) {
         itemsIndexed(intervalList) { index, intervalEditingInfo ->
+
+            val scoreInfo = intervalEditingInfo.scoreInfo
+            val intervalData = intervalEditingInfo.intervalData
+
             val dividerColor = MaterialTheme.colorScheme.onBackground
             HorizontalDivider(
                 color = dividerColor,
@@ -329,13 +337,16 @@ private fun IntervalList(
                     .padding(vertical = 6.dp)
                     .fillMaxWidth(),
             )
+
+            // Interval Header
+            val defaultIntervalLabel = stringResource(id = R.string.defaultIntervalLabel)
+            val resolvedIntervalLabel = intervalLabel.takeIf { it.isNotEmpty() } ?: defaultIntervalLabel
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                val defaultIntervalLabel = stringResource(id = R.string.defaultIntervalLabel)
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.rulesForInterval, intervalLabel.takeIf { it.isNotEmpty() } ?: defaultIntervalLabel, index + 1),
+                    text = stringResource(id = R.string.rulesForInterval, resolvedIntervalLabel, index + 1),
                     style = MaterialTheme.typography.titleMedium)
                 if (intervalList.size > 1) {
                     if (index > 0)
@@ -363,21 +374,22 @@ private fun IntervalList(
                 }
             }
 
+            // Sound Effect
+
+            Spacer(modifier = Modifier.height(16.dp))
             val playSoundEffect: (Int?) -> Unit = { rawRes ->
                 rawRes?.let {
                     val mMediaPlayer = MediaPlayer.create(context, it)
                     mMediaPlayer.start()
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
             MultipleOptionsPicker(
                 header = stringResource(id = R.string.winSoundEffect),
-                headerIconPair = intervalEditingInfo.intervalData.soundEffect.takeUnless { it == IntervalEndSound.None }?.let {
+                headerIconPair = intervalData.soundEffect.takeUnless { it == IntervalEndSound.None }?.let {
                     Speaker to ""
                 },
                 onHeaderIconClick = {
-                    playSoundEffect(intervalEditingInfo.intervalData.soundEffect.soundEffectRes())
+                    playSoundEffect(intervalData.soundEffect.soundEffectRes())
                 },
                 options = listOf(
                     OptionData(
@@ -415,13 +427,13 @@ private fun IntervalList(
                         onIconClick = { playSoundEffect(IntervalEndSound.Whistle.soundEffectRes()) }
                     ),
                 ),
-                selectedOption = intervalEditingInfo.intervalData.soundEffect,
+                selectedOption = intervalData.soundEffect,
                 onOptionSelected = { onIntervalEditForSoundEffect(index, it) }
             )
 
-            val scoreInfo = intervalEditingInfo.scoreInfo
-            val intervalData = intervalEditingInfo.intervalData
+            //Time and Max Score
 
+            Spacer(modifier = Modifier.height(16.dp))
             LabelSwitch(
                 label = stringResource(id = R.string.hasTimeLimit),
                 checked = !intervalData.increasing,
@@ -478,6 +490,22 @@ private fun IntervalList(
 
             }
 
+            //Player count
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            MultipleOptionsPicker(
+                header = stringResource(id = R.string.playerCount, resolvedIntervalLabel),
+                options = (1..10).map {
+                    OptionData(
+                        label = it.toString(),
+                        data = it
+                    )
+                },
+
+                selectedOption = scoreInfo.dataList.size,
+                onOptionSelected = { onIntervalEditForPlayerCount(index, it) }
+            )
+
 
         }
     }
@@ -505,6 +533,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIntervalEditForSecond: (Int, String) -> Unit = { _, _ -> },
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit = { _, _ -> },
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit = { _, _ -> },
+    onIntervalEditForPlayerCount: (Int, Int) -> Unit = { _, _ -> },
     onIntervalAdd: (Int?) -> Unit = { _ -> },
     onIntervalRemove: (Int) -> Unit = { _ -> },
     onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
@@ -536,6 +565,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
         onIntervalEditForSecond,
         onIntervalEditForAllowDeuceAdv,
         onIntervalEditForMaxScoreInput,
+        onIntervalEditForPlayerCount,
         onIntervalAdd,
         onIntervalRemove,
         onIntervalMove,

@@ -11,6 +11,8 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.Scoreboard
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.WinRuleType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
@@ -293,7 +295,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -318,7 +329,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -332,7 +352,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -357,7 +386,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -378,7 +416,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -406,7 +453,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -420,7 +476,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -440,7 +505,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -454,7 +528,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -474,7 +557,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -488,7 +580,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -508,7 +609,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -522,7 +632,16 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
                     ),
                     intervalData = IntervalData(
                         current = 0,
@@ -538,51 +657,18 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testEditingSoundEffect() = runTest {
-            initSut()
-            sut.onIntervalEditForSoundEffect(0, IntervalEndSound.LowBuzzer)
-            Assert.assertEquals(
-                listOf(
-                    IntervalEditingInfo(
-                        scoreInfo = ScoreInfo(
-                            scoreRule = ScoreRule.None,
-                            scoreToDisplayScoreMap = mapOf(),
-                            dataList = listOf()
-                        ),
-                        intervalData = IntervalData(
-                            current = 0,
-                            initial = 0,
-                            increasing = false,
-                            soundEffect = IntervalEndSound.LowBuzzer
-                        ),
-                        timeRepresentationPair = Pair("0", "0"),
-                        maxScoreInput = ""
-                    ),
-                ), sut.intervalList.value
-            )
-        }
+        initSut()
+        sut.onIntervalEditForSoundEffect(0, IntervalEndSound.LowBuzzer)
+        Assert.assertEquals(
+            IntervalEndSound.LowBuzzer, sut.intervalList.value[0].intervalData.soundEffect
+        )
+    }
 
     @Test
     fun testEditingIsTimeIncreasing() = runTest {
         initSut()
         sut.onIntervalEditForTimeIsIncreasing(0, true)
-        Assert.assertEquals(
-            listOf(
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.None,
-                        scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
-                    ),
-                    intervalData = IntervalData(
-                        current = 0,
-                        initial = 0,
-                        increasing = true
-                    ),
-                    timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = ""
-                ),
-            ), sut.intervalList.value
-        )
+        Assert.assertTrue(sut.intervalList.value[0].intervalData.increasing)
     }
 
     @Test
@@ -590,24 +676,8 @@ class ScoreboardDetailsViewModelTest {
         every { timeTransformer.fromTimeData(TimeData(8, 0, 0)) } answers { 480000 }
         initSut()
         sut.onIntervalEditForMinute(0, "8")
-        Assert.assertEquals(
-            listOf(
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.None,
-                        scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
-                    ),
-                    intervalData = IntervalData(
-                        current = 0,
-                        initial = 480000,
-                        increasing = false
-                    ),
-                    timeRepresentationPair = Pair("8", "0"),
-                    maxScoreInput = ""
-                ),
-            ), sut.intervalList.value
-        )
+        Assert.assertEquals(480000, sut.intervalList.value[0].intervalData.initial)
+        Assert.assertEquals(Pair("8", "0"), sut.intervalList.value[0].timeRepresentationPair)
     }
 
     @Test
@@ -615,72 +685,22 @@ class ScoreboardDetailsViewModelTest {
         every { timeTransformer.fromTimeData(TimeData(0, 9, 0)) } answers { 9000 }
         initSut()
         sut.onIntervalEditForSecond(0, "9")
-        Assert.assertEquals(
-            listOf(
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.None,
-                        scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
-                    ),
-                    intervalData = IntervalData(
-                        current = 0,
-                        initial = 9000,
-                        increasing = false
-                    ),
-                    timeRepresentationPair = Pair("0", "9"),
-                    maxScoreInput = ""
-                ),
-            ), sut.intervalList.value
-        )
+        Assert.assertEquals(9000, sut.intervalList.value[0].intervalData.initial)
+        Assert.assertEquals(Pair("0", "9"), sut.intervalList.value[0].timeRepresentationPair)
     }
 
     @Test
     fun testEditingForAllowDeuceAdv() = runTest {
         initSut()
         sut.onIntervalEditForAllowDeuceAdv(0, true)
-        Assert.assertEquals(
-            listOf(
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.Trigger.DeuceAdvantage(0),
-                        scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
-                    ),
-                    intervalData = IntervalData(
-                        current = 0,
-                        initial = 0,
-                        increasing = false
-                    ),
-                    timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = ""
-                ),
-            ), sut.intervalList.value
-        )
+        Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(0), sut.intervalList.value[0].scoreInfo.scoreRule)
     }
 
     @Test
     fun testEditingForMaxScoreInput() = runTest {
         initSut()
         sut.onIntervalEditForMaxScoreInput(0, "77")
-        Assert.assertEquals(
-            listOf(
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.None,
-                        scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
-                    ),
-                    intervalData = IntervalData(
-                        current = 0,
-                        initial = 0,
-                        increasing = false
-                    ),
-                    timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "77"
-                ),
-            ), sut.intervalList.value
-        )
+        Assert.assertEquals("77", sut.intervalList.value[0].maxScoreInput)
     }
 
     @Test
@@ -688,24 +708,8 @@ class ScoreboardDetailsViewModelTest {
         initSut()
         sut.onIntervalEditForMaxScoreInput(0, "77")
         sut.onIntervalEditForAllowDeuceAdv(0, true)
-        Assert.assertEquals(
-            listOf(
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.Trigger.DeuceAdvantage(77),
-                        scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
-                    ),
-                    intervalData = IntervalData(
-                        current = 0,
-                        initial = 0,
-                        increasing = false
-                    ),
-                    timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "77"
-                ),
-            ), sut.intervalList.value
-        )
+        Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(77), sut.intervalList.value[0].scoreInfo.scoreRule)
+        Assert.assertEquals("77", sut.intervalList.value[0].maxScoreInput)
     }
 
     @Test
@@ -713,23 +717,92 @@ class ScoreboardDetailsViewModelTest {
         initSut()
         sut.onIntervalEditForMaxScoreInput(0, "20")
         sut.onIntervalEditForAllowDeuceAdv(0, false)
+        Assert.assertEquals(ScoreRule.Trigger.Max(20), sut.intervalList.value[0].scoreInfo.scoreRule)
+        Assert.assertEquals("20", sut.intervalList.value[0].maxScoreInput)
+    }
+
+    @Test
+    fun testEditingForPlayerCount() = runTest {
+        initSut()
+        // already has 1 player
+        sut.onIntervalEditForPlayerCount(0, 4)
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.Trigger.Max(20),
-                        scoreToDisplayScoreMap = mapOf(),
-                        dataList = listOf()
-                    ),
-                    intervalData = IntervalData(
+                ScoreGroup(
+                    primary = ScoreData(
                         current = 0,
                         initial = 0,
-                        increasing = false
+                        increments = listOf(1)
                     ),
-                    timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "20"
+                    secondary = null
                 ),
-            ), sut.intervalList.value
+                ScoreGroup(
+                    primary = ScoreData(
+                        current = 0,
+                        initial = 0,
+                        increments = listOf(1)
+                    ),
+                    secondary = null
+                ),
+                ScoreGroup(
+                    primary = ScoreData(
+                        current = 0,
+                        initial = 0,
+                        increments = listOf(1)
+                    ),
+                    secondary = null
+                ),
+                ScoreGroup(
+                    primary = ScoreData(
+                        current = 0,
+                        initial = 0,
+                        increments = listOf(1)
+                    ),
+                    secondary = null
+                )
+            ), sut.intervalList.value[0].scoreInfo.dataList
+        )
+        sut.onIntervalEditForPlayerCount(0, 2)
+        Assert.assertEquals(
+            listOf(
+                ScoreGroup(
+                    primary = ScoreData(
+                        current = 0,
+                        initial = 0,
+                        increments = listOf(1)
+                    ),
+                    secondary = null
+                ),
+                ScoreGroup(
+                    primary = ScoreData(
+                        current = 0,
+                        initial = 0,
+                        increments = listOf(1)
+                    ),
+                    secondary = null
+                )
+            ), sut.intervalList.value[0].scoreInfo.dataList
+        )
+        sut.onIntervalEditForPlayerCount(0, 2)
+        Assert.assertEquals(
+            listOf(
+                ScoreGroup(
+                    primary = ScoreData(
+                        current = 0,
+                        initial = 0,
+                        increments = listOf(1)
+                    ),
+                    secondary = null
+                ),
+                ScoreGroup(
+                    primary = ScoreData(
+                        current = 0,
+                        initial = 0,
+                        increments = listOf(1)
+                    ),
+                    secondary = null
+                )
+            ), sut.intervalList.value[0].scoreInfo.dataList
         )
     }
 }
