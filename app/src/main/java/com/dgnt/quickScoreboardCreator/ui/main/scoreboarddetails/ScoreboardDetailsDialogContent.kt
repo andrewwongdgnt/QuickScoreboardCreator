@@ -66,8 +66,8 @@ import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MAX_INCREMENTS_COUNT
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MAX_TEAMS
-import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MIN_INCREMENTS_COUNT
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MIN_TEAMS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -495,7 +495,7 @@ private fun IntervalList(
             }
 
             //Team count
-            
+
             Spacer(modifier = Modifier.height(16.dp))
             MultipleOptionsPicker(
                 header = stringResource(id = R.string.teamCountHeader, resolvedIntervalLabel),
@@ -524,7 +524,8 @@ private fun IntervalList(
                     text = stringResource(id = R.string.primaryIncrementsHeader),
                     style = MaterialTheme.typography.titleMedium
                 )
-                if ((firstScoreGroup?.primary?.increments?.size ?: 0 ) <= MIN_INCREMENTS_COUNT) {
+
+                if ((firstScoreGroup?.primary?.increments?.size ?: 0 ) < MAX_INCREMENTS_COUNT) {
                     IconButton(onClick = {  }) {
                         Icon(
                             imageVector = Icons.Default.Add,

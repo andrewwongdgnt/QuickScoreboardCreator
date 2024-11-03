@@ -53,7 +53,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
     companion object {
         const val MIN_TEAMS = 1
         const val MAX_TEAMS = 16
-        const val MIN_INCREMENTS_COUNT = 1
         const val MAX_INCREMENTS_COUNT = 3
     }
 
@@ -314,6 +313,25 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 }
             } else
                 dataList
+            updateScoreInfo(
+                index, intervalEditingInfo.scoreInfo.copy(
+                    dataList = newDataList
+                )
+            )
+        }
+
+    fun onIntervalEditForPrimaryIncrement(index: Int) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            val newDataList = intervalEditingInfo.scoreInfo.dataList.map { scoreGroup ->
+                val primary = scoreGroup.primary
+                val newIncrements = primary.increments + listOf(1)
+                val newPrimary = primary.copy(
+                    increments = newIncrements
+                )
+                scoreGroup.copy(
+                    primary = newPrimary
+                )
+            }
             updateScoreInfo(
                 index, intervalEditingInfo.scoreInfo.copy(
                     dataList = newDataList

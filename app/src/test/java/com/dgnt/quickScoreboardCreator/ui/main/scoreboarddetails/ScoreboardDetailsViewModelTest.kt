@@ -805,4 +805,22 @@ class ScoreboardDetailsViewModelTest {
             ), sut.intervalList.value[0].scoreInfo.dataList
         )
     }
+
+    @Test
+    fun testEditingForPrimaryIncrement() = runTest {
+        initSut()
+        sut.onIntervalEditForTeamCount(0, 2)
+        val firstScoreGroups = sut.intervalList.value[0].scoreInfo.dataList
+        Assert.assertEquals(listOf(1), firstScoreGroups[0].primary.increments)
+        Assert.assertEquals(listOf(1), firstScoreGroups[1].primary.increments)
+        sut.onIntervalEditForPrimaryIncrement(0)
+        val firstScoreGroups2 = sut.intervalList.value[0].scoreInfo.dataList
+        Assert.assertEquals(listOf(1, 1), firstScoreGroups2[0].primary.increments)
+        Assert.assertEquals(listOf(1, 1), firstScoreGroups2[1].primary.increments)
+        sut.onIntervalEditForPrimaryIncrement(0)
+        val firstScoreGroups3 = sut.intervalList.value[0].scoreInfo.dataList
+        Assert.assertEquals(listOf(1, 1), firstScoreGroups3[0].primary.increments)
+        Assert.assertEquals(listOf(1, 1), firstScoreGroups3[1].primary.increments)
+        Assert.assertEquals(listOf(1, 1), firstScoreGroups3[2].primary.increments)
+    }
 }
