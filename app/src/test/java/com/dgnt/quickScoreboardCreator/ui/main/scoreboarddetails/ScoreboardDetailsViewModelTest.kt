@@ -722,10 +722,10 @@ class ScoreboardDetailsViewModelTest {
     }
 
     @Test
-    fun testEditingForPlayerCount() = runTest {
+    fun testEditingForTeamCount() = runTest {
         initSut()
-        // already has 1 player
-        sut.onIntervalEditForPlayerCount(0, 4)
+        // already has 1 team
+        sut.onIntervalEditForTeamCount(0, 4)
         Assert.assertEquals(
             listOf(
                 ScoreGroup(
@@ -762,7 +762,7 @@ class ScoreboardDetailsViewModelTest {
                 )
             ), sut.intervalList.value[0].scoreInfo.dataList
         )
-        sut.onIntervalEditForPlayerCount(0, 2)
+        sut.onIntervalEditForTeamCount(0, 2)
         Assert.assertEquals(
             listOf(
                 ScoreGroup(
@@ -783,7 +783,7 @@ class ScoreboardDetailsViewModelTest {
                 )
             ), sut.intervalList.value[0].scoreInfo.dataList
         )
-        sut.onIntervalEditForPlayerCount(0, 2)
+        sut.onIntervalEditForTeamCount(0, 2)
         Assert.assertEquals(
             listOf(
                 ScoreGroup(

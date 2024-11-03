@@ -87,7 +87,7 @@ class QSCScoreboardManagerTest {
                     )
         )
 
-        run `increase player 1 by 2`@{
+        run `increase team 1 by 2`@{
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -102,7 +102,7 @@ class QSCScoreboardManagerTest {
             }
             resetMocks()
         }
-        run `increase player 1 by 3`@{
+        run `increase team 1 by 3`@{
             sut.updateScore(true, 0, 1)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -118,7 +118,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 2 by 3`@{
+        run `increase team 2 by 3`@{
             sut.updateScore(true, 1, 1)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -134,7 +134,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 2 by 3`@{
+        run `increase team 2 by 3`@{
             sut.updateScore(true, 1, 1)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -175,7 +175,7 @@ class QSCScoreboardManagerTest {
                     )
         )
 
-        run `increase player 1 secondary by 1`@{
+        run `increase team 1 secondary by 1`@{
             sut.updateScore(false, 0, 0)
             verify(exactly = 1) {
                 sut.secondaryScoresUpdateListener?.invoke(
@@ -191,7 +191,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 2 secondary by 1`@{
+        run `increase team 2 secondary by 1`@{
             sut.updateScore(false, 1, 0)
             verify(exactly = 1) {
                 sut.secondaryScoresUpdateListener?.invoke(
@@ -340,7 +340,7 @@ class QSCScoreboardManagerTest {
                         0, 0
                     )
         )
-        run `increase player 1 by 1`@{
+        run `increase team 1 by 1`@{
 
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
@@ -356,7 +356,7 @@ class QSCScoreboardManagerTest {
             }
             resetMocks()
         }
-        run `increase player 1 by 1`@{
+        run `increase team 1 by 1`@{
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -371,7 +371,7 @@ class QSCScoreboardManagerTest {
             }
             resetMocks()
         }
-        run `increase player 1 by 1`@{
+        run `increase team 1 by 1`@{
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -398,7 +398,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 2 by 20`@{
+        run `increase team 2 by 20`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -483,7 +483,7 @@ class QSCScoreboardManagerTest {
                         5, 5
                     ),
         )
-        run `increase player 1 by 1`@{
+        run `increase team 1 by 1`@{
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -499,7 +499,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 1 by 1`@{
+        run `increase team 1 by 1`@{
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -514,7 +514,7 @@ class QSCScoreboardManagerTest {
             }
             resetMocks()
         }
-        run `increase player 2 by 1`@{
+        run `increase team 2 by 1`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -529,7 +529,7 @@ class QSCScoreboardManagerTest {
             }
             resetMocks()
         }
-        run `increase player 2 by 1`@{
+        run `increase team 2 by 1`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -545,7 +545,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 1 by 1`@{
+        run `increase team 1 by 1`@{
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -561,7 +561,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 2 by 1`@{
+        run `increase team 2 by 1`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -576,7 +576,7 @@ class QSCScoreboardManagerTest {
             }
             resetMocks()
         }
-        run `increase player 2 by 1`@{
+        run `increase team 2 by 1`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -592,7 +592,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 2 by 1`@{
+        run `increase team 2 by 1`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -618,7 +618,7 @@ class QSCScoreboardManagerTest {
             verify(exactly = 1) { sut.teamSizeUpdateListener?.invoke(2) }
             resetMocks()
         }
-        run `increase player 2 by 1`@{
+        run `increase team 2 by 1`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
@@ -634,7 +634,7 @@ class QSCScoreboardManagerTest {
             resetMocks()
         }
 
-        run `increase player 2 by 1`@{
+        run `increase team 2 by 1`@{
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(

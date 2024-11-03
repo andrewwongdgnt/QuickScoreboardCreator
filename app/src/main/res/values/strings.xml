@@ -42,7 +42,7 @@
     <string name="decreasingTimeMsg">Time decreases from this value</string>
     <string name="maxScore">Max score:</string>
     <string name="allowDeuceAdvantage">Allow Deuce / Advantage</string>
-    <string name="playerCount">Number of players for this %1$s</string>
+    <string name="teamCountHeader">Number of teams for this %1$s</string>
     <string name="primaryIncrementsHeader">How many ways to score?</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>

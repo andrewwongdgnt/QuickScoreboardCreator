@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -65,9 +66,9 @@ import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MAX_PLAYERS
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MAX_TEAMS
 import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MIN_INCREMENTS_COUNT
-import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MIN_PLAYERS
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MIN_TEAMS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -108,7 +109,7 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForSecond = viewModel::onIntervalEditForSecond,
         onIntervalEditForAllowDeuceAdv = viewModel::onIntervalEditForAllowDeuceAdv,
         onIntervalEditForMaxScoreInput = viewModel::onIntervalEditForMaxScoreInput,
-        onIntervalEditForPlayerCount = viewModel::onIntervalEditForPlayerCount,
+        onIntervalEditForTeamCount = viewModel::onIntervalEditForTeamCount,
         onIntervalAdd = viewModel::onIntervalAdd,
         onIntervalRemove = viewModel::onIntervalRemove,
         onIntervalMove = viewModel::onIntervalMove,
@@ -142,7 +143,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForSecond: (Int, String) -> Unit,
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
-    onIntervalEditForPlayerCount: (Int, Int) -> Unit,
+    onIntervalEditForTeamCount: (Int, Int) -> Unit,
     onIntervalAdd: (Int?) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
@@ -224,7 +225,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                     onIntervalEditForSecond = onIntervalEditForSecond,
                     onIntervalEditForAllowDeuceAdv = onIntervalEditForAllowDeuceAdv,
                     onIntervalEditForMaxScoreInput = onIntervalEditForMaxScoreInput,
-                    onIntervalEditForPlayerCount = onIntervalEditForPlayerCount,
+                    onIntervalEditForTeamCount = onIntervalEditForTeamCount,
                     onIntervalRemove = onIntervalRemove,
                     onIntervalMove = onIntervalMove
                 )
@@ -317,7 +318,7 @@ private fun IntervalList(
     onIntervalEditForSecond: (Int, String) -> Unit,
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
-    onIntervalEditForPlayerCount: (Int, Int) -> Unit,
+    onIntervalEditForTeamCount: (Int, Int) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
 ) {
@@ -493,12 +494,12 @@ private fun IntervalList(
 
             }
 
-            //Player count
+            //Team count
             
             Spacer(modifier = Modifier.height(16.dp))
             MultipleOptionsPicker(
-                header = stringResource(id = R.string.playerCount, resolvedIntervalLabel),
-                options = (MIN_PLAYERS..MAX_PLAYERS).map {
+                header = stringResource(id = R.string.teamCountHeader, resolvedIntervalLabel),
+                options = (MIN_TEAMS..MAX_TEAMS).map {
                     OptionData(
                         label = it.toString(),
                         data = it
@@ -506,12 +507,12 @@ private fun IntervalList(
                 },
 
                 selectedOption = scoreInfo.dataList.size,
-                onOptionSelected = { onIntervalEditForPlayerCount(index, it) }
+                onOptionSelected = { onIntervalEditForTeamCount(index, it) }
             )
 
             //Scoring
 
-            // Assuming there is at least 1 player
+            // Assuming there is at least 1 team
             val firstScoreGroup = scoreInfo.dataList.getOrNull(0)
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -524,7 +525,12 @@ private fun IntervalList(
                     style = MaterialTheme.typography.titleMedium
                 )
                 if ((firstScoreGroup?.primary?.increments?.size ?: 0 ) <= MIN_INCREMENTS_COUNT) {
-
+                    IconButton(onClick = {  }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.add)
+                        )
+                    }
                 }
             }
 
@@ -554,7 +560,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIntervalEditForSecond: (Int, String) -> Unit = { _, _ -> },
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit = { _, _ -> },
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit = { _, _ -> },
-    onIntervalEditForPlayerCount: (Int, Int) -> Unit = { _, _ -> },
+    onIntervalEditForTeamCount: (Int, Int) -> Unit = { _, _ -> },
     onIntervalAdd: (Int?) -> Unit = { _ -> },
     onIntervalRemove: (Int) -> Unit = { _ -> },
     onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
@@ -586,7 +592,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
         onIntervalEditForSecond,
         onIntervalEditForAllowDeuceAdv,
         onIntervalEditForMaxScoreInput,
-        onIntervalEditForPlayerCount,
+        onIntervalEditForTeamCount,
         onIntervalAdd,
         onIntervalRemove,
         onIntervalMove,

@@ -51,8 +51,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
     companion object {
-        const val MIN_PLAYERS = 1
-        const val MAX_PLAYERS = 16
+        const val MIN_TEAMS = 1
+        const val MAX_TEAMS = 16
         const val MIN_INCREMENTS_COUNT = 1
         const val MAX_INCREMENTS_COUNT = 3
     }
@@ -303,13 +303,13 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
-    fun onIntervalEditForPlayerCount(index: Int, playerCount: Int) =
+    fun onIntervalEditForTeamCount(index: Int, teamCount: Int) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
             val dataList = intervalEditingInfo.scoreInfo.dataList
-            val newDataList = if (playerCount < dataList.size && playerCount > 0) {
-                dataList.subList(0, playerCount)
-            } else if (playerCount > dataList.size) {
-                dataList + (0 until (playerCount - dataList.size)).map {
+            val newDataList = if (teamCount < dataList.size && teamCount > 0) {
+                dataList.subList(0, teamCount)
+            } else if (teamCount > dataList.size) {
+                dataList + (0 until (teamCount - dataList.size)).map {
                     generateDefaultScoreGroup()
                 }
             } else
