@@ -65,6 +65,9 @@ import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MAX_PLAYERS
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MIN_INCREMENTS_COUNT
+import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsViewModel.Companion.MIN_PLAYERS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -495,7 +498,7 @@ private fun IntervalList(
             Spacer(modifier = Modifier.height(16.dp))
             MultipleOptionsPicker(
                 header = stringResource(id = R.string.playerCount, resolvedIntervalLabel),
-                options = (1..16).map {
+                options = (MIN_PLAYERS..MAX_PLAYERS).map {
                     OptionData(
                         label = it.toString(),
                         data = it
@@ -508,6 +511,22 @@ private fun IntervalList(
 
             //Scoring
 
+            // Assuming there is at least 1 player
+            val firstScoreGroup = scoreInfo.dataList.getOrNull(0)
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(id = R.string.primaryIncrementsHeader),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                if ((firstScoreGroup?.primary?.increments?.size ?: 0 ) <= MIN_INCREMENTS_COUNT) {
+
+                }
+            }
 
         }
     }
