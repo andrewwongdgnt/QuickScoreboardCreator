@@ -94,8 +94,8 @@ fun TwoScoreDisplay(
                     modifier = Modifier.weight(2f),
                     simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
-                    onIncrement = { index, positive ->
-                        onScoreChange(false, 0, index, positive)
+                    onIncrement = { index, main ->
+                        onScoreChange(false, 0, index, main)
                     }
                 )
                 ScoreValueContent(
@@ -119,8 +119,8 @@ fun TwoScoreDisplay(
                     modifier = Modifier.weight(2f),
                     simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
-                    onIncrement = { index, positive ->
-                        onScoreChange(false, 1, index, positive)
+                    onIncrement = { index, main ->
+                        onScoreChange(false, 1, index, main)
                     }
                 )
             }

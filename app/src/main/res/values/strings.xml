@@ -20,6 +20,8 @@
     <string name="spikeball_description">Spikeball description</string>
     <string name="tennis">Tennis</string>
     <string name="tennis_description">Tennis description</string>
+    <string name="boxing">Boxing</string>
+    <string name="boxing_description">Boxing description</string>
     <!-- Interval end sounds -->
     <string name="bell">Bell</string>
     <string name="buzzer">Buzzer</string>

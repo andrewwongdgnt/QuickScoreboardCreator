@@ -28,9 +28,9 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedSc
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberTimeline
+import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.mode.ModeControlContent
@@ -150,8 +150,8 @@ private fun ScoreboardInteractionInnerContent(
                 modifier = Modifier.fillMaxHeight(),
                 simpleMode = simpleMode,
                 incrementList = primaryIncrementList[0],
-                onIncrement = { index, positive ->
-                    onScoreChange(true, 0, index, positive)
+                onIncrement = { index, main ->
+                    onScoreChange(true, 0, index, main)
                 }
             )
             Spacer(modifier = Modifier.width(spacerWidth))
@@ -169,8 +169,8 @@ private fun ScoreboardInteractionInnerContent(
                 modifier = Modifier.fillMaxHeight(),
                 simpleMode = simpleMode,
                 incrementList = primaryIncrementList[1],
-                onIncrement = { index, positive ->
-                    onScoreChange(true, 1, index, positive)
+                onIncrement = { index, main ->
+                    onScoreChange(true, 1, index, main)
                 }
             )
         }

@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dgnt.quickScoreboardCreator.ui.common.asIncrementDisplay
-import kotlin.math.abs
 
 @Composable
 fun ScoringButton(
@@ -30,7 +29,7 @@ fun ScoringButton(
                 },
                 shape = RoundedCornerShape(10.dp, 0.dp, 0.dp, 10.dp)
             ) {
-                Text(text = (abs(number) * -1).asIncrementDisplay())
+                Text(text = (number * -1).asIncrementDisplay())
             }
         Button(
             modifier = buttonModifier,
@@ -39,7 +38,7 @@ fun ScoringButton(
             },
             shape = if (simpleMode) RoundedCornerShape(20.dp) else RoundedCornerShape(0.dp, 10.dp, 10.dp, 0.dp)
         ) {
-            Text(text = abs(number).asIncrementDisplay())
+            Text(text = number.asIncrementDisplay())
         }
     }
 }
@@ -53,3 +52,13 @@ private fun ScoringButtonPreviewSimple() =
 @Composable
 private fun ScoringButtonPreviewAdvance() =
     ScoringButton(simpleMode = false, number = 5, index = 0) { _, _ -> }
+
+@Preview(showBackground = true)
+@Composable
+private fun ScoringButtonPreviewSimpleAsNeg() =
+    ScoringButton(simpleMode = true, number = -5, index = 0) { _, _ -> }
+
+@Preview(showBackground = true)
+@Composable
+private fun ScoringButtonPreviewAdvanceAsNeg() =
+    ScoringButton(simpleMode = false, number = -5, index = 0) { _, _ -> }

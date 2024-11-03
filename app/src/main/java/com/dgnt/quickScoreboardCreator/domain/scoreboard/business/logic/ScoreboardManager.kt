@@ -27,7 +27,7 @@ interface ScoreboardManager {
     var intervalOnEndListener: ((IntervalEndSound) -> Unit)?
 
     fun triggerUpdateListeners()
-    fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, positive: Boolean = true)
+    fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, main: Boolean = true)
     fun updateTime(value: Long)
     fun updateTimeBy(value: Long)
     fun resetTime()

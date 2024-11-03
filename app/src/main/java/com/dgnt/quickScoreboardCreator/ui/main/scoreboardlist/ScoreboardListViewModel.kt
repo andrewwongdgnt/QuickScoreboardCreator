@@ -34,6 +34,7 @@ class ScoreboardListViewModel @Inject constructor(
                 ScoreboardType.HOCKEY,
                 ScoreboardType.SPIKEBALL,
                 ScoreboardType.TENNIS,
+                ScoreboardType.BOXING,
             ),
             scoreboardEntityList
         )

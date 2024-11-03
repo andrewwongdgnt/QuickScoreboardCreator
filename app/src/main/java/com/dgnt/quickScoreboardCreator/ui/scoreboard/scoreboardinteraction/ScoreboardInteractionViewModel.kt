@@ -229,8 +229,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
         isPrimary: Boolean,
         scoreIndex: Int,
         incrementIndex: Int,
-        positive: Boolean,
-    ) = scoreboardManager.updateScore(isPrimary, scoreIndex, incrementIndex, positive)
+        main: Boolean,
+    ) = scoreboardManager.updateScore(isPrimary, scoreIndex, incrementIndex, main)
 
     fun toTeamPicker(index: Int) = sendUiEvent(UiEvent.TeamPicker(index))
 

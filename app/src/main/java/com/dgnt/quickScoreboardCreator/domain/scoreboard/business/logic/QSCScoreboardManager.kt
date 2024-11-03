@@ -4,7 +4,6 @@ package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
 import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.IntervalEndSoundType
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
@@ -73,7 +72,7 @@ class QSCScoreboardManager @Inject constructor(
         teamSizeUpdateListener?.invoke(currentTeamSize)
     }
 
-    override fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, positive: Boolean) {
+    override fun updateScore(isPrimary: Boolean, scoreIndex: Int, incrementIndex: Int, main: Boolean) {
         val scoreInfo = currentScoreInfo
         val scoreGroup = scoreInfo.dataList[scoreIndex]
 
@@ -83,8 +82,8 @@ class QSCScoreboardManager @Inject constructor(
             scoreGroup.secondary ?: return
 
         val newScore = scoreData.run {
-            val incrementer = abs(increments[incrementIndex]).let {
-                if (positive)
+            val incrementer = increments[incrementIndex].let {
+                if (main)
                     it
                 else
                     it * -1

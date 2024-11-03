@@ -495,7 +495,7 @@ private fun IntervalList(
             Spacer(modifier = Modifier.height(16.dp))
             MultipleOptionsPicker(
                 header = stringResource(id = R.string.playerCount, resolvedIntervalLabel),
-                options = (1..10).map {
+                options = (1..16).map {
                     OptionData(
                         label = it.toString(),
                         data = it
@@ -505,6 +505,8 @@ private fun IntervalList(
                 selectedOption = scoreInfo.dataList.size,
                 onOptionSelected = { onIntervalEditForPlayerCount(index, it) }
             )
+
+            //Scoring
 
 
         }
