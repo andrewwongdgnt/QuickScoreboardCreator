@@ -134,7 +134,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
                     timeRepresentationPair = timeTransformer.toTimeData(interval.intervalData.initial).run {
                         Pair(minute.toString(), second.toString())
                     },
-                    maxScoreInput = interval.scoreInfo.scoreRule.trigger.toString()
+                    maxScoreInput = interval.scoreInfo.scoreRule.trigger.toString(),
+                    initialScoreInput = interval.scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: ""
                 )
             }
         }
@@ -320,7 +321,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
-    fun onIntervalEditForPrimaryIncrement(index: Int) =
+    fun onIntervalEditForPrimaryIncrementAdd(index: Int) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
             val newDataList = intervalEditingInfo.scoreInfo.dataList.map { scoreGroup ->
                 val primary = scoreGroup.primary
@@ -338,6 +339,11 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 )
             )
         }
+
+    fun onIntervalEditForInitialScoreInput(index: Int, value: String) =
+        updateInitialScoreInput(
+            index, getFilteredValue(value) ?: ""
+        )
 
     private fun updateScoreInfo(index: Int, scoreInfo: ScoreInfo) {
         val newList = intervalList.value.toMutableList()
@@ -363,6 +369,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _intervalList.value = newList
     }
 
+    private fun updateInitialScoreInput(index: Int, initialScore: String) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(initialScoreInput = initialScore)
+        _intervalList.value = newList
+    }
+
     private fun generateGenericIntervalInfo() =
         IntervalEditingInfo(
             scoreInfo = ScoreInfo(
@@ -381,6 +393,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 Pair(it.minute.toString(), it.second.toString())
             },
             maxScoreInput = "",
+            initialScoreInput = "",
         )
 
     private fun generateDefaultScoreGroup() = ScoreGroup(

@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,6 +52,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.Interval
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.ui.common.asIncrementDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
@@ -110,6 +112,8 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForAllowDeuceAdv = viewModel::onIntervalEditForAllowDeuceAdv,
         onIntervalEditForMaxScoreInput = viewModel::onIntervalEditForMaxScoreInput,
         onIntervalEditForTeamCount = viewModel::onIntervalEditForTeamCount,
+        onIntervalEditForPrimaryIncrementAdd = viewModel::onIntervalEditForPrimaryIncrementAdd,
+        onIntervalEditForInitialScoreInput = viewModel::onIntervalEditForInitialScoreInput,
         onIntervalAdd = viewModel::onIntervalAdd,
         onIntervalRemove = viewModel::onIntervalRemove,
         onIntervalMove = viewModel::onIntervalMove,
@@ -144,6 +148,8 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
     onIntervalEditForTeamCount: (Int, Int) -> Unit,
+    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
+    onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
     onIntervalAdd: (Int?) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
@@ -226,6 +232,8 @@ private fun ScoreboardDetailsInnerDialogContent(
                     onIntervalEditForAllowDeuceAdv = onIntervalEditForAllowDeuceAdv,
                     onIntervalEditForMaxScoreInput = onIntervalEditForMaxScoreInput,
                     onIntervalEditForTeamCount = onIntervalEditForTeamCount,
+                    onIntervalEditForPrimaryIncrementAdd = onIntervalEditForPrimaryIncrementAdd,
+                    onIntervalEditForInitialScoreInput = onIntervalEditForInitialScoreInput,
                     onIntervalRemove = onIntervalRemove,
                     onIntervalMove = onIntervalMove
                 )
@@ -319,6 +327,8 @@ private fun IntervalList(
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
     onIntervalEditForTeamCount: (Int, Int) -> Unit,
+    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
+    onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
 ) {
@@ -351,7 +361,8 @@ private fun IntervalList(
                 Text(
                     modifier = Modifier.weight(1f),
                     text = stringResource(id = R.string.rulesForInterval, resolvedIntervalLabel, index + 1),
-                    style = MaterialTheme.typography.titleMedium)
+                    style = MaterialTheme.typography.titleMedium
+                )
                 if (intervalList.size > 1) {
                     if (index > 0)
                         IconButton(onClick = { onIntervalMove(true, index) }) {
@@ -512,6 +523,23 @@ private fun IntervalList(
 
             //Scoring
 
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.initialScoreHeader),
+                style = MaterialTheme.typography.titleMedium
+            )
+            TextField(
+                value = intervalEditingInfo.initialScoreInput,
+                onValueChange = {
+                    if (it.length <= 3)
+                        onIntervalEditForInitialScoreInput(index, it)
+                },
+                placeholder = { Text(text = stringResource(R.string.initialScorePlaceHolder)) },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+
+                )
+
             // Assuming there is at least 1 team
             val firstScoreGroup = scoreInfo.dataList.getOrNull(0)
 
@@ -525,8 +553,8 @@ private fun IntervalList(
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                if ((firstScoreGroup?.primary?.increments?.size ?: 0 ) < MAX_INCREMENTS_COUNT) {
-                    IconButton(onClick = {  }) {
+                if ((firstScoreGroup?.primary?.increments?.size ?: 0) < MAX_INCREMENTS_COUNT) {
+                    IconButton(onClick = { onIntervalEditForPrimaryIncrementAdd(index) }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = stringResource(R.string.add)
@@ -535,6 +563,39 @@ private fun IntervalList(
                 }
             }
 
+            firstScoreGroup?.primary?.increments?.let { increments ->
+                IncrementList(
+                    modifier = Modifier.heightIn(min = 0.dp, max = 70.dp * increments.size),
+                    numberFieldWidth = numberFieldWidth,
+                    increments = increments
+                )
+            }
+
+        }
+    }
+}
+
+@Composable
+private fun IncrementList(
+    modifier: Modifier = Modifier,
+    numberFieldWidth: Dp,
+    increments: List<Int>
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center
+    ) {
+        itemsIndexed(increments) { index, increment ->
+            TextField(
+                value = increment.asIncrementDisplay(),
+                onValueChange = {
+
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                modifier = Modifier.width(numberFieldWidth)
+            )
         }
     }
 }
@@ -562,6 +623,8 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit = { _, _ -> },
     onIntervalEditForMaxScoreInput: (Int, String) -> Unit = { _, _ -> },
     onIntervalEditForTeamCount: (Int, Int) -> Unit = { _, _ -> },
+    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit = { _ -> },
+    onIntervalEditForInitialScoreInput: (Int, String) -> Unit = { _, _ -> },
     onIntervalAdd: (Int?) -> Unit = { _ -> },
     onIntervalRemove: (Int) -> Unit = { _ -> },
     onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
@@ -594,6 +657,8 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
         onIntervalEditForAllowDeuceAdv,
         onIntervalEditForMaxScoreInput,
         onIntervalEditForTeamCount,
+        onIntervalEditForPrimaryIncrementAdd,
+        onIntervalEditForInitialScoreInput,
         onIntervalAdd,
         onIntervalRemove,
         onIntervalMove,
@@ -656,7 +721,8 @@ private fun `One default interval`() =
                     increasing = false
                 ),
                 timeRepresentationPair = Pair("9", "24"),
-                maxScoreInput = "33"
+                maxScoreInput = "33",
+                initialScoreInput = "10"
             ),
         )
     )

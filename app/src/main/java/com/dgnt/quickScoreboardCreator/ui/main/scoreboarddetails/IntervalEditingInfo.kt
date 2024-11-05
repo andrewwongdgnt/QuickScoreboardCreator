@@ -8,4 +8,5 @@ data class IntervalEditingInfo(
     val intervalData: IntervalData,
     val timeRepresentationPair: Pair<String,String>, //Minute and Second
     val maxScoreInput: String,
+    val initialScoreInput: String,
 )

@@ -43,7 +43,9 @@
     <string name="maxScore">Max score:</string>
     <string name="allowDeuceAdvantage">Allow Deuce / Advantage</string>
     <string name="teamCountHeader">Number of teams for this %1$s</string>
-    <string name="primaryIncrementsHeader">How many ways to score?</string>
+    <string name="initialScoreHeader">What is the starting score?</string>
+    <string name="initialScorePlaceHolder">0 – 999</string>
+    <string name="primaryIncrementsHeader">How many ways to update the scores?</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
