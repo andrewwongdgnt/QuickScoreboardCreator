@@ -135,7 +135,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
                         Pair(minute.toString(), second.toString())
                     },
                     maxScoreInput = interval.scoreInfo.scoreRule.trigger.toString(),
-                    initialScoreInput = interval.scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: ""
+                    initialScoreInput = interval.scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: "",
+                    primaryIncrementInputList = interval.scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.toString() } ?: listOf("1"),
                 )
             }
         }
@@ -323,20 +324,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     fun onIntervalEditForPrimaryIncrementAdd(index: Int) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
-            val newDataList = intervalEditingInfo.scoreInfo.dataList.map { scoreGroup ->
-                val primary = scoreGroup.primary
-                val newIncrements = primary.increments + listOf(1)
-                val newPrimary = primary.copy(
-                    increments = newIncrements
-                )
-                scoreGroup.copy(
-                    primary = newPrimary
-                )
-            }
-            updateScoreInfo(
-                index, intervalEditingInfo.scoreInfo.copy(
-                    dataList = newDataList
-                )
+            val newList = intervalEditingInfo.primaryIncrementInputList + "1"
+            updatePrimaryIncrementList(
+                index, newList
             )
         }
 
@@ -344,6 +334,15 @@ class ScoreboardDetailsViewModel @Inject constructor(
         updateInitialScoreInput(
             index, getFilteredValue(value) ?: ""
         )
+
+    fun onIntervalEditForPrimaryIncrement(index: Int, incrementIndex: Int, value: String) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            val newList = intervalEditingInfo.primaryIncrementInputList.toMutableList()
+            newList[incrementIndex] = value
+            updatePrimaryIncrementList(
+                index, newList
+            )
+        }
 
     private fun updateScoreInfo(index: Int, scoreInfo: ScoreInfo) {
         val newList = intervalList.value.toMutableList()
@@ -375,6 +374,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _intervalList.value = newList
     }
 
+    private fun updatePrimaryIncrementList(index: Int, increments: List<String>) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(primaryIncrementInputList = increments)
+        _intervalList.value = newList
+    }
+
     private fun generateGenericIntervalInfo() =
         IntervalEditingInfo(
             scoreInfo = ScoreInfo(
@@ -394,6 +399,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             },
             maxScoreInput = "",
             initialScoreInput = "",
+            primaryIncrementInputList = listOf("1")
         )
 
     private fun generateDefaultScoreGroup() = ScoreGroup(
