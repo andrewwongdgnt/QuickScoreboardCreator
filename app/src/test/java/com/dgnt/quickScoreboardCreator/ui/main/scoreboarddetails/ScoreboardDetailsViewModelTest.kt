@@ -295,6 +295,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -331,6 +332,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -356,6 +358,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -392,6 +395,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -424,6 +428,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -463,6 +468,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -488,6 +494,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -519,6 +526,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -544,6 +552,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -575,6 +584,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -600,6 +610,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -631,6 +642,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
@@ -656,6 +668,7 @@ class ScoreboardDetailsViewModelTest {
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
                         dataList = listOf(
                             ScoreGroup(
                                 primary = ScoreData(
