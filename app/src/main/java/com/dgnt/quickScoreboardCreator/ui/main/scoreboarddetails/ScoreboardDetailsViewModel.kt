@@ -344,6 +344,15 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
+    fun onIntervalEditForSecondaryScoreLabel(index: Int, value: String) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+            updateScoreInfo(
+                index, intervalEditingInfo.scoreInfo.copy(
+                    secondaryScoreLabel = value
+                )
+            )
+        }
+
     private fun updateScoreInfo(index: Int, scoreInfo: ScoreInfo) {
         val newList = intervalList.value.toMutableList()
         newList[index] = newList[index].copy(scoreInfo = scoreInfo)
@@ -385,6 +394,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             scoreInfo = ScoreInfo(
                 scoreRule = ScoreRule.None,
                 scoreToDisplayScoreMap = mapOf(),
+                secondaryScoreLabel = "",
                 dataList = listOf(
                     generateDefaultScoreGroup()
                 )

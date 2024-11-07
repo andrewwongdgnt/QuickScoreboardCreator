@@ -34,6 +34,7 @@ data class ScoreInfoConfig(
         ScoreInfo(
             scoreRule.toScoreRule(),
             scoreMapping?.mapKeys { it.key.toInt() } ?: mapOf(),
+            secondaryScoreLabel ?: "",
             dataList.map {
                 it.toScoreGroup()
             }

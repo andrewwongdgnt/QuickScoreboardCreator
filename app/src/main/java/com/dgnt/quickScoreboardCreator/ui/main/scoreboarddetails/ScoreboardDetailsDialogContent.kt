@@ -713,6 +713,7 @@ private fun `One default interval`() =
                 scoreInfo = ScoreInfo(
                     scoreRule = ScoreRule.None,
                     scoreToDisplayScoreMap = mapOf(),
+                    secondaryScoreLabel = "",
                     dataList = listOf()
                 ),
                 intervalData = IntervalData(
