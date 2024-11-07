@@ -4,8 +4,6 @@ package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
 import android.media.MediaPlayer
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,18 +50,16 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.Interval
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
-import com.dgnt.quickScoreboardCreator.ui.common.asIncrementDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.BackButton
 import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.ui.common.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.composable.LabelSwitch
+import com.dgnt.quickScoreboardCreator.ui.common.composable.MoveableElement
 import com.dgnt.quickScoreboardCreator.ui.common.composable.MultipleOptionsPicker
 import com.dgnt.quickScoreboardCreator.ui.common.composable.OptionData
 import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoreboardIconPicker
 import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
 import com.dgnt.quickScoreboardCreator.ui.common.imagevector.Speaker
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleDown
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.TriangleUp
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
@@ -314,7 +310,6 @@ private fun IntervalLabelEditor(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun IntervalList(
     modifier: Modifier = Modifier,
@@ -355,39 +350,16 @@ private fun IntervalList(
             // Interval Header
             val defaultIntervalLabel = stringResource(id = R.string.defaultIntervalLabel)
             val resolvedIntervalLabel = intervalLabel.takeIf { it.isNotEmpty() } ?: defaultIntervalLabel
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.rulesForInterval, resolvedIntervalLabel, index + 1),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                if (intervalList.size > 1) {
-                    if (index > 0)
-                        IconButton(onClick = { onIntervalMove(true, index) }) {
-                            Icon(
-                                imageVector = TriangleUp,
-                                contentDescription = stringResource(R.string.up)
-                            )
-                        }
-                    if (index < intervalList.lastIndex)
-                        IconButton(onClick = { onIntervalMove(false, index) }) {
-                            Icon(
-                                imageVector = TriangleDown,
-                                contentDescription = stringResource(R.string.down)
-                            )
-                        }
-                    Icon(modifier = Modifier.combinedClickable(
-                        onClick = { Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show() },
-                        onLongClick = { onIntervalRemove(index) }
-                    ),
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(R.string.delete)
-                    )
-
-                }
-            }
+            MoveableElement(
+                context = context,
+                header = stringResource(id = R.string.rulesForInterval, resolvedIntervalLabel, index + 1),
+                size = intervalList.size,
+                currentIndex = index,
+                lastIndex = intervalList.lastIndex,
+                onMoveUp = { onIntervalMove(true, index) },
+                onMoveDown = { onIntervalMove(false, index) },
+                onDelete = { onIntervalRemove(index) },
+            )
 
             // Sound Effect
 
@@ -540,9 +512,6 @@ private fun IntervalList(
 
                 )
 
-            // Assuming there is at least 1 team
-            val firstScoreGroup = scoreInfo.dataList.getOrNull(0)
-
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -553,7 +522,7 @@ private fun IntervalList(
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                if ((firstScoreGroup?.primary?.increments?.size ?: 0) < MAX_INCREMENTS_COUNT) {
+                if (intervalEditingInfo.primaryIncrementInputList.size < MAX_INCREMENTS_COUNT) {
                     IconButton(onClick = { onIntervalEditForPrimaryIncrementAdd(index) }) {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -563,7 +532,7 @@ private fun IntervalList(
                 }
             }
 
-            firstScoreGroup?.primary?.increments?.let { increments ->
+            intervalEditingInfo.primaryIncrementInputList.let { increments ->
                 IncrementList(
                     modifier = Modifier.heightIn(min = 0.dp, max = 70.dp * increments.size),
                     numberFieldWidth = numberFieldWidth,
@@ -579,7 +548,7 @@ private fun IntervalList(
 private fun IncrementList(
     modifier: Modifier = Modifier,
     numberFieldWidth: Dp,
-    increments: List<Int>
+    increments: List<String>
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -588,7 +557,7 @@ private fun IncrementList(
     ) {
         itemsIndexed(increments) { index, increment ->
             TextField(
-                value = increment.asIncrementDisplay(),
+                value = increment,
                 onValueChange = {
 
                 },
