@@ -2,6 +2,7 @@
 
 package com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -334,7 +335,7 @@ private fun IntervalList(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        itemsIndexed(intervalList) { index, intervalEditingInfo ->
+        itemsIndexed(intervalList) { intervalIndex, intervalEditingInfo ->
 
             val scoreInfo = intervalEditingInfo.scoreInfo
             val intervalData = intervalEditingInfo.intervalData
@@ -352,13 +353,19 @@ private fun IntervalList(
             val resolvedIntervalLabel = intervalLabel.takeIf { it.isNotEmpty() } ?: defaultIntervalLabel
             MoveableElement(
                 context = context,
-                header = stringResource(id = R.string.rulesForInterval, resolvedIntervalLabel, index + 1),
+                element = { mod ->
+                    Text(
+                        modifier = mod,
+                        text = stringResource(id = R.string.rulesForInterval, resolvedIntervalLabel, intervalIndex + 1),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
                 size = intervalList.size,
-                currentIndex = index,
+                currentIndex = intervalIndex,
                 lastIndex = intervalList.lastIndex,
-                onMoveUp = { onIntervalMove(true, index) },
-                onMoveDown = { onIntervalMove(false, index) },
-                onDelete = { onIntervalRemove(index) },
+                onMoveUp = { onIntervalMove(true, intervalIndex) },
+                onMoveDown = { onIntervalMove(false, intervalIndex) },
+                onDelete = { onIntervalRemove(intervalIndex) },
             )
 
             // Sound Effect
@@ -415,7 +422,7 @@ private fun IntervalList(
                     ),
                 ),
                 selectedOption = intervalData.soundEffect,
-                onOptionSelected = { onIntervalEditForSoundEffect(index, it) }
+                onOptionSelected = { onIntervalEditForSoundEffect(intervalIndex, it) }
             )
 
             //Time and Max Score
@@ -425,7 +432,7 @@ private fun IntervalList(
                 label = stringResource(id = R.string.hasTimeLimit),
                 checked = !intervalData.increasing,
                 onCheckedChange = {
-                    onIntervalEditForTimeIsIncreasing(index, !it)
+                    onIntervalEditForTimeIsIncreasing(intervalIndex, !it)
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -439,9 +446,9 @@ private fun IntervalList(
                     Text(text = stringResource(id = R.string.decreasingTimeMsg))
                     TimeLimitPicker(
                         minuteString = intervalEditingInfo.timeRepresentationPair.first,
-                        onMinuteChange = { onIntervalEditForMinute(index, it) },
+                        onMinuteChange = { onIntervalEditForMinute(intervalIndex, it) },
                         secondString = intervalEditingInfo.timeRepresentationPair.second,
-                        onSecondChange = { onIntervalEditForSecond(index, it) },
+                        onSecondChange = { onIntervalEditForSecond(intervalIndex, it) },
                         numberFieldWidth = numberFieldWidth
                     )
                 }
@@ -451,7 +458,7 @@ private fun IntervalList(
                     label = stringResource(id = R.string.allowDeuceAdvantage),
                     checked = scoreInfo.scoreRule is ScoreRule.Trigger.DeuceAdvantage,
                     onCheckedChange = {
-                        onIntervalEditForAllowDeuceAdv(index, it)
+                        onIntervalEditForAllowDeuceAdv(intervalIndex, it)
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -467,7 +474,7 @@ private fun IntervalList(
                     TextField(
                         value = intervalEditingInfo.maxScoreInput,
                         onValueChange = {
-                            onIntervalEditForMaxScoreInput(index, it)
+                            onIntervalEditForMaxScoreInput(intervalIndex, it)
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
@@ -490,7 +497,7 @@ private fun IntervalList(
                 },
 
                 selectedOption = scoreInfo.dataList.size,
-                onOptionSelected = { onIntervalEditForTeamCount(index, it) }
+                onOptionSelected = { onIntervalEditForTeamCount(intervalIndex, it) }
             )
 
             //Scoring
@@ -504,7 +511,7 @@ private fun IntervalList(
                 value = intervalEditingInfo.initialScoreInput,
                 onValueChange = {
                     if (it.length <= 3)
-                        onIntervalEditForInitialScoreInput(index, it)
+                        onIntervalEditForInitialScoreInput(intervalIndex, it)
                 },
                 placeholder = { Text(text = stringResource(R.string.initialScorePlaceHolder)) },
                 modifier = Modifier.fillMaxWidth(),
@@ -523,7 +530,7 @@ private fun IntervalList(
                 )
 
                 if (intervalEditingInfo.primaryIncrementInputList.size < MAX_INCREMENTS_COUNT) {
-                    IconButton(onClick = { onIntervalEditForPrimaryIncrementAdd(index) }) {
+                    IconButton(onClick = { onIntervalEditForPrimaryIncrementAdd(intervalIndex) }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = stringResource(R.string.add)
@@ -534,8 +541,10 @@ private fun IntervalList(
 
             intervalEditingInfo.primaryIncrementInputList.let { increments ->
                 IncrementList(
+                    context = context,
                     modifier = Modifier.heightIn(min = 0.dp, max = 70.dp * increments.size),
                     numberFieldWidth = numberFieldWidth,
+                    intervalIndex = intervalIndex,
                     increments = increments
                 )
             }
@@ -546,8 +555,10 @@ private fun IntervalList(
 
 @Composable
 private fun IncrementList(
+    context: Context,
     modifier: Modifier = Modifier,
     numberFieldWidth: Dp,
+    intervalIndex: Int,
     increments: List<String>
 ) {
     LazyColumn(
@@ -556,15 +567,34 @@ private fun IncrementList(
         verticalArrangement = Arrangement.Center
     ) {
         itemsIndexed(increments) { index, increment ->
-            TextField(
-                value = increment,
-                onValueChange = {
 
+            MoveableElement(
+                context = context,
+                element = { mod ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = mod
+                    ) {
+                        TextField(
+                            value = increment,
+                            onValueChange = {
+
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            modifier = Modifier.width(numberFieldWidth)
+                        )
+                    }
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                modifier = Modifier.width(numberFieldWidth)
+                size = increments.size,
+                currentIndex = index,
+                lastIndex = increments.lastIndex,
+                onMoveUp = { },
+                onMoveDown = { },
+                onDelete = { },
             )
+
+
         }
     }
 }

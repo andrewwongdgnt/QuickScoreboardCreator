@@ -51,8 +51,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
     companion object {
-        const val MIN_TEAMS = 1
-        const val MAX_TEAMS = 16
+        const val MIN_TEAMS = 2
+        const val MAX_TEAMS = 8
         const val MAX_INCREMENTS_COUNT = 3
     }
 
