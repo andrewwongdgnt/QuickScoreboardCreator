@@ -322,6 +322,11 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
+    fun onIntervalEditForInitialScoreInput(index: Int, value: String) =
+        updateInitialScoreInput(
+            index, getFilteredValue(value) ?: ""
+        )
+
     fun onIntervalEditForPrimaryIncrementAdd(index: Int) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
             val newList = intervalEditingInfo.primaryIncrementInputList + "1"
@@ -329,11 +334,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 index, newList
             )
         }
-
-    fun onIntervalEditForInitialScoreInput(index: Int, value: String) =
-        updateInitialScoreInput(
-            index, getFilteredValue(value) ?: ""
-        )
 
     fun onIntervalEditForPrimaryIncrement(index: Int, incrementIndex: Int, value: String) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
@@ -343,6 +343,27 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 index, newList
             )
         }
+
+    fun onIntervalEditForPrimaryIncrementMove(index: Int, incrementIndex: Int, up: Boolean) {
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val newList = intervalEditingInfo.primaryIncrementInputList.toMutableList()
+
+            // prevent out of bound movements
+            if ((up && incrementIndex == 0) || (!up && incrementIndex == newList.lastIndex))
+                return
+
+
+            if (incrementIndex in 0 until newList.size) {
+                val otherIndex = if (up) incrementIndex - 1 else incrementIndex + 1
+                newList.swap(incrementIndex, otherIndex)
+            }
+
+            updatePrimaryIncrementList(
+                index, newList
+            )
+        }
+    }
 
     fun onIntervalEditForSecondaryScoreLabel(index: Int, value: String) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
