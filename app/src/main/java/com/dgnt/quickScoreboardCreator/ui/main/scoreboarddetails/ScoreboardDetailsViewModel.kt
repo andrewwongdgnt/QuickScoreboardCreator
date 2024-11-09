@@ -24,6 +24,7 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUs
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.ui.common.asIncrementDisplay
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -136,7 +137,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
                     },
                     maxScoreInput = interval.scoreInfo.scoreRule.trigger.toString(),
                     initialScoreInput = interval.scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: "",
-                    primaryIncrementInputList = interval.scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.toString() } ?: listOf("1"),
+                    primaryIncrementInputList = interval.scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.asIncrementDisplay() } ?: listOf("+1"),
                 )
             }
         }
@@ -323,9 +324,11 @@ class ScoreboardDetailsViewModel @Inject constructor(
         }
 
     fun onIntervalEditForInitialScoreInput(index: Int, value: String) =
-        updateInitialScoreInput(
-            index, getFilteredValue(value) ?: ""
-        )
+        getFilteredValue(value)?.let {
+            updateInitialScoreInput(
+                index, it
+            )
+        }
 
     fun onIntervalEditForPrimaryIncrementAdd(index: Int) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
@@ -374,6 +377,19 @@ class ScoreboardDetailsViewModel @Inject constructor(
             if (incrementIndex in 0 until newList.size) {
                 newList.removeAt(index)
             }
+
+            updatePrimaryIncrementList(
+                index, newList
+            )
+        }
+    }
+
+    fun onIntervalEditForPrimaryIncrementRefresh(index: Int, incrementIndex: Int) {
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val newList = intervalEditingInfo.primaryIncrementInputList.toMutableList()
+            newList[incrementIndex] = newList[incrementIndex].asIncrementDisplay()
+
 
             updatePrimaryIncrementList(
                 index, newList
@@ -446,7 +462,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             },
             maxScoreInput = "",
             initialScoreInput = "",
-            primaryIncrementInputList = listOf("1")
+            primaryIncrementInputList = listOf("+1")
         )
 
     private fun generateDefaultScoreGroup() = ScoreGroup(

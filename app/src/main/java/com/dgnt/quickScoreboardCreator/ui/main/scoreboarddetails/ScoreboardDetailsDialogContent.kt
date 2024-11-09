@@ -35,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -111,8 +112,10 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForTeamCount = viewModel::onIntervalEditForTeamCount,
         onIntervalEditForPrimaryIncrementAdd = viewModel::onIntervalEditForPrimaryIncrementAdd,
         onIntervalEditForInitialScoreInput = viewModel::onIntervalEditForInitialScoreInput,
+        onIntervalEditForPrimaryIncrement = viewModel::onIntervalEditForPrimaryIncrement,
         onIntervalEditForPrimaryIncrementMove = viewModel::onIntervalEditForPrimaryIncrementMove,
         onIntervalEditForPrimaryIncrementRemove = viewModel::onIntervalEditForPrimaryIncrementRemove,
+        onIntervalEditForPrimaryIncrementRefresh = viewModel::onIntervalEditForPrimaryIncrementRefresh,
         onIntervalAdd = viewModel::onIntervalAdd,
         onIntervalRemove = viewModel::onIntervalRemove,
         onIntervalMove = viewModel::onIntervalMove,
@@ -149,8 +152,10 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForTeamCount: (Int, Int) -> Unit,
     onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
     onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
+    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit,
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
+    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
     onIntervalAdd: (Int?) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
@@ -235,8 +240,10 @@ private fun ScoreboardDetailsInnerDialogContent(
                     onIntervalEditForTeamCount = onIntervalEditForTeamCount,
                     onIntervalEditForPrimaryIncrementAdd = onIntervalEditForPrimaryIncrementAdd,
                     onIntervalEditForInitialScoreInput = onIntervalEditForInitialScoreInput,
+                    onIntervalEditForPrimaryIncrement = onIntervalEditForPrimaryIncrement,
                     onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
                     onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove,
+                    onIntervalEditForPrimaryIncrementRefresh = onIntervalEditForPrimaryIncrementRefresh,
                     onIntervalRemove = onIntervalRemove,
                     onIntervalMove = onIntervalMove
                 )
@@ -331,8 +338,10 @@ private fun IntervalList(
     onIntervalEditForTeamCount: (Int, Int) -> Unit,
     onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
     onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
+    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit,
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
+    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
 ) {
@@ -554,8 +563,10 @@ private fun IntervalList(
                     numberFieldWidth = numberFieldWidth,
                     intervalIndex = intervalIndex,
                     increments = increments,
+                    onIntervalEditForPrimaryIncrement = onIntervalEditForPrimaryIncrement,
                     onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
-                            onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove
+                    onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove,
+                    onIntervalEditForPrimaryIncrementRefresh = onIntervalEditForPrimaryIncrementRefresh,
                 )
             }
 
@@ -570,8 +581,10 @@ private fun IncrementList(
     numberFieldWidth: Dp,
     intervalIndex: Int,
     increments: List<String>,
+    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit,
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
+    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -590,11 +603,17 @@ private fun IncrementList(
                         TextField(
                             value = increment,
                             onValueChange = {
+                                if (it.length <= 4)
+                                    onIntervalEditForPrimaryIncrement(intervalIndex, index, it)
 
                             },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
-                            modifier = Modifier.width(numberFieldWidth)
+                            modifier = Modifier.width(numberFieldWidth).onFocusChanged { focusState ->
+                                if (!focusState.isFocused)
+                                    onIntervalEditForPrimaryIncrementRefresh(intervalIndex, index)
+
+                            }
                         )
                     }
                 },
@@ -636,8 +655,10 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIntervalEditForTeamCount: (Int, Int) -> Unit = { _, _ -> },
     onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit = { _ -> },
     onIntervalEditForInitialScoreInput: (Int, String) -> Unit = { _, _ -> },
+    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit = { _, _, _ -> },
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit = { _, _, _ -> },
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit = { _, _ -> },
+    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit = { _, _ -> },
     onIntervalAdd: (Int?) -> Unit = { _ -> },
     onIntervalRemove: (Int) -> Unit = { _ -> },
     onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
@@ -672,8 +693,10 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
         onIntervalEditForTeamCount,
         onIntervalEditForPrimaryIncrementAdd,
         onIntervalEditForInitialScoreInput,
+        onIntervalEditForPrimaryIncrement,
         onIntervalEditForPrimaryIncrementMove,
         onIntervalEditForPrimaryIncrementRemove,
+        onIntervalEditForPrimaryIncrementRefresh,
         onIntervalAdd,
         onIntervalRemove,
         onIntervalMove,
