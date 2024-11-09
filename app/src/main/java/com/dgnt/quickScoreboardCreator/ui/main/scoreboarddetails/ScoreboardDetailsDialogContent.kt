@@ -112,6 +112,7 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForPrimaryIncrementAdd = viewModel::onIntervalEditForPrimaryIncrementAdd,
         onIntervalEditForInitialScoreInput = viewModel::onIntervalEditForInitialScoreInput,
         onIntervalEditForPrimaryIncrementMove = viewModel::onIntervalEditForPrimaryIncrementMove,
+        onIntervalEditForPrimaryIncrementRemove = viewModel::onIntervalEditForPrimaryIncrementRemove,
         onIntervalAdd = viewModel::onIntervalAdd,
         onIntervalRemove = viewModel::onIntervalRemove,
         onIntervalMove = viewModel::onIntervalMove,
@@ -149,6 +150,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
     onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
+    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
     onIntervalAdd: (Int?) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
@@ -234,6 +236,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                     onIntervalEditForPrimaryIncrementAdd = onIntervalEditForPrimaryIncrementAdd,
                     onIntervalEditForInitialScoreInput = onIntervalEditForInitialScoreInput,
                     onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
+                    onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove,
                     onIntervalRemove = onIntervalRemove,
                     onIntervalMove = onIntervalMove
                 )
@@ -329,6 +332,7 @@ private fun IntervalList(
     onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
     onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
+    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
 ) {
@@ -550,7 +554,8 @@ private fun IntervalList(
                     numberFieldWidth = numberFieldWidth,
                     intervalIndex = intervalIndex,
                     increments = increments,
-                    onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove
+                    onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
+                            onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove
                 )
             }
 
@@ -566,6 +571,7 @@ private fun IncrementList(
     intervalIndex: Int,
     increments: List<String>,
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
+    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -597,7 +603,7 @@ private fun IncrementList(
                 lastIndex = increments.lastIndex,
                 onMoveUp = { onIntervalEditForPrimaryIncrementMove(intervalIndex, index, true) },
                 onMoveDown = { onIntervalEditForPrimaryIncrementMove(intervalIndex, index, false) },
-                onDelete = { },
+                onDelete = { onIntervalEditForPrimaryIncrementRemove(intervalIndex, index) },
             )
 
 
@@ -631,6 +637,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit = { _ -> },
     onIntervalEditForInitialScoreInput: (Int, String) -> Unit = { _, _ -> },
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit = { _, _, _ -> },
+    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit = { _, _ -> },
     onIntervalAdd: (Int?) -> Unit = { _ -> },
     onIntervalRemove: (Int) -> Unit = { _ -> },
     onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
@@ -666,6 +673,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
         onIntervalEditForPrimaryIncrementAdd,
         onIntervalEditForInitialScoreInput,
         onIntervalEditForPrimaryIncrementMove,
+        onIntervalEditForPrimaryIncrementRemove,
         onIntervalAdd,
         onIntervalRemove,
         onIntervalMove,

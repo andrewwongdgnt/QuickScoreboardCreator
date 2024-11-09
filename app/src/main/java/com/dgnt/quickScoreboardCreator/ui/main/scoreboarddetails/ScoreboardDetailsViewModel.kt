@@ -365,6 +365,22 @@ class ScoreboardDetailsViewModel @Inject constructor(
         }
     }
 
+    fun onIntervalEditForPrimaryIncrementRemove(index: Int, incrementIndex: Int) {
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val newList = intervalEditingInfo.primaryIncrementInputList.toMutableList()
+            if (newList.size == 1)
+                return
+            if (incrementIndex in 0 until newList.size) {
+                newList.removeAt(index)
+            }
+
+            updatePrimaryIncrementList(
+                index, newList
+            )
+        }
+    }
+
     fun onIntervalEditForSecondaryScoreLabel(index: Int, value: String) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
             updateScoreInfo(
