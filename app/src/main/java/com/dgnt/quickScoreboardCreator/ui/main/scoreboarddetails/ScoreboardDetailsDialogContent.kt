@@ -764,7 +764,8 @@ private fun `One default interval`() =
                 initialScoreInput = "10",
                 primaryIncrementInputList = listOf("+1"),
                 allowPrimaryMapping = false,
-                primaryMappingInputList = listOf()
+                primaryMappingInputList = listOf(),
+                allowSecondaryScore = false
             ),
         )
     )

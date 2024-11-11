@@ -141,8 +141,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
                     initialScoreInput = scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: "",
                     primaryIncrementInputList = scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.asIncrementDisplay() } ?: listOf("+1"),
                     allowPrimaryMapping = scoreInfo.scoreToDisplayScoreMap.isNotEmpty(),
-                    primaryMappingInputList = scoreInfo.scoreToDisplayScoreMap.map { it.key.toString() to it.value }
-
+                    primaryMappingInputList = scoreInfo.scoreToDisplayScoreMap.map { it.key.toString() to it.value },
+                    allowSecondaryScore = scoreInfo.dataList.firstOrNull()?.secondary != null
                 )
             }
         }
@@ -455,6 +455,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
         }
     }
 
+    fun onIntervalEditForSecondaryScoreAllowed(index: Int, allowed: Boolean) =
+        updateSecondaryScoreAllowed(index, allowed)
 
     fun onIntervalEditForSecondaryScoreLabel(index: Int, value: String) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
@@ -513,6 +515,12 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _intervalList.value = newList
     }
 
+    private fun updateSecondaryScoreAllowed(index: Int, allowed: Boolean) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(allowSecondaryScore = allowed)
+        _intervalList.value = newList
+    }
+
     private fun generateGenericIntervalInfo() =
         IntervalEditingInfo(
             scoreInfo = ScoreInfo(
@@ -535,7 +543,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
             initialScoreInput = "",
             primaryIncrementInputList = listOf("+1"),
             allowPrimaryMapping = false,
-            primaryMappingInputList = listOf()
+            primaryMappingInputList = listOf(),
+            allowSecondaryScore = false
         )
 
     private fun generateDefaultScoreGroup() = ScoreGroup(

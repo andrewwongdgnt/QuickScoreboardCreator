@@ -317,7 +317,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
         )
@@ -356,7 +357,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -384,7 +386,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 )
             ), sut.intervalList.value
         )
@@ -423,7 +426,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
         )
@@ -458,7 +462,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
         )
@@ -500,7 +505,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -528,7 +534,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
         )
@@ -562,7 +569,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -590,7 +598,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
         )
@@ -624,7 +633,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -652,7 +662,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
         )
@@ -686,7 +697,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -714,7 +726,8 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf()
+                    primaryMappingInputList = listOf(),
+                    allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
         )
@@ -1039,5 +1052,34 @@ class ScoreboardDetailsViewModelTest {
                 "0" to "",
             ), it)
         }
+    }
+
+    @Test
+    fun testEditingForSecondaryScoreAllowed() = runTest {
+        initSut()
+        sut.intervalList.value[0].allowSecondaryScore.let {
+            Assert.assertFalse(it)
+        }
+        sut.onIntervalEditForSecondaryScoreAllowed(0, true)
+        sut.intervalList.value[0].allowSecondaryScore.let {
+            Assert.assertTrue(it)
+        }
+        sut.onIntervalEditForSecondaryScoreAllowed(0, false)
+        sut.intervalList.value[0].allowSecondaryScore.let {
+            Assert.assertFalse(it)
+        }
+    }
+
+    @Test
+    fun testEditingForSecondaryScoreLabel() = runTest {
+        initSut()
+        sut.intervalList.value[0].scoreInfo.secondaryScoreLabel.let {
+            Assert.assertTrue(it.isEmpty())
+        }
+        sut.onIntervalEditForSecondaryScoreLabel(0, "Fouls")
+        sut.intervalList.value[0].scoreInfo.secondaryScoreLabel.let {
+            Assert.assertEquals("Fouls", it)
+        }
+
     }
 }

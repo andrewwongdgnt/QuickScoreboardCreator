@@ -12,4 +12,6 @@ data class IntervalEditingInfo(
     val primaryIncrementInputList: List<String>,
     val allowPrimaryMapping: Boolean,
     val primaryMappingInputList: List<Pair<String, String>>,
+    val allowSecondaryScore: Boolean,
+
 )
