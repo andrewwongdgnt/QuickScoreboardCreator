@@ -28,6 +28,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(2, 0, listOf(1)),
@@ -42,6 +43,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(20, 0, listOf(1)),
@@ -56,6 +58,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(25, 0, listOf(1)),
@@ -83,6 +86,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(2, 0, listOf(1)),
@@ -97,6 +101,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(20, 0, listOf(1)),
@@ -111,6 +116,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(50, 0, listOf(1)),
@@ -137,6 +143,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(2, 0, listOf(1)),
@@ -151,6 +158,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(5, 0, listOf(1)),
@@ -165,6 +173,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(8, 0, listOf(1)),
@@ -191,6 +200,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(2, 0, listOf(1)),
@@ -205,6 +215,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(5, 0, listOf(1)),
@@ -219,6 +230,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(8, 0, listOf(1)),
@@ -245,6 +257,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(10, 0, listOf(1)),
@@ -259,6 +272,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(10, 0, listOf(1)),
@@ -273,6 +287,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(10, 0, listOf(1)),
@@ -299,6 +314,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(10, 0, listOf(1)),
@@ -313,6 +329,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(10, 0, listOf(1)),
@@ -327,6 +344,7 @@ class QSCWinCalculatorTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(8, 0, listOf(1)),

@@ -71,6 +71,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(0, 0, listOf(2, 3)),
@@ -159,6 +160,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(0, 0, listOf(2, 3)),
@@ -215,6 +217,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(2, 2, listOf(2, 3)),
@@ -232,6 +235,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.None,
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(2, 2, listOf(2, 3)),
@@ -289,6 +293,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.Trigger.Max(2),
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(0, 0, listOf(1)),
@@ -307,6 +312,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.Trigger.Max(2),
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(0, 0, listOf(1)),
@@ -325,6 +331,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.Trigger.Max(2),
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(0, 0, listOf(1)),
@@ -433,6 +440,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.Trigger.DeuceAdvantage(2),
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(0, 0, listOf(1)),
@@ -451,6 +459,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.Trigger.DeuceAdvantage(2),
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(1, 1, listOf(1)),
@@ -468,6 +477,7 @@ class QSCScoreboardManagerTest {
             ScoreInfo(
                 ScoreRule.Trigger.DeuceAdvantage(2),
                 mapOf(),
+                "",
                 listOf(
                     ScoreGroup(
                         ScoreData(0, 0, listOf(2)),

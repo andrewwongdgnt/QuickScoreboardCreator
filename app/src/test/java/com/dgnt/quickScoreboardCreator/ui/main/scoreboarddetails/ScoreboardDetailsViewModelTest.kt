@@ -315,7 +315,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
             ), sut.intervalList.value
         )
@@ -352,7 +354,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -378,7 +382,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 )
             ), sut.intervalList.value
         )
@@ -415,7 +421,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
             ), sut.intervalList.value
         )
@@ -448,7 +456,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
             ), sut.intervalList.value
         )
@@ -488,7 +498,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -514,7 +526,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
             ), sut.intervalList.value
         )
@@ -546,7 +560,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -572,7 +588,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
             ), sut.intervalList.value
         )
@@ -604,7 +622,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -630,7 +650,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
             ), sut.intervalList.value
         )
@@ -662,7 +684,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
                 IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
@@ -688,7 +712,9 @@ class ScoreboardDetailsViewModelTest {
                     timeRepresentationPair = Pair("0", "0"),
                     maxScoreInput = "",
                     initialScoreInput = "",
-                    primaryIncrementInputList = listOf("1")
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf()
                 ),
             ), sut.intervalList.value
         )
@@ -849,13 +875,13 @@ class ScoreboardDetailsViewModelTest {
     fun testEditingForPrimaryIncrementAdd() = runTest {
         initSut()
         val list1 = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("1"), list1)
+        Assert.assertEquals(listOf("+1"), list1)
         sut.onIntervalEditForPrimaryIncrementAdd(0)
         val list2 = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("1", "1"), list2)
+        Assert.assertEquals(listOf("+1", "+1"), list2)
         sut.onIntervalEditForPrimaryIncrementAdd(0)
         val list3 = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("1", "1", "1"), list3)
+        Assert.assertEquals(listOf("+1", "+1", "+1"), list3)
     }
 
     @Test
@@ -872,15 +898,146 @@ class ScoreboardDetailsViewModelTest {
     fun testEditingForPrimaryIncrement() = runTest {
         initSut()
         val list1 = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("1"), list1)
+        Assert.assertEquals(listOf("+1"), list1)
         sut.onIntervalEditForPrimaryIncrementAdd(0)
         val list2 = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("1", "1"), list2)
+        Assert.assertEquals(listOf("+1", "+1"), list2)
         sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
         val list3 = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("1", "2"), list3)
+        Assert.assertEquals(listOf("+1", "2"), list3)
         sut.onIntervalEditForPrimaryIncrement(0, 0, "-1")
         val list4 = sut.intervalList.value[0].primaryIncrementInputList
         Assert.assertEquals(listOf("-1", "2"), list4)
+    }
+
+    @Test
+    fun testEditingForPrimaryIncrementMove() = runTest {
+        initSut()
+        sut.onIntervalEditForPrimaryIncrementAdd(0)
+        sut.onIntervalEditForPrimaryIncrementAdd(0)
+        sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
+        sut.onIntervalEditForPrimaryIncrementMove(0, 0, false)
+        val list = sut.intervalList.value[0].primaryIncrementInputList
+        Assert.assertEquals(listOf("2", "+1", "+1"), list)
+    }
+
+    @Test
+    fun testEditingForPrimaryIncrementRemove() = runTest {
+        initSut()
+        sut.onIntervalEditForPrimaryIncrementAdd(0)
+        sut.onIntervalEditForPrimaryIncrementAdd(0)
+        sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
+        sut.onIntervalEditForPrimaryIncrement(0, 2, "3")
+        sut.onIntervalEditForPrimaryIncrementRemove(0, 1)
+        val list = sut.intervalList.value[0].primaryIncrementInputList
+        Assert.assertEquals(listOf("+1","3"), list)
+    }
+
+    @Test
+    fun testEditingForPrimaryIncrementRefresh() = runTest {
+        initSut()
+        sut.onIntervalEditForPrimaryIncrementAdd(0)
+        sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
+        sut.onIntervalEditForPrimaryIncrementRefresh(0, 1)
+        val list = sut.intervalList.value[0].primaryIncrementInputList
+        Assert.assertEquals(listOf("+1","+2"), list)
+        sut.onIntervalEditForPrimaryIncrementAdd(0)
+        sut.onIntervalEditForPrimaryIncrement(0, 2, "-2")
+        sut.onIntervalEditForPrimaryIncrementRefresh(0, 2)
+        val list2 = sut.intervalList.value[0].primaryIncrementInputList
+        Assert.assertEquals(listOf("+1","+2", "-2"), list2)
+    }
+
+    @Test
+    fun testEditingForPrimaryMappingAllowed() = runTest {
+        initSut()
+        sut.intervalList.value[0].allowPrimaryMapping.let {
+            Assert.assertFalse(it)
+        }
+        sut.onIntervalEditForPrimaryMappingAllowed(0, true)
+        sut.intervalList.value[0].allowPrimaryMapping.let {
+            Assert.assertTrue(it)
+        }
+        sut.onIntervalEditForPrimaryMappingAllowed(0, false)
+        sut.intervalList.value[0].allowPrimaryMapping.let {
+            Assert.assertFalse(it)
+        }
+    }
+
+    @Test
+    fun testEditingForPrimaryMappingAdd() = runTest {
+        initSut()
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertTrue(it.isEmpty())
+        }
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertEquals(listOf(
+                "0" to "",
+                "1" to ""
+            ), it)
+        }
+    }
+
+    @Test
+    fun testEditingForPrimaryMappingOriginalScore() = runTest {
+        initSut()
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertEquals(listOf(
+                "0" to "",
+                "1" to ""
+            ), it)
+        }
+        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 0, "2")
+        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 1, "3")
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertEquals(listOf(
+                "2" to "",
+                "3" to ""
+            ), it)
+        }
+    }
+
+    @Test
+    fun testEditingForPrimaryMappingDisplayScore() = runTest {
+        initSut()
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertEquals(listOf(
+                "0" to "",
+                "1" to ""
+            ), it)
+        }
+        sut.onIntervalEditForPrimaryMappingDisplayScore(0, 0, "0")
+        sut.onIntervalEditForPrimaryMappingDisplayScore(0, 1, "15")
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertEquals(listOf(
+                "0" to "0",
+                "1" to "15"
+            ), it)
+        }
+    }
+
+    @Test
+    fun testEditingForPrimaryMappingRemove() = runTest {
+        initSut()
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertEquals(listOf(
+                "0" to "",
+                "1" to ""
+            ), it)
+        }
+        sut.onIntervalEditForPrimaryMappingRemove(0, 1)
+        sut.intervalList.value[0].primaryMappingInputList.let {
+            Assert.assertEquals(listOf(
+                "0" to "",
+            ), it)
+        }
     }
 }

@@ -129,15 +129,20 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
             _intervalList.value = it.intervalList.map { interval ->
                 //TODO should make a mapper for this
+                val scoreInfo = interval.scoreInfo.toScoreInfo()
+                val intervalData = interval.intervalData.toIntervalData()
                 IntervalEditingInfo(
-                    scoreInfo = interval.scoreInfo.toScoreInfo(),
-                    intervalData = interval.intervalData.toIntervalData(),
-                    timeRepresentationPair = timeTransformer.toTimeData(interval.intervalData.initial).run {
+                    scoreInfo = scoreInfo,
+                    intervalData = intervalData,
+                    timeRepresentationPair = timeTransformer.toTimeData(intervalData.initial).run {
                         Pair(minute.toString(), second.toString())
                     },
-                    maxScoreInput = interval.scoreInfo.scoreRule.trigger.toString(),
-                    initialScoreInput = interval.scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: "",
-                    primaryIncrementInputList = interval.scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.asIncrementDisplay() } ?: listOf("+1"),
+                    maxScoreInput = (scoreInfo.scoreRule as? ScoreRule.Trigger)?.trigger?.toString() ?: "",
+                    initialScoreInput = scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: "",
+                    primaryIncrementInputList = scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.asIncrementDisplay() } ?: listOf("+1"),
+                    allowPrimaryMapping = scoreInfo.scoreToDisplayScoreMap.isNotEmpty(),
+                    primaryMappingInputList = scoreInfo.scoreToDisplayScoreMap.map { it.key.toString() to it.value }
+
                 )
             }
         }
@@ -332,7 +337,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     fun onIntervalEditForPrimaryIncrementAdd(index: Int) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
-            val newList = intervalEditingInfo.primaryIncrementInputList + "1"
+            val newList = intervalEditingInfo.primaryIncrementInputList + "+1"
             updatePrimaryIncrementList(
                 index, newList
             )
@@ -375,7 +380,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             if (newList.size == 1)
                 return
             if (incrementIndex in 0 until newList.size) {
-                newList.removeAt(index)
+                newList.removeAt(incrementIndex)
             }
 
             updatePrimaryIncrementList(
@@ -396,6 +401,60 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
     }
+
+    fun onIntervalEditForPrimaryMappingAllowed(index: Int, allowed: Boolean) =
+        updatePrimaryMappingAllowed(index, allowed)
+
+
+    fun onIntervalEditForPrimaryMappingAdd(index: Int) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val max = intervalEditingInfo.primaryMappingInputList.maxOfOrNull { (key, _) -> key.toIntOrNull() ?: -1 } ?: -1
+
+            val newList = intervalEditingInfo.primaryMappingInputList + ((max + 1).toString() to "")
+            updatePrimaryMappingList(
+                index, newList
+            )
+        }
+
+    fun onIntervalEditForPrimaryMappingOriginalScore(index: Int, mappingIndex: Int, value: String) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
+            newList[mappingIndex] = newList[mappingIndex].copy(first = value)
+
+            updatePrimaryMappingList(
+                index, newList
+            )
+        }
+
+    fun onIntervalEditForPrimaryMappingDisplayScore(index: Int, mappingIndex: Int, value: String) =
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
+            newList[mappingIndex] = newList[mappingIndex].copy(second = value)
+
+            updatePrimaryMappingList(
+                index, newList
+            )
+        }
+
+    fun onIntervalEditForPrimaryMappingRemove(index: Int, mappingIndex: Int) {
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
+            if (newList.size == 1)
+                return
+            if (mappingIndex in 0 until newList.size) {
+                newList.removeAt(mappingIndex)
+            }
+
+            updatePrimaryMappingList(
+                index, newList
+            )
+        }
+    }
+
 
     fun onIntervalEditForSecondaryScoreLabel(index: Int, value: String) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
@@ -442,6 +501,18 @@ class ScoreboardDetailsViewModel @Inject constructor(
         _intervalList.value = newList
     }
 
+    private fun updatePrimaryMappingAllowed(index: Int, allowed: Boolean) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(allowPrimaryMapping = allowed)
+        _intervalList.value = newList
+    }
+
+    private fun updatePrimaryMappingList(index: Int, mapping: List<Pair<String, String>>) {
+        val newList = intervalList.value.toMutableList()
+        newList[index] = newList[index].copy(primaryMappingInputList = mapping)
+        _intervalList.value = newList
+    }
+
     private fun generateGenericIntervalInfo() =
         IntervalEditingInfo(
             scoreInfo = ScoreInfo(
@@ -462,7 +533,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
             },
             maxScoreInput = "",
             initialScoreInput = "",
-            primaryIncrementInputList = listOf("+1")
+            primaryIncrementInputList = listOf("+1"),
+            allowPrimaryMapping = false,
+            primaryMappingInputList = listOf()
         )
 
     private fun generateDefaultScoreGroup() = ScoreGroup(

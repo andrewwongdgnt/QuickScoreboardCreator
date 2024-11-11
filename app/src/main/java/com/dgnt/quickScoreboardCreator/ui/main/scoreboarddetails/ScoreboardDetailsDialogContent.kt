@@ -762,7 +762,9 @@ private fun `One default interval`() =
                 timeRepresentationPair = Pair("9", "24"),
                 maxScoreInput = "33",
                 initialScoreInput = "10",
-                primaryIncrementInputList = listOf("1")
+                primaryIncrementInputList = listOf("+1"),
+                allowPrimaryMapping = false,
+                primaryMappingInputList = listOf()
             ),
         )
     )

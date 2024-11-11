@@ -30,6 +30,7 @@ class QSCHistoryCreatorTest {
                 ScoreInfo(
                     ScoreRule.None,
                     mapOf(),
+                    "",
                     listOf()
                 ) to
                         IntervalData(
@@ -39,6 +40,7 @@ class QSCHistoryCreatorTest {
                 ScoreInfo(
                     ScoreRule.None,
                     mapOf(),
+                    "",
                     listOf()
                 ) to
                         IntervalData(
@@ -259,6 +261,7 @@ class QSCHistoryCreatorTest {
                 ScoreInfo(
                     ScoreRule.None,
                     mapOf(),
+                    "",
                     listOf()
                 ) to
                         IntervalData(
@@ -268,6 +271,7 @@ class QSCHistoryCreatorTest {
                 ScoreInfo(
                     ScoreRule.None,
                     mapOf(),
+                    "",
                     listOf()
                 ) to
                         IntervalData(
@@ -277,6 +281,7 @@ class QSCHistoryCreatorTest {
                 ScoreInfo(
                     ScoreRule.None,
                     mapOf(),
+                    "",
                     listOf()
                 ) to
                         IntervalData(
