@@ -23,7 +23,7 @@ fun BackButton(onClick: () -> Unit) {
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(R.string.launch)
+            contentDescription = stringResource(R.string.back)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(

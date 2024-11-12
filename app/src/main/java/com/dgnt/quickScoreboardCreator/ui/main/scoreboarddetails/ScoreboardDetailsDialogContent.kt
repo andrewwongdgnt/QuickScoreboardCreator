@@ -20,13 +20,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -116,6 +115,13 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForPrimaryIncrementMove = viewModel::onIntervalEditForPrimaryIncrementMove,
         onIntervalEditForPrimaryIncrementRemove = viewModel::onIntervalEditForPrimaryIncrementRemove,
         onIntervalEditForPrimaryIncrementRefresh = viewModel::onIntervalEditForPrimaryIncrementRefresh,
+        onIntervalEditForPrimaryMappingAllowed = viewModel::onIntervalEditForPrimaryMappingAllowed,
+        onIntervalEditForPrimaryMappingAdd = viewModel::onIntervalEditForPrimaryMappingAdd,
+        onIntervalEditForPrimaryMappingOriginalScore = viewModel::onIntervalEditForPrimaryMappingOriginalScore,
+        onIntervalEditForPrimaryMappingDisplayScore = viewModel::onIntervalEditForPrimaryMappingDisplayScore,
+        onIntervalEditForPrimaryMappingRemove = viewModel::onIntervalEditForPrimaryMappingRemove,
+        onIntervalEditForSecondaryScoreAllowed = viewModel::onIntervalEditForSecondaryScoreAllowed,
+        onIntervalEditForSecondaryScoreLabel = viewModel::onIntervalEditForSecondaryScoreLabel,
         onIntervalAdd = viewModel::onIntervalAdd,
         onIntervalRemove = viewModel::onIntervalRemove,
         onIntervalMove = viewModel::onIntervalMove,
@@ -156,6 +162,13 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
     onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
+    onIntervalEditForPrimaryMappingAllowed: (Int, Boolean) -> Unit,
+    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
+    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit,
+    onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit,
+    onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit,
     onIntervalAdd: (Int?) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
@@ -244,18 +257,17 @@ private fun ScoreboardDetailsInnerDialogContent(
                     onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
                     onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove,
                     onIntervalEditForPrimaryIncrementRefresh = onIntervalEditForPrimaryIncrementRefresh,
+                    onIntervalEditForPrimaryMappingAllowed = onIntervalEditForPrimaryMappingAllowed,
+                    onIntervalEditForPrimaryMappingAdd = onIntervalEditForPrimaryMappingAdd,
+                    onIntervalEditForPrimaryMappingOriginalScore = onIntervalEditForPrimaryMappingOriginalScore,
+                    onIntervalEditForPrimaryMappingDisplayScore = onIntervalEditForPrimaryMappingDisplayScore,
+                    onIntervalEditForPrimaryMappingRemove = onIntervalEditForPrimaryMappingRemove,
+                    onIntervalEditForSecondaryScoreAllowed = onIntervalEditForSecondaryScoreAllowed,
+                    onIntervalEditForSecondaryScoreLabel = onIntervalEditForSecondaryScoreLabel,
+                    onIntervalAdd = onIntervalAdd,
                     onIntervalRemove = onIntervalRemove,
                     onIntervalMove = onIntervalMove
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Button(onClick = { onIntervalAdd(null) }) {
-                        Text(text = stringResource(R.string.add))
-                    }
-                }
             }
     }
 
@@ -342,11 +354,21 @@ private fun IntervalList(
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
     onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
+    onIntervalEditForPrimaryMappingAllowed: (Int, Boolean) -> Unit,
+    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
+    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit,
+    onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit,
+    onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit,
+    onIntervalAdd: (Int?) -> Unit,
     onIntervalRemove: (Int) -> Unit,
     onIntervalMove: (Boolean, Int) -> Unit,
 ) {
 
     val context = LocalContext.current
+    val defaultIntervalLabel = stringResource(id = R.string.defaultIntervalLabel)
+    val resolvedIntervalLabel = intervalLabel.takeIf { it.isNotEmpty() } ?: defaultIntervalLabel
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
@@ -366,8 +388,6 @@ private fun IntervalList(
             )
 
             // Interval Header
-            val defaultIntervalLabel = stringResource(id = R.string.defaultIntervalLabel)
-            val resolvedIntervalLabel = intervalLabel.takeIf { it.isNotEmpty() } ?: defaultIntervalLabel
             MoveableElement(
                 context = context,
                 element = { mod ->
@@ -537,24 +557,7 @@ private fun IntervalList(
                 )
 
             Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.primaryIncrementsHeader),
-                    style = MaterialTheme.typography.titleMedium
-                )
 
-                if (intervalEditingInfo.primaryIncrementInputList.size < MAX_INCREMENTS_COUNT) {
-                    IconButton(onClick = { onIntervalEditForPrimaryIncrementAdd(intervalIndex) }) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.add)
-                        )
-                    }
-                }
-            }
 
             intervalEditingInfo.primaryIncrementInputList.let { increments ->
                 IncrementList(
@@ -563,6 +566,7 @@ private fun IntervalList(
                     numberFieldWidth = numberFieldWidth,
                     intervalIndex = intervalIndex,
                     increments = increments,
+                    onIntervalEditForPrimaryIncrementAdd = onIntervalEditForPrimaryIncrementAdd,
                     onIntervalEditForPrimaryIncrement = onIntervalEditForPrimaryIncrement,
                     onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
                     onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove,
@@ -570,6 +574,41 @@ private fun IntervalList(
                 )
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+            LabelSwitch(
+                label = stringResource(id = R.string.hasPrimaryScoreToDisplayMapping),
+                checked = intervalEditingInfo.allowPrimaryMapping,
+                onCheckedChange = {
+                    onIntervalEditForPrimaryMappingAllowed(intervalIndex, it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            if (intervalEditingInfo.allowPrimaryMapping) {
+                intervalEditingInfo.primaryMappingInputList.let { mappings ->
+                    ScoreMappingList(
+                        context = context,
+                        modifier = Modifier.heightIn(min = 0.dp, max = 70.dp * mappings.size),
+                        numberFieldWidth = numberFieldWidth,
+                        intervalIndex = intervalIndex,
+                        mappings = mappings,
+                        onIntervalEditForPrimaryMappingAdd = onIntervalEditForPrimaryMappingAdd,
+                        onIntervalEditForPrimaryMappingOriginalScore = onIntervalEditForPrimaryMappingOriginalScore,
+                        onIntervalEditForPrimaryMappingDisplayScore = onIntervalEditForPrimaryMappingDisplayScore,
+                        onIntervalEditForPrimaryMappingRemove = onIntervalEditForPrimaryMappingRemove,
+                    )
+                }
+            }
+        }
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Button(onClick = { onIntervalAdd(null) }) {
+            Text(text = stringResource(R.string.addAnotherInterval, resolvedIntervalLabel))
         }
     }
 }
@@ -581,11 +620,21 @@ private fun IncrementList(
     numberFieldWidth: Dp,
     intervalIndex: Int,
     increments: List<String>,
+    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
     onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit,
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
     onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
 ) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = stringResource(id = R.string.primaryIncrementsHeader),
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
@@ -609,11 +658,13 @@ private fun IncrementList(
                             },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
-                            modifier = Modifier.width(numberFieldWidth).onFocusChanged { focusState ->
-                                if (!focusState.isFocused)
-                                    onIntervalEditForPrimaryIncrementRefresh(intervalIndex, index)
+                            modifier = Modifier
+                                .width(numberFieldWidth)
+                                .onFocusChanged { focusState ->
+                                    if (!focusState.isFocused)
+                                        onIntervalEditForPrimaryIncrementRefresh(intervalIndex, index)
 
-                            }
+                                }
                         )
                     }
                 },
@@ -626,6 +677,88 @@ private fun IncrementList(
             )
 
 
+        }
+    }
+
+
+    if (increments.size < MAX_INCREMENTS_COUNT) {
+        Row {
+            Spacer(modifier = Modifier.weight(1f))
+            Button(onClick = { onIntervalEditForPrimaryIncrementAdd(intervalIndex) }) {
+                Text(text = stringResource(R.string.addScoringMethod))
+            }
+        }
+    }
+}
+
+@Composable
+fun ScoreMappingList(
+    context: Context,
+    modifier: Modifier = Modifier,
+    numberFieldWidth: Dp,
+    intervalIndex: Int,
+    mappings: List<Pair<String, String>>,
+    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
+    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center
+    ) {
+        itemsIndexed(mappings) { index, (originalScore, displayedScore) ->
+            MoveableElement(
+                context = context,
+                element = { mod ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = mod
+                    ) {
+                        TextField(
+                            value = originalScore,
+                            onValueChange = {
+                                if (it.length <= 3)
+                                    onIntervalEditForPrimaryMappingOriginalScore(intervalIndex, index, it)
+
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            modifier = Modifier
+                                .width(numberFieldWidth)
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = stringResource(R.string.mapTo)
+                        )
+                        TextField(
+                            value = displayedScore,
+                            onValueChange = {
+                                if (it.length <= 3)
+                                    onIntervalEditForPrimaryMappingDisplayScore(intervalIndex, index, it)
+
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            modifier = Modifier
+                                .width(numberFieldWidth)
+                        )
+                    }
+                },
+                size = mappings.size,
+                currentIndex = index,
+                lastIndex = mappings.lastIndex,
+                onMoveUp = {  },
+                onMoveDown = {  },
+                onDelete = { onIntervalEditForPrimaryMappingRemove(intervalIndex, index) },
+            )
+        }
+    }
+    Row {
+        Spacer(modifier = Modifier.weight(1f))
+        Button(onClick = { onIntervalEditForPrimaryMappingAdd(intervalIndex) }) {
+            Text(text = stringResource(R.string.addScoreMapping))
         }
     }
 }
@@ -659,6 +792,13 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit = { _, _, _ -> },
     onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit = { _, _ -> },
     onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit = { _, _ -> },
+    onIntervalEditForPrimaryMappingAllowed: (Int, Boolean) -> Unit = { _, _ -> },
+    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit = { _ -> },
+    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit = { _, _, _ -> },
+    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit = { _, _, _ -> },
+    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit = { _, _ -> },
+    onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit = { _, _ -> },
+    onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit = { _, _ -> },
     onIntervalAdd: (Int?) -> Unit = { _ -> },
     onIntervalRemove: (Int) -> Unit = { _ -> },
     onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
@@ -697,6 +837,13 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
         onIntervalEditForPrimaryIncrementMove,
         onIntervalEditForPrimaryIncrementRemove,
         onIntervalEditForPrimaryIncrementRefresh,
+        onIntervalEditForPrimaryMappingAllowed,
+        onIntervalEditForPrimaryMappingAdd,
+        onIntervalEditForPrimaryMappingOriginalScore,
+        onIntervalEditForPrimaryMappingDisplayScore,
+        onIntervalEditForPrimaryMappingRemove,
+        onIntervalEditForSecondaryScoreAllowed,
+        onIntervalEditForSecondaryScoreLabel,
         onIntervalAdd,
         onIntervalRemove,
         onIntervalMove,

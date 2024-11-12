@@ -46,6 +46,10 @@
     <string name="initialScoreHeader">What is the starting score?</string>
     <string name="initialScorePlaceHolder">0 – 999</string>
     <string name="primaryIncrementsHeader">How many ways to update the scores?</string>
+    <string name="hasPrimaryScoreToDisplayMapping">Allow custom score mapping</string>
+    <string name="addScoringMethod">Add scoring method</string>
+    <string name="addScoreMapping">Add score mapping</string>
+    <string name="addAnotherInterval">Add another %1$s</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>
     <plurals name="deletedScoreboardMsg">
@@ -134,4 +138,5 @@
     <string name="lowBuzzerSoundEffect">Low buzzer sound effect preview</string>
     <string name="hornSoundEffect">Horn sound effect preview</string>
     <string name="whistleSoundEffect">Whistle sound effect preview</string>
+    <string name="mapTo">Mapped to</string>
 </resources>
