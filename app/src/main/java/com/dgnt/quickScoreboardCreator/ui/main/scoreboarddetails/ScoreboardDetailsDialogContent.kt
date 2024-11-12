@@ -119,6 +119,7 @@ fun ScoreboardDetailsDialogContent(
         onIntervalEditForPrimaryMappingAdd = viewModel::onIntervalEditForPrimaryMappingAdd,
         onIntervalEditForPrimaryMappingOriginalScore = viewModel::onIntervalEditForPrimaryMappingOriginalScore,
         onIntervalEditForPrimaryMappingDisplayScore = viewModel::onIntervalEditForPrimaryMappingDisplayScore,
+        onIntervalEditForPrimaryMappingMove = viewModel::onIntervalEditForPrimaryMappingMove,
         onIntervalEditForPrimaryMappingRemove = viewModel::onIntervalEditForPrimaryMappingRemove,
         onIntervalEditForSecondaryScoreAllowed = viewModel::onIntervalEditForSecondaryScoreAllowed,
         onIntervalEditForSecondaryScoreLabel = viewModel::onIntervalEditForSecondaryScoreLabel,
@@ -166,6 +167,7 @@ private fun ScoreboardDetailsInnerDialogContent(
     onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
     onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
     onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit,
     onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit,
     onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit,
@@ -262,6 +264,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                     onIntervalEditForPrimaryMappingOriginalScore = onIntervalEditForPrimaryMappingOriginalScore,
                     onIntervalEditForPrimaryMappingDisplayScore = onIntervalEditForPrimaryMappingDisplayScore,
                     onIntervalEditForPrimaryMappingRemove = onIntervalEditForPrimaryMappingRemove,
+                    onIntervalEditForPrimaryMappingMove = onIntervalEditForPrimaryMappingMove,
                     onIntervalEditForSecondaryScoreAllowed = onIntervalEditForSecondaryScoreAllowed,
                     onIntervalEditForSecondaryScoreLabel = onIntervalEditForSecondaryScoreLabel,
                     onIntervalAdd = onIntervalAdd,
@@ -358,6 +361,7 @@ private fun IntervalList(
     onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
     onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
     onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit,
     onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit,
     onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit,
@@ -595,6 +599,7 @@ private fun IntervalList(
                         onIntervalEditForPrimaryMappingAdd = onIntervalEditForPrimaryMappingAdd,
                         onIntervalEditForPrimaryMappingOriginalScore = onIntervalEditForPrimaryMappingOriginalScore,
                         onIntervalEditForPrimaryMappingDisplayScore = onIntervalEditForPrimaryMappingDisplayScore,
+                        onIntervalEditForPrimaryMappingMove = onIntervalEditForPrimaryMappingMove,
                         onIntervalEditForPrimaryMappingRemove = onIntervalEditForPrimaryMappingRemove,
                     )
                 }
@@ -701,6 +706,7 @@ fun ScoreMappingList(
     onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
     onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
     onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
+    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit,
     onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit
 ) {
     LazyColumn(
@@ -735,11 +741,10 @@ fun ScoreMappingList(
                         TextField(
                             value = displayedScore,
                             onValueChange = {
-                                if (it.length <= 3)
+                                if (it.length <= 5)
                                     onIntervalEditForPrimaryMappingDisplayScore(intervalIndex, index, it)
 
                             },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
                             modifier = Modifier
                                 .width(numberFieldWidth)
@@ -749,8 +754,8 @@ fun ScoreMappingList(
                 size = mappings.size,
                 currentIndex = index,
                 lastIndex = mappings.lastIndex,
-                onMoveUp = {  },
-                onMoveDown = {  },
+                onMoveUp = { onIntervalEditForPrimaryMappingMove(intervalIndex, index, true) },
+                onMoveDown = { onIntervalEditForPrimaryMappingMove(intervalIndex, index, false) },
                 onDelete = { onIntervalEditForPrimaryMappingRemove(intervalIndex, index) },
             )
         }
@@ -796,6 +801,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
     onIntervalEditForPrimaryMappingAdd: (Int) -> Unit = { _ -> },
     onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit = { _, _, _ -> },
     onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit = { _, _, _ -> },
+    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit = { _, _, _ -> },
     onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit = { _, _ -> },
     onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit = { _, _ -> },
     onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit = { _, _ -> },
@@ -841,6 +847,7 @@ private fun ScoreboardDetailsInnerDialogContentForPreview(
         onIntervalEditForPrimaryMappingAdd,
         onIntervalEditForPrimaryMappingOriginalScore,
         onIntervalEditForPrimaryMappingDisplayScore,
+        onIntervalEditForPrimaryMappingMove,
         onIntervalEditForPrimaryMappingRemove,
         onIntervalEditForSecondaryScoreAllowed,
         onIntervalEditForSecondaryScoreLabel,

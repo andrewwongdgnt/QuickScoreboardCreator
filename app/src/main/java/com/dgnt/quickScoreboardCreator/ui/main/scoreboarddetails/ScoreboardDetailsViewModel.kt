@@ -417,15 +417,17 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
-    fun onIntervalEditForPrimaryMappingOriginalScore(index: Int, mappingIndex: Int, value: String) =
-        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+    fun onIntervalEditForPrimaryMappingOriginalScore(index: Int, mappingIndex: Int, rawValue: String) =
+        getFilteredValue(rawValue)?.let { value ->
+            intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
 
-            val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
-            newList[mappingIndex] = newList[mappingIndex].copy(first = value)
+                val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
+                newList[mappingIndex] = newList[mappingIndex].copy(first = value)
 
-            updatePrimaryMappingList(
-                index, newList
-            )
+                updatePrimaryMappingList(
+                    index, newList
+                )
+            }
         }
 
     fun onIntervalEditForPrimaryMappingDisplayScore(index: Int, mappingIndex: Int, value: String) =
@@ -438,6 +440,27 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 index, newList
             )
         }
+
+    fun onIntervalEditForPrimaryMappingMove(index: Int, mappingIndex: Int, up: Boolean) {
+        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+
+            val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
+
+            // prevent out of bound movements
+            if ((up && mappingIndex == 0) || (!up && mappingIndex == newList.lastIndex))
+                return
+
+
+            if (mappingIndex in 0 until newList.size) {
+                val otherIndex = if (up) mappingIndex - 1 else mappingIndex + 1
+                newList.swap(mappingIndex, otherIndex)
+            }
+
+            updatePrimaryMappingList(
+                index, newList
+            )
+        }
+    }
 
     fun onIntervalEditForPrimaryMappingRemove(index: Int, mappingIndex: Int) {
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
