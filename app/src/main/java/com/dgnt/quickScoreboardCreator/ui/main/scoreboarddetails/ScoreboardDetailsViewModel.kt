@@ -129,7 +129,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
             _intervalList.value = it.intervalList.map { interval ->
                 //TODO should make a mapper for this
-                val scoreInfo = interval.scoreInfo.toScoreInfo()
+                val scoreInfo = interval.scoreInfo.toScoreInfo().copy(secondaryScoreLabel = resources.getString(scoreboardType.secondaryScoreLabelRes))
                 val intervalData = interval.intervalData.toIntervalData()
                 IntervalEditingInfo(
                     scoreInfo = scoreInfo,

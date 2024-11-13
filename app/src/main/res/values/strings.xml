@@ -49,6 +49,8 @@
     <string name="hasPrimaryScoreToDisplayMapping">Allow custom score mapping</string>
     <string name="addScoringMethod">Add scoring method</string>
     <string name="addScoreMapping">Add score mapping</string>
+    <string name="hasSecondaryScoring">Show secondary counter</string>
+    <string name="secondaryScorePlaceholder">(fouls, penalties, etc.)</string>
     <string name="addAnotherInterval">Add another %1$s</string>
     <!-- Scoreboard List -->
     <string name="scoreboardListNavTitle">Scoreboards</string>

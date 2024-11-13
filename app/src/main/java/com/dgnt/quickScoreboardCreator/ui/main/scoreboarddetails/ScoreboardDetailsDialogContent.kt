@@ -243,7 +243,7 @@ private fun ScoreboardDetailsInnerDialogContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalList(
-                    modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp * intervalList.size),
+                    modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp * 10 * intervalList.size),
                     intervalLabel = intervalLabel,
                     intervalList = intervalList,
                     onIntervalEditForSoundEffect = onIntervalEditForSoundEffect,
@@ -541,7 +541,7 @@ private fun IntervalList(
                 onOptionSelected = { onIntervalEditForTeamCount(intervalIndex, it) }
             )
 
-            //Scoring
+            //Primary Scoring
 
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -566,7 +566,7 @@ private fun IntervalList(
             intervalEditingInfo.primaryIncrementInputList.let { increments ->
                 IncrementList(
                     context = context,
-                    modifier = Modifier.heightIn(min = 0.dp, max = 70.dp * increments.size),
+                    modifier = Modifier.heightIn(min = 0.dp, max = 170.dp * increments.size),
                     numberFieldWidth = numberFieldWidth,
                     intervalIndex = intervalIndex,
                     increments = increments,
@@ -592,7 +592,7 @@ private fun IntervalList(
                 intervalEditingInfo.primaryMappingInputList.let { mappings ->
                     ScoreMappingList(
                         context = context,
-                        modifier = Modifier.heightIn(min = 0.dp, max = 70.dp * mappings.size),
+                        modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp * 5 * mappings.size),
                         numberFieldWidth = numberFieldWidth,
                         intervalIndex = intervalIndex,
                         mappings = mappings,
@@ -604,6 +604,26 @@ private fun IntervalList(
                     )
                 }
             }
+
+            // Secondary scoring
+            Spacer(modifier = Modifier.height(16.dp))
+            LabelSwitch(
+                label = stringResource(id = R.string.hasSecondaryScoring),
+                checked = intervalEditingInfo.allowSecondaryScore,
+                onCheckedChange = {
+                    onIntervalEditForSecondaryScoreAllowed(intervalIndex, it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            if (intervalEditingInfo.allowSecondaryScore)
+                TextField(
+                    value = intervalEditingInfo.scoreInfo.secondaryScoreLabel,
+                    onValueChange = { onIntervalEditForSecondaryScoreLabel(intervalIndex, it) },
+                    placeholder = { Text(text = stringResource(R.string.secondaryScorePlaceholder)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+
         }
     }
 
