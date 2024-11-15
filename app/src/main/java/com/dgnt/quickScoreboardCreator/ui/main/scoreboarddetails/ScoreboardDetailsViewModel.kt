@@ -87,8 +87,26 @@ class ScoreboardDetailsViewModel @Inject constructor(
     )
     val intervalList = _intervalList.asStateFlow()
 
-    val valid: StateFlow<Boolean> = combine(title, intervalLabel) { title, intervalLabel ->
-        title.isNotBlank() && intervalLabel.isNotBlank()
+    val valid = combine(
+        title,
+        intervalLabel,
+        intervalList
+    ) { title, intervalLabel, intervalList ->
+
+        title.isNotBlank() && intervalLabel.isNotBlank() && intervalList.all { interval ->
+
+            val checkingTimeLimitAndMaxScore = (interval.intervalData.increasing && interval.maxScoreInput.toIntOrNull()?.let { it > 0 } == true) || (!interval.intervalData.increasing && interval.intervalData.initial > 0)
+
+            val checkingInitialScoreInput = (interval.initialScoreInput.isNotBlank())
+
+            val checkingIncrementList = interval.primaryIncrementInputList.all { it.isNotBlank() }
+
+            val checkingPrimaryMapping = (interval.allowPrimaryMapping && interval.primaryMappingInputList.isNotEmpty() && interval.primaryMappingInputList.all { it.first.isNotBlank() && it.second.isNotBlank() }) || !interval.allowPrimaryMapping
+
+            val checkingSecondaryScoring = (interval.allowSecondaryScore && interval.scoreInfo.secondaryScoreLabel.isNotBlank()) || !interval.allowSecondaryScore
+
+            checkingTimeLimitAndMaxScore && checkingInitialScoreInput && checkingIncrementList && checkingPrimaryMapping && checkingSecondaryScoring
+        }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     init {
@@ -346,7 +364,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
     fun onIntervalEditForPrimaryIncrement(index: Int, incrementIndex: Int, value: String) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
             val newList = intervalEditingInfo.primaryIncrementInputList.toMutableList()
-            newList[incrementIndex] = value
+            if (incrementIndex in 0 until newList.size)
+                newList[incrementIndex] = value
             updatePrimaryIncrementList(
                 index, newList
             )
@@ -379,9 +398,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
             val newList = intervalEditingInfo.primaryIncrementInputList.toMutableList()
             if (newList.size == 1)
                 return
-            if (incrementIndex in 0 until newList.size) {
+            if (incrementIndex in 0 until newList.size)
                 newList.removeAt(incrementIndex)
-            }
 
             updatePrimaryIncrementList(
                 index, newList
@@ -393,8 +411,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
 
             val newList = intervalEditingInfo.primaryIncrementInputList.toMutableList()
-            newList[incrementIndex] = newList[incrementIndex].asIncrementDisplay()
-
+            if (incrementIndex in 0 until newList.size)
+                newList[incrementIndex] = newList[incrementIndex].asIncrementDisplay()
 
             updatePrimaryIncrementList(
                 index, newList
@@ -422,7 +440,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
             intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
 
                 val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
-                newList[mappingIndex] = newList[mappingIndex].copy(first = value)
+                if (mappingIndex in 0 until newList.size)
+                    newList[mappingIndex] = newList[mappingIndex].copy(first = value)
 
                 updatePrimaryMappingList(
                     index, newList
@@ -434,7 +453,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
 
             val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
-            newList[mappingIndex] = newList[mappingIndex].copy(second = value)
+            if (mappingIndex in 0 until newList.size)
+                newList[mappingIndex] = newList[mappingIndex].copy(second = value)
 
             updatePrimaryMappingList(
                 index, newList
@@ -468,9 +488,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
             val newList = intervalEditingInfo.primaryMappingInputList.toMutableList()
             if (newList.size == 1)
                 return
-            if (mappingIndex in 0 until newList.size) {
+            if (mappingIndex in 0 until newList.size)
                 newList.removeAt(mappingIndex)
-            }
 
             updatePrimaryMappingList(
                 index, newList
@@ -492,55 +511,64 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     private fun updateScoreInfo(index: Int, scoreInfo: ScoreInfo) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(scoreInfo = scoreInfo)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(scoreInfo = scoreInfo)
         _intervalList.value = newList
     }
 
     private fun updateIntervalData(index: Int, intervalData: IntervalData) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(intervalData = intervalData)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(intervalData = intervalData)
         _intervalList.value = newList
     }
 
     private fun updateTimeRepresentationPair(index: Int, timeRepresentationPair: Pair<String, String>) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(timeRepresentationPair = timeRepresentationPair)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(timeRepresentationPair = timeRepresentationPair)
         _intervalList.value = newList
     }
 
     private fun updateMaxScoreInput(index: Int, maxScore: String) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(maxScoreInput = maxScore)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(maxScoreInput = maxScore)
         _intervalList.value = newList
     }
 
     private fun updateInitialScoreInput(index: Int, initialScore: String) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(initialScoreInput = initialScore)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(initialScoreInput = initialScore)
         _intervalList.value = newList
     }
 
     private fun updatePrimaryIncrementList(index: Int, increments: List<String>) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(primaryIncrementInputList = increments)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(primaryIncrementInputList = increments)
         _intervalList.value = newList
     }
 
     private fun updatePrimaryMappingAllowed(index: Int, allowed: Boolean) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(allowPrimaryMapping = allowed)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(allowPrimaryMapping = allowed)
         _intervalList.value = newList
     }
 
     private fun updatePrimaryMappingList(index: Int, mapping: List<Pair<String, String>>) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(primaryMappingInputList = mapping)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(primaryMappingInputList = mapping)
         _intervalList.value = newList
     }
 
     private fun updateSecondaryScoreAllowed(index: Int, allowed: Boolean) {
         val newList = intervalList.value.toMutableList()
-        newList[index] = newList[index].copy(allowSecondaryScore = allowed)
+        if (index in 0 until newList.size)
+            newList[index] = newList[index].copy(allowSecondaryScore = allowed)
         _intervalList.value = newList
     }
 
@@ -551,7 +579,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 scoreToDisplayScoreMap = mapOf(),
                 secondaryScoreLabel = "",
                 dataList = listOf(
-                    generateDefaultScoreGroup()
+                    generateDefaultScoreGroup(),
+                    generateDefaultScoreGroup(),
                 )
             ),
             intervalData = IntervalData(
@@ -566,7 +595,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
             initialScoreInput = "",
             primaryIncrementInputList = listOf("+1"),
             allowPrimaryMapping = false,
-            primaryMappingInputList = listOf(),
+            primaryMappingInputList = listOf("0" to "0"),
             allowSecondaryScore = false
         )
 

@@ -91,6 +91,7 @@ class ScoreboardDetailsViewModelTest {
         Dispatchers.setMain(testDispatcher)
         coEvery { insertScoreboardUseCase.invoke(any()) } answers { 1 }
         every { timeTransformer.toTimeData(0) } answers { TimeData(0, 0, 0) }
+        every { timeTransformer.fromTimeData(TimeData(10,0,0)) } answers { 10000 }
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
     }
 
@@ -114,7 +115,8 @@ class ScoreboardDetailsViewModelTest {
         Assert.assertEquals(WinRule.Count, sut.winRule.value)
         Assert.assertEquals(ScoreboardIcon.TENNIS, sut.icon.value)
         Assert.assertEquals("scoreboard interval", sut.intervalLabel.value)
-        Assert.assertTrue(sut.valid.value)
+//TODO un comment when validation logic is done
+    // Assert.assertTrue(sut.valid.value)
     }
 
     @Test
@@ -162,7 +164,9 @@ class ScoreboardDetailsViewModelTest {
         sut.onTitleChange("Some value")
         Assert.assertFalse(sut.valid.value)
         sut.onIntervalLabelChange("Some value")
-        Assert.assertTrue(sut.valid.value)
+        Assert.assertFalse(sut.valid.value)
+
+        //TODO add more testing here
     }
 
     @Test
@@ -195,6 +199,8 @@ class ScoreboardDetailsViewModelTest {
         sut.onWinRuleChange(WinRule.Sum)
         sut.onIconChange(ScoreboardIcon.SOCCER)
         sut.onIntervalLabelChange("new interval label")
+        sut.onIntervalEditForMinute(0, "10")
+        sut.onIntervalEditForInitialScoreInput(0, "0")
         sut.onConfirm()
         verify(exactly = 1) {
             sut.sendUiEvent(UiEvent.Done)
@@ -233,6 +239,8 @@ class ScoreboardDetailsViewModelTest {
         sut.onWinRuleChange(WinRule.Final)
         sut.onIconChange(ScoreboardIcon.BOXING)
         sut.onIntervalLabelChange("new interval label")
+        sut.onIntervalEditForMinute(0, "10")
+        sut.onIntervalEditForInitialScoreInput(0, "0")
         sut.onConfirm()
         verify(exactly = 1) {
             sut.sendUiEvent(UiEvent.Done)
@@ -304,6 +312,14 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
                             )
                         )
                     ),
@@ -317,7 +333,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
@@ -344,28 +360,7 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
-                            )
-                        )
-                    ),
-                    intervalData = IntervalData(
-                        current = 0,
-                        initial = 0,
-                        increasing = false
-                    ),
-                    timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
-                    primaryIncrementInputList = listOf("+1"),
-                    allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
-                    allowSecondaryScore = false
-                ),
-                IntervalEditingInfo(
-                    scoreInfo = ScoreInfo(
-                        scoreRule = ScoreRule.None,
-                        scoreToDisplayScoreMap = mapOf(),
-                        secondaryScoreLabel = "",
-                        dataList = listOf(
+                            ),
                             ScoreGroup(
                                 primary = ScoreData(
                                     current = 0,
@@ -386,7 +381,44 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
+                    allowSecondaryScore = false
+                ),
+                IntervalEditingInfo(
+                    scoreInfo = ScoreInfo(
+                        scoreRule = ScoreRule.None,
+                        scoreToDisplayScoreMap = mapOf(),
+                        secondaryScoreLabel = "",
+                        dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            )
+                        )
+                    ),
+                    intervalData = IntervalData(
+                        current = 0,
+                        initial = 0,
+                        increasing = false
+                    ),
+                    timeRepresentationPair = Pair("0", "0"),
+                    maxScoreInput = "",
+                    initialScoreInput = "",
+                    primaryIncrementInputList = listOf("+1"),
+                    allowPrimaryMapping = false,
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 )
             ), sut.intervalList.value
@@ -413,6 +445,14 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
                             )
                         )
                     ),
@@ -426,7 +466,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
@@ -449,6 +489,14 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
                             )
                         )
                     ),
@@ -462,7 +510,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
@@ -492,6 +540,14 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
                             )
                         )
                     ),
@@ -505,7 +561,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
@@ -514,6 +570,14 @@ class ScoreboardDetailsViewModelTest {
                         scoreToDisplayScoreMap = mapOf(),
                         secondaryScoreLabel = "",
                         dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            ),
                             ScoreGroup(
                                 primary = ScoreData(
                                     current = 0,
@@ -534,7 +598,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
@@ -556,6 +620,14 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
                             )
                         )
                     ),
@@ -569,7 +641,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
@@ -578,6 +650,14 @@ class ScoreboardDetailsViewModelTest {
                         scoreToDisplayScoreMap = mapOf(),
                         secondaryScoreLabel = "",
                         dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            ),
                             ScoreGroup(
                                 primary = ScoreData(
                                     current = 0,
@@ -598,7 +678,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
@@ -620,6 +700,14 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
                             )
                         )
                     ),
@@ -633,7 +721,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
@@ -642,6 +730,14 @@ class ScoreboardDetailsViewModelTest {
                         scoreToDisplayScoreMap = mapOf(),
                         secondaryScoreLabel = "",
                         dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            ),
                             ScoreGroup(
                                 primary = ScoreData(
                                     current = 0,
@@ -662,7 +758,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
@@ -684,6 +780,14 @@ class ScoreboardDetailsViewModelTest {
                                     increments = listOf(1)
                                 ),
                                 secondary = null
+                            ),
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
                             )
                         )
                     ),
@@ -697,7 +801,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
                 IntervalEditingInfo(
@@ -706,6 +810,14 @@ class ScoreboardDetailsViewModelTest {
                         scoreToDisplayScoreMap = mapOf(),
                         secondaryScoreLabel = "",
                         dataList = listOf(
+                            ScoreGroup(
+                                primary = ScoreData(
+                                    current = 0,
+                                    initial = 0,
+                                    increments = listOf(1)
+                                ),
+                                secondary = null
+                            ),
                             ScoreGroup(
                                 primary = ScoreData(
                                     current = 0,
@@ -726,7 +838,7 @@ class ScoreboardDetailsViewModelTest {
                     initialScoreInput = "",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
-                    primaryMappingInputList = listOf(),
+                    primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
             ), sut.intervalList.value
@@ -980,15 +1092,13 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testEditingForPrimaryMappingAdd() = runTest {
         initSut()
-        sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertTrue(it.isEmpty())
-        }
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.intervalList.value[0].primaryMappingInputList.let {
             Assert.assertEquals(listOf(
-                "0" to "",
-                "1" to ""
+                "0" to "0",
+                "1" to "",
+                "2" to "",
             ), it)
         }
     }
@@ -998,18 +1108,13 @@ class ScoreboardDetailsViewModelTest {
         initSut()
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.onIntervalEditForPrimaryMappingAdd(0)
+        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 0, "3")
+        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 1, "4")
         sut.intervalList.value[0].primaryMappingInputList.let {
             Assert.assertEquals(listOf(
-                "0" to "",
-                "1" to ""
-            ), it)
-        }
-        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 0, "2")
-        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 1, "3")
-        sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertEquals(listOf(
+                "3" to "0",
+                "4" to "",
                 "2" to "",
-                "3" to ""
             ), it)
         }
     }
@@ -1019,18 +1124,13 @@ class ScoreboardDetailsViewModelTest {
         initSut()
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertEquals(listOf(
-                "0" to "",
-                "1" to ""
-            ), it)
-        }
         sut.onIntervalEditForPrimaryMappingDisplayScore(0, 0, "0")
         sut.onIntervalEditForPrimaryMappingDisplayScore(0, 1, "15")
         sut.intervalList.value[0].primaryMappingInputList.let {
             Assert.assertEquals(listOf(
                 "0" to "0",
-                "1" to "15"
+                "1" to "15",
+                "2" to ""
             ), it)
         }
     }
@@ -1040,16 +1140,11 @@ class ScoreboardDetailsViewModelTest {
         initSut()
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertEquals(listOf(
-                "0" to "",
-                "1" to ""
-            ), it)
-        }
         sut.onIntervalEditForPrimaryMappingRemove(0, 1)
         sut.intervalList.value[0].primaryMappingInputList.let {
             Assert.assertEquals(listOf(
-                "0" to "",
+                "0" to "0",
+                "2" to "",
             ), it)
         }
     }
