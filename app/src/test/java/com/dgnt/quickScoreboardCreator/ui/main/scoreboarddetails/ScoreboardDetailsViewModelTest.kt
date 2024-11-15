@@ -91,7 +91,7 @@ class ScoreboardDetailsViewModelTest {
         Dispatchers.setMain(testDispatcher)
         coEvery { insertScoreboardUseCase.invoke(any()) } answers { 1 }
         every { timeTransformer.toTimeData(0) } answers { TimeData(0, 0, 0) }
-        every { timeTransformer.fromTimeData(TimeData(10,0,0)) } answers { 10000 }
+        every { timeTransformer.fromTimeData(TimeData(10, 0, 0)) } answers { 10000 }
         every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns null
     }
 
@@ -115,8 +115,7 @@ class ScoreboardDetailsViewModelTest {
         Assert.assertEquals(WinRule.Count, sut.winRule.value)
         Assert.assertEquals(ScoreboardIcon.TENNIS, sut.icon.value)
         Assert.assertEquals("scoreboard interval", sut.intervalLabel.value)
-//TODO un comment when validation logic is done
-    // Assert.assertTrue(sut.valid.value)
+        Assert.assertFalse(sut.valid.value)
     }
 
     @Test
@@ -165,8 +164,10 @@ class ScoreboardDetailsViewModelTest {
         Assert.assertFalse(sut.valid.value)
         sut.onIntervalLabelChange("Some value")
         Assert.assertFalse(sut.valid.value)
-
-        //TODO add more testing here
+        sut.onIntervalEditForMinute(0, "10")
+        Assert.assertFalse(sut.valid.value)
+        sut.onIntervalEditForInitialScoreInput(0, "0")
+        Assert.assertTrue(sut.valid.value)
     }
 
     @Test
@@ -1055,7 +1056,7 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalEditForPrimaryIncrement(0, 2, "3")
         sut.onIntervalEditForPrimaryIncrementRemove(0, 1)
         val list = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("+1","3"), list)
+        Assert.assertEquals(listOf("+1", "3"), list)
     }
 
     @Test
@@ -1065,12 +1066,12 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
         sut.onIntervalEditForPrimaryIncrementRefresh(0, 1)
         val list = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("+1","+2"), list)
+        Assert.assertEquals(listOf("+1", "+2"), list)
         sut.onIntervalEditForPrimaryIncrementAdd(0)
         sut.onIntervalEditForPrimaryIncrement(0, 2, "-2")
         sut.onIntervalEditForPrimaryIncrementRefresh(0, 2)
         val list2 = sut.intervalList.value[0].primaryIncrementInputList
-        Assert.assertEquals(listOf("+1","+2", "-2"), list2)
+        Assert.assertEquals(listOf("+1", "+2", "-2"), list2)
     }
 
     @Test
@@ -1095,11 +1096,13 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertEquals(listOf(
-                "0" to "0",
-                "1" to "",
-                "2" to "",
-            ), it)
+            Assert.assertEquals(
+                listOf(
+                    "0" to "0",
+                    "1" to "",
+                    "2" to "",
+                ), it
+            )
         }
     }
 
@@ -1111,11 +1114,13 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalEditForPrimaryMappingOriginalScore(0, 0, "3")
         sut.onIntervalEditForPrimaryMappingOriginalScore(0, 1, "4")
         sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertEquals(listOf(
-                "3" to "0",
-                "4" to "",
-                "2" to "",
-            ), it)
+            Assert.assertEquals(
+                listOf(
+                    "3" to "0",
+                    "4" to "",
+                    "2" to "",
+                ), it
+            )
         }
     }
 
@@ -1127,11 +1132,13 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalEditForPrimaryMappingDisplayScore(0, 0, "0")
         sut.onIntervalEditForPrimaryMappingDisplayScore(0, 1, "15")
         sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertEquals(listOf(
-                "0" to "0",
-                "1" to "15",
-                "2" to ""
-            ), it)
+            Assert.assertEquals(
+                listOf(
+                    "0" to "0",
+                    "1" to "15",
+                    "2" to ""
+                ), it
+            )
         }
     }
 
@@ -1142,10 +1149,12 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalEditForPrimaryMappingAdd(0)
         sut.onIntervalEditForPrimaryMappingRemove(0, 1)
         sut.intervalList.value[0].primaryMappingInputList.let {
-            Assert.assertEquals(listOf(
-                "0" to "0",
-                "2" to "",
-            ), it)
+            Assert.assertEquals(
+                listOf(
+                    "0" to "0",
+                    "2" to "",
+                ), it
+            )
         }
     }
 
