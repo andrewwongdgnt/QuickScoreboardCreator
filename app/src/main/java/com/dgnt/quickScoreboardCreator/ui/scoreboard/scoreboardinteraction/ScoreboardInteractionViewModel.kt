@@ -124,8 +124,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val timeUpdateListener: (Long) -> Unit = {
         _timeData.value = timeTransformer.toTimeData(it)
         if (it <= 0L) {
-            timerJob?.cancel()
-            _timerInProgress.value = false
+            stopTimerJob()
         }
     }
 
@@ -137,6 +136,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val winnersUpdateListener: (Set<Int>) -> Unit = {
         //TODO handle winners
 
+        stopTimerJob()
         isHistoryTemporary = false
         viewModelScope.launch {
             historyEntityId = insertHistory()
@@ -247,15 +247,14 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     fun onTimerPause(reset: Boolean) {
-        timerJob?.cancel()
-        _timerInProgress.value = false
+        stopTimerJob()
         if (reset) {
             scoreboardManager.resetTime()
         }
     }
 
     fun onTimerStart() {
-        timerJob?.cancel()
+        stopTimerJob()
         if (!scoreboardManager.canTimeAdvance()) {
             _timerInProgress.value = false
             return
@@ -277,8 +276,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
     }
 
     fun toIntervalEditor() {
-        timerJob?.cancel()
-        _timerInProgress.value = false
+        stopTimerJob()
         scoreboardIdentifier?.let { sId ->
             sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, sId))
         }
@@ -286,8 +284,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     fun onIntervalEdit(updatedIntervalData: UpdatedIntervalData) {
         updatedIntervalData.takeUnless { it.timeValue < 0 || it.intervalIndex < 0 }?.let {
-            timerJob?.cancel()
-            _timerInProgress.value = false
+            stopTimerJob()
             scoreboardManager.updateInterval(it.intervalIndex)
             scoreboardManager.updateTime(it.timeValue)
 
@@ -331,6 +328,11 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        stopTimerJob()
+    }
+
+    private fun stopTimerJob() {
         timerJob?.cancel()
+        _timerInProgress.value = false
     }
 }
