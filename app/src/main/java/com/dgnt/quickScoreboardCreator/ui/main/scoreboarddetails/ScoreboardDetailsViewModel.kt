@@ -18,7 +18,6 @@ import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardUseCase
@@ -95,7 +94,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
         title.isNotBlank() && intervalLabel.isNotBlank() && intervalList.all { interval ->
 
-            val checkingTimeLimitAndMaxScore = (interval.intervalData.increasing && interval.maxScoreInput.toIntOrNull()?.let { it > 0 } == true) || (!interval.intervalData.increasing && interval.intervalData.initial > 0)
+            val checkingTimeLimitAndMaxScore = (interval.intervalData.increasing && interval.maxScoreInput.toIntOrNull()?.let { it > 0 } == true) || (!interval.intervalData.increasing && (interval.timeRepresentationPair.first.toIntOrNull()?.let { it > 0 } == true || interval.timeRepresentationPair.second.toIntOrNull()?.let { it > 0 } == true))
 
             val checkingInitialScoreInput = (interval.initialScoreInput.isNotBlank())
 
@@ -273,50 +272,32 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
-    fun onIntervalEditForMinute(index: Int, value: String) =
-        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
-            val second = timeTransformer.toTimeData(intervalEditingInfo.intervalData.initial).second
-            val minute = getFilteredValue(value)?.toIntOrNull() ?: 0
+    fun onIntervalEditForMinute(index: Int, rawValue: String) =
+        getFilteredValue(rawValue)?.let { value ->
+            intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+                updateTimeRepresentationPair(
+                    index, intervalEditingInfo.timeRepresentationPair.copy(first = value)
+                )
 
-            updateIntervalData(
-                index, intervalEditingInfo.intervalData.copy(
-                    initial = timeTransformer.fromTimeData(
-                        TimeData(minute, second, 0)
-                    )
-                )
-            )
-            updateTimeRepresentationPair(
-                index, Pair(
-                    getFilteredValue(value) ?: "",
-                    second.toString()
-                )
-            )
+            }
         }
 
-    fun onIntervalEditForSecond(index: Int, value: String) =
-        intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
-            val second = getFilteredValue(value)?.toIntOrNull() ?: 0
-            val minute = timeTransformer.toTimeData(intervalEditingInfo.intervalData.initial).minute
+    fun onIntervalEditForSecond(index: Int, rawValue: String) =
+        getFilteredValue(rawValue)?.let { value ->
+            intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
+                updateTimeRepresentationPair(
+                    index, intervalEditingInfo.timeRepresentationPair.copy(second = value)
+                )
 
-            updateIntervalData(
-                index, intervalEditingInfo.intervalData.copy(
-                    initial = timeTransformer.fromTimeData(
-                        TimeData(minute, second, 0)
-                    )
-                )
-            )
-            updateTimeRepresentationPair(
-                index, Pair(
-                    minute.toString(),
-                    getFilteredValue(value) ?: ""
-                )
-            )
+            }
         }
 
-    fun onIntervalEditForMaxScoreInput(index: Int, value: String) =
-        updateMaxScoreInput(
-            index, getFilteredValue(value) ?: ""
-        )
+    fun onIntervalEditForMaxScoreInput(index: Int, rawValue: String) =
+        getFilteredValue(rawValue)?.let { value ->
+            updateMaxScoreInput(
+                index, value
+            )
+        }
 
     fun onIntervalEditForAllowDeuceAdv(index: Int, allow: Boolean) =
         intervalList.value.getOrNull(index)?.also { intervalEditingInfo ->
@@ -346,10 +327,10 @@ class ScoreboardDetailsViewModel @Inject constructor(
             )
         }
 
-    fun onIntervalEditForInitialScoreInput(index: Int, value: String) =
-        getFilteredValue(value)?.let {
+    fun onIntervalEditForInitialScoreInput(index: Int, rawValue: String) =
+        getFilteredValue(rawValue)?.let { value ->
             updateInitialScoreInput(
-                index, it
+                index, value
             )
         }
 
@@ -588,11 +569,9 @@ class ScoreboardDetailsViewModel @Inject constructor(
                 initial = 0,
                 increasing = false
             ),
-            timeRepresentationPair = timeTransformer.toTimeData(0).let {
-                Pair(it.minute.toString(), it.second.toString())
-            },
-            maxScoreInput = "",
-            initialScoreInput = "",
+            timeRepresentationPair = "0" to "0",
+            maxScoreInput = "10",
+            initialScoreInput = "0",
             primaryIncrementInputList = listOf("+1"),
             allowPrimaryMapping = false,
             primaryMappingInputList = listOf("0" to "0"),

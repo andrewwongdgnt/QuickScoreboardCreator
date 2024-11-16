@@ -165,9 +165,9 @@ class ScoreboardDetailsViewModelTest {
         sut.onIntervalLabelChange("Some value")
         Assert.assertFalse(sut.valid.value)
         sut.onIntervalEditForMinute(0, "10")
-        Assert.assertFalse(sut.valid.value)
-        sut.onIntervalEditForInitialScoreInput(0, "0")
         Assert.assertTrue(sut.valid.value)
+        sut.onIntervalEditForInitialScoreInput(0, "")
+        Assert.assertFalse(sut.valid.value)
     }
 
     @Test
@@ -330,8 +330,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -378,8 +378,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -415,8 +415,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -463,8 +463,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -507,8 +507,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -558,8 +558,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -595,8 +595,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = true
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -638,8 +638,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = true
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -675,8 +675,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -718,8 +718,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = true
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -755,8 +755,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -798,8 +798,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = true
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -835,8 +835,8 @@ class ScoreboardDetailsViewModelTest {
                         increasing = false
                     ),
                     timeRepresentationPair = Pair("0", "0"),
-                    maxScoreInput = "",
-                    initialScoreInput = "",
+                    maxScoreInput = "10",
+                    initialScoreInput = "0",
                     primaryIncrementInputList = listOf("+1"),
                     allowPrimaryMapping = false,
                     primaryMappingInputList = listOf("0" to "0"),
@@ -864,19 +864,15 @@ class ScoreboardDetailsViewModelTest {
 
     @Test
     fun testEditingMinute() = runTest {
-        every { timeTransformer.fromTimeData(TimeData(8, 0, 0)) } answers { 480000 }
         initSut()
         sut.onIntervalEditForMinute(0, "8")
-        Assert.assertEquals(480000, sut.intervalList.value[0].intervalData.initial)
         Assert.assertEquals(Pair("8", "0"), sut.intervalList.value[0].timeRepresentationPair)
     }
 
     @Test
     fun testEditingSecond() = runTest {
-        every { timeTransformer.fromTimeData(TimeData(0, 9, 0)) } answers { 9000 }
         initSut()
         sut.onIntervalEditForSecond(0, "9")
-        Assert.assertEquals(9000, sut.intervalList.value[0].intervalData.initial)
         Assert.assertEquals(Pair("0", "9"), sut.intervalList.value[0].timeRepresentationPair)
     }
 
@@ -884,7 +880,7 @@ class ScoreboardDetailsViewModelTest {
     fun testEditingForAllowDeuceAdv() = runTest {
         initSut()
         sut.onIntervalEditForAllowDeuceAdv(0, true)
-        Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(0), sut.intervalList.value[0].scoreInfo.scoreRule)
+        Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(10), sut.intervalList.value[0].scoreInfo.scoreRule)
     }
 
     @Test
@@ -1013,11 +1009,9 @@ class ScoreboardDetailsViewModelTest {
     @Test
     fun testEditingForInitialScoreInput() = runTest {
         initSut()
-        val initialScoreInput = sut.intervalList.value[0].initialScoreInput
-        Assert.assertEquals("", initialScoreInput)
         sut.onIntervalEditForInitialScoreInput(0, "50")
-        val initialScoreInput2 = sut.intervalList.value[0].initialScoreInput
-        Assert.assertEquals("50", initialScoreInput2)
+        val initialScoreInput = sut.intervalList.value[0].initialScoreInput
+        Assert.assertEquals("50", initialScoreInput)
     }
 
     @Test
