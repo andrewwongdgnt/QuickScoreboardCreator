@@ -4,6 +4,7 @@
   "winRuleType": "FINAL",
   "intervalList": [
     {
+      "type": "REAL",
       "scoreInfo": {
         "scoreRule": {
           "type": "NO_RULE",
@@ -49,17 +50,18 @@
         "increasing": false,
         "soundEffect": "BUZZER"
       }
-    }
-  ],
-  "repeatRule": [
+    },
     {
-      "from": 0,
-      "to": [
-        0,
-        1,
-        2,
-        3
-      ]
+      "type": "REPEAT",
+      "from": 0
+    },
+    {
+      "type": "REPEAT",
+      "from": 0
+    },
+    {
+      "type": "REPEAT",
+      "from": 0
     }
   ]
 }
