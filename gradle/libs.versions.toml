@@ -1,8 +1,15 @@
 [versions]
+minSdk = "30"
+targetSdk = "34"
+compileSdk = "34"
+versionCode = "1"
+versionName = "1.0.0"
 agp = "8.6.0"
 appacheCommonsLang3 = "3.14.0"
+androidxComposeCompiler = "1.5.0"
 icu4j = "3.4.4"
 kotlin = "1.9.0"
+app = "8.1.0"
 activityCompose = "1.9.2"
 composeBom = "2024.09.01"
 coreKtx = "1.13.1"
@@ -63,6 +70,8 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "app" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
