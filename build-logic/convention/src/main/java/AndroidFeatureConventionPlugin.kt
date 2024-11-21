@@ -8,7 +8,6 @@ import org.gradle.kotlin.dsl.kotlin
 class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            val bom = libs.findLibrary("coil.kt").get()
             pluginManager.apply {
                 apply("quickScoreboardCreator.android.library")
                 apply("quickScoreboardCreator.android.hilt")

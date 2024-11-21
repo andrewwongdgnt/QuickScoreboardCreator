@@ -1,11 +1,7 @@
 [versions]
-minSdk = "30"
-targetSdk = "34"
-compileSdk = "34"
-versionCode = "1"
-versionName = "1.0.0"
 agp = "8.6.0"
 appacheCommonsLang3 = "3.14.0"
+androidTools = "31.5.0"
 androidxComposeCompiler = "1.5.0"
 icu4j = "3.4.4"
 kotlin = "1.9.0"
@@ -31,6 +27,15 @@ runtimeLivedata = "1.7.1"
 composeNavigation = "2.8.0"
 serialization = "1.6.3"
 kotlinPlugin = "1.8.10"
+ksp = "2.0.0-1.0.22"
+
+# Project versions
+minSdk = "30"
+targetSdk = "34"
+compileSdk = "34"
+versionCode = "1"
+versionName = "1.0.0"
+applicationId = "com.dgnt.quickScoreboardCreator"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -70,8 +75,13 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+
+# Gradle
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "app" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -80,3 +90,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
 androidx-room = { id = "androidx.room", version.ref = "room"}
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlinPlugin"  }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+

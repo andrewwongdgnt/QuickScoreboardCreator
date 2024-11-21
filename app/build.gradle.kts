@@ -14,10 +14,6 @@ android {
     namespace = "com.dgnt.quickScoreboardCreator"
 
     defaultConfig {
-        applicationId = "com.dgnt.quickScoreboardCreator"
-        versionCode = libs.versions.versionCode.get().toInt()
-        versionName = libs.versions.versionName.get()
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true

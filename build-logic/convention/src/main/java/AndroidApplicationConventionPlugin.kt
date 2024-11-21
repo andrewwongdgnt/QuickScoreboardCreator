@@ -16,8 +16,13 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<ApplicationExtension> {
+                defaultConfig {
+                    applicationId = libs.findVersion("applicationId").get().toString()
+                    targetSdk = libs.findVersion("targetSdk").get().toString().toInt()
+                    versionCode = libs.findVersion("versionCode").get().toString().toInt()
+                    versionName = libs.findVersion("versionName").get().toString()
+                }
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = libs.findVersion("targetSdk").get().toString().toInt()
             }
 
         }
