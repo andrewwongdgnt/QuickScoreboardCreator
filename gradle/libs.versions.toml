@@ -27,7 +27,8 @@ runtimeLivedata = "1.7.1"
 composeNavigation = "2.8.0"
 serialization = "1.6.3"
 kotlinPlugin = "1.8.10"
-ksp = "2.0.0-1.0.22"
+ksp = "1.9.0-1.0.12"
+org-jetbrains-kotlin-jvm = "1.9.0"
 
 # Project versions
 minSdk = "30"
@@ -93,10 +94,21 @@ compose = [
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
 androidx-room = { id = "androidx.room", version.ref = "room"}
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlinPlugin"  }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 
+quickScoreboardCreator-android-application-compose =  { id = "quickScoreboardCreator.android.application.compose", version = "unspecified" }
+quickScoreboardCreator-android-application =  { id = "quickScoreboardCreator.android.application", version = "unspecified" }
+quickScoreboardCreator-android-library-compose =  { id = "quickScoreboardCreator.android.library.compose", version = "unspecified" }
+quickScoreboardCreator-android-library =  { id = "quickScoreboardCreator.android.library", version = "unspecified" }
+quickScoreboardCreator-android-feature =  { id = "quickScoreboardCreator.android.feature", version = "unspecified" }
+quickScoreboardCreator-android-hilt =  { id = "quickScoreboardCreator.android.hilt", version = "unspecified" }
+quickScoreboardCreator-android-room =  { id = "quickScoreboardCreator.android.room", version = "unspecified" }
+quickScoreboardCreator-android-test =  { id = "quickScoreboardCreator.android.test", version = "unspecified" }
+quickScoreboardCreator-jvm-library =  { id = "quickScoreboardCreator.jvm.library", version = "unspecified" }

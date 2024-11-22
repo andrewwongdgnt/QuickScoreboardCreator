@@ -56,8 +56,12 @@ gradlePlugin {
             id = "quickScoreboardCreator.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
         }
+        register("androidTest") {
+            id = "quickScoreboardCreator.android.test"
+            implementationClass = "AndroidTestConventionPlugin"
+        }
         register("jvmLibrary") {
-            id = "runique.jvm.library"
+            id = "quickScoreboardCreator.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
         }
     }

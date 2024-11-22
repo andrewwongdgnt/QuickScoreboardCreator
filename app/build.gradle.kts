@@ -1,13 +1,10 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.quickScoreboardCreator.android.application)
+    alias(libs.plugins.quickScoreboardCreator.android.application.compose)
+    alias(libs.plugins.quickScoreboardCreator.android.hilt)
+    alias(libs.plugins.quickScoreboardCreator.android.room)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    id("quickScoreboardCreator.android.application")
-    id("quickScoreboardCreator.android.application.compose")
-    id("quickScoreboardCreator.android.hilt")
-    kotlin("kapt")
 }
 
 android {
@@ -63,23 +60,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.kotlinx.coroutines.test)
-
-    //dagger hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.compiler)
-    testImplementation(libs.hilt.android.testing)
-    kaptTest(libs.hilt.compiler)
-    kapt(libs.androidx.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    //room
-    implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
-
-    //Kotlin Extensions and Coroutines support for Room
-    implementation(libs.androidx.room.ktx)
 
     //chart library
     implementation(libs.mpandroidchart)
