@@ -4,7 +4,6 @@
   "winRuleType": "COUNT",
   "intervalList": [
     {
-      "type": "REAL",
       "scoreInfo": {
         "scoreRule": {
           "type": "DEUCE_ADVANTAGE",
@@ -33,14 +32,16 @@
         "initial": 0,
         "increasing": true
       }
-    },
+    }
+  ],
+  "repeatRule": [
     {
-      "type": "REPEAT",
-      "from": 0
-    },
-    {
-      "type": "REPEAT",
-      "from": 0
+      "from": 0,
+      "to": [
+        0,
+        1,
+        2
+      ]
     }
   ]
 }
