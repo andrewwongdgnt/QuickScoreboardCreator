@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.theme
+package com.dgnt.quickScoreboardCreator.core.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

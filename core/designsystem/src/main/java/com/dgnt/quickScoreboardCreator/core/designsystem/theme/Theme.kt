@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.theme
+package com.dgnt.quickScoreboardCreator.core.designsystem.theme
 
 import android.app.Activity
 import android.os.Build

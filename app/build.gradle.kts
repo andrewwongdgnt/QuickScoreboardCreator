@@ -36,17 +36,10 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
+    implementation(projects.core.designsystem)
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.bundles.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.runtime.livedata)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-    implementation(libs.navigation.compose)
+
     implementation(libs.kotlinx.serialization.json)
 
 

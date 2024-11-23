@@ -26,6 +26,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.core.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
@@ -38,7 +39,6 @@ import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEdit
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerContent
-import com.dgnt.quickScoreboardCreator.ui.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.reflect.typeOf
 

@@ -18,8 +18,15 @@ internal fun Project.configureAndroidCompose(
 
         dependencies {
             val bom = libs.findLibrary("androidx-compose-bom").get()
-            add("implementation", platform(bom))
-            add("androidTestImplementation", platform(bom))
+            implementation(platform(bom))
+            androidTestImplementation(platform(bom))
+            implementation(libs.findBundle("compose").get())
+            implementation(libs.findLibrary("androidx-activity-compose").get())
+            implementation(libs.findLibrary("androidx-compose-runtime-livedata").get())
+            androidTestImplementation(libs.findLibrary("androidx-compose-ui-test-junit4").get())
+            debugImplementation(libs.findLibrary("androidx-compose-ui-tooling").get())
+            debugImplementation(libs.findLibrary("androidx-compose-ui-test-manifest").get())
+            implementation(libs.findLibrary("androidx-navigation-compose").get())
         }
     }
 
