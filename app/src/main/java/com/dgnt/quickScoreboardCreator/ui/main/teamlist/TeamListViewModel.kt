@@ -2,7 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.main.teamlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.domain.team.business.logic.TeamCategorizer
 import com.dgnt.quickScoreboardCreator.domain.team.usecase.DeleteTeamUseCase

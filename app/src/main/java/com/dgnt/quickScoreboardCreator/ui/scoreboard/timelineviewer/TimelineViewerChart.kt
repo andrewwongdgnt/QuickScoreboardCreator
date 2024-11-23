@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.core.designsystem.theme.getTimelineViewerTeamColor
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.getTimelineViewerTeamColor
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
@@ -98,8 +98,8 @@ fun TimelineViewerChart(
                 }
             }
 
-            chart.marker = object : MarkerView(localContext, R.layout.timeline_marker_view) {
-                private var textContent = findViewById<View>(R.id.tvContent) as? TextView
+            chart.marker = object : MarkerView(localContext, com.dgnt.quickScoreboardCreator.R.layout.timeline_marker_view) {
+                private var textContent = findViewById<View>(com.dgnt.quickScoreboardCreator.R.id.tvContent) as? TextView
 
                 override fun refreshContent(e: Entry, highlight: Highlight) {
                     textContent?.apply {

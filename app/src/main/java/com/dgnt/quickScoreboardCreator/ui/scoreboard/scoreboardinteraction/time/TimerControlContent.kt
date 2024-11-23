@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberPauseCircle
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberPlayCircle
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberStopCircle
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberPauseCircle
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberPlayCircle
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberStopCircle
 
 @Composable
 fun TimerControlContent(

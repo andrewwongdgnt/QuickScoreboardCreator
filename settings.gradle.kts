@@ -18,4 +18,5 @@ dependencyResolutionManagement {
 rootProject.name = "QuickScoreboardCreator"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
-include(":core:designsystem")
+include(":core:presentation:designsystem")
+include(":core:presentation:ui")

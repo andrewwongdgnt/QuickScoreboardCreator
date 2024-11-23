@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.common.resourcemapping
 
-import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
 
 fun WinRule.titleRes() = when (this) {

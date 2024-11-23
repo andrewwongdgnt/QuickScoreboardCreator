@@ -28,12 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultAlertDialog
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.TimeLimitPicker
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.value
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultAlertDialog
-import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
-import com.dgnt.quickScoreboardCreator.ui.common.composable.TimeLimitPicker
-import com.dgnt.quickScoreboardCreator.ui.common.composable.value
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow

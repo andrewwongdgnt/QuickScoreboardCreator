@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
@@ -40,7 +41,6 @@ import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListCont
 import com.dgnt.quickScoreboardCreator.ui.main.teamdetails.TeamDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
-import com.dgnt.quickScoreboardCreator.core.designsystem.theme.QuickScoreboardCreatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.reflect.typeOf
 

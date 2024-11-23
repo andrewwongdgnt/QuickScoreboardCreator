@@ -2,7 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType

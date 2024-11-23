@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
-import com.dgnt.quickScoreboardCreator.ui.common.composable.ScoringButton
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.ScoringButton
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
 
 @Composable
 fun ScoreControl(

@@ -9,9 +9,9 @@ import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.dgnt.quickScoreboardCreator.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.Timeline
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.Timeline
 
 
 sealed class NavItem(
