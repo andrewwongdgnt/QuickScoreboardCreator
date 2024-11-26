@@ -7,9 +7,9 @@ import com.dgnt.quickScoreboardCreator.data.db.QSCDatabase
 import com.dgnt.quickScoreboardCreator.data.history.repository.QSCHistoryRepository
 import com.dgnt.quickScoreboardCreator.data.scoreboard.repository.QSCScoreboardRepository
 import com.dgnt.quickScoreboardCreator.data.team.repository.QSCTeamRepository
-import com.dgnt.quickScoreboardCreator.domain.history.repository.HistoryRepository
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.repository.ScoreboardRepository
-import com.dgnt.quickScoreboardCreator.domain.team.repository.TeamRepository
+import com.dgnt.quickScoreboardCreator.core.domain.history.repository.HistoryRepository
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.repository.ScoreboardRepository
+import com.dgnt.quickScoreboardCreator.core.domain.team.repository.TeamRepository
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.QSCUiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.Module

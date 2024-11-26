@@ -4,10 +4,10 @@ package com.dgnt.quickScoreboardCreator.core.gson
 import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalIntervalRangeData
 import com.dgnt.quickScoreboardCreator.data.history.data.IntervalLabelData
 import com.dgnt.quickScoreboardCreator.data.history.data.TeamLabelData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ConfigType
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ConfigType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.CustomScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken

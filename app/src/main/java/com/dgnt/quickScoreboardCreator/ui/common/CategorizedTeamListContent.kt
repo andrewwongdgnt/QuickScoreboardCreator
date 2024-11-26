@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
-import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 
 @OptIn(ExperimentalFoundationApi::class)

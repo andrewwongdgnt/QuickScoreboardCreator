@@ -2,7 +2,7 @@ package com.dgnt.quickScoreboardCreator.data.team.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 
 @Entity
 data class TeamEntity(

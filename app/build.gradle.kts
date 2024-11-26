@@ -38,6 +38,7 @@ dependencies {
 
     implementation(projects.core.presentation.designsystem)
     implementation(projects.core.presentation.ui)
+    implementation(projects.core.domain)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
 

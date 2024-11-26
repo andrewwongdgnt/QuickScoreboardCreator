@@ -1,9 +1,9 @@
-package com.dgnt.quickScoreboardCreator.domain.history.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.history.business.logic
 
 
 import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.joda.time.DateTime

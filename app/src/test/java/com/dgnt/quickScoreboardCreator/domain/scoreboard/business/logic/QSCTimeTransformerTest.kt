@@ -1,7 +1,7 @@
-package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert

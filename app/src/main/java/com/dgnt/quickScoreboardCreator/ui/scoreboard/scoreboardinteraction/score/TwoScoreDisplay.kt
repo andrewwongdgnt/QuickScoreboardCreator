@@ -21,8 +21,8 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.value
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
 
 @Composable

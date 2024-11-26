@@ -33,7 +33,7 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.TimeLimitPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.value
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow

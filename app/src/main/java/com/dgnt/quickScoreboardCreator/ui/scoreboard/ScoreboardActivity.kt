@@ -30,10 +30,10 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.Quic
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
-import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
-import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
+import com.dgnt.quickScoreboardCreator.ui.common.customNavType
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
@@ -46,7 +46,7 @@ import kotlin.reflect.typeOf
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val startDestination = IntentCompat.getParcelableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java)?.let { scoreboardIdentifier ->
+        val startDestination = IntentCompat.getSerializableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java)?.let { scoreboardIdentifier ->
             //TODO temporary logic flow because we can't handle custom scoreboards yet
             if (scoreboardIdentifier is ScoreboardIdentifier.Custom) {
                 finish()
@@ -54,7 +54,7 @@ class ScoreboardActivity : ComponentActivity() {
                 return
             }
             NavDestination.ScoreboardInteraction(scoreboardIdentifier)
-        } ?: IntentCompat.getParcelableExtra(intent, TIMELINE_VIEWER_IDENTIFIER, TimelineViewerIdentifier::class.java)?.let { timelineViewerIdentifier ->
+        } ?: IntentCompat.getSerializableExtra(intent, TIMELINE_VIEWER_IDENTIFIER, TimelineViewerIdentifier::class.java)?.let { timelineViewerIdentifier ->
             NavDestination.TimelineViewer(timelineViewerIdentifier.id, timelineViewerIdentifier.index)
         } ?: run {
             finish()
@@ -77,7 +77,7 @@ class ScoreboardActivity : ComponentActivity() {
                         ) {
                             composable<NavDestination.ScoreboardInteraction>(
                                 typeMap = mapOf(
-                                    typeOf<ScoreboardIdentifier>() to parcelableType<ScoreboardIdentifier>()
+                                    typeOf<ScoreboardIdentifier>() to customNavType<ScoreboardIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
@@ -121,7 +121,7 @@ class ScoreboardActivity : ComponentActivity() {
                             }
                             dialog<NavDestination.IntervalEditor>(
                                 typeMap = mapOf(
-                                    typeOf<ScoreboardIdentifier>() to parcelableType<ScoreboardIdentifier>()
+                                    typeOf<ScoreboardIdentifier>() to customNavType<ScoreboardIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)

@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.domain.history.mapper
+package com.dgnt.quickScoreboardCreator.core.domain.history.mapper
 
 import com.dgnt.quickScoreboardCreator.core.gson.GsonProvider
 import com.dgnt.quickScoreboardCreator.core.gson.fromJson
@@ -9,8 +9,8 @@ import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreGroupDat
 import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.data.IntervalLabelData
 import com.dgnt.quickScoreboardCreator.data.history.data.TeamLabelData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

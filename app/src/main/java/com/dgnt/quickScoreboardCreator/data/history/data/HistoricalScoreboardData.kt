@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.data.history.data
 
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+
 
 data class HistoricalScoreboardData(
     val historicalIntervalMap: Map<Int, HistoricalIntervalData>
@@ -56,7 +57,7 @@ sealed class IntervalLabelData {
     }
 
     data class ScoreboardType(
-        val scoreboardType: com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType,
+        val scoreboardType: com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType,
 
         @Transient
         val i: Int

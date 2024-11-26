@@ -22,13 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberTimeline
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData

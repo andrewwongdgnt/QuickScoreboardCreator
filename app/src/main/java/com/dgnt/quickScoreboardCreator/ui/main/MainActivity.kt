@@ -24,14 +24,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
-import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
-import com.dgnt.quickScoreboardCreator.ui.common.parcelableType
+import com.dgnt.quickScoreboardCreator.ui.common.customNavType
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
             }
             dialog<NavDestination.ScoreboardDetails>(
                 typeMap = mapOf(
-                    typeOf<ScoreboardIdentifier?>() to parcelableType<ScoreboardIdentifier?>(isNullableAllowed = true)
+                    typeOf<ScoreboardIdentifier?>() to customNavType<ScoreboardIdentifier?>(isNullableAllowed = true)
                 )
             ) {
                 ScoreboardDetailsDialogContent(

@@ -1,10 +1,10 @@
 package com.dgnt.quickScoreboardCreator.di
 
 import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.domain.common.mapper.Mapper
-import com.dgnt.quickScoreboardCreator.domain.history.mapper.HistoricalScoreboardMapperDataToDomain
-import com.dgnt.quickScoreboardCreator.domain.history.mapper.HistoricalScoreboardMapperDomainToData
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.core.domain.common.mapper.Mapper
+import com.dgnt.quickScoreboardCreator.data.history.mapper.HistoricalScoreboardMapperDataToDomain
+import com.dgnt.quickScoreboardCreator.data.history.mapper.HistoricalScoreboardMapperDomainToData
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

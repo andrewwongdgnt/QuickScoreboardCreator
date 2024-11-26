@@ -2,8 +2,8 @@ package com.dgnt.quickScoreboardCreator.data.scoreboard.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
 
 @Entity
 data class ScoreboardEntity(
