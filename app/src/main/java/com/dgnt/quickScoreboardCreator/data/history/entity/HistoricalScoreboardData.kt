@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.data.history.data
+package com.dgnt.quickScoreboardCreator.data.history.entity
 
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 

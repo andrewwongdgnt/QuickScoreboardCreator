@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.repository
 
-import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.core.domain.base.repository.Repository
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
 
-interface ScoreboardRepository : Repository<ScoreboardEntity>
+interface ScoreboardRepository : Repository<ScoreboardModel>

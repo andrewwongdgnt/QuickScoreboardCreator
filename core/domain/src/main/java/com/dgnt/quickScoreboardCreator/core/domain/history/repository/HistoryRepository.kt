@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.core.domain.history.repository
 
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
 import com.dgnt.quickScoreboardCreator.core.domain.base.repository.Repository
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
 
-interface HistoryRepository : Repository<HistoryEntity>
+interface HistoryRepository : Repository<HistoryModel>

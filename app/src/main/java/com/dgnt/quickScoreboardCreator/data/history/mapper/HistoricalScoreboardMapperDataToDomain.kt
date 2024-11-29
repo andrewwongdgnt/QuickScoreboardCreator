@@ -1,6 +1,5 @@
 package com.dgnt.quickScoreboardCreator.data.history.mapper
 
-import com.dgnt.quickScoreboardCreator.core.domain.common.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScore
@@ -8,13 +7,14 @@ import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScore
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalIntervalData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalIntervalRangeData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreGroupData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.data.history.data.IntervalLabelData
-import com.dgnt.quickScoreboardCreator.data.history.data.TeamLabelData
+import com.dgnt.quickScoreboardCreator.core.mapper.Mapper
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalIntervalData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalIntervalRangeData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreGroupData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.data.history.entity.IntervalLabelData
+import com.dgnt.quickScoreboardCreator.data.history.entity.TeamLabelData
 
 class HistoricalScoreboardMapperDataToDomain : Mapper<HistoricalScoreboardData, HistoricalScoreboard> {
 

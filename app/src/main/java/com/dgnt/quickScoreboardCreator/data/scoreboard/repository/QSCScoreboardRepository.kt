@@ -1,9 +1,15 @@
 package com.dgnt.quickScoreboardCreator.data.scoreboard.repository
 
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.repository.ScoreboardRepository
+import com.dgnt.quickScoreboardCreator.core.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.data.base.repository.BaseRepository
 import com.dgnt.quickScoreboardCreator.data.scoreboard.dao.ScoreboardDao
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.repository.ScoreboardRepository
 import javax.inject.Inject
 
-class QSCScoreboardRepository @Inject constructor(dao: ScoreboardDao) : BaseRepository<ScoreboardEntity>(dao), ScoreboardRepository
+class QSCScoreboardRepository @Inject constructor(
+    dao: ScoreboardDao,
+    mapToDomain: Mapper<ScoreboardEntity, ScoreboardModel>,
+    mapToEntity: Mapper<ScoreboardModel, ScoreboardEntity>
+) : BaseRepository<ScoreboardEntity, ScoreboardModel>(dao, mapToDomain, mapToEntity), ScoreboardRepository

@@ -3,13 +3,16 @@ package com.dgnt.quickScoreboardCreator.di
 import android.app.Application
 import android.content.res.Resources
 import androidx.room.Room
-import com.dgnt.quickScoreboardCreator.data.db.QSCDatabase
-import com.dgnt.quickScoreboardCreator.data.history.repository.QSCHistoryRepository
-import com.dgnt.quickScoreboardCreator.data.scoreboard.repository.QSCScoreboardRepository
-import com.dgnt.quickScoreboardCreator.data.team.repository.QSCTeamRepository
 import com.dgnt.quickScoreboardCreator.core.domain.history.repository.HistoryRepository
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.repository.ScoreboardRepository
 import com.dgnt.quickScoreboardCreator.core.domain.team.repository.TeamRepository
+import com.dgnt.quickScoreboardCreator.core.mapper.Mapper
+import com.dgnt.quickScoreboardCreator.data.db.QSCDatabase
+import com.dgnt.quickScoreboardCreator.data.history.repository.QSCHistoryRepository
+import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
+import com.dgnt.quickScoreboardCreator.data.scoreboard.repository.QSCScoreboardRepository
+import com.dgnt.quickScoreboardCreator.data.team.repository.QSCTeamRepository
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.QSCUiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.Module
@@ -38,8 +41,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideScoreboardRepository(db: QSCDatabase): ScoreboardRepository =
-        QSCScoreboardRepository(db.scoreboardDao)
+    fun provideScoreboardRepository(
+        db: QSCDatabase,
+        mapScoreboardDataToDomain: Mapper<ScoreboardEntity, ScoreboardModel>,
+        mapScoreboardDomainToData: Mapper<ScoreboardModel, ScoreboardEntity>,
+
+        ): ScoreboardRepository =
+        QSCScoreboardRepository(
+            db.scoreboardDao,
+            mapScoreboardDataToDomain,
+            mapScoreboardDomainToData
+        )
 
     @Provides
     @Singleton

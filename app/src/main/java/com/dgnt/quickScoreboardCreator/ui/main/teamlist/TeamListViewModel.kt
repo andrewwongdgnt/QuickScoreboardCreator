@@ -2,12 +2,12 @@ package com.dgnt.quickScoreboardCreator.ui.main.teamlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamModel
 import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.InsertTeamListUseCase
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ class TeamListViewModel @Inject constructor(
         teamCategorizer(it)
     }
 
-    private var deletedTeamList: MutableList<TeamEntity> = mutableListOf()
+    private var deletedTeamList: MutableList<TeamModel> = mutableListOf()
 
     fun onAdd() = sendUiEvent(UiEvent.TeamDetails())
 

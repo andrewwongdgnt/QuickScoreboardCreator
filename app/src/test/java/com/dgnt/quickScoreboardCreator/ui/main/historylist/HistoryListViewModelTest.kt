@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.main.historylist
 
 import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.CategorizedHistoryItemData

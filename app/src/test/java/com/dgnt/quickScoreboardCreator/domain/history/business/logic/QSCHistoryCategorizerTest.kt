@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.core.domain.history.business.logic
 
 
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import io.mockk.MockKAnnotations

@@ -3,8 +3,6 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.core.domain.common.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
@@ -23,7 +21,6 @@ import javax.inject.Inject
 class TimelineViewerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getHistoryUseCase: GetHistoryUseCase,
-    private val historyScoreboardDomainMapper: Mapper<HistoricalScoreboardData, HistoricalScoreboard>,
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
@@ -52,7 +49,7 @@ class TimelineViewerViewModel @Inject constructor(
     private fun initWithId(id: Int) = viewModelScope.launch {
         getHistoryUseCase(id)?.let {
             _icon.value = it.icon
-            historicalScoreboard = historyScoreboardDomainMapper.map(it.historicalScoreboard)
+            historicalScoreboard = it.historicalScoreboard
             historicalScoreboard
         }?.let {
             setTimeline(intervalIndex, it)

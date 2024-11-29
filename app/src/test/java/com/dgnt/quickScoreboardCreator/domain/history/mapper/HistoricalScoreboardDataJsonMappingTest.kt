@@ -2,13 +2,13 @@ package com.dgnt.quickScoreboardCreator.core.domain.history.mapper
 
 import com.dgnt.quickScoreboardCreator.core.gson.GsonProvider
 import com.dgnt.quickScoreboardCreator.core.gson.fromJson
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalIntervalData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalIntervalRangeData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreGroupData
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.data.history.data.IntervalLabelData
-import com.dgnt.quickScoreboardCreator.data.history.data.TeamLabelData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalIntervalData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalIntervalRangeData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreGroupData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.data.history.entity.IntervalLabelData
+import com.dgnt.quickScoreboardCreator.data.history.entity.TeamLabelData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import org.junit.Assert

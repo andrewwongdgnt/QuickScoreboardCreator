@@ -1,9 +1,9 @@
 package com.dgnt.quickScoreboardCreator.core.gson
 
 
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalIntervalRangeData
-import com.dgnt.quickScoreboardCreator.data.history.data.IntervalLabelData
-import com.dgnt.quickScoreboardCreator.data.history.data.TeamLabelData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalIntervalRangeData
+import com.dgnt.quickScoreboardCreator.data.history.entity.IntervalLabelData
+import com.dgnt.quickScoreboardCreator.data.history.entity.TeamLabelData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ConfigType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.CustomScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig

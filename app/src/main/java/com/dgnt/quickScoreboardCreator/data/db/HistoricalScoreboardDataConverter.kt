@@ -3,7 +3,7 @@ package com.dgnt.quickScoreboardCreator.data.db
 import androidx.room.TypeConverter
 import com.dgnt.quickScoreboardCreator.core.gson.GsonProvider
 import com.dgnt.quickScoreboardCreator.core.gson.fromJson
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 
 class HistoricalScoreboardDataConverter {
     @TypeConverter
