@@ -11,7 +11,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.core.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData

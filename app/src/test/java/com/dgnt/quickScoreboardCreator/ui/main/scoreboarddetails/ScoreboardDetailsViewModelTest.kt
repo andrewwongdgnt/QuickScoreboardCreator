@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.Score
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.WinRuleType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound

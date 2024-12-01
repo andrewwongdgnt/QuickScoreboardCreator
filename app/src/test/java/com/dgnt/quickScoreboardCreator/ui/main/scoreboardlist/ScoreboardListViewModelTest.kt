@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedS
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardItemData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardListUseCase

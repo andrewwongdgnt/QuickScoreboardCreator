@@ -3,7 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.main.historydetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
@@ -31,7 +31,7 @@ class HistoryDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
-    private var originalEntity: HistoryEntity? = null
+    private var originalModel: HistoryModel? = null
 
     private var _title = MutableStateFlow("")
     val title = _title.asStateFlow()
@@ -56,7 +56,7 @@ class HistoryDetailsViewModel @Inject constructor(
     }
 
     private fun initWithId(it: Int) = viewModelScope.launch {
-        originalEntity = getHistoryUseCase(it)?.also {
+        originalModel = getHistoryUseCase(it)?.also {
             _title.value = it.title
             _description.value = it.description
             _icon.value = it.icon
@@ -75,7 +75,7 @@ class HistoryDetailsViewModel @Inject constructor(
 
     fun onDelete() = viewModelScope.launch {
 
-        originalEntity?.let {
+        originalModel?.let {
             deleteHistoryUseCase(it)
         }
         sendUiEvent(UiEvent.Done)
@@ -94,14 +94,14 @@ class HistoryDetailsViewModel @Inject constructor(
         if (valid.value) {
             viewModelScope.launch {
                 insertHistoryUseCase(
-                    HistoryEntity(
-                        id = originalEntity?.id,
+                    HistoryModel(
+                        id = originalModel?.id,
                         title = title.value,
                         description = description.value,
                         icon = icon.value!!,
                         lastModified = DateTime.now(),
-                        createdAt = originalEntity?.createdAt ?: DateTime.now(),
-                        historicalScoreboard = originalEntity?.historicalScoreboard!!,
+                        createdAt = originalModel?.createdAt ?: DateTime.now(),
+                        historicalScoreboard = originalModel?.historicalScoreboard!!,
                         temporary = false
                     )
                 )

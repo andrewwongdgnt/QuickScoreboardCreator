@@ -5,7 +5,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedS
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardItemData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 
 class QSCScoreboardCategorizer : ScoreboardCategorizer {
     override fun invoke(scoreboardTypeList: List<ScoreboardType>, scoreboardEntityList: List<ScoreboardModel>): Pair<CategorizedScoreboardType, CategorizedScoreboardItemData> {

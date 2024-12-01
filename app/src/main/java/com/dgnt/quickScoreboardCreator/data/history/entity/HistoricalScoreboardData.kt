@@ -57,7 +57,7 @@ sealed class IntervalLabelData {
     }
 
     data class ScoreboardType(
-        val scoreboardType: com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType,
+        val scoreboardType: com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType,
 
         @Transient
         val i: Int

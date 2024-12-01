@@ -11,7 +11,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.Inter
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreInfoConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreRuleConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreRuleType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments

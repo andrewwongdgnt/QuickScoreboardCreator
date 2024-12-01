@@ -4,14 +4,13 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.swap
-import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
@@ -22,8 +21,14 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRul
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.DeleteScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.InsertScoreboardUseCase
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.asIncrementDisplay
+import com.dgnt.quickScoreboardCreator.core.swap
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.descriptionRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.intervalLabelRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.rawRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.secondaryScoreLabelRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +61,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
         const val MAX_INCREMENTS_COUNT = 3
     }
 
-    private var originalEntity: ScoreboardEntity? = null
+    private var originalModel: ScoreboardModel? = null
 
     private val _title = MutableStateFlow("")
     val title = _title.asStateFlow()
@@ -123,7 +128,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
     }
 
     private fun initWithId(id: Int) = viewModelScope.launch {
-        originalEntity = getScoreboardUseCase(id)?.also {
+        originalModel = getScoreboardUseCase(id)?.also {
             _title.value = it.title
             _description.value = it.description
             _winRule.value = it.winRule
@@ -134,19 +139,19 @@ class ScoreboardDetailsViewModel @Inject constructor(
     }
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        _title.value = resources.getString(scoreboardType.titleRes)
-        _description.value = resources.getString(scoreboardType.descriptionRes)
+        _title.value = resources.getString(scoreboardType.titleRes())
+        _description.value = resources.getString(scoreboardType.descriptionRes())
         _icon.value = scoreboardType.icon
-        _intervalLabel.value = resources.getString(scoreboardType.intervalLabelRes)
+        _intervalLabel.value = resources.getString(scoreboardType.intervalLabelRes())
         _isNewEntity.value = true
-        scoreboardType.rawRes.let { rawRes ->
+        scoreboardType.rawRes().let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let {
             _winRule.value = it.winRuleType.toWinRule()
 
             _intervalList.value = it.intervalList.map { interval ->
                 //TODO should make a mapper for this
-                val scoreInfo = interval.scoreInfo.toScoreInfo().copy(secondaryScoreLabel = resources.getString(scoreboardType.secondaryScoreLabelRes))
+                val scoreInfo = interval.scoreInfo.toScoreInfo().copy(secondaryScoreLabel = resources.getString(scoreboardType.secondaryScoreLabelRes()))
                 val intervalData = interval.intervalData.toIntervalData()
                 IntervalEditingInfo(
                     scoreInfo = scoreInfo,
@@ -169,8 +174,8 @@ class ScoreboardDetailsViewModel @Inject constructor(
         if (valid.value) {
             viewModelScope.launch {
                 insertScoreboardUseCase(
-                    ScoreboardEntity(
-                        id = originalEntity?.id,
+                    ScoreboardModel(
+                        id = originalModel?.id,
                         title = title.value,
                         description = description.value,
                         winRule = winRule.value,
@@ -187,7 +192,7 @@ class ScoreboardDetailsViewModel @Inject constructor(
 
     fun onDelete() = viewModelScope.launch {
 
-        originalEntity?.let {
+        originalModel?.let {
             deleteScoreboardUseCase(it)
         }
         sendUiEvent(UiEvent.Done)

@@ -9,7 +9,7 @@ import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreGroupD
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.IntervalLabelData
 import com.dgnt.quickScoreboardCreator.data.history.entity.TeamLabelData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import org.junit.Assert
 import org.junit.Before

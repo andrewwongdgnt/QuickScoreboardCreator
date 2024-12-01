@@ -1,11 +1,11 @@
 package com.dgnt.quickScoreboardCreator.core.domain.team.business.logic
 
-import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamItemData
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamModel
 
 class QSCTeamCategorizer : TeamCategorizer {
-    override fun invoke(teamEntityList: List<TeamEntity>) =
+    override fun invoke(teamEntityList: List<TeamModel>) =
         teamEntityList.mapNotNull { e ->
             e.id?.let { id ->
                 TeamItemData(

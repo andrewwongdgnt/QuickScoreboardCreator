@@ -5,7 +5,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.Custo
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreRuleConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreRuleType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.WinRuleType
 import org.junit.Assert
 import org.junit.Before

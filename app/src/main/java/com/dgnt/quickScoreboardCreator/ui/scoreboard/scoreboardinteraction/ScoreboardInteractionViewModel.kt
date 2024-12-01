@@ -13,8 +13,8 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.Sco
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
@@ -23,7 +23,11 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScorebo
 import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.intervalLabelRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.rawRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.secondaryScoreLabelRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
@@ -202,10 +206,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         this.scoreboardType = scoreboardType
-        _intervalLabel.value = Label.Resource(scoreboardType.intervalLabelRes)
-        timelineViewerTitle = resources.getString(scoreboardType.titleRes)
+        _intervalLabel.value = Label.Resource(scoreboardType.intervalLabelRes())
+        timelineViewerTitle = resources.getString(scoreboardType.titleRes())
         timelineViewerIcon = scoreboardType.icon
-        scoreboardType.rawRes.let { rawRes ->
+        scoreboardType.rawRes().let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let { defaultScoreboardConfig ->
             scoreboardManager.apply {
@@ -215,7 +219,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 }
             }
             secondaryScoreLabelList = defaultScoreboardConfig.intervalList.map {
-                Label.Resource(scoreboardType.secondaryScoreLabelRes)
+                Label.Resource(scoreboardType.secondaryScoreLabelRes())
             }
         }
 

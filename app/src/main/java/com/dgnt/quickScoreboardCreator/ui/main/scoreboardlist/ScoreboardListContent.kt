@@ -43,12 +43,14 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedS
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardItemData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.descriptionRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -155,8 +157,8 @@ private fun ScoreboardListInnerContent(
                 stringResource(R.string.defaultScoreboardConfig) to it.scoreboardTypeList.map { scoreboardType ->
                     ScoreboardItemData(
                         ScoreboardIdentifier.Default(scoreboardType),
-                        stringResource(scoreboardType.titleRes),
-                        stringResource(scoreboardType.descriptionRes),
+                        stringResource(scoreboardType.titleRes()),
+                        stringResource(scoreboardType.descriptionRes()),
                         scoreboardType.icon
                     )
                 }
