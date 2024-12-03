@@ -1,9 +1,6 @@
 package com.dgnt.quickScoreboardCreator.core.gson
 
 
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalIntervalRangeData
-import com.dgnt.quickScoreboardCreator.data.history.entity.IntervalLabelData
-import com.dgnt.quickScoreboardCreator.data.history.entity.TeamLabelData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ConfigType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.CustomScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
@@ -22,24 +19,7 @@ object GsonProvider {
                 .registerSubtype(DefaultScoreboardConfig::class.java, ConfigType.DEFAULT.name)
                 .registerSubtype(CustomScoreboardConfig::class.java, ConfigType.CUSTOM.name)
         )
-        registerTypeAdapterFactory(
-            RuntimeTypeAdapterFactory
-                .of(HistoricalIntervalRangeData::class.java, "type", true)
-                .registerSubtype(HistoricalIntervalRangeData.CountDown::class.java, HistoricalIntervalRangeData.Type.COUNTDOWN.name)
-                .registerSubtype(HistoricalIntervalRangeData.Infinite::class.java, HistoricalIntervalRangeData.Type.INFINITE.name)
-        )
-        registerTypeAdapterFactory(
-            RuntimeTypeAdapterFactory
-                .of(IntervalLabelData::class.java, "type", true)
-                .registerSubtype(IntervalLabelData.Custom::class.java, IntervalLabelData.Type.CUSTOM.name)
-                .registerSubtype(IntervalLabelData.ScoreboardType::class.java, IntervalLabelData.Type.SCOREBOARD_TYPE.name)
-        )
-        registerTypeAdapterFactory(
-            RuntimeTypeAdapterFactory
-                .of(TeamLabelData::class.java, "type", true)
-                .registerSubtype(TeamLabelData.None::class.java, TeamLabelData.Type.NONE.name)
-                .registerSubtype(TeamLabelData.Custom::class.java, TeamLabelData.Type.CUSTOM.name)
-        )
+
 
     }.create()
 

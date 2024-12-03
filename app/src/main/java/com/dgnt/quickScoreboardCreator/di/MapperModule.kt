@@ -1,22 +1,23 @@
 package com.dgnt.quickScoreboardCreator.di
 
+import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoryEntity
+import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoricalScoreboardMapperDataToDomain
+import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoricalScoreboardMapperDomainToData
+import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoryMapperDataToDomain
+import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoryMapperDomainToData
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.entity.ScoreboardEntity
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.mapper.ScoreboardMapperDataToDomain
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.mapper.ScoreboardMapperDomainToData
+import com.dgnt.quickScoreboardCreator.core.data.team.entity.TeamEntity
+import com.dgnt.quickScoreboardCreator.core.data.team.mapper.TeamMapperDataToDomain
+import com.dgnt.quickScoreboardCreator.core.data.team.mapper.TeamMapperDomainToData
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamModel
-import com.dgnt.quickScoreboardCreator.core.mapper.Mapper
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.data.history.mapper.HistoricalScoreboardMapperDataToDomain
-import com.dgnt.quickScoreboardCreator.data.history.mapper.HistoricalScoreboardMapperDomainToData
-import com.dgnt.quickScoreboardCreator.data.history.mapper.HistoryMapperDataToDomain
-import com.dgnt.quickScoreboardCreator.data.history.mapper.HistoryMapperDomainToData
-import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.data.scoreboard.mapper.ScoreboardMapperDataToDomain
-import com.dgnt.quickScoreboardCreator.data.scoreboard.mapper.ScoreboardMapperDomainToData
-import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
-import com.dgnt.quickScoreboardCreator.data.team.mapper.TeamMapperDataToDomain
-import com.dgnt.quickScoreboardCreator.data.team.mapper.TeamMapperDomainToData
+import com.dgnt.quickScoreboardCreator.core.data.base.mapper.Mapper
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
