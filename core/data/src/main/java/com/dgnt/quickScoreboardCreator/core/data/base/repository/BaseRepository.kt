@@ -19,8 +19,6 @@ abstract class BaseRepository<Data, Domain>(
     override suspend fun getById(id: Int) = dao.getById(id)?.let { mapToDomain.map(it) }
     override suspend fun insert(model: Domain) = dao.insert(mapToEntity.map(model))
     override suspend fun insert(models: List<Domain>) = dao.insert(models.map { mapToEntity.map(it) })
-    override suspend fun update(model: Domain) = dao.update(mapToEntity.map(model))
-    override suspend fun update(models: List<Domain>) = dao.update(models.map { mapToEntity.map(it) })
     override suspend fun delete(model: Domain) = dao.delete(mapToEntity.map(model))
     override suspend fun delete(models: List<Domain>) = dao.delete(models.map { mapToEntity.map(it) })
 
