@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.common.resourcemapping
 
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 
 fun ScoreboardIcon.iconRes() = when (this) {
     ScoreboardIcon.BASKETBALL -> R.drawable.basketball

@@ -1,8 +1,11 @@
 [versions]
 agp = "8.6.0"
 appacheCommonsLang3 = "3.14.0"
+androidTools = "31.5.0"
+androidxComposeCompiler = "1.5.0"
 icu4j = "3.4.4"
 kotlin = "1.9.0"
+app = "8.1.0"
 activityCompose = "1.9.2"
 composeBom = "2024.09.01"
 coreKtx = "1.13.1"
@@ -11,6 +14,7 @@ gsonExtras = "1.2.0"
 guava = "33.1.0-jre"
 hilt = "2.51.1"
 androidXHilt = "1.2.0"
+javaX = "1"
 jodaTime = "2.12.7"
 junit = "4.13.2"
 androidXjunit = "1.2.1"
@@ -24,6 +28,18 @@ runtimeLivedata = "1.7.1"
 composeNavigation = "2.8.0"
 serialization = "1.6.3"
 kotlinPlugin = "1.8.10"
+ksp = "1.9.0-1.0.12"
+org-jetbrains-kotlin-jvm = "1.9.0"
+
+# Project versions
+minSdk = "30"
+targetSdk = "34"
+compileSdk = "34"
+versionCode = "1"
+versionName = "1.0.0"
+applicationId = "com.dgnt.quickScoreboardCreator"
+appcompat = "1.7.0"
+material = "1.12.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -34,17 +50,17 @@ androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidXHilt" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidXjunit" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
-androidx-ui = { module = "androidx.compose.ui:ui" }
-androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
-androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
-androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
-androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "appacheCommonsLang3" }
 gson-extras = { module = "org.danilopianini:gson-extras", version.ref = "gsonExtras" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -53,6 +69,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaX"}
 joda-time = { module = "joda-time:joda-time", version.ref = "jodaTime" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
@@ -61,13 +78,43 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+
+# Gradle
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "app" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+[bundles]
+compose = [
+    "androidx-compose-ui",
+    "androidx-compose-ui-graphics",
+    "androidx-compose-ui-tooling-preview",
+    "androidx-compose-material3",
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
 androidx-room = { id = "androidx.room", version.ref = "room"}
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlinPlugin"  }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
+
+quickScoreboardCreator-android-application-compose =  { id = "quickScoreboardCreator.android.application.compose", version = "unspecified" }
+quickScoreboardCreator-android-application =  { id = "quickScoreboardCreator.android.application", version = "unspecified" }
+quickScoreboardCreator-android-library-compose =  { id = "quickScoreboardCreator.android.library.compose", version = "unspecified" }
+quickScoreboardCreator-android-library =  { id = "quickScoreboardCreator.android.library", version = "unspecified" }
+quickScoreboardCreator-android-feature =  { id = "quickScoreboardCreator.android.feature", version = "unspecified" }
+quickScoreboardCreator-android-hilt =  { id = "quickScoreboardCreator.android.hilt", version = "unspecified" }
+quickScoreboardCreator-android-room =  { id = "quickScoreboardCreator.android.room", version = "unspecified" }
+quickScoreboardCreator-android-test =  { id = "quickScoreboardCreator.android.test", version = "unspecified" }
+quickScoreboardCreator-jvm-library =  { id = "quickScoreboardCreator.jvm.library", version = "unspecified" }

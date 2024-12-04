@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.ui.common.resourcemapping
 
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
 
 fun IntervalEndSound.titleRes() = when (this) {
     IntervalEndSound.Bell -> R.string.bell

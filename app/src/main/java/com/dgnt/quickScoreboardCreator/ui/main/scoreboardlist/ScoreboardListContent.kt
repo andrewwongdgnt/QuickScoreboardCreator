@@ -38,17 +38,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardItemData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.CategorizedScoreboardType
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardItemData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.composable.DefaultSnackbar
-import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.CardItemContent
-import com.dgnt.quickScoreboardCreator.ui.common.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedScoreboardItemData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardItemData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultSnackbar
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.CardItemContent
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.descriptionRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -155,8 +157,8 @@ private fun ScoreboardListInnerContent(
                 stringResource(R.string.defaultScoreboardConfig) to it.scoreboardTypeList.map { scoreboardType ->
                     ScoreboardItemData(
                         ScoreboardIdentifier.Default(scoreboardType),
-                        stringResource(scoreboardType.titleRes),
-                        stringResource(scoreboardType.descriptionRes),
+                        stringResource(scoreboardType.titleRes()),
+                        stringResource(scoreboardType.descriptionRes()),
                         scoreboardType.icon
                     )
                 }

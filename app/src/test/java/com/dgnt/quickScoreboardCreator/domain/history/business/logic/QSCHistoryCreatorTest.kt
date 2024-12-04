@@ -1,14 +1,14 @@
-package com.dgnt.quickScoreboardCreator.domain.history.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.history.business.logic
 
 
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
-import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
-import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreRule
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert

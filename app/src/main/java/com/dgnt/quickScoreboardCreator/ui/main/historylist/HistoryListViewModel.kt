@@ -2,12 +2,12 @@ package com.dgnt.quickScoreboardCreator.ui.main.historylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCategorizer
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.DeleteHistoryUseCase
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.GetHistoryListUseCase
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ class HistoryListViewModel @Inject constructor(
         historyCategorizer(it)
     }
 
-    private var deletedHistoryList: MutableList<HistoryEntity> = mutableListOf()
+    private var deletedHistoryList: MutableList<HistoryModel> = mutableListOf()
 
     fun onEdit(id: Int) = sendUiEvent(UiEvent.HistoryDetails(id))
 

@@ -3,7 +3,7 @@ package com.dgnt.quickScoreboardCreator.ui.common.uievent
 import androidx.annotation.PluralsRes
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
-import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 
 sealed interface UiEvent {
     data class LaunchScoreboard(val scoreboardIdentifier: ScoreboardIdentifier) : UiEvent

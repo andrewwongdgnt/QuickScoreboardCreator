@@ -1,10 +1,10 @@
-package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreRule
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert

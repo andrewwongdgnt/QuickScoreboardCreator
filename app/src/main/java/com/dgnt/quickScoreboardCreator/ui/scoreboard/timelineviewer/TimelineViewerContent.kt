@@ -29,15 +29,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScore
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreGroup
-import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
-import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.ui.common.PreviewLandscape
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScore
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreGroup
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.intervalLabelRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -98,7 +99,7 @@ private fun TimelineViewerInnerContent(
             val intervalLabel = historicalInterval.let {
                 when (val label = historicalInterval.intervalLabel) {
                     is IntervalLabel.Custom -> label.value
-                    is IntervalLabel.ScoreboardType -> stringResource(id = label.scoreboardType.intervalLabelRes)
+                    is IntervalLabel.ScoreboardType -> stringResource(id = label.scoreboardType.intervalLabelRes())
                 }
             }
             val intervalLabelString = stringResource(

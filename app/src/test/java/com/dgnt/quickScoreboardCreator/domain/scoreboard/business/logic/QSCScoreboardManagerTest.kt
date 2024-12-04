@@ -1,16 +1,16 @@
-package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
 
-import com.dgnt.quickScoreboardCreator.domain.history.business.logic.HistoryCreator
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreGroup
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.ScoreRule
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.score.WinRule
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreRule
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs

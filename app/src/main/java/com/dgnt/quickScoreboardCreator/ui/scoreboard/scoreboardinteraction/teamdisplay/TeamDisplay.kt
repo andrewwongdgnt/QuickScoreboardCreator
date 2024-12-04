@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay
 
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 
 
 sealed interface TeamDisplay {

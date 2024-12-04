@@ -1,12 +1,13 @@
 package com.dgnt.quickScoreboardCreator.ui.common
 
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.io.Serializable
 
 fun NavController.commonNavigate(currentDestination: androidx.navigation.NavDestination? = null, navDestination: NavDestination) = navigate(navDestination) {
     // Avoid building up a large stack of destinations
@@ -30,21 +31,23 @@ fun NavController.commonNavigate(currentDestination: androidx.navigation.NavDest
 }
 
 
-inline fun <reified T : Parcelable?> parcelableType(
+inline fun <reified T : Serializable?> customNavType(
     isNullableAllowed: Boolean = false,
     json: Json = Json,
 ) = object : NavType<T>(isNullableAllowed = isNullableAllowed) {
     override fun get(bundle: Bundle, key: String) =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bundle.getParcelable(key, T::class.java)
+            bundle.getSerializable(key, T::class.java)
         } else {
             @Suppress("DEPRECATION")
-            bundle.getParcelable(key)
+            bundle.getSerializable(key) as? T
         }
 
-    override fun parseValue(value: String): T = json.decodeFromString(value)
+    override fun parseValue(value: String): T = json.decodeFromString(Uri.decode(value))
 
-    override fun serializeAsValue(value: T): String = json.encodeToString(value)
+    override fun serializeAsValue(value: T) = Uri.encode(json.encodeToString(value))
 
-    override fun put(bundle: Bundle, key: String, value: T) = bundle.putParcelable(key, value)
+    override fun put(bundle: Bundle, key: String, value: T) =
+        bundle.putSerializable(key, value)
+
 }

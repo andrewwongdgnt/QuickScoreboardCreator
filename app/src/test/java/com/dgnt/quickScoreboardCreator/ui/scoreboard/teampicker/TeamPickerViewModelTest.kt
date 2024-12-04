@@ -2,11 +2,11 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker
 
 import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
-import com.dgnt.quickScoreboardCreator.domain.team.business.logic.TeamCategorizer
-import com.dgnt.quickScoreboardCreator.domain.team.model.CategorizedTeamItemData
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamItemData
-import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamListUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.CategorizedTeamItemData
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamItemData
+import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler

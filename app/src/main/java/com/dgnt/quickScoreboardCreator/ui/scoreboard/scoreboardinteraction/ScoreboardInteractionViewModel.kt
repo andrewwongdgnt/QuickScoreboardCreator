@@ -4,29 +4,30 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.domain.common.mapper.Mapper
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
-import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryUseCase
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.TimeTransformer
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.interval.IntervalEndSound
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.state.DisplayedScoreInfo
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardUseCase
-import com.dgnt.quickScoreboardCreator.domain.team.usecase.GetTeamUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamUseCase
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
-import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.composable.Label
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.intervalLabelRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.rawRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.secondaryScoreLabelRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.soundEffectRes
+import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
@@ -51,7 +52,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
-    private val historyScoreboardDataMapper: Mapper<HistoricalScoreboard, HistoricalScoreboardData>,
     savedStateHandle: SavedStateHandle,
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
@@ -206,10 +206,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         this.scoreboardType = scoreboardType
-        _intervalLabel.value = Label.Resource(scoreboardType.intervalLabelRes)
-        timelineViewerTitle = resources.getString(scoreboardType.titleRes)
+        _intervalLabel.value = Label.Resource(scoreboardType.intervalLabelRes())
+        timelineViewerTitle = resources.getString(scoreboardType.titleRes())
         timelineViewerIcon = scoreboardType.icon
-        scoreboardType.rawRes.let { rawRes ->
+        scoreboardType.rawRes().let { rawRes ->
             scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
         }?.let { defaultScoreboardConfig ->
             scoreboardManager.apply {
@@ -219,7 +219,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
                 }
             }
             secondaryScoreLabelList = defaultScoreboardConfig.intervalList.map {
-                Label.Resource(scoreboardType.secondaryScoreLabelRes)
+                Label.Resource(scoreboardType.secondaryScoreLabelRes())
             }
         }
 
@@ -314,13 +314,13 @@ class ScoreboardInteractionViewModel @Inject constructor(
         val historicalScoreboard = scoreboardManager.createTimeline(intervalLabel, teamList)
 
         return insertHistoryUseCase(
-            HistoryEntity(
+            HistoryModel(
                 id = historyEntityId,
                 title = timelineViewerTitle,
                 description = "",
                 icon = timelineViewerIcon,
                 lastModified = DateTime.now(),
-                historicalScoreboard = historyScoreboardDataMapper.map(historicalScoreboard),
+                historicalScoreboard = historicalScoreboard,
                 temporary = isHistoryTemporary
             )
         ).toInt()

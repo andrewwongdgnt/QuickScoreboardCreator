@@ -1,8 +1,8 @@
 package com.dgnt.quickScoreboardCreator.ui.common.resourcemapping
 
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIconGroup
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIconGroup
 
 fun TeamIcon.iconRes() = when (this) {
     TeamIcon.ALIEN-> R.drawable.alien

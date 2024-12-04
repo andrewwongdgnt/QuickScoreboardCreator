@@ -1,12 +1,12 @@
 package com.dgnt.quickScoreboardCreator.ui.main.historydetails
 
 import androidx.lifecycle.SavedStateHandle
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.DeleteHistoryUseCase
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.GetHistoryUseCase
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.InsertHistoryUseCase
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler

@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberToggleOff
-import com.dgnt.quickScoreboardCreator.ui.common.imagevector.rememberToggleOn
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberToggleOff
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberToggleOn
 
 @Composable
 fun ModeControlContent(

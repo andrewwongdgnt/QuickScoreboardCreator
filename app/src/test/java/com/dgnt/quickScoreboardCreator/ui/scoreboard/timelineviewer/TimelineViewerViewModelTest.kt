@@ -1,20 +1,20 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 
 import androidx.lifecycle.SavedStateHandle
-import com.dgnt.quickScoreboardCreator.data.history.data.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.domain.common.mapper.Mapper
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalInterval
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalIntervalRange
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScore
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreGroup
-import com.dgnt.quickScoreboardCreator.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.domain.history.model.IntervalLabel
-import com.dgnt.quickScoreboardCreator.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.domain.history.usecase.GetHistoryUseCase
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScore
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreGroup
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.data.base.mapper.Mapper
+import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
@@ -125,7 +125,6 @@ class TimelineViewerViewModelTest {
         sut = TimelineViewerViewModel(
             savedStateHandle,
             getHistoryUseCase,
-            historyScoreboardDomainMapper,
             uiEventHandler
         )
     }
@@ -137,14 +136,14 @@ class TimelineViewerViewModelTest {
         every { savedStateHandle.get<Int>(Arguments.INDEX) } returns 0
         every { savedStateHandle.get<Int>(Arguments.ID) } returns 1
         coEvery { getHistoryUseCase(1) } coAnswers {
-            HistoryEntity(
+            HistoryModel(
                 id = 1,
                 title = "Spike",
                 description = "Craziness",
                 icon = ScoreboardIcon.TENNIS,
                 lastModified = DateTime(2024, 5, 12, 15, 15),
                 createdAt = DateTime(2024, 5, 10, 12, 10),
-                historicalScoreboard = HistoricalScoreboardData(mapOf()),
+                historicalScoreboard = HistoricalScoreboard(mapOf()),
                 temporary = false
             )
         }

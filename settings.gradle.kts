@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -14,6 +15,10 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Quick Scoreboard Creator"
+rootProject.name = "QuickScoreboardCreator"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
- 
+include(":core:presentation:designsystem")
+include(":core:presentation:ui")
+include(":core:domain")
+include(":core:data")

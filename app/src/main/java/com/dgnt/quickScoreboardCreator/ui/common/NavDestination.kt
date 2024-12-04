@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.ui.common
 
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

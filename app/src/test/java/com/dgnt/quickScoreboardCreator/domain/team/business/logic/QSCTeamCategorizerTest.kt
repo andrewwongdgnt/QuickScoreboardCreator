@@ -1,8 +1,8 @@
-package com.dgnt.quickScoreboardCreator.domain.team.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.team.business.logic
 
 
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
-import com.dgnt.quickScoreboardCreator.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Assert

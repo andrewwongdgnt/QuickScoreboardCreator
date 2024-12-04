@@ -2,14 +2,14 @@ package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.R
-import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.business.logic.ScoreboardCategorizer
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.model.config.ScoreboardType
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.DeleteScoreboardUseCase
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.GetScoreboardListUseCase
-import com.dgnt.quickScoreboardCreator.domain.scoreboard.usecase.InsertScoreboardListUseCase
-import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.ScoreboardCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.DeleteScoreboardUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.InsertScoreboardListUseCase
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +26,8 @@ class ScoreboardListViewModel @Inject constructor(
     private val scoreboardCategorizer: ScoreboardCategorizer,
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
-    private val scoreboardEntityList = getScoreboardListUseCase()
-    val categorizedScoreboards = scoreboardEntityList.map { scoreboardEntityList ->
+    private val scoreboardModelList = getScoreboardListUseCase()
+    val categorizedScoreboards = scoreboardModelList.map { scoreboardModelList ->
         scoreboardCategorizer(
             listOf(
                 ScoreboardType.BASKETBALL,
@@ -36,19 +36,19 @@ class ScoreboardListViewModel @Inject constructor(
                 ScoreboardType.TENNIS,
                 ScoreboardType.BOXING,
             ),
-            scoreboardEntityList
+            scoreboardModelList
         )
     }
 
-    private var deletedScoreboardList: MutableList<ScoreboardEntity> = mutableListOf()
+    private var deletedScoreboardList: MutableList<ScoreboardModel> = mutableListOf()
 
     fun onAdd() = sendUiEvent(UiEvent.ScoreboardDetails())
 
     fun onEdit(scoreboardIdentifier: ScoreboardIdentifier) = sendUiEvent(UiEvent.ScoreboardDetails(scoreboardIdentifier))
 
     fun onDelete(id: Int) = viewModelScope.launch {
-        scoreboardEntityList.first().find { entity ->
-            entity.id == id
+        scoreboardModelList.first().find { model ->
+            model.id == id
         }?.let {
             deletedScoreboardList.add(it)
             deleteScoreboardUseCase(it)
