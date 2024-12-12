@@ -2,7 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.ScoreboardCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
@@ -48,7 +48,7 @@ class ScoreboardListViewModel @Inject constructor(
 
     fun onDelete(id: Int) = viewModelScope.launch {
         scoreboardModelList.first().find { model ->
-            model.id == id
+            (model.scoreboardIdentifier as? ScoreboardIdentifier.Custom)?.id == id
         }?.let {
             deletedScoreboardList.add(it)
             deleteScoreboardUseCase(it)

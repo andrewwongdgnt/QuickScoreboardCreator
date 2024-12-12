@@ -4,12 +4,11 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.IntervalConfig
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardUseCase
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
@@ -30,7 +29,6 @@ class IntervalEditorViewModel @Inject constructor(
     private val resources: Resources,
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val timeTransformer: TimeTransformer,
-    private val scoreboardLoader: ScoreboardLoader,
     savedStateHandle: SavedStateHandle,
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
@@ -44,11 +42,11 @@ class IntervalEditorViewModel @Inject constructor(
     private var centiSecond = 0
 
     private val initialTimeValue
-        get() = intervalList.getOrNull(intervalValue - 1)?.intervalData?.initial
+        get() = intervalList.getOrNull(intervalValue - 1)?.second?.initial
     private val isTimeIncreasing
-        get() = intervalList.getOrNull(intervalValue - 1)?.intervalData?.increasing
+        get() = intervalList.getOrNull(intervalValue - 1)?.second?.increasing
 
-    private var intervalList = listOf<IntervalConfig>()
+    private var intervalList = listOf<Pair<ScoreInfo, IntervalData>>()
     private var currentTimeValue = 0L
         set(value) {
             field = value
@@ -101,9 +99,7 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _label.value = Label.Resource(scoreboardType.intervalLabelRes())
-        scoreboardType.rawRes().let { rawRes ->
-            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
-        }?.let {
+        getScoreboardUseCase(resources.openRawResource(scoreboardType.rawRes()))?.let {
             intervalList = it.intervalList
             maxInterval = it.intervalList.size
         }

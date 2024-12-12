@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.core.data.db
 
 import androidx.room.TypeConverter
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.WinRuleType
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.WinRuleType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
 
 class WinRuleConverter {

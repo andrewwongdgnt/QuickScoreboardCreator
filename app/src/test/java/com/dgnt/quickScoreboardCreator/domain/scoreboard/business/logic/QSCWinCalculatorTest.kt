@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCWinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo

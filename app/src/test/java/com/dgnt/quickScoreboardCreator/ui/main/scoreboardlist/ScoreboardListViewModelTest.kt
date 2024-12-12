@@ -2,7 +2,7 @@ package com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist
 
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.ScoreboardCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedScoreboardItemData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon

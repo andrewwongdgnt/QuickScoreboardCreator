@@ -4,13 +4,11 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
@@ -49,7 +47,6 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private val insertScoreboardUseCase: InsertScoreboardUseCase,
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val deleteScoreboardUseCase: DeleteScoreboardUseCase,
-    private val scoreboardLoader: ScoreboardLoader,
     private val timeTransformer: TimeTransformer,
     savedStateHandle: SavedStateHandle,
     private val uiEventHandler: UiEventHandler
@@ -141,18 +138,16 @@ class ScoreboardDetailsViewModel @Inject constructor(
     private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
         _title.value = resources.getString(scoreboardType.titleRes())
         _description.value = resources.getString(scoreboardType.descriptionRes())
-        _icon.value = scoreboardType.icon
         _intervalLabel.value = resources.getString(scoreboardType.intervalLabelRes())
         _isNewEntity.value = true
-        scoreboardType.rawRes().let { rawRes ->
-            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
-        }?.let {
-            _winRule.value = it.winRuleType.toWinRule()
+        getScoreboardUseCase(resources.openRawResource(scoreboardType.rawRes()))?.let {
+            _winRule.value = it.winRule
+            _icon.value = it.icon
 
             _intervalList.value = it.intervalList.map { interval ->
                 //TODO should make a mapper for this
-                val scoreInfo = interval.scoreInfo.toScoreInfo().copy(secondaryScoreLabel = resources.getString(scoreboardType.secondaryScoreLabelRes()))
-                val intervalData = interval.intervalData.toIntervalData()
+                val scoreInfo = interval.first.copy(secondaryScoreLabel = resources.getString(scoreboardType.secondaryScoreLabelRes()))
+                val intervalData = interval.second
                 IntervalEditingInfo(
                     scoreInfo = scoreInfo,
                     intervalData = intervalData,
@@ -175,12 +170,13 @@ class ScoreboardDetailsViewModel @Inject constructor(
             viewModelScope.launch {
                 insertScoreboardUseCase(
                     ScoreboardModel(
-                        id = originalModel?.id,
+                        scoreboardIdentifier = originalModel?.scoreboardIdentifier,
                         title = title.value,
                         description = description.value,
                         winRule = winRule.value,
                         icon = icon.value!!,
-                        intervalLabel = intervalLabel.value
+                        intervalLabel = intervalLabel.value,
+                        intervalList = listOf()
                     )
                 )
             }

@@ -1,20 +1,17 @@
 package com.dgnt.quickScoreboardCreator.di
 
-import com.dgnt.quickScoreboardCreator.core.gson.GsonProvider
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.QSCHistoryCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.QSCHistoryCreator
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.QSCScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.QSCScoreboardCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.QSCScoreboardManager
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.QSCTimeTransformer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.QSCWinCalculator
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.ScoreboardCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.WinCalculator
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCScoreboardCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCScoreboardManager
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCTimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCWinCalculator
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.WinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.QSCTeamCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
 import dagger.Module
@@ -26,12 +23,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object BusinessModule {
-
-    @Provides
-    @Singleton
-    fun provideScoreboardLoader(): ScoreboardLoader =
-        QSCScoreboardLoader(GsonProvider.gson)
-
 
     @Provides
     fun provideWinCalculator(): WinCalculator =

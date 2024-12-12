@@ -3,6 +3,8 @@ package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCScoreboardManager
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.WinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup

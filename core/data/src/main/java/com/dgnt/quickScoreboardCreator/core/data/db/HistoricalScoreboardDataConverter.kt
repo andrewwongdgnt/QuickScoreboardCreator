@@ -1,19 +1,19 @@
 package com.dgnt.quickScoreboardCreator.core.data.db
 
+import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoricalScoreboardData
-import com.dgnt.quickScoreboardCreator.core.data.util.GsonProvider
-import com.dgnt.quickScoreboardCreator.core.data.util.fromJson
+import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 
-
-class HistoricalScoreboardDataConverter {
+@ProvidedTypeConverter
+class HistoricalScoreboardDataConverter (private val serializer: Serializer) {
     @TypeConverter
     fun fromJson(json: String): HistoricalScoreboardData {
-        return GsonProvider.gson.fromJson<HistoricalScoreboardData>(json)
+        return serializer.deserialize(json)
     }
 
     @TypeConverter
     fun toJson(value: HistoricalScoreboardData): String {
-        return GsonProvider.gson.toJson(value)
+        return serializer.serialize(value)
     }
 }

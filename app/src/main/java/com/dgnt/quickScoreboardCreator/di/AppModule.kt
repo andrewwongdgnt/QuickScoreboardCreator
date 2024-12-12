@@ -2,6 +2,8 @@ package com.dgnt.quickScoreboardCreator.di
 
 import android.app.Application
 import android.content.res.Resources
+import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
+import com.dgnt.quickScoreboardCreator.core.serializer.QSCSerializer
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.QSCUiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import dagger.Module
@@ -18,6 +20,11 @@ object AppModule {
     @Singleton
     fun provideResources(app: Application): Resources =
         app.resources
+
+    @Provides
+    @Singleton
+    fun provideSerializer(): Serializer =
+        QSCSerializer()
 
     @Provides
     fun provideUiEventHandler(): UiEventHandler =

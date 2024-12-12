@@ -1,19 +1,28 @@
-package com.dgnt.quickScoreboardCreator.core.data.util
-
+package com.dgnt.quickScoreboardCreator.core.serializer
 
 
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoricalIntervalRangeData
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.IntervalLabelData
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.TeamLabelData
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.ConfigType
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.CustomScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.DefaultScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.ScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 
-object GsonProvider {
+class QSCSerializer: Serializer {
 
-    val gson: Gson = GsonBuilder().apply {
-
+    private val gson: Gson = GsonBuilder().apply {
+        registerTypeAdapterFactory(
+            RuntimeTypeAdapterFactory
+                .of(ScoreboardConfig::class.java, "type", true)
+                .registerSubtype(DefaultScoreboardConfig::class.java, ConfigType.DEFAULT.name)
+                .registerSubtype(CustomScoreboardConfig::class.java, ConfigType.CUSTOM.name)
+        )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
                 .of(HistoricalIntervalRangeData::class.java, "type", true)
@@ -35,7 +44,8 @@ object GsonProvider {
 
     }.create()
 
-}
+    override fun <T> serialize(value: T): String = gson.toJson(value)
 
-inline fun <reified T> Gson.fromJson(json: String): T =
-    fromJson(json, object : TypeToken<T>() {}.type)
+    override fun <T> deserialize(value: String): T = gson.fromJson(value, object : TypeToken<T>() {}.type)
+
+}

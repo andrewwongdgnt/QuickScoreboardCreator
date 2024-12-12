@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business
 
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedScoreboardItemData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.CategorizedScoreboardType
@@ -8,14 +8,14 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardMo
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 
 class QSCScoreboardCategorizer : ScoreboardCategorizer {
-    override fun invoke(scoreboardTypeList: List<ScoreboardType>, scoreboardEntityList: List<ScoreboardModel>): Pair<CategorizedScoreboardType, CategorizedScoreboardItemData> {
-        val scoreboardList = scoreboardEntityList.map { e ->
+    override fun invoke(scoreboardTypeList: List<ScoreboardType>, scoreboardList: List<ScoreboardModel>): Pair<CategorizedScoreboardType, CategorizedScoreboardItemData> {
+        val scoreboardItemList = scoreboardList.map { e ->
             ScoreboardItemData(
-                ScoreboardIdentifier.Custom(e.id ?: -1), e.title, e.description, e.icon
+                e.scoreboardIdentifier ?: ScoreboardIdentifier.Custom(-1), e.title, e.description, e.icon
             )
         }
         return CategorizedScoreboardType(scoreboardTypeList) to
-                CategorizedScoreboardItemData(scoreboardList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, ScoreboardItemData::title)))
+                CategorizedScoreboardItemData(scoreboardItemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, ScoreboardItemData::title)))
 
     }
 }

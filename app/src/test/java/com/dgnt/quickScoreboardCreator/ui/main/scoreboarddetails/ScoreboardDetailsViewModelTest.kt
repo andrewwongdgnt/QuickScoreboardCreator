@@ -4,7 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.data.scoreboard.entity.ScoreboardEntity
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType

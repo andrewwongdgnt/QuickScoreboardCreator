@@ -8,13 +8,11 @@ import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
@@ -49,7 +47,6 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private val getScoreboardUseCase: GetScoreboardUseCase,
     private val getTeamUseCase: GetTeamUseCase,
     private val insertHistoryUseCase: InsertHistoryUseCase,
-    private val scoreboardLoader: ScoreboardLoader,
     private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
     savedStateHandle: SavedStateHandle,
@@ -209,16 +206,12 @@ class ScoreboardInteractionViewModel @Inject constructor(
         _intervalLabel.value = Label.Resource(scoreboardType.intervalLabelRes())
         timelineViewerTitle = resources.getString(scoreboardType.titleRes())
         timelineViewerIcon = scoreboardType.icon
-        scoreboardType.rawRes().let { rawRes ->
-            scoreboardLoader(resources.openRawResource(rawRes)) as DefaultScoreboardConfig?
-        }?.let { defaultScoreboardConfig ->
+        getScoreboardUseCase(resources.openRawResource(scoreboardType.rawRes()))?.let { scoreboardModel ->
             scoreboardManager.apply {
-                winRule = defaultScoreboardConfig.winRuleType.toWinRule()
-                intervalList = defaultScoreboardConfig.intervalList.map {
-                    it.scoreInfo.toScoreInfo() to it.intervalData.toIntervalData()
-                }
+                winRule = scoreboardModel.winRule
+                intervalList = scoreboardModel.intervalList
             }
-            secondaryScoreLabelList = defaultScoreboardConfig.intervalList.map {
+            secondaryScoreLabelList = scoreboardModel.intervalList.map {
                 Label.Resource(scoreboardType.secondaryScoreLabelRes())
             }
         }

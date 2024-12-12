@@ -1,18 +1,18 @@
-package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app
+package com.dgnt.quickScoreboardCreator.core.data.scoreboard.loader
 
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.IntervalConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreboardConfig
-import com.google.gson.Gson
+import com.dgnt.quickScoreboardCreator.core.data.base.loader.BaseLoader
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.IntervalConfig
+import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.ScoreboardConfig
+import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import java.io.InputStream
 
-class QSCScoreboardLoader(private val gson: Gson) : ScoreboardLoader {
-
-    override fun invoke(inputStream: InputStream): ScoreboardConfig? {
+class ScoreboardLoader(private val serializer: Serializer): BaseLoader<ScoreboardConfig> {
+    override fun import(inputStream: InputStream): ScoreboardConfig? {
         return try {
             val data = inputStream.bufferedReader().use {
                 it.readText()
             }
-            gson.fromJson(data, ScoreboardConfig::class.java).apply {
+            serializer.deserialize<ScoreboardConfig>(data).apply {
                 val size = repeatRule.map { it.to.size }.reduce { sum, element -> sum + element }
                 val newIntervalList = MutableList<IntervalConfig?>(size) { null }
                 repeatRule.forEach { repeatRuleConfig ->

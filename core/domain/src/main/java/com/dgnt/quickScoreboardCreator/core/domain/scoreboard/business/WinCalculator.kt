@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
+package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business
 
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule

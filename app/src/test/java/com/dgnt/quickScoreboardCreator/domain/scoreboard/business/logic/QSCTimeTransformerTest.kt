@@ -1,6 +1,7 @@
 package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
 
+import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCTimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
