@@ -4,6 +4,7 @@ import com.dgnt.quickScoreboardCreator.core.data.base.loader.BaseFileDao
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.IntervalFileDTO
 import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTO
+import com.google.gson.reflect.TypeToken
 import java.io.InputStream
 
 class SportFileDao(private val serializer: Serializer): BaseFileDao<SportFileDTO> {
@@ -12,7 +13,7 @@ class SportFileDao(private val serializer: Serializer): BaseFileDao<SportFileDTO
             val data = inputStream.bufferedReader().use {
                 it.readText()
             }
-            serializer.deserialize<SportFileDTO>(data).apply {
+            serializer.deserialize<SportFileDTO>(data, object : TypeToken<SportFileDTO>() {}.type).apply {
                 val size = repeatRule.map { it.to.size }.reduce { sum, element -> sum + element }
                 val newIntervalList = MutableList<IntervalFileDTO?>(size) { null }
                 repeatRule.forEach { repeatRuleFileDTO ->

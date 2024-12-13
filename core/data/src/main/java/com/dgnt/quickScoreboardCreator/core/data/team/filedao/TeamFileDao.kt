@@ -3,6 +3,7 @@ package com.dgnt.quickScoreboardCreator.core.data.team.filedao
 import com.dgnt.quickScoreboardCreator.core.data.base.loader.BaseFileDao
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import com.dgnt.quickScoreboardCreator.core.data.team.filedto.TeamFileDTO
+import com.google.gson.reflect.TypeToken
 import java.io.InputStream
 
 class TeamFileDao(private val serializer: Serializer): BaseFileDao<TeamFileDTO> {
@@ -11,7 +12,7 @@ class TeamFileDao(private val serializer: Serializer): BaseFileDao<TeamFileDTO> 
             val data = inputStream.bufferedReader().use {
                 it.readText()
             }
-            serializer.deserialize<TeamFileDTO>(data)
+            serializer.deserialize<TeamFileDTO>(data, object : TypeToken<TeamFileDTO>() {}.type)
 
 
         } catch (e: Exception) {

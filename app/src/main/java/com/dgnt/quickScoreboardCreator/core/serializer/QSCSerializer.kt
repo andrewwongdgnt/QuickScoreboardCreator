@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
+import java.lang.reflect.Type
 
 class QSCSerializer: Serializer {
 
@@ -46,6 +47,8 @@ class QSCSerializer: Serializer {
 
     override fun <T> serialize(value: T): String = gson.toJson(value)
 
-    override fun <T> deserialize(value: String): T = gson.fromJson(value, object : TypeToken<T>() {}.type)
+    override fun <T> deserialize(value: String, type: Type): T {
+        return gson.fromJson(value, type)
+    }
 
 }

@@ -5,6 +5,6 @@ import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
 
 data class DefaultSportFileDTO(
 
-    val scoreboardType: SportType
+    val sportType: SportType
 
 ) : SportFileDTO()

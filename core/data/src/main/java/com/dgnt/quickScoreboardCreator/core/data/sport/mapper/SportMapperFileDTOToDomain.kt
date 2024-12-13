@@ -12,11 +12,11 @@ class SportMapperFileDTOToDomain : Mapper<SportFileDTO, SportModel> {
     override fun map(from: SportFileDTO) =
         when (from) {
             is DefaultSportFileDTO -> SportModel(
-                SportIdentifier.Default(from.scoreboardType),
+                SportIdentifier.Default(from.sportType),
                 "",
                 "",
                 from.winRuleType.toWinRule(),
-                from.scoreboardType.icon,
+                from.sportType.icon,
                 "",
                 from.intervalList.map {
                     it.scoreInfo.toScoreInfo() to it.intervalData.toIntervalData()

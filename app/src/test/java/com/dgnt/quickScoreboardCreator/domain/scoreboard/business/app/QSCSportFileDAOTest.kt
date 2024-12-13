@@ -1,12 +1,13 @@
-package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app
+package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app
 
-import com.dgnt.quickScoreboardCreator.core.gson.GsonProvider
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreRuleConfig
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreRuleType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.WinRuleType
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedao.SportFileDao
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.CustomSportFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.DefaultSportFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.ScoreRuleFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.ScoreRuleType
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.WinRuleType
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
+import com.dgnt.quickScoreboardCreator.core.serializer.QSCSerializer
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -14,26 +15,26 @@ import org.junit.Test
 
 class QSCSportFileDAOTest {
 
-    private lateinit var sut: QSCScoreboardLoader
+    private lateinit var sut: SportFileDao
 
     @Before
     fun setup() {
-        sut = QSCScoreboardLoader(GsonProvider.gson)
+        sut = SportFileDao(QSCSerializer())
     }
 
     @Test
     fun testLoadDefault() {
         val exampleDefault = javaClass.classLoader?.getResourceAsStream("example_default.json")?.let { ins ->
-            sut(ins)
-        } as DefaultScoreboardConfig
+            sut.import(ins)
+        } as DefaultSportFileDTO
 
-        Assert.assertEquals(ScoreboardType.BASKETBALL, exampleDefault.scoreboardType)
+        Assert.assertEquals(SportType.BASKETBALL, exampleDefault.sportType)
         Assert.assertEquals(WinRuleType.FINAL, exampleDefault.winRuleType)
         Assert.assertEquals(6, exampleDefault.intervalList.size)
         (0 until 4).forEach {
             val intervalInfo = exampleDefault.intervalList[it]
             val scoreInfo = intervalInfo.scoreInfo
-            Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.DEUCE_ADVANTAGE, 3), scoreInfo.scoreRule)
+            Assert.assertEquals(ScoreRuleFileDTO(ScoreRuleType.DEUCE_ADVANTAGE, 3), scoreInfo.scoreRule)
             Assert.assertEquals("0", scoreInfo.scoreMapping?.get("0"))
             Assert.assertEquals("15", scoreInfo.scoreMapping?.get("1"))
             Assert.assertEquals("30", scoreInfo.scoreMapping?.get("2"))
@@ -44,7 +45,7 @@ class QSCSportFileDAOTest {
         (4 until 6).forEach {
             val intervalInfo = exampleDefault.intervalList[it]
             val scoreInfo = intervalInfo.scoreInfo
-            Assert.assertEquals(ScoreRuleConfig(ScoreRuleType.NO_RULE, 0), scoreInfo.scoreRule)
+            Assert.assertEquals(ScoreRuleFileDTO(ScoreRuleType.NO_RULE, 0), scoreInfo.scoreRule)
             Assert.assertNull(scoreInfo.scoreMapping)
             Assert.assertFalse(intervalInfo.intervalData.increasing)
         }
@@ -54,8 +55,8 @@ class QSCSportFileDAOTest {
     @Test
     fun testLoadCustom() {
         val exampleCustom = javaClass.classLoader?.getResourceAsStream("example_custom.json")?.let { ins ->
-            sut(ins)
-        } as CustomScoreboardConfig
+            sut.import(ins)
+        } as CustomSportFileDTO
 
         Assert.assertEquals("Spike Ball", exampleCustom.title)
         Assert.assertEquals("Covid sport", exampleCustom.description)
