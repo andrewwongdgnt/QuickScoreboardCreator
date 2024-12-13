@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
@@ -27,7 +27,7 @@ class TimelineViewerViewModel @Inject constructor(
 
     private var intervalIndex = 0
 
-    private var _icon = MutableStateFlow<ScoreboardIcon?>(null)
+    private var _icon = MutableStateFlow<SportIcon?>(null)
     val icon = _icon.asStateFlow()
 
     private var historicalScoreboard: HistoricalScoreboard? = null

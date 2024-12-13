@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.core.data.history.entity
 
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 
 
@@ -41,7 +42,7 @@ sealed class IntervalLabelData {
 
     enum class Type {
         CUSTOM,
-        SCOREBOARD_TYPE
+        SPORT_TYPE
     }
 
     data class Custom(
@@ -56,14 +57,14 @@ sealed class IntervalLabelData {
         }
     }
 
-    data class ScoreboardType(
-        val scoreboardType: com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType,
+    data class DefaultSport(
+        val sportType: SportType,
 
         @Transient
         val i: Int
     ) : IntervalLabelData() {
         init {
-            type = Type.SCOREBOARD_TYPE.name
+            type = Type.SPORT_TYPE.name
             index = i
         }
     }

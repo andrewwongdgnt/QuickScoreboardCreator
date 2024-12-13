@@ -20,7 +20,7 @@ sealed class NavItem(
     val unselectedIcon: ImageVector,
     val navDestination: NavDestination
 ) {
-    data object ScoreboardList : NavItem(R.string.scoreboardListNavTitle, Icons.Filled.Home, Icons.Outlined.Home, NavDestination.ScoreboardList)
+    data object SportList : NavItem(R.string.sportListNavTitle, Icons.Filled.Home, Icons.Outlined.Home, NavDestination.SportList)
     data object TeamList : NavItem(R.string.teamListNavTitle, Icons.Filled.Person, Icons.Outlined.Person, NavDestination.TeamList)
     data object HistoryList : NavItem(R.string.historyListNavTitle, Icons.Filled.Timeline, Icons.Filled.Timeline, NavDestination.HistoryList)
     data object Contact : NavItem(R.string.contactNavTitle, Icons.Filled.Email, Icons.Outlined.Email, NavDestination.Contact)

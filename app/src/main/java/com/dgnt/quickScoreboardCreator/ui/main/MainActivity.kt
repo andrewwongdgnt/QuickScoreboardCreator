@@ -24,9 +24,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
@@ -36,8 +36,8 @@ import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
-import com.dgnt.quickScoreboardCreator.ui.main.scoreboarddetails.ScoreboardDetailsDialogContent
-import com.dgnt.quickScoreboardCreator.ui.main.scoreboardlist.ScoreboardListContent
+import com.dgnt.quickScoreboardCreator.ui.main.sportdetails.SportDetailsDialogContent
+import com.dgnt.quickScoreboardCreator.ui.main.sportlist.SportListContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamdetails.TeamDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             QuickScoreboardCreatorTheme {
-                val navItemLists = listOf(NavItem.ScoreboardList, NavItem.TeamList, NavItem.HistoryList, NavItem.Contact)
+                val navItemLists = listOf(NavItem.SportList, NavItem.TeamList, NavItem.HistoryList, NavItem.Contact)
 
                 val navController = rememberNavController()
 
@@ -102,17 +102,17 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         NavHost(
             navController = navController,
-            startDestination = NavDestination.ScoreboardList,
+            startDestination = NavDestination.SportList,
             modifier = modifier
         ) {
-            composable<NavDestination.ScoreboardList> {
-                ScoreboardListContent(
+            composable<NavDestination.SportList> {
+                SportListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            is UiEvent.ScoreboardDetails -> navController.commonNavigate(navDestination = NavDestination.ScoreboardDetails(uiEvent.scoreboardIdentifier))
+                            is UiEvent.SportDetails -> navController.commonNavigate(navDestination = NavDestination.SportDetails(uiEvent.sportIdentifier))
 
                             is UiEvent.LaunchScoreboard -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
-                                intent.putExtra(SCOREBOARD_IDENTIFIER, uiEvent.scoreboardIdentifier)
+                                intent.putExtra(SPORT_IDENTIFIER, uiEvent.sportIdentifier)
                             })
 
                             else -> Unit
@@ -120,12 +120,12 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-            dialog<NavDestination.ScoreboardDetails>(
+            dialog<NavDestination.SportDetails>(
                 typeMap = mapOf(
-                    typeOf<ScoreboardIdentifier?>() to customNavType<ScoreboardIdentifier?>(isNullableAllowed = true)
+                    typeOf<SportIdentifier?>() to customNavType<SportIdentifier?>(isNullableAllowed = true)
                 )
             ) {
-                ScoreboardDetailsDialogContent(
+                SportDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
                             UiEvent.Done -> navController.navigateUp()

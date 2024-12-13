@@ -1,6 +1,6 @@
 {
   "type": "DEFAULT",
-  "scoreboardType": "HOCKEY",
+  "sportType": "HOCKEY",
   "winRuleType": "FINAL",
   "intervalList": [
     {

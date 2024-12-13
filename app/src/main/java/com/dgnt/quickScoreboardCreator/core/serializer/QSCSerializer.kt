@@ -4,11 +4,11 @@ package com.dgnt.quickScoreboardCreator.core.serializer
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoricalIntervalRangeData
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.IntervalLabelData
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.TeamLabelData
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.ConfigType
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.CustomScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.DefaultScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.ScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.CustomSportFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.DefaultSportFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTOType
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -19,9 +19,9 @@ class QSCSerializer: Serializer {
     private val gson: Gson = GsonBuilder().apply {
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
-                .of(ScoreboardConfig::class.java, "type", true)
-                .registerSubtype(DefaultScoreboardConfig::class.java, ConfigType.DEFAULT.name)
-                .registerSubtype(CustomScoreboardConfig::class.java, ConfigType.CUSTOM.name)
+                .of(SportFileDTO::class.java, "type", true)
+                .registerSubtype(DefaultSportFileDTO::class.java, SportFileDTOType.DEFAULT.name)
+                .registerSubtype(CustomSportFileDTO::class.java, SportFileDTOType.CUSTOM.name)
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
@@ -33,7 +33,7 @@ class QSCSerializer: Serializer {
             RuntimeTypeAdapterFactory
                 .of(IntervalLabelData::class.java, "type", true)
                 .registerSubtype(IntervalLabelData.Custom::class.java, IntervalLabelData.Type.CUSTOM.name)
-                .registerSubtype(IntervalLabelData.ScoreboardType::class.java, IntervalLabelData.Type.SCOREBOARD_TYPE.name)
+                .registerSubtype(IntervalLabelData.DefaultSport::class.java, IntervalLabelData.Type.SPORT_TYPE.name)
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory

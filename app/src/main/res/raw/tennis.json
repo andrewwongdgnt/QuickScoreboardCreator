@@ -1,6 +1,6 @@
 {
   "type": "DEFAULT",
-  "scoreboardType": "TENNIS",
+  "sportType": "TENNIS",
   "winRuleType": "COUNT",
   "intervalList": [
     {

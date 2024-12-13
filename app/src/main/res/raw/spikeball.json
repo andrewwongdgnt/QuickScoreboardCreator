@@ -1,6 +1,6 @@
 {
   "type": "DEFAULT",
-  "scoreboardType": "SPIKEBALL",
+  "sportType": "SPIKEBALL",
   "winRuleType": "COUNT",
   "intervalList": [
     {

@@ -42,7 +42,7 @@ class HistoricalScoreboardMapperDataToDomain : Mapper<HistoricalScoreboardData, 
 
     private fun IntervalLabelData.toDomain() = when (this) {
         is IntervalLabelData.Custom -> IntervalLabel.Custom(value, index)
-        is IntervalLabelData.ScoreboardType -> IntervalLabel.ScoreboardType(scoreboardType, index)
+        is IntervalLabelData.DefaultSport -> IntervalLabel.DefaultSport(sportType, index)
     }
 
     private fun HistoricalScoreGroupData.toDomain() = HistoricalScoreGroup(

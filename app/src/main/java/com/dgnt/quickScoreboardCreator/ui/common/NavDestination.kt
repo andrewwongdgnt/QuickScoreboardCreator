@@ -1,11 +1,11 @@
 package com.dgnt.quickScoreboardCreator.ui.common
 
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 object Arguments {
-    const val SCOREBOARD_IDENTIFIER = "scoreboardIdentifier"
+    const val SPORT_IDENTIFIER = "sportIdentifier"
     const val TIMELINE_VIEWER_IDENTIFIER = "timelineViewerIdentifier"
     const val ID = "id"
     const val INDEX = "index"
@@ -15,7 +15,7 @@ object Arguments {
 @Serializable
 sealed interface NavDestination {
     @Serializable
-    data object ScoreboardList : NavDestination
+    data object SportList : NavDestination
 
     @Serializable
     data object TeamList : NavDestination
@@ -27,9 +27,9 @@ sealed interface NavDestination {
     data object Contact : NavDestination
 
     @Serializable
-    data class ScoreboardDetails(
-        @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
-        val scoreboardIdentifier: ScoreboardIdentifier?
+    data class SportDetails(
+        @SerialName(Arguments.SPORT_IDENTIFIER)
+        val sportIdentifier: SportIdentifier?
     ) : NavDestination
 
     @Serializable
@@ -45,9 +45,9 @@ sealed interface NavDestination {
     ) : NavDestination
 
     @Serializable
-    data class ScoreboardInteraction(
-        @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
-        val scoreboardIdentifier: ScoreboardIdentifier
+    data class Scoreboard(
+        @SerialName(Arguments.SPORT_IDENTIFIER)
+        val sportIdentifier: SportIdentifier
     ) : NavDestination
 
     @Serializable
@@ -62,8 +62,8 @@ sealed interface NavDestination {
         val value: Long,
         @SerialName(Arguments.INDEX)
         val index: Int,
-        @SerialName(Arguments.SCOREBOARD_IDENTIFIER)
-        val scoreboardIdentifier: ScoreboardIdentifier
+        @SerialName(Arguments.SPORT_IDENTIFIER)
+        val sportIdentifier: SportIdentifier
     ) : NavDestination
 
     @Serializable

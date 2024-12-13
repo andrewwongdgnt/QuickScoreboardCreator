@@ -1,7 +1,8 @@
 package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business
 
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.WinRule
+
 
 interface WinCalculator {
     fun store(scoreInfo: ScoreInfo, intervalIndex: Int)

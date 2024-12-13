@@ -19,8 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
 
 @Composable
 fun TimerDisplayContent(

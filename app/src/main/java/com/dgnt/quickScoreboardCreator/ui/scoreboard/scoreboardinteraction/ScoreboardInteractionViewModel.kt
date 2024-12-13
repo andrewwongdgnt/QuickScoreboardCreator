@@ -9,18 +9,18 @@ import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.intervalLabelRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.rawRes
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.secondaryScoreLabelRes
@@ -44,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScoreboardInteractionViewModel @Inject constructor(
     private val resources: Resources,
-    private val getScoreboardUseCase: GetScoreboardUseCase,
+    private val getSportUseCase: GetSportUseCase,
     private val getTeamUseCase: GetTeamUseCase,
     private val insertHistoryUseCase: InsertHistoryUseCase,
     private val scoreboardManager: ScoreboardManager,
@@ -125,7 +125,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
         }
     }
 
-    private var scoreboardType: ScoreboardType? = null
+    private var sportType: SportType? = null
 
     /**
      * Winners by team index
@@ -154,10 +154,10 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
-    private var scoreboardIdentifier: ScoreboardIdentifier? = null
+    private var sportIdentifier: SportIdentifier? = null
 
     private var timelineViewerTitle = ""
-    private var timelineViewerIcon = ScoreboardIcon.BASKETBALL
+    private var timelineViewerIcon = SportIcon.BASKETBALL
 
     private var historyEntityId: Int? = null
     private var isHistoryTemporary = true
@@ -171,12 +171,12 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private var secondaryScoreLabelList = listOf<Label>()
 
     init {
-        savedStateHandle.get<ScoreboardIdentifier>(SCOREBOARD_IDENTIFIER)?.let { sId ->
+        savedStateHandle.get<SportIdentifier>(SPORT_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is ScoreboardIdentifier.Custom -> initWithId(sId.id)
-                is ScoreboardIdentifier.Default -> initWithScoreboardType(sId.scoreboardType)
+                is SportIdentifier.Custom -> initWithId(sId.id)
+                is SportIdentifier.Default -> initWithSportType(sId.sportType)
             }
-            scoreboardIdentifier = sId
+            sportIdentifier = sId
         }
 
         scoreboardManager.primaryScoresUpdateListener = primaryScoresUpdateListener
@@ -194,25 +194,25 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     private fun initWithId(id: Int) {
         viewModelScope.launch {
-            getScoreboardUseCase(id)?.let {
+            getSportUseCase(id)?.let {
                 timelineViewerTitle = it.title
                 timelineViewerIcon = it.icon
             }
         }
     }
 
-    private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        this.scoreboardType = scoreboardType
-        _intervalLabel.value = Label.Resource(scoreboardType.intervalLabelRes())
-        timelineViewerTitle = resources.getString(scoreboardType.titleRes())
-        timelineViewerIcon = scoreboardType.icon
-        getScoreboardUseCase(resources.openRawResource(scoreboardType.rawRes()))?.let { scoreboardModel ->
+    private fun initWithSportType(sportType: SportType) {
+        this.sportType = sportType
+        _intervalLabel.value = Label.Resource(sportType.intervalLabelRes())
+        timelineViewerTitle = resources.getString(sportType.titleRes())
+        timelineViewerIcon = sportType.icon
+        getSportUseCase(resources.openRawResource(sportType.rawRes()))?.let { sportModel ->
             scoreboardManager.apply {
-                winRule = scoreboardModel.winRule
-                intervalList = scoreboardModel.intervalList
+                winRule = sportModel.winRule
+                intervalList = sportModel.intervalList
             }
-            secondaryScoreLabelList = scoreboardModel.intervalList.map {
-                Label.Resource(scoreboardType.secondaryScoreLabelRes())
+            secondaryScoreLabelList = sportModel.intervalList.map {
+                Label.Resource(sportType.secondaryScoreLabelRes())
             }
         }
 
@@ -270,7 +270,7 @@ class ScoreboardInteractionViewModel @Inject constructor(
 
     fun toIntervalEditor() {
         stopTimerJob()
-        scoreboardIdentifier?.let { sId ->
+        sportIdentifier?.let { sId ->
             sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, sId))
         }
     }
@@ -294,8 +294,8 @@ class ScoreboardInteractionViewModel @Inject constructor(
     private suspend fun insertHistory(): Int {
         val intervalLabel = when (val l = intervalLabel.value) {
             is Label.Custom -> IntervalLabel.Custom(l.value)
-            else -> scoreboardType?.let {
-                IntervalLabel.ScoreboardType(it)
+            else -> sportType?.let {
+                IntervalLabel.DefaultSport(it)
             } ?: IntervalLabel.Custom("")
         }
         val teamList = teamList.value.map {

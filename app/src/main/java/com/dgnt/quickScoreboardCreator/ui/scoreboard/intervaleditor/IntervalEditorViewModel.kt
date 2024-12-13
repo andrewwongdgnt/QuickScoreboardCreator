@@ -4,13 +4,13 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.intervalLabelRes
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class IntervalEditorViewModel @Inject constructor(
     private val resources: Resources,
-    private val getScoreboardUseCase: GetScoreboardUseCase,
+    private val getSportUseCase: GetSportUseCase,
     private val timeTransformer: TimeTransformer,
     savedStateHandle: SavedStateHandle,
     uiEventHandler: UiEventHandler
@@ -69,10 +69,10 @@ class IntervalEditorViewModel @Inject constructor(
     val errors = _errors.asStateFlow()
 
     init {
-        savedStateHandle.get<ScoreboardIdentifier>(Arguments.SCOREBOARD_IDENTIFIER)?.let { sId ->
+        savedStateHandle.get<SportIdentifier>(Arguments.SPORT_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is ScoreboardIdentifier.Custom -> initWithId(sId.id)
-                is ScoreboardIdentifier.Default -> initWithScoreboardType(sId.scoreboardType)
+                is SportIdentifier.Custom -> initWithId(sId.id)
+                is SportIdentifier.Default -> initWithSportType(sId.sportType)
             }
         }
         savedStateHandle.get<Long>(Arguments.VALUE)?.let {
@@ -91,15 +91,15 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun initWithId(id: Int) {
         viewModelScope.launch {
-            getScoreboardUseCase(id)?.let {
+            getSportUseCase(id)?.let {
 
             }
         }
     }
 
-    private fun initWithScoreboardType(scoreboardType: ScoreboardType) {
-        _label.value = Label.Resource(scoreboardType.intervalLabelRes())
-        getScoreboardUseCase(resources.openRawResource(scoreboardType.rawRes()))?.let {
+    private fun initWithSportType(sportType: SportType) {
+        _label.value = Label.Resource(sportType.intervalLabelRes())
+        getSportUseCase(resources.openRawResource(sportType.rawRes()))?.let {
             intervalList = it.intervalList
             maxInterval = it.intervalList.size
         }

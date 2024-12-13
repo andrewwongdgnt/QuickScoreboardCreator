@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "192c21b5dcea048730fb178d5846efad",
+    "identityHash": "5ecd892030d5c6e974cc0ef98b8ba196",
     "entities": [
       {
-        "tableName": "ScoreboardEntity",
+        "tableName": "SportEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `winRule` TEXT NOT NULL, `icon` TEXT NOT NULL, `intervalLabel` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
@@ -158,7 +158,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '192c21b5dcea048730fb178d5846efad')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5ecd892030d5c6e974cc0ef98b8ba196')"
     ]
   }
 }

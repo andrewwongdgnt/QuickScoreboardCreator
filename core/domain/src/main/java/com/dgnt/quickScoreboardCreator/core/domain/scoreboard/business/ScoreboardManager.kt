@@ -4,11 +4,11 @@ package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.WinRule
 
 interface ScoreboardManager {
 

@@ -4,7 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.app.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.DefaultScoreboardConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.IntervalConfig
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.IntervalDataConfig
@@ -13,7 +13,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.Score
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.config.ScoreRuleType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.usecase.GetScoreboardUseCase
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
@@ -43,7 +43,7 @@ class IntervalEditorViewModelTest {
     private lateinit var resources: Resources
 
     @MockK
-    private lateinit var getScoreboardUseCase: GetScoreboardUseCase
+    private lateinit var getSportUseCase: GetSportUseCase
 
     @MockK
     private lateinit var timeTransformer: TimeTransformer
@@ -105,7 +105,7 @@ class IntervalEditorViewModelTest {
     private fun initSut() {
         sut = IntervalEditorViewModel(
             resources,
-            getScoreboardUseCase,
+            getSportUseCase,
             timeTransformer,
             scoreboardLoader,
             savedStateHandle,
@@ -117,7 +117,7 @@ class IntervalEditorViewModelTest {
         val inputStream = mockk<InputStream>()
         val scoreboardConfig = mockk<DefaultScoreboardConfig>()
 
-        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SCOREBOARD_IDENTIFIER) } returns ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL)
+        every { savedStateHandle.get<ScoreboardIdentifier?>(Arguments.SPORT_IDENTIFIER) } returns ScoreboardIdentifier.Default(ScoreboardType.BASKETBALL)
         every { resources.openRawResource(ScoreboardType.BASKETBALL.rawRes) } returns inputStream
         every { scoreboardLoader.invoke(inputStream) } returns scoreboardConfig
         every { scoreboardConfig.intervalList } returns mockIntervalList

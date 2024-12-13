@@ -13,7 +13,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.getTimelineViewerTeamColor
 import com.github.mikephil.charting.charts.LineChart

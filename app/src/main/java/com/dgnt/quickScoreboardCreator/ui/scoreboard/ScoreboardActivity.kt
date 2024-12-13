@@ -25,18 +25,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SCOREBOARD_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.customNavType
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardInteractionContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.ScoreboardContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerContent
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,14 +46,14 @@ import kotlin.reflect.typeOf
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val startDestination = IntentCompat.getSerializableExtra(intent, SCOREBOARD_IDENTIFIER, ScoreboardIdentifier::class.java)?.let { scoreboardIdentifier ->
-            //TODO temporary logic flow because we can't handle custom scoreboards yet
-            if (scoreboardIdentifier is ScoreboardIdentifier.Custom) {
+        val startDestination = IntentCompat.getSerializableExtra(intent, SPORT_IDENTIFIER, SportIdentifier::class.java)?.let { sportIdentifier ->
+            //TODO temporary logic flow because we can't handle custom sports yet
+            if (sportIdentifier is SportIdentifier.Custom) {
                 finish()
                 Toast.makeText(this, getString(R.string.defaultInvalid), Toast.LENGTH_LONG).show()
                 return
             }
-            NavDestination.ScoreboardInteraction(scoreboardIdentifier)
+            NavDestination.Scoreboard(sportIdentifier)
         } ?: IntentCompat.getSerializableExtra(intent, TIMELINE_VIEWER_IDENTIFIER, TimelineViewerIdentifier::class.java)?.let { timelineViewerIdentifier ->
             NavDestination.TimelineViewer(timelineViewerIdentifier.id, timelineViewerIdentifier.index)
         } ?: run {
@@ -75,21 +75,21 @@ class ScoreboardActivity : ComponentActivity() {
                         navigation<NavDestination.Start>(
                             startDestination = startDestination
                         ) {
-                            composable<NavDestination.ScoreboardInteraction>(
+                            composable<NavDestination.Scoreboard>(
                                 typeMap = mapOf(
-                                    typeOf<ScoreboardIdentifier>() to customNavType<ScoreboardIdentifier>()
+                                    typeOf<SportIdentifier>() to customNavType<SportIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 val updatedTeamData by viewModel.updatedTeamData.collectAsStateWithLifecycle()
                                 val updatedIntervalData by viewModel.updatedIntervalData.collectAsStateWithLifecycle()
-                                ScoreboardInteractionContent(
+                                ScoreboardContent(
                                     updatedTeamData,
                                     updatedIntervalData,
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
                                             is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
-                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.scoreboardIdentifier))
+                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.sportIdentifier))
                                             is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.id, uiEvent.index))
                                             else -> Unit
                                         }
@@ -121,7 +121,7 @@ class ScoreboardActivity : ComponentActivity() {
                             }
                             dialog<NavDestination.IntervalEditor>(
                                 typeMap = mapOf(
-                                    typeOf<ScoreboardIdentifier>() to customNavType<ScoreboardIdentifier>()
+                                    typeOf<SportIdentifier>() to customNavType<SportIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)

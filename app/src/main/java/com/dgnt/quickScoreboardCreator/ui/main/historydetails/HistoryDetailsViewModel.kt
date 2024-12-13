@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
@@ -39,7 +39,7 @@ class HistoryDetailsViewModel @Inject constructor(
     private val _description = MutableStateFlow("")
     val description: StateFlow<String> = _description.asStateFlow()
 
-    private var _icon = MutableStateFlow<ScoreboardIcon?>(null)
+    private var _icon = MutableStateFlow<SportIcon?>(null)
     val icon = _icon.asStateFlow()
 
     private val _iconChanging = MutableStateFlow(false)
@@ -85,7 +85,7 @@ class HistoryDetailsViewModel @Inject constructor(
         _iconChanging.value = changing
     }
 
-    fun onIconChange(icon: ScoreboardIcon) {
+    fun onIconChange(icon: SportIcon) {
         _icon.value = icon
         _iconChanging.value = false
     }

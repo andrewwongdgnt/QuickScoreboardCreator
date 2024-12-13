@@ -4,13 +4,13 @@ package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalEndSound
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreRule
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreRule
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.WinRule
 import javax.inject.Inject
 import kotlin.math.abs
 

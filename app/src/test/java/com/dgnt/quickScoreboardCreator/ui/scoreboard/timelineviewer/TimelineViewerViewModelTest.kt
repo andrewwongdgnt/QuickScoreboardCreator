@@ -85,7 +85,7 @@ class TimelineViewerViewModelTest {
 
     private val mockHistoricalInterval2 = HistoricalInterval(
         range = HistoricalIntervalRange.Infinite,
-        intervalLabel = IntervalLabel.ScoreboardType(ScoreboardType.SPIKEBALL, 1),
+        intervalLabel = IntervalLabel.DefaultSport(ScoreboardType.SPIKEBALL, 1),
         historicalScoreGroupList = mapOf()
     )
 

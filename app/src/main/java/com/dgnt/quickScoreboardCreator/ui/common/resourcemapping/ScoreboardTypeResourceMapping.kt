@@ -1,43 +1,43 @@
 package com.dgnt.quickScoreboardCreator.ui.common.resourcemapping
 
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.R as R2
 
-fun ScoreboardType.rawRes() = when (this) {
-    ScoreboardType.BASKETBALL -> R2.raw.basketball
-    ScoreboardType.BOXING -> R2.raw.boxing
-    ScoreboardType.HOCKEY -> R2.raw.hockey
-    ScoreboardType.TENNIS -> R2.raw.tennis
-    ScoreboardType.SPIKEBALL -> R2.raw.spikeball
+fun SportType.rawRes() = when (this) {
+    SportType.BASKETBALL -> R2.raw.basketball
+    SportType.BOXING -> R2.raw.boxing
+    SportType.HOCKEY -> R2.raw.hockey
+    SportType.TENNIS -> R2.raw.tennis
+    SportType.SPIKEBALL -> R2.raw.spikeball
 }
 
-fun ScoreboardType.titleRes() = when(this) {
-    ScoreboardType.BASKETBALL -> R.string.basketball
-    ScoreboardType.HOCKEY -> R.string.hockey
-    ScoreboardType.SPIKEBALL -> R.string.spikeball
-    ScoreboardType.TENNIS -> R.string.tennis
-    ScoreboardType.BOXING -> R.string.boxing
+fun SportType.titleRes() = when(this) {
+    SportType.BASKETBALL -> R.string.basketball
+    SportType.HOCKEY -> R.string.hockey
+    SportType.SPIKEBALL -> R.string.spikeball
+    SportType.TENNIS -> R.string.tennis
+    SportType.BOXING -> R.string.boxing
 }
 
-fun ScoreboardType.descriptionRes() = when(this) {
-    ScoreboardType.BASKETBALL -> R.string.basketball_description
-    ScoreboardType.HOCKEY -> R.string.hockey_description
-    ScoreboardType.SPIKEBALL -> R.string.spikeball_description
-    ScoreboardType.TENNIS -> R.string.tennis_description
-    ScoreboardType.BOXING -> R.string.boxing_description
+fun SportType.descriptionRes() = when(this) {
+    SportType.BASKETBALL -> R.string.basketball_description
+    SportType.HOCKEY -> R.string.hockey_description
+    SportType.SPIKEBALL -> R.string.spikeball_description
+    SportType.TENNIS -> R.string.tennis_description
+    SportType.BOXING -> R.string.boxing_description
 }
 
-fun ScoreboardType.intervalLabelRes() = when(this) {
-    ScoreboardType.BASKETBALL -> R.string.quarter
-    ScoreboardType.HOCKEY -> R.string.period
-    ScoreboardType.SPIKEBALL -> R.string.game
-    ScoreboardType.TENNIS -> R.string.game
-    ScoreboardType.BOXING -> R.string.round
+fun SportType.intervalLabelRes() = when(this) {
+    SportType.BASKETBALL -> R.string.quarter
+    SportType.HOCKEY -> R.string.period
+    SportType.SPIKEBALL -> R.string.game
+    SportType.TENNIS -> R.string.game
+    SportType.BOXING -> R.string.round
 }
 
-fun ScoreboardType.secondaryScoreLabelRes() = when(this) {
-    ScoreboardType.BASKETBALL -> R.string.fouls
-    ScoreboardType.HOCKEY -> R.string.penalties
+fun SportType.secondaryScoreLabelRes() = when(this) {
+    SportType.BASKETBALL -> R.string.fouls
+    SportType.HOCKEY -> R.string.penalties
     else -> R.string.blank
 }

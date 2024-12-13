@@ -10,7 +10,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreD
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreRule
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.WinRule
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
 import io.mockk.MockKAnnotations

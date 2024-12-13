@@ -3,8 +3,8 @@ package com.dgnt.quickScoreboardCreator.core.data.db
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreInfo
 
 @ProvidedTypeConverter
 class IntervalListConverter (private val serializer: Serializer) {

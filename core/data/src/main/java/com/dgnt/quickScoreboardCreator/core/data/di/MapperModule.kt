@@ -1,27 +1,27 @@
 package com.dgnt.quickScoreboardCreator.core.data.di
 
 import com.dgnt.quickScoreboardCreator.core.data.base.mapper.Mapper
-import com.dgnt.quickScoreboardCreator.core.data.history.config.HistoryConfig
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoryEntity
+import com.dgnt.quickScoreboardCreator.core.data.history.filedto.HistoryFileDTO
 import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoricalScoreboardMapperDataToDomain
 import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoricalScoreboardMapperDomainToData
-import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoryMapperConfigToDomain
 import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoryMapperDataToDomain
 import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoryMapperDomainToData
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.ScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.mapper.ScoreboardMapperConfigToDomain
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.mapper.ScoreboardMapperDataToDomain
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.mapper.ScoreboardMapperDomainToData
-import com.dgnt.quickScoreboardCreator.core.data.team.config.TeamConfig
+import com.dgnt.quickScoreboardCreator.core.data.history.mapper.HistoryMapperFileDTOToDomain
+import com.dgnt.quickScoreboardCreator.core.data.sport.entity.SportEntity
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.mapper.SportMapperDataToDomain
+import com.dgnt.quickScoreboardCreator.core.data.sport.mapper.SportMapperDomainToData
+import com.dgnt.quickScoreboardCreator.core.data.sport.mapper.SportMapperFileDTOToDomain
 import com.dgnt.quickScoreboardCreator.core.data.team.entity.TeamEntity
-import com.dgnt.quickScoreboardCreator.core.data.team.mapper.TeamMapperConfigToDomain
+import com.dgnt.quickScoreboardCreator.core.data.team.filedto.TeamFileDTO
 import com.dgnt.quickScoreboardCreator.core.data.team.mapper.TeamMapperDataToDomain
 import com.dgnt.quickScoreboardCreator.core.data.team.mapper.TeamMapperDomainToData
+import com.dgnt.quickScoreboardCreator.core.data.team.mapper.TeamMapperFileDTOToDomain
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportModel
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamModel
 import dagger.Module
 import dagger.Provides
@@ -36,18 +36,18 @@ object MapperModule {
 
     @Singleton
     @Provides
-    fun provideScoreboardMapperDomainToData(): Mapper<ScoreboardModel, ScoreboardEntity> =
-        ScoreboardMapperDomainToData()
+    fun provideSportMapperDomainToData(): Mapper<SportModel, SportEntity> =
+        SportMapperDomainToData()
 
     @Singleton
     @Provides
-    fun provideScoreboardMapperDataToDomain(): Mapper<ScoreboardEntity, ScoreboardModel> =
-        ScoreboardMapperDataToDomain()
+    fun provideSportMapperDataToDomain(): Mapper<SportEntity, SportModel> =
+        SportMapperDataToDomain()
 
     @Singleton
     @Provides
-    fun provideScoreboardMapperConfigToDomain(): Mapper<ScoreboardConfig, ScoreboardModel> =
-        ScoreboardMapperConfigToDomain()
+    fun provideSportMapperConfigToDomain(): Mapper<SportFileDTO, SportModel> =
+        SportMapperFileDTOToDomain()
 
     @Singleton
     @Provides
@@ -61,8 +61,8 @@ object MapperModule {
 
     @Singleton
     @Provides
-    fun provideTeamMapperConfigToDomain(): Mapper<TeamConfig, TeamModel> =
-        TeamMapperConfigToDomain()
+    fun provideTeamMapperConfigToDomain(): Mapper<TeamFileDTO, TeamModel> =
+        TeamMapperFileDTOToDomain()
 
     @Singleton
     @Provides
@@ -80,8 +80,8 @@ object MapperModule {
 
     @Singleton
     @Provides
-    fun provideHistoryMapperConfigToDomain(): Mapper<HistoryConfig, HistoryModel> =
-        HistoryMapperConfigToDomain()
+    fun provideHistoryMapperConfigToDomain(): Mapper<HistoryFileDTO, HistoryModel> =
+        HistoryMapperFileDTOToDomain()
 
     @Singleton
     @Provides

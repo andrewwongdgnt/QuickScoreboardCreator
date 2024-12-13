@@ -1,6 +1,6 @@
 {
   "type": "DEFAULT",
-  "scoreboardType": "BASKETBALL",
+  "sportType": "BASKETBALL",
   "winRuleType": "FINAL",
   "intervalList": [
     {

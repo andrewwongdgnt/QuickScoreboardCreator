@@ -1,14 +1,14 @@
 package com.dgnt.quickScoreboardCreator.ui.common.resourcemapping
 
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 
-fun ScoreboardIcon.iconRes() = when (this) {
-    ScoreboardIcon.BASKETBALL -> R.drawable.basketball
-    ScoreboardIcon.BOXING -> R.drawable.boxing
-    ScoreboardIcon.HOCKEY -> R.drawable.hockey
-    ScoreboardIcon.SOCCER -> R.drawable.soccer
-    ScoreboardIcon.TENNIS -> R.drawable.tennis
-    ScoreboardIcon.SPIKEBALL -> R.drawable.spikeball
-    ScoreboardIcon.VOLLEYBALL -> R.drawable.volleyball
+fun SportIcon.iconRes() = when (this) {
+    SportIcon.BASKETBALL -> R.drawable.basketball
+    SportIcon.BOXING -> R.drawable.boxing
+    SportIcon.HOCKEY -> R.drawable.hockey
+    SportIcon.SOCCER -> R.drawable.soccer
+    SportIcon.TENNIS -> R.drawable.tennis
+    SportIcon.SPIKEBALL -> R.drawable.spikeball
+    SportIcon.VOLLEYBALL -> R.drawable.volleyball
 }

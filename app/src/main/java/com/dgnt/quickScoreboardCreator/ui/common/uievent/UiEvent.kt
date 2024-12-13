@@ -3,16 +3,16 @@ package com.dgnt.quickScoreboardCreator.ui.common.uievent
 import androidx.annotation.PluralsRes
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
 
 sealed interface UiEvent {
-    data class LaunchScoreboard(val scoreboardIdentifier: ScoreboardIdentifier) : UiEvent
-    data class ScoreboardDetails(val scoreboardIdentifier: ScoreboardIdentifier? = null) : UiEvent
+    data class LaunchScoreboard(val sportIdentifier: SportIdentifier) : UiEvent
+    data class SportDetails(val sportIdentifier: SportIdentifier? = null) : UiEvent
     data class TeamDetails(val id: Int = -1) : UiEvent
     data class HistoryDetails(val id: Int = -1) : UiEvent
     data class TeamPicker(val index: Int) : UiEvent
     data class TeamUpdated(val index: Int, val id: Int) : UiEvent
-    data class IntervalEditor(val currentTimeValue: Long, val index: Int, val scoreboardIdentifier: ScoreboardIdentifier) : UiEvent
+    data class IntervalEditor(val currentTimeValue: Long, val index: Int, val sportIdentifier: SportIdentifier) : UiEvent
     data class IntervalUpdated(val timeValue: Long, val index: Int) : UiEvent
     data class TimelineViewer(val id: Int = -1, val index: Int) : UiEvent
 

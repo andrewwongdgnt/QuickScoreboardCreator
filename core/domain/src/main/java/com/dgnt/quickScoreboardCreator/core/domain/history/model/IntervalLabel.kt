@@ -1,5 +1,6 @@
 package com.dgnt.quickScoreboardCreator.core.domain.history.model
 
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
 import kotlinx.serialization.Serializable
 
 
@@ -12,12 +13,12 @@ sealed interface IntervalLabel {
     data class Custom(val value: String, override val index: Int = -1) : IntervalLabel
 
     @Serializable
-    data class ScoreboardType(val scoreboardType: com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType, override val index: Int = -1) : IntervalLabel
+    data class DefaultSport(val sportType: SportType, override val index: Int = -1) : IntervalLabel
 
     fun duplicateWithIndex(index: Int) =
         when (this) {
             is Custom -> Custom(this.value, index)
-            is ScoreboardType -> ScoreboardType(scoreboardType, index)
+            is DefaultSport -> DefaultSport(sportType, index)
         }
 
 }

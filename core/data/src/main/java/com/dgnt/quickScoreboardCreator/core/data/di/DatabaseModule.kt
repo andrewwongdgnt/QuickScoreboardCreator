@@ -2,28 +2,28 @@ package com.dgnt.quickScoreboardCreator.core.data.di
 
 import android.app.Application
 import androidx.room.Room
-import com.dgnt.quickScoreboardCreator.core.data.base.loader.BaseLoader
+import com.dgnt.quickScoreboardCreator.core.data.base.loader.BaseFileDao
 import com.dgnt.quickScoreboardCreator.core.data.base.mapper.Mapper
 import com.dgnt.quickScoreboardCreator.core.data.db.HistoricalScoreboardDataConverter
 import com.dgnt.quickScoreboardCreator.core.data.db.IntervalListConverter
 import com.dgnt.quickScoreboardCreator.core.data.db.QSCDatabase
-import com.dgnt.quickScoreboardCreator.core.data.history.config.HistoryConfig
 import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.core.data.history.loader.HistoryLoader
+import com.dgnt.quickScoreboardCreator.core.data.history.filedao.HistoryFileDao
+import com.dgnt.quickScoreboardCreator.core.data.history.filedto.HistoryFileDTO
 import com.dgnt.quickScoreboardCreator.core.data.history.repository.QSCHistoryRepository
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.config.ScoreboardConfig
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.entity.ScoreboardEntity
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.loader.ScoreboardLoader
-import com.dgnt.quickScoreboardCreator.core.data.scoreboard.repository.QSCScoreboardRepository
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
-import com.dgnt.quickScoreboardCreator.core.data.team.config.TeamConfig
+import com.dgnt.quickScoreboardCreator.core.data.sport.entity.SportEntity
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedao.SportFileDao
+import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTO
+import com.dgnt.quickScoreboardCreator.core.data.sport.repository.QSCSportRepository
 import com.dgnt.quickScoreboardCreator.core.data.team.entity.TeamEntity
-import com.dgnt.quickScoreboardCreator.core.data.team.loader.TeamLoader
+import com.dgnt.quickScoreboardCreator.core.data.team.filedao.TeamFileDao
+import com.dgnt.quickScoreboardCreator.core.data.team.filedto.TeamFileDTO
 import com.dgnt.quickScoreboardCreator.core.data.team.repository.QSCTeamRepository
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.core.domain.history.repository.HistoryRepository
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardModel
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.repository.ScoreboardRepository
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportModel
+import com.dgnt.quickScoreboardCreator.core.domain.sport.repository.SportRepository
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamModel
 import com.dgnt.quickScoreboardCreator.core.domain.team.repository.TeamRepository
 import dagger.Module
@@ -64,20 +64,20 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideScoreboardLoader(serializer: Serializer): BaseLoader<ScoreboardConfig> =
-        ScoreboardLoader(serializer)
+    fun provideSportFileDao(serializer: Serializer): BaseFileDao<SportFileDTO> =
+        SportFileDao(serializer)
 
     @Provides
     @Singleton
-    fun provideScoreboardRepository(
+    fun provideSportRepository(
         db: QSCDatabase,
-        loader: BaseLoader<ScoreboardConfig>,
-        mapScoreboardDataToDomain: Mapper<ScoreboardEntity, ScoreboardModel>,
-        mapScoreboardDomainToData: Mapper<ScoreboardModel, ScoreboardEntity>,
-        mapScoreboardConfigToDomain: Mapper<ScoreboardConfig, ScoreboardModel>,
-    ): ScoreboardRepository =
-        QSCScoreboardRepository(
-            db.scoreboardDao,
+        loader: BaseFileDao<SportFileDTO>,
+        mapScoreboardDataToDomain: Mapper<SportEntity, SportModel>,
+        mapScoreboardDomainToData: Mapper<SportModel, SportEntity>,
+        mapScoreboardConfigToDomain: Mapper<SportFileDTO, SportModel>,
+    ): SportRepository =
+        QSCSportRepository(
+            db.sportDao,
             loader,
             mapScoreboardDataToDomain,
             mapScoreboardDomainToData,
@@ -86,45 +86,45 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideTeamLoader(serializer: Serializer): BaseLoader<TeamConfig> =
-        TeamLoader(serializer)
+    fun provideTeamFileDao(serializer: Serializer): BaseFileDao<TeamFileDTO> =
+        TeamFileDao(serializer)
 
     @Provides
     @Singleton
     fun provideTeamRepository(
         db: QSCDatabase,
-        loader: BaseLoader<TeamConfig>,
+        loader: BaseFileDao<TeamFileDTO>,
         mapTeamDataToDomain: Mapper<TeamEntity, TeamModel>,
         mapTeamDomainToData: Mapper<TeamModel, TeamEntity>,
-        mapTeamConfigToDomain: Mapper<TeamConfig, TeamModel>,
+        mapTeamFileDTOToDomain: Mapper<TeamFileDTO, TeamModel>,
     ): TeamRepository =
         QSCTeamRepository(
             db.teamDao,
             loader,
             mapTeamDataToDomain,
             mapTeamDomainToData,
-            mapTeamConfigToDomain
+            mapTeamFileDTOToDomain
         )
 
     @Provides
     @Singleton
-    fun provideHistoryLoader(serializer: Serializer): BaseLoader<HistoryConfig> =
-        HistoryLoader(serializer)
+    fun provideHistoryFileDao(serializer: Serializer): BaseFileDao<HistoryFileDTO> =
+        HistoryFileDao(serializer)
 
     @Provides
     @Singleton
     fun provideHistoryRepository(
         db: QSCDatabase,
-        loader: BaseLoader<HistoryConfig>,
+        loader: BaseFileDao<HistoryFileDTO>,
         mapHistoryDataToDomain: Mapper<HistoryEntity, HistoryModel>,
         mapHistoryDomainToData: Mapper<HistoryModel, HistoryEntity>,
-        mapHistoryConfigToDomain: Mapper<HistoryConfig, HistoryModel>,
+        mapHistoryFileDTOToDomain: Mapper<HistoryFileDTO, HistoryModel>,
     ): HistoryRepository =
         QSCHistoryRepository(
             db.historyDao,
             loader,
             mapHistoryDataToDomain,
             mapHistoryDomainToData,
-            mapHistoryConfigToDomain
+            mapHistoryFileDTOToDomain
         )
 }

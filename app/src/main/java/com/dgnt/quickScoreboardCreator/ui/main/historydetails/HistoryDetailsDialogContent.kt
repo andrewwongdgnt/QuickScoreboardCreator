@@ -22,12 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.BackButton
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.IconDisplay
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.ui.common.ScoreboardIconPicker
+import com.dgnt.quickScoreboardCreator.ui.common.SportIconPicker
 import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
@@ -69,8 +69,8 @@ private fun HistoryDetailsInnerDialogContent(
     onTitleChange: (String) -> Unit,
     description: String,
     onDescriptionChange: (String) -> Unit,
-    icon: ScoreboardIcon?,
-    onIconChange: (ScoreboardIcon) -> Unit,
+    icon: SportIcon?,
+    onIconChange: (SportIcon) -> Unit,
     iconChanging: Boolean,
     onIconEdit: (Boolean) -> Unit,
     valid: Boolean,
@@ -107,7 +107,7 @@ private fun HistoryDetailsInnerDialogContent(
             ) {
                 BackButton { onIconEdit(false) }
                 Spacer(modifier = Modifier.height(8.dp))
-                ScoreboardIconPicker(
+                SportIconPicker(
                     onIconChange = onIconChange
                 )
             }
@@ -155,7 +155,7 @@ private fun `New Icon Selection`() {
         onTitleChange = {},
         description = "description 222",
         onDescriptionChange = {},
-        icon = ScoreboardIcon.HOCKEY,
+        icon = SportIcon.HOCKEY,
         onIconChange = {},
         iconChanging = true,
         onIconEdit = {},

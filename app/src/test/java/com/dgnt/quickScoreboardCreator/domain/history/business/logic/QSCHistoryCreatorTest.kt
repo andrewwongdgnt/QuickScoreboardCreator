@@ -350,7 +350,7 @@ class QSCHistoryCreatorTest {
         )
 
         val historicalScoreboard = sut.create(
-            IntervalLabel.ScoreboardType(ScoreboardType.BASKETBALL),
+            IntervalLabel.DefaultSport(ScoreboardType.BASKETBALL),
             listOf(
                 TeamLabel.None,
                 TeamLabel.Custom("KYRA", TeamIcon.TANK),

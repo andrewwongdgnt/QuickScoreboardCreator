@@ -28,8 +28,8 @@
     <string name="lowBuzzer">Deep Buzzer</string>
     <string name="horn">Horn</string>
     <string name="whistle">Whistle</string>
-    <!-- Scoreboard Details -->
-    <string name="scoreboardDetailsTitle">Scoreboard details</string>
+    <!-- Sport Details -->
+    <string name="sportDetailsTitle">Sport details</string>
     <string name="intervalLabelPlaceholder">Label for each round*</string>
     <string name="winRule">Win Rule</string>
     <string name="winRuleSum">Sum (Winner determined by summing up all the scores of each round)</string>
@@ -52,14 +52,14 @@
     <string name="hasSecondaryScoring">Show secondary counter</string>
     <string name="secondaryScorePlaceholder">(fouls, penalties, etc.)*</string>
     <string name="addAnotherInterval">Add another %1$s</string>
-    <!-- Scoreboard List -->
-    <string name="scoreboardListNavTitle">Scoreboards</string>
-    <plurals name="deletedScoreboardMsg">
-        <item quantity="one">%d scoreboard deleted</item>
-        <item quantity="other">%d scoreboards deleted</item>
+    <!-- Sport List -->
+    <string name="sportListNavTitle">Sports</string>
+    <plurals name="deletedSportMsg">
+        <item quantity="one">%d sport deleted</item>
+        <item quantity="other">%d sports deleted</item>
     </plurals>
-    <string name="defaultScoreboardConfig">Default</string>
-    <string name="customScoreboardConfig">Custom</string>
+    <string name="defaultSportConfig">Default</string>
+    <string name="customSportConfig">Custom</string>
     <!-- Team List -->
     <string name="teamListNavTitle">My teams</string>
     <plurals name="deletedTeamMsg">

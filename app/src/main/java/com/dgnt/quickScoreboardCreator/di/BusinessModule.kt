@@ -4,13 +4,13 @@ import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.Histor
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.QSCHistoryCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.QSCHistoryCreator
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCScoreboardCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.QSCCategorizeSportUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCScoreboardManager
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCTimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.QSCTimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCWinCalculator
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardCategorizer
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.CategorizeSportUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.TimeTransformer
+import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.WinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.QSCTeamCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
@@ -44,8 +44,8 @@ object BusinessModule {
 
     @Provides
     @Singleton
-    fun provideScoreboardCategorizer(): ScoreboardCategorizer =
-        QSCScoreboardCategorizer()
+    fun provideScoreboardCategorizer(): CategorizeSportUseCase =
+        QSCCategorizeSportUseCase()
 
     @Provides
     fun provideHistoryCreator(): HistoryCreator =

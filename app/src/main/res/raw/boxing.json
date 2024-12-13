@@ -1,6 +1,6 @@
 {
   "type": "DEFAULT",
-  "scoreboardType": "BOXING",
+  "sportType": "BOXING",
   "winRuleType": "SUM",
   "intervalList": [
     {
