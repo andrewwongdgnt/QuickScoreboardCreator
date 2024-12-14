@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay
+package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.teamdisplay
 
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 

@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time
+package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.time
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

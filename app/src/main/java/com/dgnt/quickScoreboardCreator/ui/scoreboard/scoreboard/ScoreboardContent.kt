@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
+package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.clickable
@@ -33,14 +33,14 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevecto
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.mode.ModeControlContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.ScoreControl
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score.TwoScoreDisplay
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplayContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.IntervalDisplayContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerControlContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.time.TimerDisplayContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.mode.ModeControlContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.score.ScoreControl
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.score.TwoScoreDisplay
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.teamdisplay.TeamDisplay
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.teamdisplay.TeamDisplayContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.time.IntervalDisplayContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.time.TimerControlContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.time.TimerDisplayContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -49,22 +49,22 @@ fun ScoreboardContent(
     updatedTeamData: UpdatedTeamData?,
     updatedIntervalData: UpdatedIntervalData?,
     onUiEvent: (UiEvent) -> Unit,
-    viewModel: ScoreboardInteractionViewModel = hiltViewModel()
+    viewModel: ScoreboardViewModel = hiltViewModel()
 ) {
 
     updatedTeamData?.let { viewModel.onTeamPick(it) }
     updatedIntervalData?.let { viewModel.onIntervalEdit(it) }
 
-    ScoreboardInteractionVMDataContent(
+    ScoreboardVMDataContent(
         onUiEvent = onUiEvent,
         viewModel = viewModel
     )
 }
 
 @Composable
-private fun ScoreboardInteractionVMDataContent(
+private fun ScoreboardVMDataContent(
     onUiEvent: (UiEvent) -> Unit,
-    viewModel: ScoreboardInteractionViewModel
+    viewModel: ScoreboardViewModel
 ) {
     val primaryDisplayedScoreInfo by viewModel.primaryDisplayedScoreInfo.collectAsStateWithLifecycle()
     val primaryIncrementList by viewModel.primaryIncrementList.collectAsStateWithLifecycle()
@@ -78,7 +78,7 @@ private fun ScoreboardInteractionVMDataContent(
     val intervalLabelInfo by viewModel.intervalLabel.collectAsStateWithLifecycle()
     val currentInterval by viewModel.currentInterval.collectAsStateWithLifecycle()
 
-    ScoreboardInteractionInnerContent(
+    ScoreboardInnerContent(
         uiEvent = viewModel.uiEvent,
         onUiEvent = onUiEvent,
         primaryDisplayedScoreInfo = primaryDisplayedScoreInfo,
@@ -103,7 +103,7 @@ private fun ScoreboardInteractionVMDataContent(
 }
 
 @Composable
-private fun ScoreboardInteractionInnerContent(
+private fun ScoreboardInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
     primaryDisplayedScoreInfo: DisplayedScoreInfo,
@@ -253,7 +253,7 @@ private fun ScoreboardInteractionInnerContent(
 @PreviewLandscape
 @Composable
 private fun `2 Teams with long names`() =
-    ScoreboardInteractionInnerContent(
+    ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
@@ -300,7 +300,7 @@ private fun `2 Teams with long names`() =
 @PreviewLandscape
 @Composable
 private fun `2 Teams with short names`() =
-    ScoreboardInteractionInnerContent(
+    ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
@@ -347,7 +347,7 @@ private fun `2 Teams with short names`() =
 @PreviewLandscape
 @Composable
 private fun `Adv`() =
-    ScoreboardInteractionInnerContent(
+    ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
         primaryDisplayedScoreInfo = DisplayedScoreInfo(
@@ -388,7 +388,7 @@ private fun `Adv`() =
 @PreviewLandscape
 @Composable
 private fun `Deuce`() =
-    ScoreboardInteractionInnerContent(
+    ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
         primaryDisplayedScoreInfo = DisplayedScoreInfo(

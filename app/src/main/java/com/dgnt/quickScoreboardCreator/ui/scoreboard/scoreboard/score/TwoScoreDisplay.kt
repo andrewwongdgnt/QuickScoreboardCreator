@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.score
+package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.score
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction
+package com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard
 
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
@@ -30,7 +30,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboardinteraction.teamdisplay.TeamDisplay
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.teamdisplay.TeamDisplay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -42,7 +42,7 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ScoreboardInteractionViewModel @Inject constructor(
+class ScoreboardViewModel @Inject constructor(
     private val resources: Resources,
     private val getSportUseCase: GetSportUseCase,
     private val getTeamUseCase: GetTeamUseCase,
