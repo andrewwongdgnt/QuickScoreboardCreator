@@ -14,18 +14,17 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("implementation", project(":designsystem"))
-                add("implementation", project(":ui"))
-                add("implementation", project(":domain"))
+                add("implementation", project(":core:presentation:designsystem"))
+                add("implementation", project(":core:presentation:ui"))
+                add("implementation", project(":core:domain"))
 
                 add("testImplementation", kotlin("test"))
                 add("androidTestImplementation", kotlin("test"))
 
-                add("implementation", libs.findLibrary("coil.kt").get())
-                add("implementation", libs.findLibrary("coil.kt.compose").get())
-                add("implementation", libs.findLibrary("compose.navigation").get())
-                add("implementation", libs.findLibrary("androidx.hilt.navigation.compose").get())
-                add("implementation", libs.findLibrary("kotlinx.coroutines.android").get())
+
+                add("implementation", libs.findLibrary("androidx-navigation-compose").get())
+                add("implementation", libs.findLibrary("androidx-hilt-navigation-compose").get())
+                add("implementation", libs.findLibrary("kotlinx-coroutines-android").get())
 
             }
         }
