@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.main.teamlist
+package com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,11 +30,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultSnackbar
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.SnackBar
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData
-import com.dgnt.quickScoreboardCreator.ui.common.CategorizedTeamListContent
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.composable.CategorizedTeamListContent
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.uievent.TeamDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -63,7 +65,7 @@ fun TeamListContent(
 private fun TeamListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    categorizedTeamList: List<com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData>,
+    categorizedTeamList: List<CategorizedTeamItemData>,
     onAdd: () -> Unit,
     onEdit: (id: Int) -> Unit,
     onDelete: (id: Int) -> Unit,
@@ -84,7 +86,7 @@ private fun TeamListInnerContent(
         }
         uiEvent.collect { event ->
             when (event) {
-                is UiEvent.SnackBar.QuantitySnackBar -> {
+                is SnackBar.QuantitySnackBar -> {
                     dismissSnackbar(false)
                     scope.launch {
                         val result = snackbarHostState.showSnackbar(
@@ -102,7 +104,7 @@ private fun TeamListInnerContent(
                     }
                 }
 
-                is UiEvent.TeamDetails -> {
+                is TeamDetails -> {
                     dismissSnackbar(true)
                 }
 
@@ -168,25 +170,25 @@ private fun `Some teams`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         categorizedTeamList = listOf(
-            com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
+            CategorizedTeamItemData(
                 "D",
                 listOf(
-                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
-                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
-                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER)
+                    TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
+                    TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
+                    TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER)
                 )
             ),
-            com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
+            CategorizedTeamItemData(
                 "T",
                 listOf(
-                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
-                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER)
+                    TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
+                    TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER)
                 )
             ),
-            com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
+            CategorizedTeamItemData(
                 "J",
                 listOf(
-                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER)
+                    TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER)
                 )
             )
 

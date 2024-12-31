@@ -4,8 +4,10 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.SPORT_IDENTIFIER
 
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.asIncrementDisplay
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.core.util.swap
@@ -29,7 +31,6 @@ import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemappin
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.rawRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.secondaryScoreLabelRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.titleRes
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -183,17 +184,17 @@ class SportDetailsViewModel @Inject constructor(
                 )
             }
         }
-        sendUiEvent(UiEvent.Done)
+        sendUiEvent(Done)
     }
 
-    fun onDismiss() = sendUiEvent(UiEvent.Done)
+    fun onDismiss() = sendUiEvent(Done)
 
     fun onDelete() = viewModelScope.launch {
 
         originalModel?.let {
             deleteSportUseCase(it)
         }
-        sendUiEvent(UiEvent.Done)
+        sendUiEvent(Done)
     }
 
     fun onTitleChange(title: String) {

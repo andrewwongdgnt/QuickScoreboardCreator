@@ -29,17 +29,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreGroup
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -66,7 +66,7 @@ fun TimelineViewerContent(
 private fun TimelineViewerInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    historicalInterval: com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval?,
+    historicalInterval: HistoricalInterval?,
     onDismiss: () -> Unit,
     onNewInterval: (Boolean) -> Unit
 ) {
@@ -171,28 +171,28 @@ private fun `Infinite Timeline`() =
     TimelineViewerInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        historicalInterval = com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval(
-            range = com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.Infinite,
+        historicalInterval = HistoricalInterval(
+            range = HistoricalIntervalRange.Infinite,
             IntervalLabel.Custom("Game", 0),
             mapOf(
-                0 to com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreGroup(
+                0 to HistoricalScoreGroup(
                     teamLabel = TeamLabel.Custom("DGNT", TeamIcon.AXE),
                     primaryScoreList = listOf(
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(0, "0", 0),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(1, "1", 1000),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(2, "2", 1400),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(3, "3", 6003),
+                        HistoricalScore(0, "0", 0),
+                        HistoricalScore(1, "1", 1000),
+                        HistoricalScore(2, "2", 1400),
+                        HistoricalScore(3, "3", 6003),
                     ),
                     secondaryScoreList = listOf()
                 ),
-                1 to com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreGroup(
+                1 to HistoricalScoreGroup(
                     teamLabel = TeamLabel.None,
                     primaryScoreList = listOf(
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(0, "0", 0),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(1, "1", 2000),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(2, "2", 4400),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(3, "3", 5655),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(4, "4", 9800),
+                        HistoricalScore(0, "0", 0),
+                        HistoricalScore(1, "1", 2000),
+                        HistoricalScore(2, "2", 4400),
+                        HistoricalScore(3, "3", 5655),
+                        HistoricalScore(4, "4", 9800),
                     ),
                     secondaryScoreList = listOf()
                 )
@@ -211,19 +211,19 @@ private fun `Countdown Timeline`() =
     TimelineViewerInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        historicalInterval = com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval(
+        historicalInterval = HistoricalInterval(
             range = com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.CountDown(72000),
             IntervalLabel.Custom("Quarter", 0),
             mapOf(
-                0 to com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreGroup(
+                0 to HistoricalScoreGroup(
                     teamLabel = TeamLabel.Custom("DGNT", TeamIcon.AXE),
                     primaryScoreList = listOf(
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(0, "0", 720000),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(1, "1", 66000L),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(2, "2", 63000L),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(3, "3", 480000),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(4, "4", 330000),
-                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(7, "7", 300000),
+                        HistoricalScore(0, "0", 720000),
+                        HistoricalScore(1, "1", 66000L),
+                        HistoricalScore(2, "2", 63000L),
+                        HistoricalScore(3, "3", 480000),
+                        HistoricalScore(4, "4", 330000),
+                        HistoricalScore(7, "7", 300000),
                     ),
                     secondaryScoreList = listOf()
                 )

@@ -9,6 +9,6 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.icu4j)
 
 }

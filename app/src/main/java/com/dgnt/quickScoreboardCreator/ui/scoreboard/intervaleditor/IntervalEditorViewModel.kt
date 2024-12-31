@@ -4,18 +4,20 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalData
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreInfo
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.IntervalUpdated
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalData
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreInfo
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.GetSportUseCase
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.rawRes
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,13 +70,13 @@ class IntervalEditorViewModel @Inject constructor(
     val errors = _errors.asStateFlow()
 
     init {
-        savedStateHandle.get<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>(Arguments.SPORT_IDENTIFIER)?.let { sId ->
+        savedStateHandle.get<SportIdentifier>(NavArguments.SPORT_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom -> initWithId(sId.id)
-                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default -> initWithSportType(sId.sportType)
+                is SportIdentifier.Custom -> initWithId(sId.id)
+                is SportIdentifier.Default -> initWithSportType(sId.sportType)
             }
         }
-        savedStateHandle.get<Long>(Arguments.VALUE)?.let {
+        savedStateHandle.get<Long>(NavArguments.VALUE)?.let {
             currentTimeValue = it
             timeTransformer.toTimeData(it).let { td ->
                 _minuteString.value = td.minute.toString()
@@ -82,7 +84,7 @@ class IntervalEditorViewModel @Inject constructor(
                 centiSecond = td.centiSecond
             }
         }
-        savedStateHandle.get<Int>(Arguments.INDEX)?.let {
+        savedStateHandle.get<Int>(NavArguments.INDEX)?.let {
             _intervalString.value = (it + 1).toString()
             intervalValue = it + 1
         }
@@ -104,19 +106,19 @@ class IntervalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onDismiss() = sendUiEvent(UiEvent.Done)
+    fun onDismiss() = sendUiEvent(Done)
 
     fun onConfirm(){
         val initialTimeValue = initialTimeValue
         val isTimeIncreasing = isTimeIncreasing
         if (initialTimeValue == null || isTimeIncreasing == null) {
-            sendUiEvent(UiEvent.Done)
+            sendUiEvent(Done)
         } else {
             val newCurrentTimeValue = if (!isTimeIncreasing)
                 currentTimeValue.coerceIn(0, initialTimeValue)
             else
                 currentTimeValue.coerceAtLeast(0)
-            sendUiEvent(UiEvent.IntervalUpdated(newCurrentTimeValue, (intervalValue - 1).coerceIn(0, maxInterval - 1)))
+            sendUiEvent(IntervalUpdated(newCurrentTimeValue, (intervalValue - 1).coerceIn(0, maxInterval - 1)))
         }
     }
 

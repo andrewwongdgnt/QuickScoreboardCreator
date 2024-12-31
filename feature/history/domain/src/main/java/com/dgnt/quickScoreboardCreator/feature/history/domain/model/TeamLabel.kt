@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.feature.history.domain.model
 
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
 import kotlinx.serialization.Serializable
 
 

@@ -25,18 +25,24 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.SPORT_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.TIMELINE_VIEWER_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.HistoryDetails
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamDetails
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TimelineViewer
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist.SportListContent
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.LaunchScoreboard
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.SportDetails
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.customNavType
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
-import com.dgnt.quickScoreboardCreator.ui.main.teamdetails.TeamDetailsDialogContent
-import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails.TeamDetailsDialogContent
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.reflect.typeOf
@@ -103,12 +109,12 @@ class MainActivity : ComponentActivity() {
             modifier = modifier
         ) {
             composable<NavDestination.SportList> {
-                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist.SportListContent(
+                SportListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            is UiEvent.SportDetails -> navController.commonNavigate(navDestination = NavDestination.SportDetails(uiEvent.sportIdentifier))
+                            is SportDetails -> navController.commonNavigate(navDestination = NavDestination.SportDetails(uiEvent.sportIdentifier))
 
-                            is UiEvent.LaunchScoreboard -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
+                            is LaunchScoreboard -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
                                 intent.putExtra(SPORT_IDENTIFIER, uiEvent.sportIdentifier)
                             })
 
@@ -125,17 +131,17 @@ class MainActivity : ComponentActivity() {
                 com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.SportDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            UiEvent.Done -> navController.navigateUp()
+                            Done -> navController.navigateUp()
                             else -> Unit
                         }
                     }
                 )
             }
             composable<NavDestination.TeamList> {
-                TeamListContent(
+                com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist.TeamListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            is UiEvent.TeamDetails -> navController.commonNavigate(navDestination = NavDestination.TeamDetails(uiEvent.id))
+                            is TeamDetails -> navController.commonNavigate(navDestination = NavDestination.TeamDetails(uiEvent.id))
                             else -> Unit
                         }
 
@@ -143,10 +149,10 @@ class MainActivity : ComponentActivity() {
                 )
             }
             dialog<NavDestination.TeamDetails> {
-                TeamDetailsDialogContent(
+                com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails.TeamDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            UiEvent.Done -> navController.navigateUp()
+                            Done -> navController.navigateUp()
                             else -> Unit
                         }
                     }
@@ -156,8 +162,8 @@ class MainActivity : ComponentActivity() {
                 HistoryListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            is UiEvent.HistoryDetails -> navController.commonNavigate(navDestination = NavDestination.HistoryDetails(uiEvent.id))
-                            is UiEvent.TimelineViewer -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
+                            is HistoryDetails -> navController.commonNavigate(navDestination = NavDestination.HistoryDetails(uiEvent.id))
+                            is TimelineViewer -> context.startActivity(Intent(context, ScoreboardActivity::class.java).also { intent ->
                                 intent.putExtra(TIMELINE_VIEWER_IDENTIFIER, TimelineViewerIdentifier(uiEvent.id, uiEvent.index))
                             })
                             else -> Unit
@@ -170,7 +176,7 @@ class MainActivity : ComponentActivity() {
                 HistoryDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
-                            UiEvent.Done -> navController.navigateUp()
+                            Done -> navController.navigateUp()
                             else -> Unit
                         }
                     }

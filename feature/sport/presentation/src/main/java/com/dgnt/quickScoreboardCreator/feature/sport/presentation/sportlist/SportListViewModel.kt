@@ -2,15 +2,18 @@ package com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportModel
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.CategorizeSportUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.DeleteSportUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportListUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.InsertSportListUseCase
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.SnackBar
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportModel
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.CategorizeSportUseCase
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.DeleteSportUseCase
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.GetSportListUseCase
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.InsertSportListUseCase
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.LaunchScoreboard
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.SportDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -41,19 +44,19 @@ class SportListViewModel @Inject constructor(
 
     private var deletedSportList: MutableList<SportModel> = mutableListOf()
 
-    fun onAdd() = sendUiEvent(UiEvent.SportDetails())
+    fun onAdd() = sendUiEvent(SportDetails())
 
-    fun onEdit(sportIdentifier: com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier) = sendUiEvent(UiEvent.SportDetails(sportIdentifier))
+    fun onEdit(sportIdentifier: SportIdentifier) = sendUiEvent(SportDetails(sportIdentifier))
 
     fun onDelete(id: Int) = viewModelScope.launch {
         sportModelList.first().find { model ->
-            (model.sportIdentifier as? com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom)?.id == id
+            (model.sportIdentifier as? SportIdentifier.Custom)?.id == id
         }?.let {
             deletedSportList.add(it)
             deleteSportUseCase(it)
         }
         sendUiEvent(
-            UiEvent.SnackBar.QuantitySnackBar(
+            SnackBar.QuantitySnackBar(
                 message = R.plurals.deletedSportMsg,
                 quantity = deletedSportList.size,
                 action = R.string.undo
@@ -72,6 +75,6 @@ class SportListViewModel @Inject constructor(
 
     fun onClearDeletedSportList() = deletedSportList.clear()
 
-    fun onLaunch(sportIdentifier: com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier) = sendUiEvent(UiEvent.LaunchScoreboard(sportIdentifier))
+    fun onLaunch(sportIdentifier: SportIdentifier) = sendUiEvent(LaunchScoreboard(sportIdentifier))
 
 }

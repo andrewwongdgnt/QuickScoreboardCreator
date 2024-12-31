@@ -45,6 +45,7 @@ dependencies {
     implementation(projects.feature.sport.presentation)
     implementation(projects.feature.sport.domain)
     implementation(projects.feature.sport.data)
+    implementation(projects.feature.team.presentation)
     implementation(projects.feature.team.domain)
     implementation(projects.feature.team.data)
     implementation(projects.feature.history.domain)

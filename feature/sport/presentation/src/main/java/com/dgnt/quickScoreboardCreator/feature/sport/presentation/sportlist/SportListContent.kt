@@ -38,16 +38,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.descriptionRes
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.SnackBar
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportListItem
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportType
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.descriptionRes
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.titleRes
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.LaunchScoreboard
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.SportDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -60,7 +65,7 @@ fun SportListContent(
 ) {
 
     val categorizedSports = viewModel.categorizedSports.collectAsStateWithLifecycle(
-        initialValue = com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportType(listOf()) to com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportListItem(listOf())
+        initialValue = CategorizedSportType(listOf()) to CategorizedSportListItem(listOf())
     )
 
     SportListInnerContent(
@@ -104,7 +109,7 @@ private fun SportListInnerContent(
         }
         uiEvent.collect { event ->
             when (event) {
-                is UiEvent.SnackBar.QuantitySnackBar -> {
+                is SnackBar.QuantitySnackBar -> {
                     dismissSnackbar(false)
                     scope.launch {
                         val result = snackBarHostState.showSnackbar(
@@ -123,8 +128,8 @@ private fun SportListInnerContent(
                     }
                 }
 
-                is UiEvent.SportDetails,
-                is UiEvent.LaunchScoreboard -> {
+                is SportDetails,
+                is LaunchScoreboard -> {
                     dismissSnackbar(true)
                 }
 

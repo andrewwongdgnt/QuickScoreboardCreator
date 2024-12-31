@@ -44,10 +44,10 @@ class TeamDetailsViewModelTest {
     @MockK
     private lateinit var uiEventHandler: UiEventHandler
 
-    private lateinit var sut: TeamDetailsViewModel
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails.TeamDetailsViewModel
 
     private fun initSut() {
-        sut = TeamDetailsViewModel(
+        sut = com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails.TeamDetailsViewModel(
             insertTeamUseCase,
             getTeamUseCase,
             deleteTeamUseCase,

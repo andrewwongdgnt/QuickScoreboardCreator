@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.common
+package com.dgnt.quickScoreboardCreator.feature.team.presentation.composable
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -14,10 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.resourcemapping.iconRes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

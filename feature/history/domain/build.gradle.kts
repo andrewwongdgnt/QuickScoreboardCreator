@@ -6,6 +6,7 @@ plugins {
 dependencies {
 
     implementation(projects.feature.sport.domain)
+    implementation(projects.feature.team.domain)
     api(projects.core.domain)
 
     implementation(libs.kotlinx.coroutines.core)

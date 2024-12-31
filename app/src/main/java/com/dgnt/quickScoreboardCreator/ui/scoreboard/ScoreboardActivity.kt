@@ -25,18 +25,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.SPORT_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.TIMELINE_VIEWER_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.IntervalUpdated
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamPicker
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamUpdated
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TimelineViewer
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.customNavType
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.ScoreboardContent
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.uievent.IntervalEditor
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerContent
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,9 +51,9 @@ import kotlin.reflect.typeOf
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val startDestination = IntentCompat.getSerializableExtra(intent, SPORT_IDENTIFIER, com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier::class.java)?.let { sportIdentifier ->
+        val startDestination = IntentCompat.getSerializableExtra(intent, SPORT_IDENTIFIER, SportIdentifier::class.java)?.let { sportIdentifier ->
             //TODO temporary logic flow because we can't handle custom sports yet
-            if (sportIdentifier is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom) {
+            if (sportIdentifier is SportIdentifier.Custom) {
                 finish()
                 Toast.makeText(this, getString(R.string.defaultInvalid), Toast.LENGTH_LONG).show()
                 return
@@ -77,7 +82,7 @@ class ScoreboardActivity : ComponentActivity() {
                         ) {
                             composable<NavDestination.Scoreboard>(
                                 typeMap = mapOf(
-                                    typeOf<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>() to customNavType<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>()
+                                    typeOf<SportIdentifier>() to customNavType<SportIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
@@ -88,9 +93,9 @@ class ScoreboardActivity : ComponentActivity() {
                                     updatedIntervalData,
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            is UiEvent.TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
-                                            is UiEvent.IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.sportIdentifier))
-                                            is UiEvent.TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.id, uiEvent.index))
+                                            is TeamPicker -> navController.commonNavigate(navDestination = NavDestination.TeamPicker(uiEvent.index))
+                                            is IntervalEditor -> navController.commonNavigate(navDestination = NavDestination.IntervalEditor(uiEvent.currentTimeValue, uiEvent.index, uiEvent.sportIdentifier))
+                                            is TimelineViewer -> navController.commonNavigate(navDestination = NavDestination.TimelineViewer(uiEvent.id, uiEvent.index))
                                             else -> Unit
                                         }
 
@@ -106,9 +111,9 @@ class ScoreboardActivity : ComponentActivity() {
                                 TeamPickerDialogContent(
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            UiEvent.Done -> navController.navigateUp()
+                                            Done -> navController.navigateUp()
 
-                                            is UiEvent.TeamUpdated -> {
+                                            is TeamUpdated -> {
                                                 viewModel.onTeamDataUpdate(UpdatedTeamData(uiEvent.index, uiEvent.id))
                                                 navController.navigateUp()
                                             }
@@ -121,16 +126,16 @@ class ScoreboardActivity : ComponentActivity() {
                             }
                             dialog<NavDestination.IntervalEditor>(
                                 typeMap = mapOf(
-                                    typeOf<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>() to customNavType<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>()
+                                    typeOf<SportIdentifier>() to customNavType<SportIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
                                 IntervalEditorDialogContent(
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            UiEvent.Done -> navController.navigateUp()
+                                            Done -> navController.navigateUp()
 
-                                            is UiEvent.IntervalUpdated -> {
+                                            is IntervalUpdated -> {
                                                 viewModel.onIntervalDataUpdate(UpdatedIntervalData(uiEvent.timeValue, uiEvent.index))
                                                 navController.navigateUp()
                                             }
@@ -145,7 +150,7 @@ class ScoreboardActivity : ComponentActivity() {
                                 TimelineViewerContent(
                                     onUiEvent = { uiEvent ->
                                         when (uiEvent) {
-                                            UiEvent.Done -> navController.navigateUp()
+                                            Done -> navController.navigateUp()
                                             else -> Unit
                                         }
                                     },

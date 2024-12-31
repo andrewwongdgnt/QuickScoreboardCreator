@@ -4,32 +4,32 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.SPORT_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.PlaySound
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamPicker
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TimelineViewer
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.IntervalLabel
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalEndSound
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
-import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalEndSound
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.GetSportUseCase
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.rawRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.secondaryScoreLabelRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.titleRes
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.teamdisplay.TeamDisplay
+import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.uievent.IntervalEditor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -44,9 +44,9 @@ import javax.inject.Inject
 class ScoreboardViewModel @Inject constructor(
     private val resources: Resources,
     private val getSportUseCase: GetSportUseCase,
-    private val getTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase,
-    private val insertHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase,
-    private val scoreboardManager: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.ScoreboardManager,
+    private val getTeamUseCase: GetTeamUseCase,
+    private val insertHistoryUseCase: InsertHistoryUseCase,
+    private val scoreboardManager: ScoreboardManager,
     private val timeTransformer: TimeTransformer,
     savedStateHandle: SavedStateHandle,
     private val uiEventHandler: UiEventHandler
@@ -141,7 +141,7 @@ class ScoreboardViewModel @Inject constructor(
 
     private val intervalOnEndListener: (IntervalEndSound) -> Unit = { sound ->
         sound.soundEffectRes()?.let {
-            sendUiEvent(UiEvent.PlaySound(it))
+            sendUiEvent(PlaySound(it))
         }
     }
 
@@ -224,7 +224,7 @@ class ScoreboardViewModel @Inject constructor(
         main: Boolean,
     ) = scoreboardManager.updateScore(isPrimary, scoreIndex, incrementIndex, main)
 
-    fun toTeamPicker(index: Int) = sendUiEvent(UiEvent.TeamPicker(index))
+    fun toTeamPicker(index: Int) = sendUiEvent(TeamPicker(index))
 
     fun onTeamPick(updatedTeamData: UpdatedTeamData) = viewModelScope.launch {
         _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
@@ -270,7 +270,7 @@ class ScoreboardViewModel @Inject constructor(
     fun toIntervalEditor() {
         stopTimerJob()
         sportIdentifier?.let { sId ->
-            sendUiEvent(UiEvent.IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, sId))
+            sendUiEvent(IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, sId))
         }
     }
 
@@ -286,7 +286,7 @@ class ScoreboardViewModel @Inject constructor(
     fun toTimelineViewer() = viewModelScope.launch {
         insertHistory().let {
             historyEntityId = it
-            sendUiEvent(UiEvent.TimelineViewer(it, currentInterval.value - 1))
+            sendUiEvent(TimelineViewer(it, currentInterval.value - 1))
         }
     }
 

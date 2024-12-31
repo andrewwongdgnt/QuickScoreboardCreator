@@ -1,7 +1,7 @@
-package com.dgnt.quickScoreboardCreator.ui.common.resourcemapping
+package com.dgnt.quickScoreboardCreator.feature.team.presentation.resourcemapping
 
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup
 
 fun TeamIcon.iconRes() = when (this) {
@@ -64,12 +64,12 @@ fun TeamIcon.iconRes() = when (this) {
     TeamIcon.WORM -> R.drawable.worm
 }
 
-fun com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.titleRes() = when(this) {
-    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.ANIMALS -> R.string.ic_group_animals
-    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.ARTIFACTS -> R.string.ic_group_artifacts
-    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.NATURE -> R.string.ic_group_nature
-    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.PEOPLE -> R.string.ic_group_people
-    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.SCIFI -> R.string.ic_group_scifi
-    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.VEHICLES -> R.string.ic_group_vehicles
-    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIconGroup.WEAPONS -> R.string.ic_group_weapons
+fun TeamIconGroup.titleRes() = when(this) {
+    TeamIconGroup.ANIMALS -> R.string.ic_group_animals
+    TeamIconGroup.ARTIFACTS -> R.string.ic_group_artifacts
+    TeamIconGroup.NATURE -> R.string.ic_group_nature
+    TeamIconGroup.PEOPLE -> R.string.ic_group_people
+    TeamIconGroup.SCIFI -> R.string.ic_group_scifi
+    TeamIconGroup.VEHICLES -> R.string.ic_group_vehicles
+    TeamIconGroup.WEAPONS -> R.string.ic_group_weapons
 }

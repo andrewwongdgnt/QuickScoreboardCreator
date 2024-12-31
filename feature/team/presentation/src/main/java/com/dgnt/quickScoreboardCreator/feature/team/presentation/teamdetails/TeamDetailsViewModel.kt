@@ -1,16 +1,16 @@
-package com.dgnt.quickScoreboardCreator.ui.main.teamdetails
+package com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.ID
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamUseCase
-import com.dgnt.quickScoreboardCreator.ui.common.Arguments.ID
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,14 +24,14 @@ import kotlin.random.Random
 
 @HiltViewModel
 class TeamDetailsViewModel @Inject constructor(
-    private val insertTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamUseCase,
-    private val getTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase,
-    private val deleteTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase,
+    private val insertTeamUseCase: InsertTeamUseCase,
+    private val getTeamUseCase: GetTeamUseCase,
+    private val deleteTeamUseCase: DeleteTeamUseCase,
     uiEventHandler: UiEventHandler,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
-    private var originalModel: com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel? = null
+    private var originalModel: TeamModel? = null
 
     private val _title = MutableStateFlow("")
     val title: StateFlow<String> = _title.asStateFlow()
@@ -76,7 +76,7 @@ class TeamDetailsViewModel @Inject constructor(
         if (valid.value) {
             viewModelScope.launch {
                 insertTeamUseCase(
-                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel(
+                    TeamModel(
                         id = originalModel?.id,
                         title = title.value,
                         description = description.value,
@@ -85,17 +85,17 @@ class TeamDetailsViewModel @Inject constructor(
                 )
             }
         }
-        sendUiEvent(UiEvent.Done)
+        sendUiEvent(Done)
     }
 
-    fun onDismiss() = sendUiEvent(UiEvent.Done)
+    fun onDismiss() = sendUiEvent(Done)
 
     fun onDelete() = viewModelScope.launch {
 
         originalModel?.let {
             deleteTeamUseCase(it)
         }
-        sendUiEvent(UiEvent.Done)
+        sendUiEvent(Done)
     }
 
     fun onTitleChange(title: String) {

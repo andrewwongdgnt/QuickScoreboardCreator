@@ -13,11 +13,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultAlertDialog
-import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.CategorizedTeamListContent
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.composable.CategorizedTeamListContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

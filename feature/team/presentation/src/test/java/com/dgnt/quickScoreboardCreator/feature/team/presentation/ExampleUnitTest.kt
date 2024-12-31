@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.feature.history.domain
+package com.dgnt.quickScoreboardCreator.feature.team.presentation
 
 import org.junit.Test
 

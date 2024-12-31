@@ -47,7 +47,7 @@ class TeamListViewModelTest {
     @MockK
     private lateinit var uiEventHandler: UiEventHandler
 
-    private lateinit var sut: TeamListViewModel
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist.TeamListViewModel
 
     private val mockTeamList = listOf(
         TeamEntity(1, "team name", "team desc", TeamIcon.ALIEN),
@@ -101,7 +101,7 @@ class TeamListViewModelTest {
             teamCategorizer(mockTeamList)
         } answers { mockCategorizedTeamList }
         coEvery { insertTeamListUseCase(mockTeamList) } returns listOf(1, 2)
-        sut = TeamListViewModel(
+        sut = com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist.TeamListViewModel(
             getTeamListUseCase,
             insertTeamListUseCase,
             deleteTeamUseCase,
