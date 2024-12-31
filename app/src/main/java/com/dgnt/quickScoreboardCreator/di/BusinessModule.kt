@@ -1,19 +1,19 @@
 package com.dgnt.quickScoreboardCreator.di
 
-import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCategorizer
+import com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.HistoryCategorizer
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
-import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.QSCHistoryCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.QSCHistoryCreator
+import com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.QSCHistoryCategorizer
+import com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.QSCHistoryCreator
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.QSCCategorizeSportUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCScoreboardManager
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCScoreboardManager
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.QSCTimeTransformer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCWinCalculator
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCWinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.CategorizeSportUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.WinCalculator
-import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.QSCTeamCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.WinCalculator
+import com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.QSCTeamCategorizer
+import com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,12 +25,12 @@ import javax.inject.Singleton
 object BusinessModule {
 
     @Provides
-    fun provideWinCalculator(): WinCalculator =
-        QSCWinCalculator()
+    fun provideWinCalculator(): com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.WinCalculator =
+        com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCWinCalculator()
 
     @Provides
-    fun provideScoreboardManager(winCalculator: WinCalculator, historyCreator: HistoryCreator): ScoreboardManager =
-        QSCScoreboardManager(winCalculator, historyCreator)
+    fun provideScoreboardManager(winCalculator: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.WinCalculator, historyCreator: HistoryCreator): com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.ScoreboardManager =
+        com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCScoreboardManager(winCalculator, historyCreator)
 
     @Provides
     @Singleton
@@ -39,8 +39,8 @@ object BusinessModule {
 
     @Provides
     @Singleton
-    fun provideTeamCategorizer(): TeamCategorizer =
-        QSCTeamCategorizer()
+    fun provideTeamCategorizer(): com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer =
+        com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.QSCTeamCategorizer()
 
     @Provides
     @Singleton
@@ -49,10 +49,10 @@ object BusinessModule {
 
     @Provides
     fun provideHistoryCreator(): HistoryCreator =
-        QSCHistoryCreator()
+        com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.QSCHistoryCreator()
 
     @Provides
     @Singleton
-    fun provideHistoryCategorizer(): HistoryCategorizer =
-        QSCHistoryCategorizer()
+    fun provideHistoryCategorizer(): com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.HistoryCategorizer =
+        com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.QSCHistoryCategorizer()
 }

@@ -16,9 +16,9 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.time.TimeDat
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.designsystem.composable.Label
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

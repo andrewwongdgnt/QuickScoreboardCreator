@@ -24,7 +24,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.TIMELINE_VIEWER_IDENTIFIER
@@ -32,12 +31,10 @@ import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.customNavType
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
-import com.dgnt.quickScoreboardCreator.ui.main.sportdetails.SportDetailsDialogContent
-import com.dgnt.quickScoreboardCreator.ui.main.sportlist.SportListContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamdetails.TeamDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
@@ -106,7 +103,7 @@ class MainActivity : ComponentActivity() {
             modifier = modifier
         ) {
             composable<NavDestination.SportList> {
-                SportListContent(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist.SportListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
                             is UiEvent.SportDetails -> navController.commonNavigate(navDestination = NavDestination.SportDetails(uiEvent.sportIdentifier))
@@ -122,10 +119,10 @@ class MainActivity : ComponentActivity() {
             }
             dialog<NavDestination.SportDetails>(
                 typeMap = mapOf(
-                    typeOf<SportIdentifier?>() to customNavType<SportIdentifier?>(isNullableAllowed = true)
+                    typeOf<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier?>() to customNavType<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier?>(isNullableAllowed = true)
                 )
             ) {
-                SportDetailsDialogContent(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.SportDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
                             UiEvent.Done -> navController.navigateUp()

@@ -15,7 +15,7 @@ import org.junit.Test
 class QSCHistoryCategorizerTest {
 
     @InjectMockKs
-    lateinit var sut: QSCHistoryCategorizer
+    lateinit var sut: com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.QSCHistoryCategorizer
 
     @Before
     fun setup() {

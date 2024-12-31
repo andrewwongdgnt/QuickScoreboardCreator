@@ -1,6 +1,6 @@
 package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCWinCalculator
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCWinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
@@ -15,7 +15,7 @@ import org.junit.Test
 class QSCWinCalculatorTest {
 
     @InjectMockKs
-    private lateinit var sut: QSCWinCalculator
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCWinCalculator
 
     @Before
     fun setup() {

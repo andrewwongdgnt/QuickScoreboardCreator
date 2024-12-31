@@ -30,11 +30,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultSnackbar
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.CategorizedTeamItemData
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamItemData
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.ui.common.CategorizedTeamListContent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -63,7 +63,7 @@ fun TeamListContent(
 private fun TeamListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    categorizedTeamList: List<CategorizedTeamItemData>,
+    categorizedTeamList: List<com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData>,
     onAdd: () -> Unit,
     onEdit: (id: Int) -> Unit,
     onDelete: (id: Int) -> Unit,
@@ -168,25 +168,25 @@ private fun `Some teams`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         categorizedTeamList = listOf(
-            CategorizedTeamItemData(
+            com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
                 "D",
                 listOf(
-                    TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
-                    TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
-                    TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER)
+                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(0, "DGNT", "My Description 1", TeamIcon.TIGER),
+                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(1, "Dragons", "My Description 2", TeamIcon.TIGER),
+                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(2, "Darkness", "My Description 3", TeamIcon.TIGER)
                 )
             ),
-            CategorizedTeamItemData(
+            com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
                 "T",
                 listOf(
-                    TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
-                    TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER)
+                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(3, "tricksters", "tricky people", TeamIcon.TIGER),
+                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(5, "Terminators", "My Description 5", TeamIcon.TIGER)
                 )
             ),
-            CategorizedTeamItemData(
+            com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
                 "J",
                 listOf(
-                    TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER)
+                    com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(4, "Jedi Council", "My Description 4", TeamIcon.TIGER)
                 )
             )
 

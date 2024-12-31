@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
@@ -31,7 +31,7 @@ import org.joda.time.Duration
 @Composable
 fun TimelineViewerChart(
     modifier: Modifier = Modifier,
-    historicalInterval: HistoricalInterval
+    historicalInterval: com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval
 ) {
     val commonTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
     val commonTextSize = 20f
@@ -47,8 +47,8 @@ fun TimelineViewerChart(
                 val scoreIndex = entry.key
                 historicalScore.primaryScoreList.map {
                     val time = when (range) {
-                        is HistoricalIntervalRange.CountDown -> (range.start - it.time).toFloat()
-                        HistoricalIntervalRange.Infinite -> it.time.toFloat()
+                        is com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.CountDown -> (range.start - it.time).toFloat()
+                        com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.Infinite -> it.time.toFloat()
                     }
                     val lineColor = getTimelineViewerTeamColor(scoreIndex, isDarkTheme).toArgb()
                     Entry(time, it.score.toFloat(), lineColor)
@@ -76,8 +76,8 @@ fun TimelineViewerChart(
             }.values.toList()
             chart.data = LineData(dataSetList)
             when (range) {
-                is HistoricalIntervalRange.CountDown -> chart.xAxis.axisMaximum = range.start.toFloat()
-                HistoricalIntervalRange.Infinite -> Unit
+                is com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.CountDown -> chart.xAxis.axisMaximum = range.start.toFloat()
+                com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.Infinite -> Unit
             }
             chart.xAxis.apply {
                 axisMinimum = 0f

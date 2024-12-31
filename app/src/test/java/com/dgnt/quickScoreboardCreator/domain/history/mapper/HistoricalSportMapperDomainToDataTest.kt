@@ -1,9 +1,9 @@
 package com.dgnt.quickScoreboardCreator.domain.history.mapper
 
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScore
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreGroup
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreGroup
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
@@ -31,39 +31,39 @@ class HistoricalSportMapperDomainToDataTest {
         sut.map(
             HistoricalScoreboard(
                 mapOf(
-                    0 to HistoricalInterval(
-                        range = HistoricalIntervalRange.CountDown(72000),
+                    0 to com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval(
+                        range = com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.CountDown(72000),
                         intervalLabel = IntervalLabel.Custom("Quarter", 0),
                         historicalScoreGroupList = mapOf(
-                            0 to HistoricalScoreGroup(
+                            0 to com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreGroup(
                                 teamLabel = TeamLabel.Custom("DGNT", TeamIcon.AXE),
                                 primaryScoreList = listOf(
-                                    HistoricalScore(0, "0", 720000),
-                                    HistoricalScore(1, "1", 660000),
-                                    HistoricalScore(2, "2", 630000),
-                                    HistoricalScore(3, "3", 480000),
-                                    HistoricalScore(4, "4", 330000),
-                                    HistoricalScore(7, "7", 300000),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(0, "0", 720000),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(1, "1", 660000),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(2, "2", 630000),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(3, "3", 480000),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(4, "4", 330000),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(7, "7", 300000),
                                 ),
                                 secondaryScoreList = listOf(
-                                    HistoricalScore(1, "1", 720000)
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(1, "1", 720000)
                                 )
                             ),
-                            1 to HistoricalScoreGroup(
+                            1 to com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreGroup(
                                 teamLabel = TeamLabel.None,
                                 primaryScoreList = listOf(
-                                    HistoricalScore(0, "0", 0),
-                                    HistoricalScore(1, "1", 2000),
-                                    HistoricalScore(2, "2", 4400),
-                                    HistoricalScore(3, "3", 5655),
-                                    HistoricalScore(4, "4", 9800),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(0, "0", 0),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(1, "1", 2000),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(2, "2", 4400),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(3, "3", 5655),
+                                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScore(4, "4", 9800),
                                 ),
                                 secondaryScoreList = listOf()
                             )
                         )
                     ),
-                    1 to HistoricalInterval(
-                        range = HistoricalIntervalRange.Infinite,
+                    1 to com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval(
+                        range = com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.Infinite,
                         intervalLabel = IntervalLabel.DefaultSport(ScoreboardType.SPIKEBALL, 1),
                         historicalScoreGroupList = mapOf()
                     )

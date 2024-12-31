@@ -22,14 +22,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.BackButton
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.IconDisplay
-import com.dgnt.quickScoreboardCreator.ui.common.SportIconPicker
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.SportIconPicker
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

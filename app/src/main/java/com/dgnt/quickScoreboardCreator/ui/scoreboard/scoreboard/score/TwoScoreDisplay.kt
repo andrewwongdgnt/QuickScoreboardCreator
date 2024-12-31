@@ -21,16 +21,16 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.value
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
-import com.dgnt.quickScoreboardCreator.ui.common.SpecialScoreConstants
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.SpecialScoreConstants
 
 @Composable
 fun TwoScoreDisplay(
     modifier: Modifier = Modifier,
     simpleMode: Boolean,
-    primaryDisplayedScoreInfo: DisplayedScoreInfo,
-    secondaryDisplayedScoreInfo: DisplayedScoreInfo,
+    primaryDisplayedScoreInfo: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo,
+    secondaryDisplayedScoreInfo: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
     secondaryScoreLabel: Label,
     onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
@@ -47,7 +47,7 @@ fun TwoScoreDisplay(
         ) {
 
             val maxFontSize = if (hasSecondaryScores) 135.sp else 200.sp
-            if (primaryDisplayedScoreInfo.overallDisplayedScore != DisplayedScore.Blank)
+            if (primaryDisplayedScoreInfo.overallDisplayedScore != com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank)
                 ScoreValueContent(
                     modifier = Modifier.weight(1f),
                     displayedScore = primaryDisplayedScoreInfo.overallDisplayedScore,
@@ -83,7 +83,7 @@ fun TwoScoreDisplay(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val maxFontSize = 50.sp
-            if (secondaryDisplayedScoreInfo.overallDisplayedScore != DisplayedScore.Blank)
+            if (secondaryDisplayedScoreInfo.overallDisplayedScore != com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank)
                 ScoreValueContent(
                     modifier = Modifier.weight(1f),
                     displayedScore = secondaryDisplayedScoreInfo.overallDisplayedScore,
@@ -133,14 +133,14 @@ fun TwoScoreDisplay(
 @Composable
 private fun ScoreValueContent(
     modifier: Modifier = Modifier,
-    displayedScore: DisplayedScore,
+    displayedScore: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore,
     maxFontSize: TextUnit
 ) {
     val displayedValue = when (displayedScore) {
-        DisplayedScore.Advantage -> stringResource(id = R.string.advantageDisplay)
-        is DisplayedScore.Custom -> displayedScore.display
-        DisplayedScore.Deuce -> stringResource(id = R.string.deuceDisplay)
-        DisplayedScore.Blank -> SpecialScoreConstants.NOTHING
+        com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Advantage -> stringResource(id = R.string.advantageDisplay)
+        is com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom -> displayedScore.display
+        com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Deuce -> stringResource(id = R.string.deuceDisplay)
+        com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank -> SpecialScoreConstants.NOTHING
     }
     AutoSizeText(
         text = displayedValue,
@@ -158,19 +158,19 @@ private fun ScoreValueContent(
 private fun `Normal scores`() =
     TwoScoreDisplay(
         simpleMode = false,
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Custom("10"),
-                DisplayedScore.Custom("10"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("10"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("10"),
             ),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Custom("1"),
-                DisplayedScore.Custom("1"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
             ),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(
             listOf(1),
@@ -185,16 +185,16 @@ private fun `Normal scores`() =
 private fun `Deuce`() =
     TwoScoreDisplay(
         simpleMode = true,
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Blank,
-                DisplayedScore.Blank,
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
             ),
-            DisplayedScore.Deuce
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Deuce
         ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
         secondaryScoreLabel = Label.Resource(R.string.blank),

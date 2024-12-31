@@ -4,28 +4,28 @@ import android.app.Application
 import androidx.room.Room
 import com.dgnt.quickScoreboardCreator.core.data.base.loader.BaseFileDao
 import com.dgnt.quickScoreboardCreator.core.data.base.mapper.Mapper
-import com.dgnt.quickScoreboardCreator.core.data.db.HistoricalScoreboardDataConverter
-import com.dgnt.quickScoreboardCreator.core.data.db.IntervalListConverter
-import com.dgnt.quickScoreboardCreator.core.data.db.QSCDatabase
-import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.core.data.history.filedao.HistoryFileDao
-import com.dgnt.quickScoreboardCreator.core.data.history.filedto.HistoryFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.history.repository.QSCHistoryRepository
+import com.dgnt.quickScoreboardCreator.feature.history.data.converter.HistoricalScoreboardDataConverter
+import com.dgnt.quickScoreboardCreator.feature.sport.data.converter.IntervalListConverter
+import com.dgnt.quickScoreboardCreator.core.database.QSCDatabase
+import com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoryEntity
+import com.dgnt.quickScoreboardCreator.feature.history.data.filedao.HistoryFileDao
+import com.dgnt.quickScoreboardCreator.feature.history.data.filedto.HistoryFileDTO
+import com.dgnt.quickScoreboardCreator.feature.history.data.repository.QSCHistoryRepository
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import com.dgnt.quickScoreboardCreator.core.data.sport.entity.SportEntity
 import com.dgnt.quickScoreboardCreator.core.data.sport.filedao.SportFileDao
 import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTO
 import com.dgnt.quickScoreboardCreator.core.data.sport.repository.QSCSportRepository
-import com.dgnt.quickScoreboardCreator.core.data.team.entity.TeamEntity
-import com.dgnt.quickScoreboardCreator.core.data.team.filedao.TeamFileDao
-import com.dgnt.quickScoreboardCreator.core.data.team.filedto.TeamFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.team.repository.QSCTeamRepository
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
-import com.dgnt.quickScoreboardCreator.core.domain.history.repository.HistoryRepository
+import com.dgnt.quickScoreboardCreator.feature.team.data.entity.TeamEntity
+import com.dgnt.quickScoreboardCreator.feature.team.data.filedao.TeamFileDao
+import com.dgnt.quickScoreboardCreator.feature.team.data.filedto.TeamFileDTO
+import com.dgnt.quickScoreboardCreator.feature.team.data.repository.QSCTeamRepository
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
+import com.dgnt.quickScoreboardCreator.feature.history.domain.repository.HistoryRepository
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportModel
 import com.dgnt.quickScoreboardCreator.core.domain.sport.repository.SportRepository
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamModel
-import com.dgnt.quickScoreboardCreator.core.domain.team.repository.TeamRepository
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
+import com.dgnt.quickScoreboardCreator.feature.team.domain.repository.TeamRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,28 +39,13 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideIntervalListConverter(serializer: Serializer) =
-        IntervalListConverter(serializer)
+        com.dgnt.quickScoreboardCreator.feature.sport.data.converter.IntervalListConverter(serializer)
 
     @Provides
     @Singleton
     fun provideHistoricalScoreboardDataConverter(serializer: Serializer) =
-        HistoricalScoreboardDataConverter(serializer)
+        com.dgnt.quickScoreboardCreator.feature.history.data.converter.HistoricalScoreboardDataConverter(serializer)
 
-    @Provides
-    @Singleton
-    fun provideDatabase(
-        app: Application,
-        intervalListConverter: IntervalListConverter,
-        historicalScoreboardDataConverter: HistoricalScoreboardDataConverter
-    ) =
-        Room.databaseBuilder(
-            app,
-            QSCDatabase::class.java,
-            "qsc_db"
-        )
-//            .addTypeConverter(intervalListConverter)
-            .addTypeConverter(historicalScoreboardDataConverter)
-            .build()
 
     @Provides
     @Singleton
@@ -70,7 +55,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideSportRepository(
-        db: QSCDatabase,
+        db: com.dgnt.quickScoreboardCreator.core.database.QSCDatabase,
         loader: BaseFileDao<SportFileDTO>,
         mapScoreboardDataToDomain: Mapper<SportEntity, SportModel>,
         mapScoreboardDomainToData: Mapper<SportModel, SportEntity>,
@@ -86,19 +71,19 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideTeamFileDao(serializer: Serializer): BaseFileDao<TeamFileDTO> =
-        TeamFileDao(serializer)
+    fun provideTeamFileDao(serializer: Serializer): BaseFileDao<com.dgnt.quickScoreboardCreator.feature.team.data.filedto.TeamFileDTO> =
+        com.dgnt.quickScoreboardCreator.feature.team.data.filedao.TeamFileDao(serializer)
 
     @Provides
     @Singleton
     fun provideTeamRepository(
-        db: QSCDatabase,
-        loader: BaseFileDao<TeamFileDTO>,
-        mapTeamDataToDomain: Mapper<TeamEntity, TeamModel>,
-        mapTeamDomainToData: Mapper<TeamModel, TeamEntity>,
-        mapTeamFileDTOToDomain: Mapper<TeamFileDTO, TeamModel>,
-    ): TeamRepository =
-        QSCTeamRepository(
+        db: com.dgnt.quickScoreboardCreator.core.database.QSCDatabase,
+        loader: BaseFileDao<com.dgnt.quickScoreboardCreator.feature.team.data.filedto.TeamFileDTO>,
+        mapTeamDataToDomain: Mapper<com.dgnt.quickScoreboardCreator.feature.team.data.entity.TeamEntity, com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel>,
+        mapTeamDomainToData: Mapper<com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel, com.dgnt.quickScoreboardCreator.feature.team.data.entity.TeamEntity>,
+        mapTeamFileDTOToDomain: Mapper<com.dgnt.quickScoreboardCreator.feature.team.data.filedto.TeamFileDTO, com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel>,
+    ): com.dgnt.quickScoreboardCreator.feature.team.domain.repository.TeamRepository =
+        com.dgnt.quickScoreboardCreator.feature.team.data.repository.QSCTeamRepository(
             db.teamDao,
             loader,
             mapTeamDataToDomain,
@@ -114,7 +99,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideHistoryRepository(
-        db: QSCDatabase,
+        db: com.dgnt.quickScoreboardCreator.core.database.QSCDatabase,
         loader: BaseFileDao<HistoryFileDTO>,
         mapHistoryDataToDomain: Mapper<HistoryEntity, HistoryModel>,
         mapHistoryDomainToData: Mapper<HistoryModel, HistoryEntity>,

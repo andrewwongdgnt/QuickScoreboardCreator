@@ -40,6 +40,16 @@ dependencies {
     implementation(projects.core.presentation.ui)
     implementation(projects.core.domain)
     implementation(projects.core.data)
+    implementation(projects.core.database)
+    implementation(projects.core.util)
+    implementation(projects.feature.sport.presentation)
+    implementation(projects.feature.sport.domain)
+    implementation(projects.feature.sport.data)
+    implementation(projects.feature.team.domain)
+    implementation(projects.feature.team.data)
+    implementation(projects.feature.history.domain)
+    implementation(projects.feature.history.data)
+    implementation(projects.feature.scoreboard.domain)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
 

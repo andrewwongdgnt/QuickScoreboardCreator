@@ -3,13 +3,13 @@ package com.dgnt.quickScoreboardCreator.ui.main.historydetails
 import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.awaits
 import io.mockk.coEvery
@@ -35,13 +35,13 @@ class HistoryDetailsViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @MockK
-    private lateinit var insertHistoryUseCase: InsertHistoryUseCase
+    private lateinit var insertHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
 
     @MockK
-    private lateinit var getHistoryUseCase: GetHistoryUseCase
+    private lateinit var getHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase
 
     @MockK
-    private lateinit var deleteHistoryUseCase: DeleteHistoryUseCase
+    private lateinit var deleteHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
 
     @MockK
     private lateinit var savedStateHandle: SavedStateHandle

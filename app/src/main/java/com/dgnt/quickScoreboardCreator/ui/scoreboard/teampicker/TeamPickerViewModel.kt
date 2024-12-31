@@ -2,20 +2,20 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamListUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUseCase
 
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class TeamPickerViewModel @Inject constructor(
-    teamCategorizer: TeamCategorizer,
-    getTeamListUseCase: GetTeamListUseCase,
+    teamCategorizer: com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer,
+    getTeamListUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUseCase,
     savedStateHandle: SavedStateHandle,
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {

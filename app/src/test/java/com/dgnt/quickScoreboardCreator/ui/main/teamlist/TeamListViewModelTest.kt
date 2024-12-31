@@ -2,15 +2,15 @@ package com.dgnt.quickScoreboardCreator.ui.main.teamlist
 
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
-import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.CategorizedTeamItemData
+import com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamItemData
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.DeleteTeamUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamListUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.InsertTeamListUseCase
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamListUseCase
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -33,16 +33,16 @@ class TeamListViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @MockK
-    private lateinit var getTeamListUseCase: GetTeamListUseCase
+    private lateinit var getTeamListUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUseCase
 
     @MockK
-    private lateinit var insertTeamListUseCase: InsertTeamListUseCase
+    private lateinit var insertTeamListUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamListUseCase
 
     @MockK
-    private lateinit var deleteTeamUseCase: DeleteTeamUseCase
+    private lateinit var deleteTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
 
     @MockK
-    private lateinit var teamCategorizer: TeamCategorizer
+    private lateinit var teamCategorizer: com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer
 
     @MockK
     private lateinit var uiEventHandler: UiEventHandler
@@ -54,16 +54,16 @@ class TeamListViewModelTest {
         TeamEntity(2, "team name 2", "team desc 2", TeamIcon.CYBORG),
     )
     private val mockCategorizedTeamList = listOf(
-        CategorizedTeamItemData(
+        com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
             "A",
             listOf(
-                TeamItemData(
+                com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(
                     id = 1,
                     title = "A team name",
                     description = "team desc",
                     icon = TeamIcon.ALIEN
                 ),
-                TeamItemData(
+                com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(
                     id = 2,
                     title = "a team name 2",
                     description = "team desc 2",
@@ -71,16 +71,16 @@ class TeamListViewModelTest {
                 )
             )
         ),
-        CategorizedTeamItemData(
+        com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData(
             "F",
             listOf(
-                TeamItemData(
+                com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(
                     id = 4,
                     title = "F team name",
                     description = "team desc",
                     icon = TeamIcon.ANT
                 ),
-                TeamItemData(
+                com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData(
                     id = 6,
                     title = "F team name 2",
                     description = "team desc 2",

@@ -2,14 +2,14 @@ package com.dgnt.quickScoreboardCreator.ui.main.historylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryListUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.HistoryCategorizer
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryListUseCase
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -18,10 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryListViewModel @Inject constructor(
-    getHistoryListUseCase: GetHistoryListUseCase,
-    private val insertHistoryListUseCase: InsertHistoryListUseCase,
-    private val deleteHistoryUseCase: DeleteHistoryUseCase,
-    private val historyCategorizer: HistoryCategorizer,
+    getHistoryListUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryListUseCase,
+    private val insertHistoryListUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryListUseCase,
+    private val deleteHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase,
+    private val historyCategorizer: com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.HistoryCategorizer,
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val historyEntityList = getHistoryListUseCase()
@@ -29,7 +29,7 @@ class HistoryListViewModel @Inject constructor(
         historyCategorizer(it)
     }
 
-    private var deletedHistoryList: MutableList<HistoryModel> = mutableListOf()
+    private var deletedHistoryList: MutableList<com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel> = mutableListOf()
 
     fun onEdit(id: Int) = sendUiEvent(UiEvent.HistoryDetails(id))
 

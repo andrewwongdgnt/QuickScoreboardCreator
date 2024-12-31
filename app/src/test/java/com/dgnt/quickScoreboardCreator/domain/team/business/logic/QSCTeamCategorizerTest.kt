@@ -13,7 +13,7 @@ import org.junit.Test
 class QSCTeamCategorizerTest {
 
     @InjectMockKs
-    lateinit var sut: QSCTeamCategorizer
+    lateinit var sut: com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.QSCTeamCategorizer
 
     @Before
     fun setup() {

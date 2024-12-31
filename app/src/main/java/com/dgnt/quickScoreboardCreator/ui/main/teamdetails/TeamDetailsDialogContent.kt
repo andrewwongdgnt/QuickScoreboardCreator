@@ -40,9 +40,9 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.header
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.iconRes
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.titleRes
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.titleRes
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -133,7 +133,7 @@ private fun TeamDetailsInnerDialogContent(
                         val icons = entry.value
                         header {
                             Text(
-                                stringResource(id = iconGroup.titleRes()),
+                                stringResource(id = com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.titleRes()),
                                 modifier = if (index > 0) Modifier.padding(
                                     start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
                                 ) else Modifier
@@ -141,7 +141,7 @@ private fun TeamDetailsInnerDialogContent(
                         }
                         items(icons.toTypedArray()) { icon ->
                             Image(
-                                painterResource(icon.iconRes()),
+                                painterResource(com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes()),
                                 null,
                                 modifier = Modifier
                                     .padding(2.dp)
@@ -179,7 +179,7 @@ private fun TeamDetailsInnerDialogContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 IconDisplay(
-                    iconRes = icon?.iconRes(),
+                    iconRes = com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes(),
                     onClick = { onIconEdit(true) }
                 )
 

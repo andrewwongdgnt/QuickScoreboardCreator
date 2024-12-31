@@ -1,17 +1,16 @@
 package com.dgnt.quickScoreboardCreator.core.serializer
 
 
-import com.dgnt.quickScoreboardCreator.core.data.history.entity.HistoricalIntervalRangeData
-import com.dgnt.quickScoreboardCreator.core.data.history.entity.IntervalLabelData
-import com.dgnt.quickScoreboardCreator.core.data.history.entity.TeamLabelData
+import com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData
+import com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData
+import com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.CustomSportFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.DefaultSportFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.SportFileDTOType
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.CustomSportFileDTO
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.DefaultSportFileDTO
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.SportFileDTO
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.SportFileDTOType
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 import java.lang.reflect.Type
 
@@ -26,21 +25,21 @@ class QSCSerializer: Serializer {
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
-                .of(HistoricalIntervalRangeData::class.java, "type", true)
-                .registerSubtype(HistoricalIntervalRangeData.CountDown::class.java, HistoricalIntervalRangeData.Type.COUNTDOWN.name)
-                .registerSubtype(HistoricalIntervalRangeData.Infinite::class.java, HistoricalIntervalRangeData.Type.INFINITE.name)
+                .of(com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData::class.java, "type", true)
+                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.CountDown::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.Type.COUNTDOWN.name)
+                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.Infinite::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.Type.INFINITE.name)
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
-                .of(IntervalLabelData::class.java, "type", true)
-                .registerSubtype(IntervalLabelData.Custom::class.java, IntervalLabelData.Type.CUSTOM.name)
-                .registerSubtype(IntervalLabelData.DefaultSport::class.java, IntervalLabelData.Type.SPORT_TYPE.name)
+                .of(com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData::class.java, "type", true)
+                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.Custom::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.Type.CUSTOM.name)
+                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.DefaultSport::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.Type.SPORT_TYPE.name)
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
-                .of(TeamLabelData::class.java, "type", true)
-                .registerSubtype(TeamLabelData.None::class.java, TeamLabelData.Type.NONE.name)
-                .registerSubtype(TeamLabelData.Custom::class.java, TeamLabelData.Type.CUSTOM.name)
+                .of(com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData::class.java, "type", true)
+                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.None::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.Type.NONE.name)
+                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.Custom::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.Type.CUSTOM.name)
         )
 
     }.create()

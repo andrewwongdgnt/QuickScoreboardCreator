@@ -3,13 +3,13 @@ package com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalInterval
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TimelineViewerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getHistoryUseCase: GetHistoryUseCase,
+    private val getHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase,
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
@@ -32,7 +32,7 @@ class TimelineViewerViewModel @Inject constructor(
 
     private var historicalScoreboard: HistoricalScoreboard? = null
 
-    private var _historicalInterval = MutableStateFlow<HistoricalInterval?>(null)
+    private var _historicalInterval = MutableStateFlow<com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval?>(null)
     val historicalInterval = _historicalInterval.asStateFlow()
 
 

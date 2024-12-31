@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.core.domain.history.business.logic
 
 
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalIntervalRange
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardType
@@ -20,7 +20,7 @@ class QSCHistoryCreatorTest {
 
 
     @InjectMockKs
-    private lateinit var sut: QSCHistoryCreator
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.QSCHistoryCreator
 
     @Before
     fun setup() {
@@ -203,12 +203,12 @@ class QSCHistoryCreatorTest {
         Assert.assertEquals(2, historicalScoreboard.historicalIntervalMap.size)
         val interval1 = historicalScoreboard.historicalIntervalMap[0]!!
         interval1.let { interval ->
-            Assert.assertEquals(HistoricalIntervalRange.CountDown(1000), interval.range)
+            Assert.assertEquals(com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.CountDown(1000), interval.range)
         }
 
         val interval2 = historicalScoreboard.historicalIntervalMap[1]!!
         interval2.let { interval ->
-            Assert.assertEquals(HistoricalIntervalRange.Infinite, interval.range)
+            Assert.assertEquals(com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.Infinite, interval.range)
         }
 
     }

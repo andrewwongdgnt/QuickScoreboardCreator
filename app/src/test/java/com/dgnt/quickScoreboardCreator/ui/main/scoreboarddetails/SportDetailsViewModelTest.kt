@@ -22,10 +22,8 @@ import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.InsertSportUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
-import com.dgnt.quickScoreboardCreator.ui.main.sportdetails.IntervalEditingInfo
-import com.dgnt.quickScoreboardCreator.ui.main.sportdetails.SportDetailsViewModel
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -72,10 +70,10 @@ class SportDetailsViewModelTest {
     @MockK
     private lateinit var timeTransformer: TimeTransformer
 
-    private lateinit var sut: SportDetailsViewModel
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.SportDetailsViewModel
 
     private fun initSut() {
-        sut = SportDetailsViewModel(
+        sut = com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.SportDetailsViewModel(
             resources,
             insertSportUseCase,
             getSportUseCase,
@@ -302,7 +300,7 @@ class SportDetailsViewModelTest {
 
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -350,7 +348,7 @@ class SportDetailsViewModelTest {
         sut.onIntervalAdd()
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -387,7 +385,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -435,7 +433,7 @@ class SportDetailsViewModelTest {
         sut.onIntervalRemove(0)
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -479,7 +477,7 @@ class SportDetailsViewModelTest {
         sut.onIntervalRemove(1)
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -530,7 +528,7 @@ class SportDetailsViewModelTest {
         sut.onIntervalMove(true, 1)
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -567,7 +565,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -610,7 +608,7 @@ class SportDetailsViewModelTest {
         sut.onIntervalMove(false, 0)
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -647,7 +645,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -690,7 +688,7 @@ class SportDetailsViewModelTest {
         sut.onIntervalMove(true, 0)
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -727,7 +725,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -770,7 +768,7 @@ class SportDetailsViewModelTest {
         sut.onIntervalMove(false, 1)
         Assert.assertEquals(
             listOf(
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),
@@ -807,7 +805,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-                IntervalEditingInfo(
+                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.IntervalEditingInfo(
                     scoreInfo = ScoreInfo(
                         scoreRule = ScoreRule.None,
                         scoreToDisplayScoreMap = mapOf(),

@@ -12,9 +12,8 @@ import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.DeleteSportUseC
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportListUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.InsertSportListUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIdentifier
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
-import com.dgnt.quickScoreboardCreator.ui.main.sportlist.SportListViewModel
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -51,7 +50,7 @@ class SportListViewModelTest {
     @MockK
     private lateinit var uiEventHandler: UiEventHandler
 
-    private lateinit var sut: SportListViewModel
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist.SportListViewModel
 
     private val mockScoreboardList = listOf(
         ScoreboardEntity(1, "scoreboard name", "scoreboard desc", WinRule.Count, ScoreboardIcon.SOCCER, intervalLabel = "game"),
@@ -67,13 +66,13 @@ class SportListViewModelTest {
             )
         ) to CategorizedScoreboardItemData(
             listOf(
-                com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportListItem(
+                com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem(
                     ScoreboardIdentifier.Custom(1),
                     title = "A team name",
                     description = "team desc",
                     icon = ScoreboardIcon.TENNIS
                 ),
-                com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportListItem(
+                com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem(
                     ScoreboardIdentifier.Custom(2),
                     title = "Next team name",
                     description = "team desc",
@@ -100,7 +99,7 @@ class SportListViewModelTest {
             )
         } answers { mockCategorizedScoreboardList }
         coEvery { insertSportListUseCase(mockScoreboardList) } returns listOf(1, 2)
-        sut = SportListViewModel(
+        sut = com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist.SportListViewModel(
             getSportListUseCase,
             insertSportListUseCase,
             deleteSportUseCase,

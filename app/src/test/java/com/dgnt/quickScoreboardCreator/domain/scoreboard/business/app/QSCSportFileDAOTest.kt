@@ -1,11 +1,11 @@
 package com.dgnt.quickScoreboardCreator.domain.scoreboard.business.app
 
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedao.SportFileDao
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.CustomSportFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.DefaultSportFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.ScoreRuleFileDTO
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.ScoreRuleType
-import com.dgnt.quickScoreboardCreator.core.data.sport.filedto.WinRuleType
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedao.SportFileDao
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.CustomSportFileDTO
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.DefaultSportFileDTO
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.ScoreRuleFileDTO
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.ScoreRuleType
+import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.WinRuleType
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
 import com.dgnt.quickScoreboardCreator.core.serializer.QSCSerializer
 import org.junit.Assert

@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.res.Resources
 import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import com.dgnt.quickScoreboardCreator.core.serializer.QSCSerializer
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.QSCUiEventHandler
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.QSCUiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

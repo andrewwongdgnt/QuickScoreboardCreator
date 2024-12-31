@@ -22,15 +22,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberTimeline
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.mode.ModeControlContent
@@ -106,9 +106,9 @@ private fun ScoreboardVMDataContent(
 private fun ScoreboardInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    primaryDisplayedScoreInfo: DisplayedScoreInfo,
+    primaryDisplayedScoreInfo: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo,
     primaryIncrementList: List<List<Int>>,
-    secondaryDisplayedScoreInfo: DisplayedScoreInfo,
+    secondaryDisplayedScoreInfo: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
     secondaryScoreLabel: Label,
     onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
@@ -256,23 +256,23 @@ private fun `2 Teams with long names`() =
     ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Custom("10"),
-                DisplayedScore.Custom("21"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("10"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("21"),
             ),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         primaryIncrementList = listOf(
             listOf(1, 2, 2),
             listOf(1, 2, 3),
         ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Custom("1"),
-                DisplayedScore.Custom("0"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
             ),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(
             listOf(1),
@@ -303,23 +303,23 @@ private fun `2 Teams with short names`() =
     ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Custom("10"),
-                DisplayedScore.Custom("261"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("10"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("261"),
             ),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         primaryIncrementList = listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Custom("1"),
-                DisplayedScore.Custom("0"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
             ),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(
             listOf(1),
@@ -350,20 +350,20 @@ private fun `Adv`() =
     ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Advantage,
-                DisplayedScore.Blank,
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Advantage,
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
             ),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         primaryIncrementList = listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
         secondaryScoreLabel = Label.Resource(R.string.blank),
@@ -391,20 +391,20 @@ private fun `Deuce`() =
     ScoreboardInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
+        primaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(
-                DisplayedScore.Blank,
-                DisplayedScore.Blank,
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
+                com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
             ),
-            DisplayedScore.Deuce
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Deuce
         ),
         primaryIncrementList = listOf(
             listOf(1, 2, 23),
             listOf(1, 2, 3),
         ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
+        secondaryDisplayedScoreInfo = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
             listOf(),
-            DisplayedScore.Blank
+            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
         ),
         secondaryIncrementList = listOf(),
         secondaryScoreLabel = Label.Resource(R.string.blank),

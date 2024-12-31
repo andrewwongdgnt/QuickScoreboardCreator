@@ -2,14 +2,14 @@ package com.dgnt.quickScoreboardCreator.ui.main.teamlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.team.business.logic.TeamCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamModel
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.DeleteTeamUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamListUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.InsertTeamListUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -18,10 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamListViewModel @Inject constructor(
-    getTeamListUseCase: GetTeamListUseCase,
-    private val insertTeamListUseCase: InsertTeamListUseCase,
-    private val deleteTeamUseCase: DeleteTeamUseCase,
-    private val teamCategorizer: TeamCategorizer,
+    getTeamListUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUseCase,
+    private val insertTeamListUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamListUseCase,
+    private val deleteTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase,
+    private val teamCategorizer: com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer,
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val teamEntityList = getTeamListUseCase()
@@ -29,7 +29,7 @@ class TeamListViewModel @Inject constructor(
         teamCategorizer(it)
     }
 
-    private var deletedTeamList: MutableList<TeamModel> = mutableListOf()
+    private var deletedTeamList: MutableList<com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel> = mutableListOf()
 
     fun onAdd() = sendUiEvent(UiEvent.TeamDetails())
 

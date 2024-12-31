@@ -3,12 +3,12 @@ package com.dgnt.quickScoreboardCreator.ui.main.teamdetails
 import androidx.lifecycle.SavedStateHandle
 import com.dgnt.quickScoreboardCreator.data.team.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.DeleteTeamUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.GetTeamUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.team.usecase.InsertTeamUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamUseCase
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -30,13 +30,13 @@ class TeamDetailsViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @MockK
-    private lateinit var insertTeamUseCase: InsertTeamUseCase
+    private lateinit var insertTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamUseCase
 
     @MockK
-    private lateinit var getTeamUseCase: GetTeamUseCase
+    private lateinit var getTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
 
     @MockK
-    private lateinit var deleteTeamUseCase: DeleteTeamUseCase
+    private lateinit var deleteTeamUseCase: com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
 
     @MockK
     private lateinit var savedStateHandle: SavedStateHandle

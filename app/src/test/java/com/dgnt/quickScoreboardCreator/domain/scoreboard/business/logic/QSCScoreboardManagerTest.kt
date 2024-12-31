@@ -3,16 +3,16 @@ package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.QSCScoreboardManager
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.WinCalculator
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCScoreboardManager
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.WinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.WinRule
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -26,13 +26,13 @@ import org.junit.Test
 class QSCScoreboardManagerTest {
 
     @MockK
-    private lateinit var winCalculator: WinCalculator
+    private lateinit var winCalculator: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.WinCalculator
 
     @MockK
     private lateinit var historyCreator: HistoryCreator
 
     @InjectMockKs
-    private lateinit var sut: QSCScoreboardManager
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCScoreboardManager
 
     @Before
     fun setup() {
@@ -94,12 +94,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("2"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("2"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -109,12 +109,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 1)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("5"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("5"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -125,12 +125,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 1)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("5"),
-                            DisplayedScore.Custom("3"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("5"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("3"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -141,12 +141,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 1)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("5"),
-                            DisplayedScore.Custom("6"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("5"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("6"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -183,12 +183,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(false, 0, 0)
             verify(exactly = 1) {
                 sut.secondaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("1"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -199,12 +199,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(false, 1, 0)
             verify(exactly = 1) {
                 sut.secondaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("1"),
-                            DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -263,12 +263,12 @@ class QSCScoreboardManagerTest {
             sut.updateTime(0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("2"),
-                            DisplayedScore.Custom("3"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("2"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("3"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -354,12 +354,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("1"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -369,12 +369,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("2"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("2"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -384,12 +384,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("0"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -411,12 +411,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("0"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -499,12 +499,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("1"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -515,12 +515,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("2"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("2"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -530,12 +530,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("2"),
-                            DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("2"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -545,12 +545,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Blank,
-                            DisplayedScore.Blank,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
                         ),
-                        overallDisplayedScore = DisplayedScore.Deuce
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Deuce
                     )
                 )
             }
@@ -561,12 +561,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 0, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Advantage,
-                            DisplayedScore.Blank,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Advantage,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -577,12 +577,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Blank,
-                            DisplayedScore.Blank,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
                         ),
-                        overallDisplayedScore = DisplayedScore.Deuce
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Deuce
                     )
                 )
             }
@@ -592,12 +592,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Blank,
-                            DisplayedScore.Advantage,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank,
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Advantage,
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -608,12 +608,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("1"),
-                            DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -634,12 +634,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("1"),
-                            DisplayedScore.Custom("2"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("1"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("2"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }
@@ -650,12 +650,12 @@ class QSCScoreboardManagerTest {
             sut.updateScore(true, 1, 0)
             verify(exactly = 1) {
                 sut.primaryScoresUpdateListener?.invoke(
-                    DisplayedScoreInfo(
+                    com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo(
                         displayedScores = listOf(
-                            DisplayedScore.Custom("0"),
-                            DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
+                            com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Custom("0"),
                         ),
-                        overallDisplayedScore = DisplayedScore.Blank
+                        overallDisplayedScore = com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank
                     )
                 )
             }

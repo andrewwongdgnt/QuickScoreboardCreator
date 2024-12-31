@@ -3,14 +3,14 @@ package com.dgnt.quickScoreboardCreator.ui.main.historydetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryModel
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,14 +24,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryDetailsViewModel @Inject constructor(
-    private val insertHistoryUseCase: InsertHistoryUseCase,
-    private val getHistoryUseCase: GetHistoryUseCase,
-    private val deleteHistoryUseCase: DeleteHistoryUseCase,
+    private val insertHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase,
+    private val getHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase,
+    private val deleteHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase,
     private val uiEventHandler: UiEventHandler,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
-    private var originalModel: HistoryModel? = null
+    private var originalModel: com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel? = null
 
     private var _title = MutableStateFlow("")
     val title = _title.asStateFlow()
@@ -94,7 +94,7 @@ class HistoryDetailsViewModel @Inject constructor(
         if (valid.value) {
             viewModelScope.launch {
                 insertHistoryUseCase(
-                    HistoryModel(
+                    com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel(
                         id = originalModel?.id,
                         title = title.value,
                         description = description.value,

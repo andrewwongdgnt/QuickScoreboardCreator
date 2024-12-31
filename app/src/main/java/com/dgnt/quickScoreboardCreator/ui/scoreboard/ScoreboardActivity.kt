@@ -25,7 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments.SPORT_IDENTIFIER
@@ -34,7 +34,7 @@ import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.customNavType
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.ScoreboardContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
@@ -46,9 +46,9 @@ import kotlin.reflect.typeOf
 class ScoreboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val startDestination = IntentCompat.getSerializableExtra(intent, SPORT_IDENTIFIER, SportIdentifier::class.java)?.let { sportIdentifier ->
+        val startDestination = IntentCompat.getSerializableExtra(intent, SPORT_IDENTIFIER, com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier::class.java)?.let { sportIdentifier ->
             //TODO temporary logic flow because we can't handle custom sports yet
-            if (sportIdentifier is SportIdentifier.Custom) {
+            if (sportIdentifier is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom) {
                 finish()
                 Toast.makeText(this, getString(R.string.defaultInvalid), Toast.LENGTH_LONG).show()
                 return
@@ -77,7 +77,7 @@ class ScoreboardActivity : ComponentActivity() {
                         ) {
                             composable<NavDestination.Scoreboard>(
                                 typeMap = mapOf(
-                                    typeOf<SportIdentifier>() to customNavType<SportIdentifier>()
+                                    typeOf<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>() to customNavType<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)
@@ -121,7 +121,7 @@ class ScoreboardActivity : ComponentActivity() {
                             }
                             dialog<NavDestination.IntervalEditor>(
                                 typeMap = mapOf(
-                                    typeOf<SportIdentifier>() to customNavType<SportIdentifier>()
+                                    typeOf<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>() to customNavType<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>()
                                 )
                             ) { entry ->
                                 val viewModel = entry.sharedViewModel<ScoreboardActivityViewModel>(navController)

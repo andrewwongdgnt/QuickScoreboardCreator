@@ -4,7 +4,6 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportType
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.ScoreInfo
@@ -13,10 +12,10 @@ import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.GetSportUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.sport.usecase.TimeTransformer
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.intervalLabelRes
-import com.dgnt.quickScoreboardCreator.ui.common.resourcemapping.rawRes
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.rawRes
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -69,10 +68,10 @@ class IntervalEditorViewModel @Inject constructor(
     val errors = _errors.asStateFlow()
 
     init {
-        savedStateHandle.get<SportIdentifier>(Arguments.SPORT_IDENTIFIER)?.let { sId ->
+        savedStateHandle.get<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>(Arguments.SPORT_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is SportIdentifier.Custom -> initWithId(sId.id)
-                is SportIdentifier.Default -> initWithSportType(sId.sportType)
+                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom -> initWithId(sId.id)
+                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default -> initWithSportType(sId.sportType)
             }
         }
         savedStateHandle.get<Long>(Arguments.VALUE)?.let {

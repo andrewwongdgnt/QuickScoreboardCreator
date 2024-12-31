@@ -3,15 +3,15 @@ package com.dgnt.quickScoreboardCreator.ui.main.historylist
 import com.dgnt.quickScoreboardCreator.R
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardData
 import com.dgnt.quickScoreboardCreator.data.history.entity.HistoryEntity
-import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCategorizer
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.CategorizedHistoryItemData
-import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoryItemData
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.DeleteHistoryUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.GetHistoryListUseCase
-import com.dgnt.quickScoreboardCreator.core.domain.history.usecase.InsertHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.HistoryCategorizer
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryListUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryListUseCase
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.common.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -35,16 +35,16 @@ class HistoryListViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @MockK
-    private lateinit var getHistoryListUseCase: GetHistoryListUseCase
+    private lateinit var getHistoryListUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryListUseCase
 
     @MockK
-    private lateinit var insertHistoryListUseCase: InsertHistoryListUseCase
+    private lateinit var insertHistoryListUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryListUseCase
 
     @MockK
-    private lateinit var deleteHistoryUseCase: DeleteHistoryUseCase
+    private lateinit var deleteHistoryUseCase: com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
 
     @MockK
-    private lateinit var historyCategorizer: HistoryCategorizer
+    private lateinit var historyCategorizer: com.dgnt.quickScoreboardCreator.feature.history.domain.business.logic.HistoryCategorizer
 
     @MockK
     private lateinit var uiEventHandler: UiEventHandler
@@ -74,18 +74,18 @@ class HistoryListViewModelTest {
         ),
     )
     private val mockCategorizedHistoryList = listOf(
-        CategorizedHistoryItemData(
+        com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData(
             DateTime(2024, 6, 1, 0, 0),
             listOf(
-                HistoryItemData(1, "Tennis", "22",ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
-                HistoryItemData(2, "Tennis", "3443",ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
+                com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(1, "Tennis", "22", ScoreboardIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
+                com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(2, "Tennis", "3443", ScoreboardIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
             )
         ),
-        CategorizedHistoryItemData(
+        com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData(
             DateTime(2024, 5, 1, 0, 0),
             listOf(
-                HistoryItemData(4, "Basketball NBA", "something",ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
-                HistoryItemData(7, "Hockey NHL", "something again", ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
+                com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(4, "Basketball NBA", "something", ScoreboardIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
+                com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(7, "Hockey NHL", "something again", ScoreboardIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
             )
         )
     )
