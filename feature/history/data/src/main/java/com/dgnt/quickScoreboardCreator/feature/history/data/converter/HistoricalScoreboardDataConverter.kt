@@ -7,7 +7,7 @@ import com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalSco
 import com.google.gson.reflect.TypeToken
 
 @ProvidedTypeConverter
-class HistoricalScoreboardDataConverter (private val serializer: Serializer) {
+class HistoricalScoreboardDataConverter(private val serializer: Serializer) {
     @TypeConverter
     fun fromJson(json: String): HistoricalScoreboardData {
         return serializer.deserialize(json, object : TypeToken<HistoricalScoreboardData>() {}.type)

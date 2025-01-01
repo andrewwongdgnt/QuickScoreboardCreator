@@ -8,7 +8,7 @@ import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreInf
 import com.google.gson.reflect.TypeToken
 
 @ProvidedTypeConverter
-class IntervalListConverter (private val serializer: Serializer) {
+class IntervalListConverter(private val serializer: Serializer) {
     @TypeConverter
     fun fromJson(json: String): List<Pair<ScoreInfo, IntervalData>> {
         return try {

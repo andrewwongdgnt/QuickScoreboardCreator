@@ -10,7 +10,7 @@ android {
 
 dependencies {
     implementation(projects.feature.team.domain)
-    implementation(projects.core.data)
+    api(projects.core.data)
     implementation(libs.joda.time)
     implementation(libs.gson.extras)
 }

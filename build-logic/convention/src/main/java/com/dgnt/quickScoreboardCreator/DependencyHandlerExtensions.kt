@@ -17,3 +17,6 @@ fun DependencyHandler.androidTestImplementation(dependencyNotation: Any): Depend
 
 fun DependencyHandler.debugImplementation(dependencyNotation: Any): Dependency? =
     add("debugImplementation", dependencyNotation)
+
+fun DependencyHandler.ksp(dependencyNotation: Any): Dependency? =
+    add("ksp", dependencyNotation)

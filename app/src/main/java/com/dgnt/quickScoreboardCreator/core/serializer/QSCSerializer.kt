@@ -1,10 +1,10 @@
 package com.dgnt.quickScoreboardCreator.core.serializer
 
 
+import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData
 import com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData
 import com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData
-import com.dgnt.quickScoreboardCreator.core.data.serializer.Serializer
 import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.CustomSportFileDTO
 import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.DefaultSportFileDTO
 import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.SportFileDTO
@@ -25,21 +25,21 @@ class QSCSerializer: Serializer {
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
-                .of(com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData::class.java, "type", true)
-                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.CountDown::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.Type.COUNTDOWN.name)
-                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.Infinite::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoricalIntervalRangeData.Type.INFINITE.name)
+                .of(HistoricalIntervalRangeData::class.java, "type", true)
+                .registerSubtype(HistoricalIntervalRangeData.CountDown::class.java, HistoricalIntervalRangeData.Type.COUNTDOWN.name)
+                .registerSubtype(HistoricalIntervalRangeData.Infinite::class.java, HistoricalIntervalRangeData.Type.INFINITE.name)
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
-                .of(com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData::class.java, "type", true)
-                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.Custom::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.Type.CUSTOM.name)
-                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.DefaultSport::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.IntervalLabelData.Type.SPORT_TYPE.name)
+                .of(IntervalLabelData::class.java, "type", true)
+                .registerSubtype(IntervalLabelData.Custom::class.java, IntervalLabelData.Type.CUSTOM.name)
+                .registerSubtype(IntervalLabelData.DefaultSport::class.java, IntervalLabelData.Type.SPORT_TYPE.name)
         )
         registerTypeAdapterFactory(
             RuntimeTypeAdapterFactory
-                .of(com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData::class.java, "type", true)
-                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.None::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.Type.NONE.name)
-                .registerSubtype(com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.Custom::class.java, com.dgnt.quickScoreboardCreator.feature.history.data.entity.TeamLabelData.Type.CUSTOM.name)
+                .of(TeamLabelData::class.java, "type", true)
+                .registerSubtype(TeamLabelData.None::class.java, TeamLabelData.Type.NONE.name)
+                .registerSubtype(TeamLabelData.Custom::class.java, TeamLabelData.Type.CUSTOM.name)
         )
 
     }.create()
