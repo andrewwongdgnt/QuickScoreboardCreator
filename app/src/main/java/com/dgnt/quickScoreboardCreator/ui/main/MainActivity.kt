@@ -29,11 +29,15 @@ import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.SPORT_I
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.TIMELINE_VIEWER_IDENTIFIER
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.HistoryDetails
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamDetails
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TimelineViewer
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.SportDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist.SportListContent
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.LaunchScoreboard
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.SportDetails
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails.TeamDetailsDialogContent
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist.TeamListContent
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.uievent.TeamDetails
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
@@ -41,8 +45,6 @@ import com.dgnt.quickScoreboardCreator.ui.common.customNavType
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
 import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
 import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
-import com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails.TeamDetailsDialogContent
-import com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist.TeamListContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.reflect.typeOf
@@ -125,10 +127,10 @@ class MainActivity : ComponentActivity() {
             }
             dialog<NavDestination.SportDetails>(
                 typeMap = mapOf(
-                    typeOf<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier?>() to customNavType<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier?>(isNullableAllowed = true)
+                    typeOf<SportIdentifier?>() to customNavType<SportIdentifier?>(isNullableAllowed = true)
                 )
             ) {
-                com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportdetails.SportDetailsDialogContent(
+                SportDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
                             Done -> navController.navigateUp()
@@ -138,7 +140,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
             composable<NavDestination.TeamList> {
-                com.dgnt.quickScoreboardCreator.feature.team.presentation.teamlist.TeamListContent(
+                TeamListContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
                             is TeamDetails -> navController.commonNavigate(navDestination = NavDestination.TeamDetails(uiEvent.id))
@@ -149,7 +151,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
             dialog<NavDestination.TeamDetails> {
-                com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails.TeamDetailsDialogContent(
+                TeamDetailsDialogContent(
                     onUiEvent = { uiEvent ->
                         when (uiEvent) {
                             Done -> navController.navigateUp()

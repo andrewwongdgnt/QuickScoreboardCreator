@@ -86,7 +86,7 @@ fun TimelineViewerChart(
 
                     override fun getFormattedValue(value: Float): String {
 
-                        //TODO exactly the same code in QSCTimeTransformer.toTimeData() so should extract it out
+                        //TODO exactly the same code in TimeConversionUseCase.toTimeData() so should extract it out
                         val milli = value.toLong()
                         val duration = Duration.millis(milli)
                         val minutes = duration.standardMinutes

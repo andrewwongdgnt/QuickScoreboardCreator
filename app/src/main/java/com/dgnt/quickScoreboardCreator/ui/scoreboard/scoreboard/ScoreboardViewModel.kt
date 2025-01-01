@@ -13,13 +13,13 @@ import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandl
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.ScoreboardManager
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.manager.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.GetSportUseCase
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeTransformer
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeConversionUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.rawRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.secondaryScoreLabelRes
@@ -47,7 +47,7 @@ class ScoreboardViewModel @Inject constructor(
     private val getTeamUseCase: GetTeamUseCase,
     private val insertHistoryUseCase: InsertHistoryUseCase,
     private val scoreboardManager: ScoreboardManager,
-    private val timeTransformer: TimeTransformer,
+    private val timeConversionUseCase: TimeConversionUseCase,
     savedStateHandle: SavedStateHandle,
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
@@ -118,7 +118,7 @@ class ScoreboardViewModel @Inject constructor(
     private val _timeData = MutableStateFlow(TimeData(0, 0, 0))
     val timeData: StateFlow<TimeData> = _timeData.asStateFlow()
     private val timeUpdateListener: (Long) -> Unit = {
-        _timeData.value = timeTransformer.toTimeData(it)
+        _timeData.value = timeConversionUseCase.toTimeData(it)
         if (it <= 0L) {
             stopTimerJob()
         }
@@ -270,7 +270,7 @@ class ScoreboardViewModel @Inject constructor(
     fun toIntervalEditor() {
         stopTimerJob()
         sportIdentifier?.let { sId ->
-            sendUiEvent(IntervalEditor(timeTransformer.fromTimeData(timeData.value), currentInterval.value - 1, sId))
+            sendUiEvent(IntervalEditor(timeConversionUseCase.fromTimeData(timeData.value), currentInterval.value - 1, sId))
         }
     }
 

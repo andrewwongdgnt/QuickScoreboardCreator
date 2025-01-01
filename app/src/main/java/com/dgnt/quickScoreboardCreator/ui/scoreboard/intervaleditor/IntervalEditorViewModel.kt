@@ -15,7 +15,7 @@ import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.Inter
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.GetSportUseCase
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeTransformer
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeConversionUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.rawRes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ import javax.inject.Inject
 class IntervalEditorViewModel @Inject constructor(
     private val resources: Resources,
     private val getSportUseCase: GetSportUseCase,
-    private val timeTransformer: TimeTransformer,
+    private val timeConversionUseCase: TimeConversionUseCase,
     savedStateHandle: SavedStateHandle,
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
@@ -78,7 +78,7 @@ class IntervalEditorViewModel @Inject constructor(
         }
         savedStateHandle.get<Long>(NavArguments.VALUE)?.let {
             currentTimeValue = it
-            timeTransformer.toTimeData(it).let { td ->
+            timeConversionUseCase.toTimeData(it).let { td ->
                 _minuteString.value = td.minute.toString()
                 _secondString.value = td.second.toString()
                 centiSecond = td.centiSecond
@@ -131,7 +131,7 @@ class IntervalEditorViewModel @Inject constructor(
                 (secondString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
                 centiSecond
             ).let {
-                timeTransformer.fromTimeData(it)
+                timeConversionUseCase.fromTimeData(it)
             }
         }
     }
@@ -145,7 +145,7 @@ class IntervalEditorViewModel @Inject constructor(
                 (second.toIntOrNull() ?: 0).coerceAtLeast(0),
                 centiSecond
             ).let {
-                timeTransformer.fromTimeData(it)
+                timeConversionUseCase.fromTimeData(it)
             }
         }
     }
@@ -175,7 +175,7 @@ class IntervalEditorViewModel @Inject constructor(
         val isTimeIncreasing = isTimeIncreasing
         if (initialTimeValue != null && isTimeIncreasing != null && !isTimeIncreasing) {
             if (currentTimeValue > initialTimeValue)
-                timeTransformer.toTimeData(initialTimeValue).let {
+                timeConversionUseCase.toTimeData(initialTimeValue).let {
                     errors.add(IntervalEditorErrorType.Time.Invalid(it.minute, it.second))
                 }
             else if (currentTimeValue <= 0 && !errors.contains(IntervalEditorErrorType.Time.Empty))

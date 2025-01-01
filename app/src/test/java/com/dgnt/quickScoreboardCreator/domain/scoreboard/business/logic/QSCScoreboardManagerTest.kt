@@ -3,16 +3,12 @@ package com.dgnt.quickScoreboardCreator.core.domain.scoreboard.business.logic
 
 import com.dgnt.quickScoreboardCreator.core.domain.history.business.logic.HistoryCreator
 import com.dgnt.quickScoreboardCreator.core.domain.history.model.HistoricalScoreboard
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCScoreboardManager
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.WinCalculator
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreGroup
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.core.domain.sport.model.score.WinRule
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -26,13 +22,13 @@ import org.junit.Test
 class QSCScoreboardManagerTest {
 
     @MockK
-    private lateinit var winCalculator: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.WinCalculator
+    private lateinit var winCalculator: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.manager.WinCalculator
 
     @MockK
     private lateinit var historyCreator: HistoryCreator
 
     @InjectMockKs
-    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.business.QSCScoreboardManager
+    private lateinit var sut: com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.manager.QSCScoreboardManager
 
     @Before
     fun setup() {

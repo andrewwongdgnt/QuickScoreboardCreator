@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation(projects.feature.history.domain)
     implementation(projects.feature.sport.domain)
+    implementation(projects.feature.team.domain)
     api(projects.core.data)
     implementation(libs.joda.time)
     implementation(libs.gson.extras)

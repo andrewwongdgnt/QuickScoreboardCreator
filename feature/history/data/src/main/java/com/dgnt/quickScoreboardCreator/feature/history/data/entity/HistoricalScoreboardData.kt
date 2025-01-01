@@ -1,7 +1,7 @@
 package com.dgnt.quickScoreboardCreator.feature.history.data.entity
 
-import com.dgnt.quickScoreboardCreator.core.domain.team.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
 
 
 data class HistoricalScoreboardData(

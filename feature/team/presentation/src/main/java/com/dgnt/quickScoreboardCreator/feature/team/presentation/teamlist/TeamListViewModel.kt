@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.SnackBar
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
-import com.dgnt.quickScoreboardCreator.feature.team.domain.business.logic.TeamCategorizer
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.CategorizeTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamListUseCase
@@ -22,12 +22,12 @@ class TeamListViewModel @Inject constructor(
     getTeamListUseCase: GetTeamListUseCase,
     private val insertTeamListUseCase: InsertTeamListUseCase,
     private val deleteTeamUseCase: DeleteTeamUseCase,
-    private val teamCategorizer: TeamCategorizer,
+    private val categorizeTeamUseCase: CategorizeTeamUseCase,
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val teamEntityList = getTeamListUseCase()
     val categorizedTeamList = teamEntityList.map {
-        teamCategorizer(it)
+        categorizeTeamUseCase(it)
     }
 
     private var deletedTeamList: MutableList<TeamModel> = mutableListOf()

@@ -8,7 +8,6 @@ import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.SPORT_I
 
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.asIncrementDisplay
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.core.util.swap
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
@@ -25,7 +24,7 @@ import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.DeleteSportUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.GetSportUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.InsertSportUseCase
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeTransformer
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeConversionUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.descriptionRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.rawRes
@@ -50,7 +49,7 @@ class SportDetailsViewModel @Inject constructor(
     private val insertSportUseCase: InsertSportUseCase,
     private val getSportUseCase: GetSportUseCase,
     private val deleteSportUseCase: DeleteSportUseCase,
-    private val timeTransformer: TimeTransformer,
+    private val timeConversionUseCase: TimeConversionUseCase,
     savedStateHandle: SavedStateHandle,
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
@@ -154,7 +153,7 @@ class SportDetailsViewModel @Inject constructor(
                 IntervalEditingInfo(
                     scoreInfo = scoreInfo,
                     intervalData = intervalData,
-                    timeRepresentationPair = timeTransformer.toTimeData(intervalData.initial).run {
+                    timeRepresentationPair = timeConversionUseCase.toTimeData(intervalData.initial).run {
                         Pair(minute.toString(), second.toString())
                     },
                     maxScoreInput = (scoreInfo.scoreRule as? ScoreRule.Trigger)?.trigger?.toString() ?: "",

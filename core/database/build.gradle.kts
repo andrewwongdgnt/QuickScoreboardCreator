@@ -11,6 +11,11 @@ android {
 
 dependencies {
     implementation(projects.feature.history.data)
+    implementation(projects.feature.history.domain)
     implementation(projects.feature.sport.data)
+    implementation(projects.feature.sport.domain)
     implementation(projects.feature.team.data)
+    implementation(projects.feature.team.domain)
+    //other third party dependencies
+    implementation(libs.joda.time)
 }

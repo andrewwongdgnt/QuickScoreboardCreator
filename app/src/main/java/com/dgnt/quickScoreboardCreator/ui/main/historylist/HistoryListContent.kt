@@ -41,10 +41,10 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData
-import com.dgnt.quickScoreboardCreator.core.domain.sport.model.SportIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.DateDisplayUtil.getDayOfMonthSuffix
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -75,7 +75,7 @@ fun HistoryListContent(
 private fun HistoryListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    categorizedHistoryList: List<com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData>,
+    categorizedHistoryList: List<CategorizedHistoryItemData>,
     onLaunch: (id: Int) -> Unit,
     onEdit: (id: Int) -> Unit,
     onDelete: (id: Int) -> Unit,
@@ -159,7 +159,7 @@ private fun CategorizedHistoryListContent(
     onLaunch: (Int) -> Unit,
     onEdit: (Int) -> Unit,
     onDelete: (Int) -> Unit,
-    categorizedHistoryList: List<com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData>
+    categorizedHistoryList: List<CategorizedHistoryItemData>
 ) {
     LazyColumn(
         modifier = modifier
@@ -241,21 +241,21 @@ private fun `Some histories`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         categorizedHistoryList = listOf(
-            com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData(
+            CategorizedHistoryItemData(
                 DateTime(2024, 6, 1, 0, 0),
                 listOf(
                     com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(1, "Tennis", "tennis_description", SportIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
                     com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(2, "Tennis", "another banger", SportIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
                 )
             ),
-            com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData(
+            CategorizedHistoryItemData(
                 DateTime(2024, 5, 1, 0, 0),
                 listOf(
                     com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(4, "Basketball NBA", "cool", SportIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
                     com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(7, "Hockey NHL", "", SportIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
                 )
             ),
-            com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData(
+            CategorizedHistoryItemData(
                 DateTime(2024, 1, 1, 0, 0),
                 listOf(
                     com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData(8, "Pick up bball", "f", SportIcon.BASKETBALL, DateTime(2024, 1, 31, 16, 14), DateTime(2024, 1, 31, 16, 14)),
