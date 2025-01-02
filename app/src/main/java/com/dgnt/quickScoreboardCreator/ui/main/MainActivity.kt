@@ -43,8 +43,8 @@ import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.customNavType
 import com.dgnt.quickScoreboardCreator.ui.main.contact.ContactContent
-import com.dgnt.quickScoreboardCreator.ui.main.historydetails.HistoryDetailsDialogContent
-import com.dgnt.quickScoreboardCreator.ui.main.historylist.HistoryListContent
+import com.dgnt.quickScoreboardCreator.feature.history.presentation.historydetails.HistoryDetailsDialogContent
+import com.dgnt.quickScoreboardCreator.feature.history.presentation.historylist.HistoryListContent
 import com.dgnt.quickScoreboardCreator.ui.scoreboard.ScoreboardActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.reflect.typeOf

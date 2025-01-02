@@ -7,7 +7,7 @@ dependencies {
 
     implementation(projects.feature.sport.domain)
     implementation(projects.feature.history.domain)
-    implementation(projects.core.domain)
+    api(projects.core.domain)
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.javax.inject)

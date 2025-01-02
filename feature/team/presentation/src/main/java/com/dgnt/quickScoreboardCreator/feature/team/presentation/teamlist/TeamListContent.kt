@@ -31,11 +31,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.SnackBar
-import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
-import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
-import com.dgnt.quickScoreboardCreator.feature.team.presentation.composable.CategorizedTeamListContent
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.categorizedteamlist.CategorizedTeamListContent
 import com.dgnt.quickScoreboardCreator.feature.team.presentation.uievent.TeamDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow

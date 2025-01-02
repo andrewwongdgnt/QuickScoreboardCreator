@@ -10,6 +10,7 @@ import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUs
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.teampicker.TeamPickerViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every

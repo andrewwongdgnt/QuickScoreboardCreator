@@ -48,8 +48,10 @@ dependencies {
     implementation(projects.feature.team.presentation)
     implementation(projects.feature.team.domain)
     implementation(projects.feature.team.data)
+    implementation(projects.feature.history.presentation)
     implementation(projects.feature.history.domain)
     implementation(projects.feature.history.data)
+    implementation(projects.feature.scoreboard.presentation)
     implementation(projects.feature.scoreboard.domain)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -67,9 +69,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.kotlinx.coroutines.test)
-
-    //chart library
-    implementation(libs.mpandroidchart)
 
     //ICU
     implementation(libs.icu4j)

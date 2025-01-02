@@ -19,6 +19,8 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardId
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.intervaleditor.IntervalEditorErrorType
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.intervaleditor.IntervalEditorViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

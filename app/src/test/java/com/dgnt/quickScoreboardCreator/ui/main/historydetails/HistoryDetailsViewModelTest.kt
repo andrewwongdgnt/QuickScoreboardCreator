@@ -10,6 +10,7 @@ import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIc
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.history.presentation.historydetails.HistoryDetailsViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.awaits
 import io.mockk.coEvery

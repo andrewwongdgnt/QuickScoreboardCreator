@@ -43,3 +43,5 @@ include(":feature:history:data")
 
 include(":feature:scoreboard:di")
 include(":feature:scoreboard:domain")
+include(":feature:history:presentation")
+include(":feature:scoreboard:presentation")

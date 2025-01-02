@@ -10,8 +10,6 @@ android {
 dependencies {
 
     implementation(projects.feature.team.domain)
-    implementation(projects.core.presentation.ui)
-    implementation(projects.core.presentation.designsystem)
-    implementation(projects.core.util)
-    implementation(libs.commons.lang3)
+    api(projects.core.util)//TODO do i need this
+    implementation(libs.commons.lang3)//TODO do i need this
 }

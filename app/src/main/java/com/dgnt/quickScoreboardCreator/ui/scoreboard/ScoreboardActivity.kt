@@ -34,16 +34,16 @@ import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.IntervalUpda
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamUpdated
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TimelineViewer
+import com.dgnt.quickScoreboardCreator.feature.history.presentation.timelineviewer.TimelineViewerContent
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.intervaleditor.IntervalEditorDialogContent
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.ScoreboardContent
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.uievent.IntervalEditor
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.feature.team.presentation.teampicker.TeamPickerDialogContent
 import com.dgnt.quickScoreboardCreator.ui.common.NavDestination
 import com.dgnt.quickScoreboardCreator.ui.common.TimelineViewerIdentifier
 import com.dgnt.quickScoreboardCreator.ui.common.commonNavigate
 import com.dgnt.quickScoreboardCreator.ui.common.customNavType
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.intervaleditor.IntervalEditorDialogContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.ScoreboardContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.scoreboard.uievent.IntervalEditor
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.teampicker.TeamPickerDialogContent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.timelineviewer.TimelineViewerContent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.reflect.typeOf
 

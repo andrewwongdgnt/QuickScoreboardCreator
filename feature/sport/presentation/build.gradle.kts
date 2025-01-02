@@ -10,8 +10,6 @@ android {
 dependencies {
 
     implementation(projects.feature.sport.domain)
-    implementation(projects.core.presentation.ui)
-    implementation(projects.core.presentation.designsystem)
-    implementation(projects.core.util)
+    api(projects.core.util)
     implementation(libs.commons.lang3)
 }

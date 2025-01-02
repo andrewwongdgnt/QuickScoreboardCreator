@@ -12,6 +12,7 @@ import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHist
 import com.dgnt.quickScoreboardCreator.core.domain.scoreboard.model.ScoreboardIcon
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.history.presentation.historylist.HistoryListViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify

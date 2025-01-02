@@ -18,6 +18,7 @@ import com.dgnt.quickScoreboardCreator.data.history.entity.HistoricalScoreboardD
 import com.dgnt.quickScoreboardCreator.ui.common.Arguments
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.history.presentation.timelineviewer.TimelineViewerViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
