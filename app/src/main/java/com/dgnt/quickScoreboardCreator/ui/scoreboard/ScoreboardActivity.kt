@@ -34,9 +34,11 @@ import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.IntervalUpda
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamUpdated
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TimelineViewer
-import com.dgnt.quickScoreboardCreator.feature.history.presentation.timelineviewer.TimelineViewerContent
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.intervaleditor.IntervalEditorDialogContent
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.UpdatedIntervalData
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.ScoreboardContent
+import com.dgnt.quickScoreboardCreator.feature.history.presentation.timelineviewer.TimelineViewerContent
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.uievent.IntervalEditor
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.feature.team.presentation.teampicker.TeamPickerDialogContent

@@ -3,8 +3,9 @@ package com.dgnt.quickScoreboardCreator.feature.team.domain.usecase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamItemData
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
+import javax.inject.Inject
 
-class CategorizeTeamUseCase {
+class CategorizeTeamUseCase @Inject constructor() {
     operator fun invoke(teamEntityList: List<TeamModel>) =
         teamEntityList.mapNotNull { e ->
             e.id?.let { id ->

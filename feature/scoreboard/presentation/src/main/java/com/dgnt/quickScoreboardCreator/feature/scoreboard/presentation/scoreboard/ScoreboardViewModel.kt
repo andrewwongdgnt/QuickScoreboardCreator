@@ -28,8 +28,7 @@ import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemappin
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
+
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.uievent.IntervalEditor
 import dagger.hilt.android.lifecycle.HiltViewModel

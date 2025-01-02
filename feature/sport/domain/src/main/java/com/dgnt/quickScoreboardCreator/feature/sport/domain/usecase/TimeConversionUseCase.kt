@@ -2,8 +2,9 @@ package com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase
 
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
 import org.joda.time.Duration
+import javax.inject.Inject
 
-class TimeConversionUseCase {
+class TimeConversionUseCase @Inject constructor() {
     fun toTimeData(milli: Long): TimeData {
         val duration = Duration.millis(milli)
         val minutes = duration.standardMinutes

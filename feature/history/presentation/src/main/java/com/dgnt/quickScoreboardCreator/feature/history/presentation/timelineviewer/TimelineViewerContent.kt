@@ -212,7 +212,7 @@ private fun `Countdown Timeline`() =
         uiEvent = emptyFlow(),
         onUiEvent = {},
         historicalInterval = HistoricalInterval(
-            range = com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalIntervalRange.CountDown(72000),
+            range = HistoricalIntervalRange.CountDown(72000),
             IntervalLabel.Custom("Quarter", 0),
             mapOf(
                 0 to HistoricalScoreGroup(

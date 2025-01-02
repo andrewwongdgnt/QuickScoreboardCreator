@@ -1,6 +1,8 @@
 package com.dgnt.quickScoreboardCreator.ui.scoreboard
 
 import androidx.lifecycle.ViewModel
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.UpdatedTeamData
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.UpdatedIntervalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,8 +13,6 @@ class ScoreboardActivityViewModel : ViewModel() {
 
     private val _updatedIntervalData = MutableStateFlow<UpdatedIntervalData?>(null)
     val updatedIntervalData: StateFlow<UpdatedIntervalData?> = _updatedIntervalData.asStateFlow()
-
-    private val _updatedHistoryId = MutableStateFlow<Long?>(null)
 
     fun onIntervalDataUpdate(updatedIntervalData: UpdatedIntervalData?) {
         _updatedIntervalData.value = updatedIntervalData

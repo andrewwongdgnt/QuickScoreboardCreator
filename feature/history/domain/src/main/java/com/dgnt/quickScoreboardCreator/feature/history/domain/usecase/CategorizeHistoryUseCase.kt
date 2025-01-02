@@ -4,8 +4,9 @@ import com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedH
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CategorizeHistoryUseCase {
+class CategorizeHistoryUseCase @Inject constructor() {
     operator fun invoke(historyEntityList: List<HistoryModel>) =
         historyEntityList.mapNotNull { e ->
             e.id?.let { id ->

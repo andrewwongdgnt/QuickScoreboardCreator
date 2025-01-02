@@ -30,8 +30,6 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberTimeline
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.PlaySound
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedIntervalData
-import com.dgnt.quickScoreboardCreator.ui.scoreboard.UpdatedTeamData
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.mode.ModeControlContent
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.score.ScoreControl
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.score.TwoScoreDisplay

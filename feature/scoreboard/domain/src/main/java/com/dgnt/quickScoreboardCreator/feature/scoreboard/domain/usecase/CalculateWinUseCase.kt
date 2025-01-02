@@ -3,9 +3,10 @@ package com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.usecase
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreData
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.WinRule
+import javax.inject.Inject
 
 
-class CalculateWinUseCase {
+class CalculateWinUseCase @Inject constructor() {
 
     private val scoreMap = mutableMapOf<Int, List<ScoreData>>()
     fun store(scoreInfo: ScoreInfo, intervalIndex: Int) {

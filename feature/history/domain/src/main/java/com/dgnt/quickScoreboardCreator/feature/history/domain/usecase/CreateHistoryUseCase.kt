@@ -9,9 +9,10 @@ import com.dgnt.quickScoreboardCreator.feature.history.domain.model.IntervalLabe
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreInfo
+import javax.inject.Inject
 
 
-class CreateHistoryUseCase  {
+class CreateHistoryUseCase @Inject constructor() {
 
     private val allEntries = mutableListOf<HistoryEntry>()
 

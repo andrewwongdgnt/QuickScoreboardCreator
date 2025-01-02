@@ -1,4 +1,4 @@
-package com.dgnt.quickScoreboardCreator.ui.scoreboard
+package com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard
 
 data class UpdatedIntervalData(
     val timeValue: Long,

@@ -6,8 +6,9 @@ import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifie
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportModel
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
+import javax.inject.Inject
 
-class CategorizeSportUseCase  {
+class CategorizeSportUseCase @Inject constructor() {
     operator fun invoke(sportTypeList: List<SportType>, sportItemList: List<SportModel>): Pair<CategorizedSportType, CategorizedSportListItem> {
         val sport = sportItemList.map { e ->
             SportListItem(
