@@ -37,8 +37,6 @@ android {
 dependencies {
 
     implementation(projects.core.data)
-    implementation(projects.core.database)
-    implementation(projects.core.di)
     implementation(projects.core.domain)
     implementation(projects.core.presentation.designsystem)
     implementation(projects.core.presentation.ui)

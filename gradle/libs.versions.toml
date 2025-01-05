@@ -118,3 +118,4 @@ quickScoreboardCreator-android-hilt =  { id = "quickScoreboardCreator.android.hi
 quickScoreboardCreator-android-room =  { id = "quickScoreboardCreator.android.room", version = "unspecified" }
 quickScoreboardCreator-android-test =  { id = "quickScoreboardCreator.android.test", version = "unspecified" }
 quickScoreboardCreator-jvm-library =  { id = "quickScoreboardCreator.jvm.library", version = "unspecified" }
+quickScoreboardCreator-test =  { id = "quickScoreboardCreator.test", version = "unspecified" }

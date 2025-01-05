@@ -8,10 +8,8 @@ import com.dgnt.quickScoreboardCreator.feature.sport.data.entity.SportEntity
 import com.dgnt.quickScoreboardCreator.feature.sport.data.filedto.SportFileDTO
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportModel
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.repository.SportRepository
-import javax.inject.Inject
 
-//TODO maybe remove @Inject?
-class QSCSportRepository @Inject constructor(
+class QSCSportRepository(
     dao: BaseDao<SportEntity>,
     fileDao: BaseFileDao<SportFileDTO>,
     mapEntityToDomain: Mapper<SportEntity, SportModel>,

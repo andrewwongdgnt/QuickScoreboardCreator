@@ -11,7 +11,6 @@ dependencies {
 
     implementation(projects.feature.history.domain)
     implementation(projects.feature.history.data)
-    implementation(projects.core.database)
 }
 
 

@@ -1,9 +1,8 @@
-
+import com.dgnt.quickScoreboardCreator.implementation
 import com.dgnt.quickScoreboardCreator.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 
 class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -14,17 +13,13 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("implementation", project(":core:presentation:designsystem"))
-                add("implementation", project(":core:presentation:ui"))
-                add("implementation", project(":core:domain"))
+                implementation(project(":core:presentation:designsystem"))
+                implementation(project(":core:presentation:ui"))
+                implementation(project(":core:domain"))
 
-                add("testImplementation", kotlin("test"))
-                add("androidTestImplementation", kotlin("test"))
-
-
-                add("implementation", libs.findLibrary("androidx-navigation-compose").get())
-                add("implementation", libs.findLibrary("androidx-hilt-navigation-compose").get())
-                add("implementation", libs.findLibrary("kotlinx-coroutines-android").get())
+                implementation(libs.findLibrary("androidx-navigation-compose").get())
+                implementation(libs.findLibrary("androidx-hilt-navigation-compose").get())
+                implementation(libs.findLibrary("kotlinx-coroutines-android").get())
 
             }
         }

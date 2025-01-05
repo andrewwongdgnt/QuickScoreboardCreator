@@ -7,8 +7,8 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class CategorizeHistoryUseCase @Inject constructor() {
-    operator fun invoke(historyEntityList: List<HistoryModel>) =
-        historyEntityList.mapNotNull { e ->
+    operator fun invoke(historyModelList: List<HistoryModel>) =
+        historyModelList.mapNotNull { e ->
             e.id?.let { id ->
                 HistoryItemData(
                     id, e.title, e.description, e.icon, e.lastModified, e.createdAt

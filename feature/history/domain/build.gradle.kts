@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.quickScoreboardCreator.jvm.library)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.quickScoreboardCreator.test)
 }
 
 dependencies {

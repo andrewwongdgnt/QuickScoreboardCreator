@@ -60,6 +60,10 @@ gradlePlugin {
             id = "quickScoreboardCreator.android.test"
             implementationClass = "AndroidTestConventionPlugin"
         }
+        register("test") {
+            id = "quickScoreboardCreator.test"
+            implementationClass = "TestConventionPlugin"
+        }
         register("jvmLibrary") {
             id = "quickScoreboardCreator.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"

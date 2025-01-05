@@ -10,13 +10,17 @@ import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.PlaySound
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TeamPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.TimelineViewer
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.IntervalLabel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.manager.ScoreboardManager
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.teamdisplay.TeamDisplay
+import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.uievent.IntervalEditor
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalEndSound
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
@@ -28,9 +32,6 @@ import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemappin
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.soundEffectRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.titleRes
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
-
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.teamdisplay.TeamDisplay
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.uievent.IntervalEditor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -65,7 +66,7 @@ class ScoreboardViewModel @Inject constructor(
     /**
      * Secondary Display score
      */
-    private val _secondaryDisplayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore.Blank))
+    private val _secondaryDisplayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
     val secondaryDisplayedScoreInfo: StateFlow<DisplayedScoreInfo> = _secondaryDisplayedScoreInfo.asStateFlow()
     private val secondaryScoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
         _secondaryDisplayedScoreInfo.value = it
@@ -154,7 +155,7 @@ class ScoreboardViewModel @Inject constructor(
 
     private var timerJob: Job? = null
 
-    private var sportIdentifier: com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier? = null
+    private var sportIdentifier: SportIdentifier? = null
 
     private var timelineViewerTitle = ""
     private var timelineViewerIcon = SportIcon.BASKETBALL
@@ -171,10 +172,10 @@ class ScoreboardViewModel @Inject constructor(
     private var secondaryScoreLabelList = listOf<Label>()
 
     init {
-        savedStateHandle.get<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier>(SPORT_IDENTIFIER)?.let { sId ->
+        savedStateHandle.get<SportIdentifier>(SPORT_IDENTIFIER)?.let { sId ->
             when (sId) {
-                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom -> initWithId(sId.id)
-                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default -> initWithSportType(sId.sportType)
+                is SportIdentifier.Custom -> initWithId(sId.id)
+                is SportIdentifier.Default -> initWithSportType(sId.sportType)
             }
             sportIdentifier = sId
         }
@@ -307,7 +308,7 @@ class ScoreboardViewModel @Inject constructor(
         val historicalScoreboard = scoreboardManager.createTimeline(intervalLabel, teamList)
 
         return insertHistoryUseCase(
-            com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel(
+            HistoryModel(
                 id = historyEntityId,
                 title = timelineViewerTitle,
                 description = "",

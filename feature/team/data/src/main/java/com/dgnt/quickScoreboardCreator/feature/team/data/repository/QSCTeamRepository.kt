@@ -8,9 +8,8 @@ import com.dgnt.quickScoreboardCreator.feature.team.data.entity.TeamEntity
 import com.dgnt.quickScoreboardCreator.feature.team.data.filedto.TeamFileDTO
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
 import com.dgnt.quickScoreboardCreator.feature.team.domain.repository.TeamRepository
-import javax.inject.Inject
 
-class QSCTeamRepository @Inject constructor(
+class QSCTeamRepository(
     dao: BaseDao<TeamEntity>,
     fileDao: BaseFileDao<TeamFileDTO>,
     mapEntityToDomain: Mapper<TeamEntity, TeamModel>,

@@ -11,5 +11,4 @@ dependencies {
 
     implementation(projects.feature.sport.domain)
     implementation(projects.feature.sport.data)
-    implementation(projects.core.database)
 }

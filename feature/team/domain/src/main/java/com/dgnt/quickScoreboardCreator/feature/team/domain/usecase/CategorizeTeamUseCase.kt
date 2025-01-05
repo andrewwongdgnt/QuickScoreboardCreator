@@ -6,8 +6,8 @@ import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
 import javax.inject.Inject
 
 class CategorizeTeamUseCase @Inject constructor() {
-    operator fun invoke(teamEntityList: List<TeamModel>) =
-        teamEntityList.mapNotNull { e ->
+    operator fun invoke(teamModelList: List<TeamModel>) =
+        teamModelList.mapNotNull { e ->
             e.id?.let { id ->
                 TeamItemData(
                     id, e.title, e.description, e.icon

@@ -47,6 +47,8 @@ import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportListItem
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportType
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
+import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.descriptionRes
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
@@ -87,10 +89,10 @@ fun SportListContent(
 private fun SportListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    categorizedSports: Pair<com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportType, com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportListItem>,
-    onLaunch: (com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier) -> Unit,
+    categorizedSports: Pair<CategorizedSportType, CategorizedSportListItem>,
+    onLaunch: (SportIdentifier) -> Unit,
     onAdd: () -> Unit,
-    onEdit: (com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier) -> Unit,
+    onEdit: (SportIdentifier) -> Unit,
     onDelete: (id: Int) -> Unit,
     onUndoDelete: () -> Unit,
     onClearDeletedSportList: () -> Unit,
@@ -156,8 +158,8 @@ private fun SportListInnerContent(
         val categoryList = listOf(
             categorizedSports.first.let {
                 stringResource(R.string.defaultSportConfig) to it.sportTypeList.map { sportType ->
-                    com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem(
-                        com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default(sportType),
+                    SportListItem(
+                        SportIdentifier.Default(sportType),
                         stringResource(sportType.titleRes()),
                         stringResource(sportType.descriptionRes()),
                         sportType.icon
@@ -194,8 +196,8 @@ private fun SportListInnerContent(
                         items = itemList,
                         key = { item ->
                             when (val sId = item.sportIdentifier) {
-                                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom -> sId.id
-                                is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default -> sId.sportType
+                                is SportIdentifier.Custom -> sId.id
+                                is SportIdentifier.Default -> sId.sportType
                             }
                         }
                     ) { sport ->
@@ -221,7 +223,7 @@ private fun SportListInnerContent(
                             }
                         }
                         when (val sId = sport.sportIdentifier) {
-                            is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Custom ->
+                            is SportIdentifier.Custom ->
                                 SwipeBox(
                                     modifier = Modifier.animateItem(),
                                     onDelete = {
@@ -230,7 +232,7 @@ private fun SportListInnerContent(
                                     content = cardItemContent
                                 )
 
-                            is com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default -> cardItemContent()
+                            is SportIdentifier.Default -> cardItemContent()
                         }
                     }
                 }
@@ -245,9 +247,9 @@ private fun `Only defaults`() =
     SportListInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        categorizedSports = com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportType(listOf(SportType.BASKETBALL, SportType.HOCKEY, SportType.SPIKEBALL))
+        categorizedSports = CategorizedSportType(listOf(SportType.BASKETBALL, SportType.HOCKEY, SportType.SPIKEBALL))
                 to
-                com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportListItem(emptyList()),
+                CategorizedSportListItem(emptyList()),
         onLaunch = { _ -> },
         onAdd = {},
         onEdit = { _ -> },
@@ -263,13 +265,13 @@ private fun `Defaults and customs`() =
     SportListInnerContent(
         uiEvent = emptyFlow(),
         onUiEvent = {},
-        categorizedSports = com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportType(listOf(SportType.BASKETBALL, SportType.HOCKEY, SportType.SPIKEBALL))
+        categorizedSports = CategorizedSportType(listOf(SportType.BASKETBALL, SportType.HOCKEY, SportType.SPIKEBALL))
                 to
-                com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportListItem(
+                CategorizedSportListItem(
                     listOf(
-                        com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem(com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default(SportType.BASKETBALL), "My Sport 1", "My Description 1", SportIcon.BASKETBALL),
-                        com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem(com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default(SportType.TENNIS), "My Sport 2", "My Description 2", SportIcon.TENNIS),
-                        com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem(com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier.Default(SportType.BASKETBALL), "My Sport 3", "My Description 3 ", SportIcon.BOXING),
+                        SportListItem(SportIdentifier.Default(SportType.BASKETBALL), "My Sport 1", "My Description 1", SportIcon.BASKETBALL),
+                        SportListItem(SportIdentifier.Default(SportType.TENNIS), "My Sport 2", "My Description 2", SportIcon.TENNIS),
+                        SportListItem(SportIdentifier.Default(SportType.BASKETBALL), "My Sport 3", "My Description 3 ", SportIcon.BOXING),
                     )
                 ),
         onLaunch = { _ -> },

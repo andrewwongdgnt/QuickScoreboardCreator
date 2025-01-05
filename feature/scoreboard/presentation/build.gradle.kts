@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.quickScoreboardCreator.android.library.compose)
     alias(libs.plugins.quickScoreboardCreator.android.feature)
+    alias(libs.plugins.quickScoreboardCreator.test)
 }
 
 android {

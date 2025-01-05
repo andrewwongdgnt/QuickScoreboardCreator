@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
+import com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData
 import com.dgnt.quickScoreboardCreator.feature.team.presentation.resourcemapping.iconRes
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -24,7 +25,7 @@ fun CategorizedTeamListContent(
     modifier: Modifier = Modifier,
     onItemClick: (Int) -> Unit,
     onItemDelete: ((Int) -> Unit)? = null,
-    categorizedTeamList: List<com.dgnt.quickScoreboardCreator.feature.team.domain.model.CategorizedTeamItemData>
+    categorizedTeamList: List<CategorizedTeamItemData>
 ) {
     LazyColumn(
         modifier = modifier

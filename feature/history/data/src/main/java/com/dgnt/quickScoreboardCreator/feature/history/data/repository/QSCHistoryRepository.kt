@@ -8,9 +8,8 @@ import com.dgnt.quickScoreboardCreator.feature.history.data.entity.HistoryEntity
 import com.dgnt.quickScoreboardCreator.feature.history.data.filedto.HistoryFileDTO
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.repository.HistoryRepository
-import javax.inject.Inject
 
-class QSCHistoryRepository @Inject constructor(
+class QSCHistoryRepository(
     dao: BaseDao<HistoryEntity>,
     fileDao: BaseFileDao<HistoryFileDTO>,
     mapEntityToDomain: Mapper<HistoryEntity, HistoryModel>,

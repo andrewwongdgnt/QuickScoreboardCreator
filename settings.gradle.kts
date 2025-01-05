@@ -21,9 +21,7 @@ include(":app")
 
 include(":core:presentation:designsystem")
 include(":core:presentation:ui")
-include(":core:di")
 include(":core:domain")
-include(":core:database")
 include(":core:data")
 include(":core:util")
 
