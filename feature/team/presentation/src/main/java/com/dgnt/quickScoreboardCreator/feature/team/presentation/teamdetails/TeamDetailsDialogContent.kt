@@ -5,16 +5,10 @@ package com.dgnt.quickScoreboardCreator.feature.team.presentation.teamdetails
 
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -28,17 +22,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.BackButton
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.IconDisplay
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.header
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconDrawableResHolder
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconGroupStringResHolder
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
 import com.dgnt.quickScoreboardCreator.feature.team.presentation.resourcemapping.iconRes
@@ -122,37 +116,17 @@ private fun TeamDetailsInnerDialogContent(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
-                BackButton { onIconEdit(false) }
-                Spacer(modifier = Modifier.height(8.dp))
-                val group = TeamIcon.entries.groupBy { it.group }
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(45.dp)
-                ) {
-                    group.onEachIndexed { index, entry ->
-                        val iconGroup = entry.key
-                        val icons = entry.value
-                        header {
-                            Text(
-                                stringResource(id = iconGroup.titleRes()),
-                                modifier = if (index > 0) Modifier.padding(
-                                    start = 0.dp, end = 0.dp, top = 20.dp, bottom = 4.dp
-                                ) else Modifier
-                            )
-                        }
-                        items(icons.toTypedArray()) { icon ->
-                            Image(
-                                painterResource(icon.iconRes()),
-                                null,
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .clickable {
-                                        onIconChange(icon)
-                                    }
-                            )
-                        }
-                    }
-
-                }
+                IconPicker(
+                    iconGroups = TeamIcon.entries.groupBy { it.group }
+                        .mapKeys { IconGroupStringResHolder(it.key.titleRes()) }
+                        .mapValues { teamIcon ->
+                            teamIcon.value.map {
+                                IconDrawableResHolder(it, it.iconRes())
+                            }
+                        },
+                    onCancel = { onIconEdit(false) },
+                    onIconChange = { onIconChange(it.originalIcon) }
+                )
             }
         } else
             Column(

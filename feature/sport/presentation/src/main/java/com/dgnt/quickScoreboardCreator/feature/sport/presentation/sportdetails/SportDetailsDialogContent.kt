@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.BackButton
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultAlertDialog
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.IconDisplay
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.LabelSwitch
@@ -53,6 +52,9 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.MultipleOptionsPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.OptionData
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.TimeLimitPicker
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconDrawableResHolder
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconGroupStringResHolder
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.Speaker
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
@@ -206,10 +208,10 @@ private fun SportDetailsInnerDialogContent(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
-                BackButton { onIconEdit(false) }
-                Spacer(modifier = Modifier.height(8.dp))
-                SportIconPicker(
-                    onIconChange = onIconChange
+                IconPicker(
+                    iconGroups = mapOf(IconGroupStringResHolder(R.string.pickIconMsg) to SportIcon.entries.map { IconDrawableResHolder(it, it.iconRes()) }),
+                    onCancel = { onIconEdit(false) },
+                    onIconChange = { onIconChange(it.originalIcon) }
                 )
             }
         else
