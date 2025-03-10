@@ -69,10 +69,10 @@ class TeamDetailsViewModelTest {
         coEvery { getTeamUseCase(1) } coAnswers { TeamModel(1, "team name", "team desc", TeamIcon.ALIEN) }
         initSut()
 
-        Assert.assertEquals("team name", sut.title.value)
-        Assert.assertEquals("team desc", sut.description.value)
-        Assert.assertEquals(TeamIcon.ALIEN, sut.icon.value)
-        Assert.assertTrue(sut.valid.value)
+        Assert.assertEquals("team name", sut.state.value.title)
+        Assert.assertEquals("team desc", sut.state.value.description)
+        Assert.assertEquals(TeamIcon.ALIEN, (sut.state.value.iconState as TeamIconState.Picked.Displaying).teamIcon)
+        Assert.assertTrue(sut.state.value.valid)
     }
 
     @Test
@@ -80,10 +80,10 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns -1
         initSut()
 
-        Assert.assertTrue(sut.title.value.isEmpty())
-        Assert.assertTrue(sut.description.value.isEmpty())
-        Assert.assertNotNull(sut.icon.value)
-        Assert.assertFalse(sut.valid.value)
+        Assert.assertTrue(sut.state.value.title.isEmpty())
+        Assert.assertTrue(sut.state.value.description.isEmpty())
+        Assert.assertFalse(sut.state.value.iconState is TeamIconState.Initial)
+        Assert.assertFalse(sut.state.value.valid)
     }
 
     @Test
@@ -91,11 +91,11 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns -1
         initSut()
 
-        Assert.assertFalse(sut.valid.value)
-        sut.onDescriptionChange("Some value")
-        Assert.assertFalse(sut.valid.value)
-        sut.onTitleChange("Some value")
-        Assert.assertTrue(sut.valid.value)
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(TeamDetailsAction.DescriptionChange("Some value"))
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(TeamDetailsAction.TitleChange("Some value"))
+        Assert.assertTrue(sut.state.value.valid)
     }
 
     @Test
@@ -103,11 +103,10 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns -1
         initSut()
 
-        sut.onIconEdit()
-        Assert.assertTrue(sut.iconChanging.value)
-        sut.onIconChange(TeamIcon.BEAR)
-        Assert.assertEquals(TeamIcon.BEAR, sut.icon.value)
-        Assert.assertFalse(sut.iconChanging.value)
+        sut.onAction(TeamDetailsAction.IconEdit(true))
+        Assert.assertTrue(sut.state.value.iconState is TeamIconState.Picked.Changing)
+        sut.onAction(TeamDetailsAction.IconChange(TeamIcon.BEAR))
+        Assert.assertEquals(TeamIcon.BEAR, (sut.state.value.iconState as TeamIconState.Picked.Displaying).teamIcon)
     }
 
     @Test
@@ -115,7 +114,7 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns -1
         initSut()
 
-        sut.onDismiss()
+        sut.onAction(TeamDetailsAction.Dismiss)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -126,10 +125,10 @@ class TeamDetailsViewModelTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns -1
         initSut()
 
-        sut.onTitleChange("new team")
-        sut.onDescriptionChange("new team desc")
-        sut.onIconChange(TeamIcon.DRAGON)
-        sut.onConfirm()
+        sut.onAction(TeamDetailsAction.TitleChange("new team"))
+        sut.onAction(TeamDetailsAction.DescriptionChange("new team desc"))
+        sut.onAction(TeamDetailsAction.IconChange(TeamIcon.DRAGON))
+        sut.onAction(TeamDetailsAction.Confirm)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -151,10 +150,10 @@ class TeamDetailsViewModelTest {
         coEvery { getTeamUseCase(2) } coAnswers { TeamModel(2, "team name 2", "team desc 2", TeamIcon.TREE) }
         initSut()
 
-        sut.onTitleChange("new team")
-        sut.onDescriptionChange("new team desc")
-        sut.onIconChange(TeamIcon.DRAGON)
-        sut.onConfirm()
+        sut.onAction(TeamDetailsAction.TitleChange("new team"))
+        sut.onAction(TeamDetailsAction.DescriptionChange("new team desc"))
+        sut.onAction(TeamDetailsAction.IconChange(TeamIcon.DRAGON))
+        sut.onAction(TeamDetailsAction.Confirm)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -176,7 +175,7 @@ class TeamDetailsViewModelTest {
         coEvery { getTeamUseCase(2) } coAnswers { TeamModel(2, "team name 2", "team desc 2", TeamIcon.TREE) }
         initSut()
 
-        sut.onDelete()
+        sut.onAction(TeamDetailsAction.Delete)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }

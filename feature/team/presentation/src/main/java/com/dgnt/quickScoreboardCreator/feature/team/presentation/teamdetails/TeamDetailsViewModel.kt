@@ -13,11 +13,8 @@ import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCas
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -33,64 +30,69 @@ class TeamDetailsViewModel @Inject constructor(
 
     private var originalModel: TeamModel? = null
 
-    private val _title = MutableStateFlow("")
-    val title: StateFlow<String> = _title.asStateFlow()
-
-    private val _description = MutableStateFlow("")
-    val description: StateFlow<String> = _description.asStateFlow()
-
-    private val _icon = MutableStateFlow<TeamIcon?>(null)
-    val icon: StateFlow<TeamIcon?> = _icon.asStateFlow()
-
-    private val _iconChanging = MutableStateFlow(false)
-    val iconChanging: StateFlow<Boolean> = _iconChanging.asStateFlow()
-
-    private val _isNewEntity = MutableStateFlow(true)
-    val isNewEntity = _isNewEntity.asStateFlow()
-
-    val valid: StateFlow<Boolean> = title.map {
-        it.isNotBlank()
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    private val _state = MutableStateFlow(TeamDetailsState())
+    val state: StateFlow<TeamDetailsState> = _state.asStateFlow()
 
     init {
         savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
             initWithId(id)
         } ?: run {
-            _icon.value = TeamIcon.entries.toTypedArray().let {
+            TeamIcon.entries.toTypedArray().let {
                 it[Random.nextInt(it.size)]
+            }.let { icon ->
+                _state.value = state.value.copy(
+                    iconState = TeamIconState.Picked.Displaying(icon)
+                )
             }
         }
     }
 
     private fun initWithId(id: Int) = viewModelScope.launch {
         originalModel = getTeamUseCase(id)?.also {
-            _title.value = it.title
-            _description.value = it.description
-            _icon.value = it.icon
-            _isNewEntity.value = false
+            _state.value = state.value.copy(
+                title = it.title,
+                description = it.description,
+                iconState = TeamIconState.Picked.Displaying(it.icon),
+                isNewEntity = false,
+            )
+
         }
 
     }
 
-    fun onConfirm() {
-        if (valid.value) {
-            viewModelScope.launch {
-                insertTeamUseCase(
-                    TeamModel(
-                        id = originalModel?.id,
-                        title = title.value,
-                        description = description.value,
-                        icon = icon.value!!
+    fun onAction(action: TeamDetailsAction) {
+        when (action) {
+            TeamDetailsAction.Confirm -> onConfirm()
+            TeamDetailsAction.Delete -> onDelete()
+            is TeamDetailsAction.DescriptionChange -> onDescriptionChange(action.description)
+            TeamDetailsAction.Dismiss -> onDismiss()
+            is TeamDetailsAction.IconChange -> onIconChange(action.icon)
+            is TeamDetailsAction.IconEdit -> onIconEdit(action.changing)
+            is TeamDetailsAction.TitleChange -> onTitleChange(action.title)
+        }
+    }
+
+    private fun onConfirm() {
+        with(state.value) {
+            if (valid) {
+                viewModelScope.launch {
+                    insertTeamUseCase(
+                        TeamModel(
+                            id = originalModel?.id,
+                            title = title,
+                            description = description,
+                            icon = (iconState as TeamIconState.Picked).teamIcon
+                        )
                     )
-                )
+                }
             }
+            sendUiEvent(Done)
         }
-        sendUiEvent(Done)
     }
 
-    fun onDismiss() = sendUiEvent(Done)
+    private fun onDismiss() = sendUiEvent(Done)
 
-    fun onDelete() = viewModelScope.launch {
+    private fun onDelete() = viewModelScope.launch {
 
         originalModel?.let {
             deleteTeamUseCase(it)
@@ -98,21 +100,34 @@ class TeamDetailsViewModel @Inject constructor(
         sendUiEvent(Done)
     }
 
-    fun onTitleChange(title: String) {
-        _title.value = title
+    private fun onTitleChange(title: String) {
+        _state.value = state.value.copy(
+            title = title
+        )
     }
 
-    fun onDescriptionChange(description: String) {
-        _description.value = description
+    private fun onDescriptionChange(description: String) {
+        _state.value = state.value.copy(
+            description = description
+        )
     }
 
-    fun onIconEdit(changing: Boolean = true) {
-        _iconChanging.value = changing
+    private fun onIconEdit(changing: Boolean = true) {
+        (state.value.iconState as? TeamIconState.Picked)?.teamIcon?.let { originalTeamIcon->
+            _state.value = state.value.copy(
+                iconState = if (changing)
+                    TeamIconState.Picked.Changing(originalTeamIcon)
+                else
+                    TeamIconState.Picked.Displaying(originalTeamIcon)
+            )
+
+        }
     }
 
-    fun onIconChange(icon: TeamIcon) {
-        _icon.value = icon
-        _iconChanging.value = false
+    private fun onIconChange(icon: TeamIcon) {
+        _state.value = state.value.copy(
+            iconState = TeamIconState.Picked.Displaying(icon)
+        )
     }
 
 }
