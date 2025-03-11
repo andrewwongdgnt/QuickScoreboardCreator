@@ -7,12 +7,11 @@ import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreInf
 data class IntervalEditingInfo(
     val scoreInfo: ScoreInfo,
     val intervalData: IntervalData,
-    val timeRepresentationPair: Pair<String,String>, //Minute and Second
+    val timeRepresentationPair: Pair<String, String>, //Minute and Second
     val maxScoreInput: String,
     val initialScoreInput: String,
     val primaryIncrementInputList: List<String>,
     val allowPrimaryMapping: Boolean,
     val primaryMappingInputList: List<Pair<String, String>>,
     val allowSecondaryScore: Boolean,
-
-    )
+)

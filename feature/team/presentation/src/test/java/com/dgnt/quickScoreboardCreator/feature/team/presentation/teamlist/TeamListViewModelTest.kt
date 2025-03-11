@@ -115,7 +115,7 @@ class TeamListViewModelTest {
 
     @Test
     fun testOnAdd() = runTest {
-        sut.onAdd()
+        sut.onAction(TeamListAction.Add)
         verify(exactly = 1) {
             sut.sendUiEvent(TeamDetails())
         }
@@ -123,7 +123,7 @@ class TeamListViewModelTest {
 
     @Test
     fun testOnEdit() = runTest {
-        sut.onEdit(1)
+        sut.onAction(TeamListAction.Edit(1))
         verify(exactly = 1) {
             sut.sendUiEvent(TeamDetails(1))
         }
@@ -131,7 +131,7 @@ class TeamListViewModelTest {
 
     @Test
     fun testOnDeleteAndUndo() = runTest {
-        sut.onDelete(1)
+        sut.onAction(TeamListAction.Delete(1))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -141,7 +141,7 @@ class TeamListViewModelTest {
                 )
             )
         }
-        sut.onDelete(2)
+        sut.onAction(TeamListAction.Delete(2))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -151,7 +151,7 @@ class TeamListViewModelTest {
                 )
             )
         }
-        sut.onUndoDelete()
+        sut.onAction(TeamListAction.UndoDelete)
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[0]) }
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[1]) }
         coVerify(exactly = 1) { insertTeamListUseCase(mockTeamList) }
@@ -159,7 +159,7 @@ class TeamListViewModelTest {
 
     @Test
     fun testNoUndo() = runTest {
-        sut.onDelete(1)
+        sut.onAction(TeamListAction.Delete(1))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -169,7 +169,7 @@ class TeamListViewModelTest {
                 )
             )
         }
-        sut.onDelete(2)
+        sut.onAction(TeamListAction.Delete(2))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -179,8 +179,8 @@ class TeamListViewModelTest {
                 )
             )
         }
-        sut.onClearDeletedTeamList()
-        sut.onUndoDelete()
+        sut.onAction(TeamListAction.ClearDeletedTeamList)
+        sut.onAction(TeamListAction.UndoDelete)
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[0]) }
         coVerify(exactly = 1) { deleteTeamUseCase(mockTeamList[1]) }
         coVerify(exactly = 0) { insertTeamListUseCase(any()) }

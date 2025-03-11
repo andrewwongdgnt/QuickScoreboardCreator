@@ -12,8 +12,10 @@ import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamListUs
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamListUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.presentation.uievent.TeamDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,17 +28,29 @@ class TeamListViewModel @Inject constructor(
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val teamEntityList = getTeamListUseCase()
-    val categorizedTeamList = teamEntityList.map {
-        categorizeTeamUseCase(it)
-    }
+    val state = teamEntityList.map {
+        TeamListState(
+            categorizedTeamList = categorizeTeamUseCase(it)
+        )
+    }.stateIn(viewModelScope, SharingStarted.Lazily, TeamListState())
 
     private var deletedTeamList: MutableList<TeamModel> = mutableListOf()
 
-    fun onAdd() = sendUiEvent(TeamDetails())
+    fun onAction(action: TeamListAction){
+        when(action){
+            TeamListAction.Add -> onAdd()
+            is TeamListAction.Edit -> onEdit(action.id)
+            is TeamListAction.Delete -> onDelete(action.id)
+            TeamListAction.UndoDelete -> onUndoDelete()
+            TeamListAction.ClearDeletedTeamList -> onClearDeletedTeamList()
+        }
+    }
 
-    fun onEdit(id: Int) = sendUiEvent(TeamDetails(id))
+    private fun onAdd() = sendUiEvent(TeamDetails())
 
-    fun onDelete(id: Int) = viewModelScope.launch {
+    private fun onEdit(id: Int) = sendUiEvent(TeamDetails(id))
+
+    private fun onDelete(id: Int) = viewModelScope.launch {
         teamEntityList.first().find { entity ->
             entity.id == id
         }?.let {
@@ -52,7 +66,7 @@ class TeamListViewModel @Inject constructor(
         )
     }
 
-    fun onUndoDelete() {
+    private fun onUndoDelete() {
         deletedTeamList.toList().takeUnless { it.isEmpty() }?.let { teamList ->
             viewModelScope.launch {
                 insertTeamListUseCase(teamList)
@@ -61,6 +75,6 @@ class TeamListViewModel @Inject constructor(
         }
     }
 
-    fun onClearDeletedTeamList() = deletedTeamList.clear()
+    private fun onClearDeletedTeamList() = deletedTeamList.clear()
 
 }
