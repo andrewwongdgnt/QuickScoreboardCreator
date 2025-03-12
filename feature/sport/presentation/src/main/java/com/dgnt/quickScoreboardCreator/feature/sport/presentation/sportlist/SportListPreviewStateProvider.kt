@@ -15,9 +15,9 @@ class SportListPreviewStateProvider : CollectionPreviewParameterProvider<SportLi
         SportListState(
             defaultSportList = listOf(SportType.BASKETBALL, SportType.HOCKEY, SportType.SPIKEBALL),
             customSportList = listOf(
-                SportListItem(SportIdentifier.Default(SportType.BASKETBALL), "My Sport 1", "My Description 1", SportIcon.BASKETBALL),
-                SportListItem(SportIdentifier.Default(SportType.TENNIS), "My Sport 2", "My Description 2", SportIcon.TENNIS),
-                SportListItem(SportIdentifier.Default(SportType.BASKETBALL), "My Sport 3", "My Description 3 ", SportIcon.BOXING),
+                SportListItem(SportIdentifier.Custom(1), "My Sport 1", "My Description 1", SportIcon.BASKETBALL),
+                SportListItem(SportIdentifier.Custom(2), "My Sport 2", "My Description 2", SportIcon.TENNIS),
+                SportListItem(SportIdentifier.Custom(3), "My Sport 3", "My Description 3 ", SportIcon.BOXING),
             ),
         )
     )
