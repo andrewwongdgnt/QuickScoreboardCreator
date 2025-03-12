@@ -15,8 +15,10 @@ import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.InsertSportL
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.LaunchScoreboard
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.uievent.SportDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +31,7 @@ class SportListViewModel @Inject constructor(
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val sportModelList = getSportListUseCase()
-    val categorizedSports = sportModelList.map { sportModelList ->
+    val state = sportModelList.map { sportModelList ->
         categorizeSportUseCase(
             listOf(
                 SportType.BASKETBALL,
@@ -39,16 +41,29 @@ class SportListViewModel @Inject constructor(
                 SportType.BOXING,
             ),
             sportModelList
-        )
-    }
+        ).let { (defaultSportList, customSportList) ->
+            SportListState(defaultSportList, customSportList)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, SportListState())
 
     private var deletedSportList: MutableList<SportModel> = mutableListOf()
 
-    fun onAdd() = sendUiEvent(SportDetails())
+    fun onAction(action: SportListAction){
+        when (action)  {
+            SportListAction.Add -> onAdd()
+            SportListAction.ClearDeletedSportList -> onClearDeletedSportList()
+            is SportListAction.Delete -> onDelete(action.id)
+            is SportListAction.Edit -> onEdit(action.sportIdentifier)
+            is SportListAction.Launch -> onLaunch(action.sportIdentifier)
+            SportListAction.UndoDelete -> onUndoDelete()
+        }
+    }
 
-    fun onEdit(sportIdentifier: SportIdentifier) = sendUiEvent(SportDetails(sportIdentifier))
+    private fun onAdd() = sendUiEvent(SportDetails())
 
-    fun onDelete(id: Int) = viewModelScope.launch {
+    private fun onEdit(sportIdentifier: SportIdentifier) = sendUiEvent(SportDetails(sportIdentifier))
+
+    private fun onDelete(id: Int) = viewModelScope.launch {
         sportModelList.first().find { model ->
             (model.sportIdentifier as? SportIdentifier.Custom)?.id == id
         }?.let {
@@ -64,7 +79,7 @@ class SportListViewModel @Inject constructor(
         )
     }
 
-    fun onUndoDelete() {
+    private fun onUndoDelete() {
         deletedSportList.toList().takeUnless { it.isEmpty() }?.let { sportList ->
             viewModelScope.launch {
                 insertSportListUseCase(sportList)
@@ -73,8 +88,8 @@ class SportListViewModel @Inject constructor(
         }
     }
 
-    fun onClearDeletedSportList() = deletedSportList.clear()
+    private fun onClearDeletedSportList() = deletedSportList.clear()
 
-    fun onLaunch(sportIdentifier: SportIdentifier) = sendUiEvent(LaunchScoreboard(sportIdentifier))
+    private fun onLaunch(sportIdentifier: SportIdentifier) = sendUiEvent(LaunchScoreboard(sportIdentifier))
 
 }

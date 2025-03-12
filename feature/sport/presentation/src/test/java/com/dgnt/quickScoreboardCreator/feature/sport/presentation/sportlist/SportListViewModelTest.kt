@@ -4,8 +4,6 @@ package com.dgnt.quickScoreboardCreator.feature.sport.presentation.sportlist
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.SnackBar
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportListItem
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.CategorizedSportType
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportListItem
@@ -58,19 +56,19 @@ class SportListViewModelTest {
 
     private val mockSportList = listOf(
         SportModel(
-            sportIdentifier = SportIdentifier.Custom(1), 
+            sportIdentifier = SportIdentifier.Custom(1),
             "scoreboard name",
             "scoreboard desc",
-            WinRule.Count, 
-            SportIcon.SOCCER, 
+            WinRule.Count,
+            SportIcon.SOCCER,
             intervalLabel = "game",
             intervalList = listOf()
         ),
         SportModel(
-            sportIdentifier = SportIdentifier.Custom(2), 
-            "scoreboard name 2", 
-            "scoreboard desc 2", 
-            WinRule.Count, 
+            sportIdentifier = SportIdentifier.Custom(2),
+            "scoreboard name 2",
+            "scoreboard desc 2",
+            WinRule.Count,
             SportIcon.SOCCER,
             intervalLabel = "game",
             intervalList = listOf()
@@ -78,26 +76,23 @@ class SportListViewModelTest {
     )
     private lateinit var mockFlowScoreboardList: Flow<List<SportModel>>
     private val mockCategorizedScoreboardList =
-        CategorizedSportType(
-            listOf(
-                SportType.BASKETBALL,
-                SportType.HOCKEY,
-                SportType.TENNIS,
-            )
-        ) to CategorizedSportListItem(
-            listOf(
-                SportListItem(
-                    SportIdentifier.Custom(1),
-                    title = "A team name",
-                    description = "team desc",
-                    icon = SportIcon.TENNIS
-                ),
-                SportListItem(
-                    SportIdentifier.Custom(2),
-                    title = "Next team name",
-                    description = "team desc",
-                    icon = SportIcon.TENNIS
-                )
+
+        listOf(
+            SportType.BASKETBALL,
+            SportType.HOCKEY,
+            SportType.TENNIS,
+        ) to listOf(
+            SportListItem(
+                SportIdentifier.Custom(1),
+                title = "A team name",
+                description = "team desc",
+                icon = SportIcon.TENNIS
+            ),
+            SportListItem(
+                SportIdentifier.Custom(2),
+                title = "Next team name",
+                description = "team desc",
+                icon = SportIcon.TENNIS
             )
         )
 
@@ -130,7 +125,7 @@ class SportListViewModelTest {
 
     @Test
     fun testOnAdd() = runTest {
-        sut.onAdd()
+        sut.onAction(SportListAction.Add)
         verify(exactly = 1) {
             sut.sendUiEvent(SportDetails())
         }
@@ -138,7 +133,7 @@ class SportListViewModelTest {
 
     @Test
     fun testOnEdit() = runTest {
-        sut.onEdit(SportIdentifier.Default(SportType.TENNIS))
+        sut.onAction(SportListAction.Edit(SportIdentifier.Default(SportType.TENNIS)))
         verify(exactly = 1) {
             sut.sendUiEvent(SportDetails(SportIdentifier.Default(SportType.TENNIS)))
         }
@@ -146,7 +141,7 @@ class SportListViewModelTest {
 
     @Test
     fun testOnDeleteAndUndo() = runTest {
-        sut.onDelete(1)
+        sut.onAction(SportListAction.Delete(1))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -156,7 +151,7 @@ class SportListViewModelTest {
                 )
             )
         }
-        sut.onDelete(2)
+        sut.onAction(SportListAction.Delete(2))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -166,7 +161,7 @@ class SportListViewModelTest {
                 )
             )
         }
-        sut.onUndoDelete()
+        sut.onAction(SportListAction.UndoDelete)
         coVerify(exactly = 1) { deleteSportUseCase(mockSportList[0]) }
         coVerify(exactly = 1) { deleteSportUseCase(mockSportList[1]) }
         coVerify(exactly = 1) { insertSportListUseCase(mockSportList) }
@@ -174,7 +169,7 @@ class SportListViewModelTest {
 
     @Test
     fun testNoUndo() = runTest {
-        sut.onDelete(1)
+        sut.onAction(SportListAction.Delete(1))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -184,7 +179,7 @@ class SportListViewModelTest {
                 )
             )
         }
-        sut.onDelete(2)
+        sut.onAction(SportListAction.Delete(2))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -194,8 +189,8 @@ class SportListViewModelTest {
                 )
             )
         }
-        sut.onClearDeletedSportList()
-        sut.onUndoDelete()
+        sut.onAction(SportListAction.ClearDeletedSportList)
+        sut.onAction(SportListAction.UndoDelete)
         coVerify(exactly = 1) { deleteSportUseCase(mockSportList[0]) }
         coVerify(exactly = 1) { deleteSportUseCase(mockSportList[1]) }
         coVerify(exactly = 0) { insertSportListUseCase(mockSportList) }
@@ -203,7 +198,7 @@ class SportListViewModelTest {
 
     @Test
     fun testOnLaunch() = runTest {
-        sut.onLaunch(SportIdentifier.Default(SportType.TENNIS))
+        sut.onAction(SportListAction.Launch(SportIdentifier.Default(SportType.TENNIS)))
         verify(exactly = 1) {
             sut.sendUiEvent(LaunchScoreboard(SportIdentifier.Default(SportType.TENNIS)))
         }
