@@ -13,11 +13,8 @@ import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHist
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -33,21 +30,8 @@ class HistoryDetailsViewModel @Inject constructor(
 
     private var originalModel: HistoryModel? = null
 
-    private var _title = MutableStateFlow("")
-    val title = _title.asStateFlow()
-
-    private val _description = MutableStateFlow("")
-    val description: StateFlow<String> = _description.asStateFlow()
-
-    private var _icon = MutableStateFlow<SportIcon?>(null)
-    val icon = _icon.asStateFlow()
-
-    private val _iconChanging = MutableStateFlow(false)
-    val iconChanging: StateFlow<Boolean> = _iconChanging.asStateFlow()
-
-    val valid: StateFlow<Boolean> = title.map {
-        it.isNotBlank()
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    private val _state = MutableStateFlow(HistoryDetailsState())
+    val state: StateFlow<HistoryDetailsState> = _state.asStateFlow()
 
     init {
         savedStateHandle.get<Int>(NavArguments.ID)?.let {
@@ -57,23 +41,41 @@ class HistoryDetailsViewModel @Inject constructor(
 
     private fun initWithId(it: Int) = viewModelScope.launch {
         originalModel = getHistoryUseCase(it)?.also {
-            _title.value = it.title
-            _description.value = it.description
-            _icon.value = it.icon
+            _state.value = state.value.copy(
+                title = it.title,
+                description = it.description,
+                iconState = HistoryIconState.Picked.Displaying(it.icon),
+            )
         }
     }
 
-    fun onTitleChange(title: String) {
-        _title.value = title
+    fun onAction(action: HistoryDetailsAction) {
+        when (action) {
+            HistoryDetailsAction.Confirm -> onConfirm()
+            HistoryDetailsAction.Delete -> onDelete()
+            is HistoryDetailsAction.DescriptionChange -> onDescriptionChange(action.description)
+            HistoryDetailsAction.Dismiss -> onDismiss()
+            is HistoryDetailsAction.IconChange -> onIconChange(action.icon)
+            is HistoryDetailsAction.IconEdit -> onIconEdit(action.changing)
+            is HistoryDetailsAction.TitleChange -> onTitleChange(action.title)
+        }
     }
 
-    fun onDescriptionChange(description: String) {
-        _description.value = description
+    private fun onTitleChange(title: String) {
+        _state.value = state.value.copy(
+            title = title
+        )
     }
 
-    fun onDismiss() = sendUiEvent(Done)
+    private fun onDescriptionChange(description: String) {
+        _state.value = state.value.copy(
+            description = description
+        )
+    }
 
-    fun onDelete() = viewModelScope.launch {
+    private fun onDismiss() = sendUiEvent(Done)
+
+    private fun onDelete() = viewModelScope.launch {
 
         originalModel?.let {
             deleteHistoryUseCase(it)
@@ -81,33 +83,44 @@ class HistoryDetailsViewModel @Inject constructor(
         sendUiEvent(Done)
     }
 
-    fun onIconEdit(changing: Boolean = true) {
-        _iconChanging.value = changing
-    }
+    private fun onIconEdit(changing: Boolean) {
+        (state.value.iconState as? HistoryIconState.Picked)?.sportIcon?.let { originalSportIcon ->
+            _state.value = state.value.copy(
+                iconState = if (changing)
+                    HistoryIconState.Picked.Changing(originalSportIcon)
+                else
+                    HistoryIconState.Picked.Displaying(originalSportIcon)
+            )
 
-    fun onIconChange(icon: SportIcon) {
-        _icon.value = icon
-        _iconChanging.value = false
-    }
-
-    fun onConfirm() {
-        if (valid.value) {
-            viewModelScope.launch {
-                insertHistoryUseCase(
-                    HistoryModel(
-                        id = originalModel?.id,
-                        title = title.value,
-                        description = description.value,
-                        icon = icon.value!!,
-                        lastModified = DateTime.now(),
-                        createdAt = originalModel?.createdAt ?: DateTime.now(),
-                        historicalScoreboard = originalModel?.historicalScoreboard!!,
-                        temporary = false
-                    )
-                )
-            }
         }
-        sendUiEvent(Done)
+    }
+
+    private fun onIconChange(icon: SportIcon) {
+        _state.value = state.value.copy(
+            iconState = HistoryIconState.Picked.Displaying(icon)
+        )
+    }
+
+    private fun onConfirm() {
+        with(state.value) {
+            if (valid) {
+                viewModelScope.launch {
+                    insertHistoryUseCase(
+                        HistoryModel(
+                            id = originalModel?.id,
+                            title = title,
+                            description = description,
+                            icon = (iconState as HistoryIconState.Picked).sportIcon,
+                            lastModified = DateTime.now(),
+                            createdAt = originalModel?.createdAt ?: DateTime.now(),
+                            historicalScoreboard = originalModel?.historicalScoreboard!!,
+                            temporary = false
+                        )
+                    )
+                }
+            }
+            sendUiEvent(Done)
+        }
     }
 
 }

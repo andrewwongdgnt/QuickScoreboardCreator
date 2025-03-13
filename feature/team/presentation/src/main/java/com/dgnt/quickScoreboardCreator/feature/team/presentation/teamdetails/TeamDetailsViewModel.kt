@@ -112,7 +112,7 @@ class TeamDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun onIconEdit(changing: Boolean = true) {
+    private fun onIconEdit(changing: Boolean) {
         (state.value.iconState as? TeamIconState.Picked)?.teamIcon?.let { originalTeamIcon->
             _state.value = state.value.copy(
                 iconState = if (changing)

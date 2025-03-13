@@ -85,10 +85,10 @@ class HistoryDetailsViewModelTest {
         }
         initSut()
 
-        Assert.assertEquals("history name", sut.title.value)
-        Assert.assertEquals("history desc", sut.description.value)
-        Assert.assertEquals(SportIcon.TENNIS, sut.icon.value)
-        Assert.assertTrue(sut.valid.value)
+        Assert.assertEquals("history name", sut.state.value.title)
+        Assert.assertEquals("history desc", sut.state.value.description)
+        Assert.assertEquals(SportIcon.TENNIS, (sut.state.value.iconState as HistoryIconState.Picked.Displaying).sportIcon)
+        Assert.assertTrue(sut.state.value.valid)
     }
 
     @Test
@@ -108,12 +108,12 @@ class HistoryDetailsViewModelTest {
         }
         initSut()
 
-        sut.onTitleChange("")
-        Assert.assertFalse(sut.valid.value)
-        sut.onDescriptionChange("Some value")
-        Assert.assertFalse(sut.valid.value)
-        sut.onTitleChange("Some value")
-        Assert.assertTrue(sut.valid.value)
+        sut.onAction(HistoryDetailsAction.TitleChange(""))
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(HistoryDetailsAction.DescriptionChange("Some value"))
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(HistoryDetailsAction.TitleChange("Some value"))
+        Assert.assertTrue(sut.state.value.valid)
     }
 
     @Test
@@ -133,11 +133,10 @@ class HistoryDetailsViewModelTest {
         }
         initSut()
 
-        sut.onIconEdit()
-        Assert.assertTrue(sut.iconChanging.value)
-        sut.onIconChange(SportIcon.SOCCER)
-        Assert.assertEquals(SportIcon.SOCCER, sut.icon.value)
-        Assert.assertFalse(sut.iconChanging.value)
+        sut.onAction(HistoryDetailsAction.IconEdit(true))
+        Assert.assertTrue(sut.state.value.iconState is HistoryIconState.Picked.Changing)
+        sut.onAction(HistoryDetailsAction.IconChange(SportIcon.SOCCER))
+        Assert.assertEquals(SportIcon.SOCCER, (sut.state.value.iconState as HistoryIconState.Picked.Displaying).sportIcon)
     }
 
     @Test
@@ -157,7 +156,7 @@ class HistoryDetailsViewModelTest {
         }
         initSut()
 
-        sut.onDismiss()
+        sut.onAction(HistoryDetailsAction.Dismiss)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -183,10 +182,10 @@ class HistoryDetailsViewModelTest {
         initSut()
 
 
-        sut.onTitleChange("new history")
-        sut.onDescriptionChange("new history desc")
-        sut.onIconChange(SportIcon.HOCKEY)
-        sut.onConfirm()
+        sut.onAction(HistoryDetailsAction.TitleChange("new history"))
+        sut.onAction(HistoryDetailsAction.DescriptionChange("new history desc"))
+        sut.onAction(HistoryDetailsAction.IconChange(SportIcon.HOCKEY))
+        sut.onAction(HistoryDetailsAction.Confirm)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -219,7 +218,7 @@ class HistoryDetailsViewModelTest {
         }
         initSut()
 
-        sut.onDelete()
+        sut.onAction(HistoryDetailsAction.Delete)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
