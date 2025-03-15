@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -25,14 +26,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultAlertDialog
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.TimeLimitPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.value
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
 import kotlinx.coroutines.flow.Flow
@@ -44,44 +46,23 @@ fun IntervalEditorDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: IntervalEditorViewModel = hiltViewModel()
 ) {
-    val minuteString by viewModel.minuteString.collectAsStateWithLifecycle()
-    val secondString by viewModel.secondString.collectAsStateWithLifecycle()
-    val intervalString by viewModel.intervalString.collectAsStateWithLifecycle()
-    val labelInfo by viewModel.label.collectAsStateWithLifecycle()
-    val errors by viewModel.errors.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     IntervalEditorInnerDialogContent(
-        viewModel.uiEvent,
-        onUiEvent,
-        minuteString,
-        viewModel::onMinuteChange,
-        secondString,
-        viewModel::onSecondChange,
-        intervalString,
-        viewModel::onIntervalChange,
-        labelInfo,
-        errors,
-        viewModel::onDismiss,
-        viewModel::onConfirm
+        uiEvent = viewModel.uiEvent,
+        onUiEvent = onUiEvent,
+        state = state,
+        onAction = viewModel::onAction
     )
-
 }
 
 @Composable
 private fun IntervalEditorInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    minuteString: String,
-    onMinuteChange: (String) -> Unit,
-    secondString: String,
-    onSecondChange: (String) -> Unit,
-    intervalString: String,
-    onIntervalChange: (String) -> Unit,
-    label: Label,
-    errors: Set<IntervalEditorErrorType>,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-) {
+    state: IntervalEditorState,
+    onAction: (IntervalEditorAction) -> Unit
+) = state.run {
 
     LaunchedEffect(key1 = true) {
         uiEvent.collect(collector = onUiEvent)
@@ -91,9 +72,9 @@ private fun IntervalEditorInnerDialogContent(
         title = stringResource(id = R.string.intervalEditorTitle),
         confirmText = stringResource(id = android.R.string.ok),
         confirmEnabled = errors.isEmpty(),
-        onConfirm = onConfirm,
+        onConfirm = { onAction(IntervalEditorAction.Confirm) },
         dismissText = stringResource(id = android.R.string.cancel),
-        onDismiss = onDismiss
+        onDismiss = { onAction(IntervalEditorAction.Dismiss) }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -118,9 +99,9 @@ private fun IntervalEditorInnerDialogContent(
 
             TimeLimitPicker(
                 minuteString = minuteString,
-                onMinuteChange = onMinuteChange,
+                onMinuteChange = { onAction(IntervalEditorAction.MinuteChange(it)) },
                 secondString = secondString,
-                onSecondChange = onSecondChange,
+                onSecondChange = { onAction(IntervalEditorAction.SecondChange(it)) },
                 numberFieldWidth = numberFieldWidth
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -150,7 +131,7 @@ private fun IntervalEditorInnerDialogContent(
                     value = intervalString,
                     onValueChange = {
                         if (it.length <= 2)
-                            onIntervalChange(it)
+                            onAction(IntervalEditorAction.IntervalChange(it))
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
@@ -166,109 +147,15 @@ private fun IntervalEditorInnerDialogContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun `12 minutes 8 seconds`() =
-    IntervalEditorInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        minuteString = "12",
-        onMinuteChange = {},
-        secondString = "8",
-        onSecondChange = {},
-        intervalString = "1",
-        onIntervalChange = {},
-        label = Label.Resource(R.string.quarter),
-        errors = emptySet(),
-        onDismiss = {},
-        onConfirm = {},
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `invalid time`() =
-    IntervalEditorInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        minuteString = "12",
-        onMinuteChange = {},
-        secondString = "8",
-        onSecondChange = {},
-        intervalString = "1",
-        onIntervalChange = {},
-        label = Label.Resource(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.Time.Invalid(12, 0)),
-        onDismiss = {},
-        onConfirm = {},
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `empty time`() =
-    IntervalEditorInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        minuteString = "",
-        onMinuteChange = {},
-        secondString = "8",
-        onSecondChange = {},
-        intervalString = "1",
-        onIntervalChange = {},
-        label = Label.Resource(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.Time.Empty),
-        onDismiss = {},
-        onConfirm = {},
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `zero time`() =
-    IntervalEditorInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        minuteString = "0",
-        onMinuteChange = {},
-        secondString = "0",
-        onSecondChange = {},
-        intervalString = "1",
-        onIntervalChange = {},
-        label = Label.Resource(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.Time.Zero),
-        onDismiss = {},
-        onConfirm = {},
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `empty interval`() =
-    IntervalEditorInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        minuteString = "10",
-        onMinuteChange = {},
-        secondString = "0",
-        onSecondChange = {},
-        intervalString = "",
-        onIntervalChange = {},
-        label = Label.Resource(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.Interval.Empty),
-        onDismiss = {},
-        onConfirm = {},
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `invalid interval`() =
-    IntervalEditorInnerDialogContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        minuteString = "12",
-        onMinuteChange = {},
-        secondString = "8",
-        onSecondChange = {},
-        intervalString = "1",
-        onIntervalChange = {},
-        label = Label.Resource(R.string.quarter),
-        errors = setOf(IntervalEditorErrorType.Interval.Invalid(22)),
-        onDismiss = {},
-        onConfirm = {},
-    )
-
+private fun IntervalEditorContentPreview(
+    @PreviewParameter(IntervalEditorPreviewStateProvider::class) state: IntervalEditorState
+) = QuickScoreboardCreatorTheme {
+    Surface {
+        IntervalEditorInnerDialogContent(
+            uiEvent = emptyFlow(),
+            onUiEvent = {},
+            state = state,
+            onAction = {}
+        )
+    }
+}

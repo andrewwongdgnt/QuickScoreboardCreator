@@ -135,29 +135,32 @@ class IntervalEditorViewModelTest {
     fun testInitializingTime() = runTest {
         initWithSportType()
 
-        Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), sut.minuteString.value)
-        Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
+        sut.state.value.run {
+            Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), minuteString)
+            Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), secondString)
+        }
     }
 
     @Test
     fun testInitializingIntervalIndex() = runTest {
         initWithSportType()
 
-        Assert.assertEquals("1", sut.intervalString.value)
+        Assert.assertEquals("1", sut.state.value.intervalString)
     }
 
     @Test
     fun testInitializingADefaultScoreboard() = runTest {
         initWithSportType()
-
-        Assert.assertEquals(Label.Resource(R.string.quarter), sut.label.value)
-        Assert.assertTrue(sut.errors.value.isEmpty())
+        sut.state.value.run {
+            Assert.assertEquals(Label.Resource(R.string.quarter), label)
+            Assert.assertTrue(errors.isEmpty())
+        }
     }
 
     @Test
     fun testOnDismiss() = runTest {
         initWithSportType()
-        sut.onDismiss()
+        sut.onAction(IntervalEditorAction.Dismiss)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -166,7 +169,7 @@ class IntervalEditorViewModelTest {
     @Test
     fun testOnConfirmInitialValues() = runTest {
         initWithSportType()
-        sut.onConfirm()
+        sut.onAction(IntervalEditorAction.Confirm)
         verify(exactly = 1) {
             sut.sendUiEvent(IntervalUpdated(mockInitialCurrentTimeValue, mockInitialCurrentIntervalIndex))
         }
@@ -176,99 +179,115 @@ class IntervalEditorViewModelTest {
     fun testOnMinuteChange() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(10, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 1000
-        sut.onMinuteChange("10")
-        Assert.assertEquals("10", sut.minuteString.value)
-        Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
-        Assert.assertEquals("1", sut.intervalString.value)
-        Assert.assertTrue(sut.errors.value.isEmpty())
+        sut.onAction(IntervalEditorAction.MinuteChange("10"))
+        sut.state.value.run {
+            Assert.assertEquals("10", minuteString)
+            Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), secondString)
+            Assert.assertEquals("1", intervalString)
+            Assert.assertTrue(errors.isEmpty())
+        }
     }
 
     @Test
     fun testOnSecondChange() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(mockInitialCurrentTimeData.minute, 10, mockInitialCurrentTimeData.centiSecond)) } returns 1000
-        sut.onSecondChange("10")
-        Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), sut.minuteString.value)
-        Assert.assertEquals("10", sut.secondString.value)
-        Assert.assertEquals("1", sut.intervalString.value)
-        Assert.assertTrue(sut.errors.value.isEmpty())
+        sut.onAction(IntervalEditorAction.SecondChange("10"))
+        sut.state.value.run {
+            Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), minuteString)
+            Assert.assertEquals("10", secondString)
+            Assert.assertEquals("1", intervalString)
+            Assert.assertTrue(errors.isEmpty())
+        }
     }
 
     @Test
     fun testOnIntervalChange() = runTest {
         initWithSportType()
-        sut.onIntervalChange("2")
-        Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), sut.minuteString.value)
-        Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
-        Assert.assertEquals("2", sut.intervalString.value)
-        Assert.assertTrue(sut.errors.value.isEmpty())
+        sut.onAction(IntervalEditorAction.IntervalChange("2"))
+        sut.state.value.run {
+            Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), minuteString)
+            Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), secondString)
+            Assert.assertEquals("2", intervalString)
+            Assert.assertTrue(errors.isEmpty())
+        }
     }
 
     @Test
     fun testOnInvalidMinuteChange() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(13, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 740000
-        sut.onMinuteChange("13")
-        Assert.assertEquals("13", sut.minuteString.value)
-        Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
-        Assert.assertEquals("1", sut.intervalString.value)
-        Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.Time.Invalid(interval1TimeData.minute, interval1TimeData.second), sut.errors.value.first())
+        sut.onAction(IntervalEditorAction.MinuteChange("13"))
+        sut.state.value.run {
+            Assert.assertEquals("13", minuteString)
+            Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), secondString)
+            Assert.assertEquals("1", intervalString)
+            Assert.assertEquals(1, errors.size)
+            Assert.assertEquals(IntervalEditorErrorType.Time.Invalid(interval1TimeData.minute, interval1TimeData.second), errors.first())
+        }
     }
 
     @Test
     fun testOnInvalidMinuteChange_Zero() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 0
-        sut.onMinuteChange("0")
-        Assert.assertEquals("0", sut.minuteString.value)
-        Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
-        Assert.assertEquals("1", sut.intervalString.value)
-        Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.Time.Zero, sut.errors.value.first())
+        sut.onAction(IntervalEditorAction.MinuteChange("0"))
+        sut.state.value.run {
+            Assert.assertEquals("0", minuteString)
+            Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), secondString)
+            Assert.assertEquals("1", intervalString)
+            Assert.assertEquals(1, errors.size)
+            Assert.assertEquals(IntervalEditorErrorType.Time.Zero, errors.first())
+        }
     }
 
     @Test
     fun testOnInvalidIntervalChange() = runTest {
         initWithSportType()
-        sut.onIntervalChange("313")
-        Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), sut.minuteString.value)
-        Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), sut.secondString.value)
-        Assert.assertEquals("313", sut.intervalString.value)
-        Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.Interval.Invalid(3), sut.errors.value.first())
+        sut.onAction(IntervalEditorAction.IntervalChange("313"))
+        sut.state.value.run {
+            Assert.assertEquals(mockInitialCurrentTimeData.minute.toString(), minuteString)
+            Assert.assertEquals(mockInitialCurrentTimeData.second.toString(), secondString)
+            Assert.assertEquals("313", intervalString)
+            Assert.assertEquals(1, errors.size)
+            Assert.assertEquals(IntervalEditorErrorType.Interval.Invalid(3), errors.first())
+        }
     }
 
     @Test
     fun testOnInvalidIntervalAndTimeChange() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(13, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 740000
-        sut.onMinuteChange("13")
-        sut.onIntervalChange("313")
-        Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertEquals(IntervalEditorErrorType.Interval.Invalid(3), sut.errors.value.first())
+        sut.onAction(IntervalEditorAction.MinuteChange("13"))
+        sut.onAction(IntervalEditorAction.IntervalChange("313"))
+        sut.state.value.run {
+            Assert.assertEquals(1, errors.size)
+            Assert.assertEquals(IntervalEditorErrorType.Interval.Invalid(3), errors.first())
+        }
     }
 
     @Test
     fun testHighMinChangeOnIncreasingTimeInterval() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(13, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 740000
-        sut.onMinuteChange("13")
-        sut.onIntervalChange("3")
-        Assert.assertTrue(sut.errors.value.isEmpty())
+        sut.onAction(IntervalEditorAction.MinuteChange("13"))
+        sut.onAction(IntervalEditorAction.IntervalChange("3"))
+        Assert.assertTrue(sut.state.value.errors.isEmpty())
     }
 
     @Test
     fun testEmptyTimeAndIntervalError() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 123
-        sut.onMinuteChange("")
-        sut.onIntervalChange("")
-        Assert.assertTrue(sut.minuteString.value.isEmpty())
-        Assert.assertTrue(sut.intervalString.value.isEmpty())
-        Assert.assertEquals(2, sut.errors.value.size)
-        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.Time.Empty))
-        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.Interval.Empty))
+        sut.onAction(IntervalEditorAction.MinuteChange(""))
+        sut.onAction(IntervalEditorAction.IntervalChange(""))
+        sut.state.value.run {
+            Assert.assertTrue(minuteString.isEmpty())
+            Assert.assertTrue(intervalString.isEmpty())
+            Assert.assertEquals(2, errors.size)
+            Assert.assertTrue(errors.contains(IntervalEditorErrorType.Time.Empty))
+            Assert.assertTrue(errors.contains(IntervalEditorErrorType.Interval.Empty))
+        }
     }
 
     /**
@@ -279,19 +298,21 @@ class IntervalEditorViewModelTest {
     fun testZeroTimeAndIntervalError() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 0
-        sut.onMinuteChange("0")
-        sut.onIntervalChange("0")
-        Assert.assertEquals(1, sut.errors.value.size)
-        Assert.assertTrue(sut.errors.value.contains(IntervalEditorErrorType.Interval.Invalid(3)))
+        sut.onAction(IntervalEditorAction.MinuteChange("0"))
+        sut.onAction(IntervalEditorAction.IntervalChange("0"))
+        sut.state.value.run {
+            Assert.assertEquals(1, errors.size)
+            Assert.assertTrue(errors.contains(IntervalEditorErrorType.Interval.Invalid(3)))
+        }
     }
 
     @Test
     fun testZeroTimeAllowed() = runTest {
         initWithSportType()
         every { timeConversionUseCase.fromTimeData(TimeData(0, mockInitialCurrentTimeData.second, mockInitialCurrentTimeData.centiSecond)) } returns 0
-        sut.onMinuteChange("0")
-        sut.onIntervalChange("3")
-        Assert.assertEquals(0, sut.errors.value.size)
+        sut.onAction(IntervalEditorAction.MinuteChange("0"))
+        sut.onAction(IntervalEditorAction.IntervalChange("3"))
+        Assert.assertTrue(sut.state.value.errors.isEmpty())
     }
 
 

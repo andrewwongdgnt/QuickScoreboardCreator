@@ -34,11 +34,8 @@ class IntervalEditorViewModel @Inject constructor(
     uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
-    private val _minuteString = MutableStateFlow("")
-    val minuteString = _minuteString.asStateFlow()
-
-    private val _secondString = MutableStateFlow("")
-    val secondString = _secondString.asStateFlow()
+    private val _state = MutableStateFlow(IntervalEditorState())
+    val state = _state.asStateFlow()
 
     private var centiSecond = 0
 
@@ -53,8 +50,6 @@ class IntervalEditorViewModel @Inject constructor(
             field = value
             validate()
         }
-    private val _intervalString = MutableStateFlow("")
-    val intervalString = _intervalString.asStateFlow()
 
     private var maxInterval = 1
     private var intervalValue = 1
@@ -62,12 +57,6 @@ class IntervalEditorViewModel @Inject constructor(
             field = value
             validate()
         }
-
-    private val _label = MutableStateFlow<Label>(Label.Custom(""))
-    val label = _label.asStateFlow()
-
-    private val _errors = MutableStateFlow(emptySet<IntervalEditorErrorType>())
-    val errors = _errors.asStateFlow()
 
     init {
         savedStateHandle.get<SportIdentifier>(NavArguments.SPORT_IDENTIFIER)?.let { sId ->
@@ -79,13 +68,17 @@ class IntervalEditorViewModel @Inject constructor(
         savedStateHandle.get<Long>(NavArguments.VALUE)?.let {
             currentTimeValue = it
             timeConversionUseCase.toTimeData(it).let { td ->
-                _minuteString.value = td.minute.toString()
-                _secondString.value = td.second.toString()
+                _state.value = state.value.copy(
+                    minuteString = td.minute.toString(),
+                    secondString = td.second.toString()
+                )
                 centiSecond = td.centiSecond
             }
         }
         savedStateHandle.get<Int>(NavArguments.INDEX)?.let {
-            _intervalString.value = (it + 1).toString()
+            _state.value = state.value.copy(
+                intervalString = (it + 1).toString()
+            )
             intervalValue = it + 1
         }
     }
@@ -99,16 +92,28 @@ class IntervalEditorViewModel @Inject constructor(
     }
 
     private fun initWithSportType(sportType: SportType) {
-        _label.value = Label.Resource(sportType.intervalLabelRes())
+        _state.value = state.value.copy(
+            label = Label.Resource(sportType.intervalLabelRes())
+        )
         getSportUseCase(resources.openRawResource(sportType.rawRes()))?.let {
             intervalList = it.intervalList
             maxInterval = it.intervalList.size
         }
     }
 
-    fun onDismiss() = sendUiEvent(Done)
+    fun onAction(action: IntervalEditorAction) {
+        when (action) {
+            is IntervalEditorAction.Dismiss -> onDismiss()
+            is IntervalEditorAction.Confirm -> onConfirm()
+            is IntervalEditorAction.MinuteChange -> onMinuteChange(action.value)
+            is IntervalEditorAction.SecondChange -> onSecondChange(action.value)
+            is IntervalEditorAction.IntervalChange -> onIntervalChange(action.value)
+        }
+    }
 
-    fun onConfirm(){
+    private fun onDismiss() = sendUiEvent(Done)
+
+    private fun onConfirm() {
         val initialTimeValue = initialTimeValue
         val isTimeIncreasing = isTimeIncreasing
         if (initialTimeValue == null || isTimeIncreasing == null) {
@@ -122,13 +127,15 @@ class IntervalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onMinuteChange(value: String){
+    private fun onMinuteChange(value: String) {
         getFilteredValue(value)?.let { min ->
-            _minuteString.value = min
+            _state.value = state.value.copy(
+                minuteString = min
+            )
             centiSecond = 0
             currentTimeValue = TimeData(
                 (min.toIntOrNull() ?: 0).coerceAtLeast(0),
-                (secondString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
+                (state.value.secondString.toIntOrNull() ?: 0).coerceAtLeast(0),
                 centiSecond
             ).let {
                 timeConversionUseCase.fromTimeData(it)
@@ -136,12 +143,14 @@ class IntervalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onSecondChange(value: String){
+    private fun onSecondChange(value: String) {
         getFilteredValue(value)?.let { second ->
-            _secondString.value = second
+            _state.value = state.value.copy(
+                secondString = second
+            )
             centiSecond = 0
             currentTimeValue = TimeData(
-                (minuteString.value.toIntOrNull() ?: 0).coerceAtLeast(0),
+                (state.value.minuteString.toIntOrNull() ?: 0).coerceAtLeast(0),
                 (second.toIntOrNull() ?: 0).coerceAtLeast(0),
                 centiSecond
             ).let {
@@ -150,9 +159,11 @@ class IntervalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onIntervalChange(value: String) {
+    private fun onIntervalChange(value: String) {
         getFilteredValue(value)?.let { interval ->
-            _intervalString.value = interval
+            _state.value = state.value.copy(
+                intervalString = interval
+            )
             intervalValue = interval.toIntOrNull() ?: 0
         }
     }
@@ -164,11 +175,11 @@ class IntervalEditorViewModel @Inject constructor(
     else
         null
 
-    private fun validate() {
+    private fun validate() = state.value.run {
         val errors = mutableSetOf<IntervalEditorErrorType>()
-        if (minuteString.value.isEmpty() || secondString.value.isEmpty())
+        if (minuteString.isEmpty() || secondString.isEmpty())
             errors.add(IntervalEditorErrorType.Time.Empty)
-        if (intervalString.value.isEmpty())
+        if (intervalString.isEmpty())
             errors.add(IntervalEditorErrorType.Interval.Empty)
 
         val initialTimeValue = initialTimeValue
@@ -185,7 +196,9 @@ class IntervalEditorViewModel @Inject constructor(
         if (!errors.contains(IntervalEditorErrorType.Interval.Empty) && (intervalValue <= 0 || intervalValue > maxInterval)) {
             errors.add(IntervalEditorErrorType.Interval.Invalid(maxInterval))
         }
-
-        _errors.value = errors
+        _state.value = copy(
+            errors = errors
+        )
     }
+
 }
