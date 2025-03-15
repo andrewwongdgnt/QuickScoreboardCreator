@@ -18,5 +18,4 @@ sealed interface TeamIconState {
         data class Changing(private val _teamIcon: TeamIcon) : Picked(_teamIcon)
         data class Displaying(private val _teamIcon: TeamIcon) : Picked(_teamIcon)
     }
-
 }

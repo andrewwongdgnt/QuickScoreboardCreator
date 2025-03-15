@@ -6,12 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
-import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalInterval
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoricalScoreboard
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.TreeSet
@@ -27,14 +26,10 @@ class TimelineViewerViewModel @Inject constructor(
 
     private var intervalIndex = 0
 
-    private var _icon = MutableStateFlow<SportIcon?>(null)
-    val icon = _icon.asStateFlow()
-
     private var historicalScoreboard: HistoricalScoreboard? = null
 
-    private var _historicalInterval = MutableStateFlow<HistoricalInterval?>(null)
-    val historicalInterval = _historicalInterval.asStateFlow()
-
+    private val _state = MutableStateFlow(TimelineViewerState())
+    val state: StateFlow<TimelineViewerState> = _state.asStateFlow()
 
     init {
 
@@ -48,7 +43,6 @@ class TimelineViewerViewModel @Inject constructor(
 
     private fun initWithId(id: Int) = viewModelScope.launch {
         getHistoryUseCase(id)?.let {
-            _icon.value = it.icon
             historicalScoreboard = it.historicalScoreboard
             historicalScoreboard
         }?.let {
@@ -56,9 +50,16 @@ class TimelineViewerViewModel @Inject constructor(
         }
     }
 
-    fun onDismiss() = sendUiEvent(Done)
+    fun onAction(action: TimelineViewerAction) {
+        when (action) {
+            is TimelineViewerAction.Dismiss -> onDismiss()
+            is TimelineViewerAction.NewInterval -> onNewInterval(action.next)
+        }
+    }
 
-    fun onNewInterval(next: Boolean) {
+    private fun onDismiss() = sendUiEvent(Done)
+
+    private fun onNewInterval(next: Boolean) {
         historicalScoreboard?.let {
             val sortedSet = TreeSet(it.historicalIntervalMap.keys.toSortedSet())
             if (sortedSet.size > 1) {
@@ -82,6 +83,10 @@ class TimelineViewerViewModel @Inject constructor(
 
     private fun setTimeline(intervalIndex: Int, historicalScoreboard: HistoricalScoreboard) {
         this.intervalIndex = intervalIndex
-        _historicalInterval.value = historicalScoreboard.historicalIntervalMap[intervalIndex]
+        _state.value = state.value.copy(
+            historicalIntervalState = historicalScoreboard.historicalIntervalMap[intervalIndex]?.let {
+                HistoricalIntervalState.Loaded(it)
+            } ?: HistoricalIntervalState.None
+        )
     }
 }

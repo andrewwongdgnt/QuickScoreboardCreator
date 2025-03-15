@@ -153,13 +153,13 @@ class TimelineViewerViewModelTest {
     @Test
     fun testInit() = runTest {
         initSut()
-        Assert.assertEquals(mockHistoricalInterval1, sut.historicalInterval.value)
+        Assert.assertEquals(mockHistoricalInterval1, (sut.state.value.historicalIntervalState as HistoricalIntervalState.Loaded).historicalInterval)
     }
 
     @Test
     fun testOnDismiss() = runTest {
         initSut()
-        sut.onDismiss()
+        sut.onAction(TimelineViewerAction.Dismiss)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -168,16 +168,16 @@ class TimelineViewerViewModelTest {
     @Test
     fun testOnNewInterval() = runTest {
         initSut()
-        sut.onNewInterval(true)
-        Assert.assertEquals(mockHistoricalInterval2, sut.historicalInterval.value)
-        sut.onNewInterval(true)
-        Assert.assertEquals(mockHistoricalInterval3, sut.historicalInterval.value)
-        sut.onNewInterval(false)
-        Assert.assertEquals(mockHistoricalInterval2, sut.historicalInterval.value)
-        sut.onNewInterval(true)
-        sut.onNewInterval(true)
-        Assert.assertEquals(mockHistoricalInterval1, sut.historicalInterval.value)
-        sut.onNewInterval(false)
-        Assert.assertEquals(mockHistoricalInterval3, sut.historicalInterval.value)
+        sut.onAction(TimelineViewerAction.NewInterval(true))
+        Assert.assertEquals(mockHistoricalInterval2, (sut.state.value.historicalIntervalState as HistoricalIntervalState.Loaded).historicalInterval)
+        sut.onAction(TimelineViewerAction.NewInterval(true))
+        Assert.assertEquals(mockHistoricalInterval3, (sut.state.value.historicalIntervalState as HistoricalIntervalState.Loaded).historicalInterval)
+        sut.onAction(TimelineViewerAction.NewInterval(false))
+        Assert.assertEquals(mockHistoricalInterval2, (sut.state.value.historicalIntervalState as HistoricalIntervalState.Loaded).historicalInterval)
+        sut.onAction(TimelineViewerAction.NewInterval(true))
+        sut.onAction(TimelineViewerAction.NewInterval(true))
+        Assert.assertEquals(mockHistoricalInterval1, (sut.state.value.historicalIntervalState as HistoricalIntervalState.Loaded).historicalInterval)
+        sut.onAction(TimelineViewerAction.NewInterval(false))
+        Assert.assertEquals(mockHistoricalInterval3, (sut.state.value.historicalIntervalState as HistoricalIntervalState.Loaded).historicalInterval)
     }
 }
