@@ -13,8 +13,10 @@ import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHist
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryListUseCase
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,17 +29,29 @@ class HistoryListViewModel @Inject constructor(
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
     private val historyEntityList = getHistoryListUseCase()
-    val categorizedHistoryList = historyEntityList.map {
-        categorizeHistoryUseCase(it)
-    }
+    val state = historyEntityList.map {
+        HistoryListState(
+            categorizeHistoryUseCase(it)
+        )
+    }.stateIn(viewModelScope, SharingStarted.Lazily, HistoryListState())
 
     private var deletedHistoryList: MutableList<HistoryModel> = mutableListOf()
 
-    fun onEdit(id: Int) = sendUiEvent(HistoryDetails(id))
+    fun onAction(action: HistoryListAction) {
+        when (action) {
+            HistoryListAction.ClearDeleteHistoryList -> onClearDeletedHistoryList()
+            is HistoryListAction.Delete -> onDelete(action.id)
+            is HistoryListAction.Edit -> onEdit(action.id)
+            is HistoryListAction.Launch -> onLaunch(action.id)
+            HistoryListAction.UndoDelete -> onUndoDelete()
+        }
+    }
 
-    fun onLaunch(id: Int) = sendUiEvent(TimelineViewer(id, 0))
+    private fun onEdit(id: Int) = sendUiEvent(HistoryDetails(id))
 
-    fun onDelete(id: Int) = viewModelScope.launch {
+    private fun onLaunch(id: Int) = sendUiEvent(TimelineViewer(id, 0))
+
+    private fun onDelete(id: Int) = viewModelScope.launch {
         historyEntityList.first().find { entity ->
             entity.id == id
         }?.let {
@@ -53,7 +67,7 @@ class HistoryListViewModel @Inject constructor(
         )
     }
 
-    fun onUndoDelete() {
+    private fun onUndoDelete() {
         deletedHistoryList.toList().takeUnless { it.isEmpty() }?.let { historyList ->
             viewModelScope.launch {
                 insertHistoryListUseCase(historyList)
@@ -62,6 +76,6 @@ class HistoryListViewModel @Inject constructor(
         }
     }
 
-    fun onClearDeletedHistoryList() = deletedHistoryList.clear()
+    private fun onClearDeletedHistoryList() = deletedHistoryList.clear()
 
 }

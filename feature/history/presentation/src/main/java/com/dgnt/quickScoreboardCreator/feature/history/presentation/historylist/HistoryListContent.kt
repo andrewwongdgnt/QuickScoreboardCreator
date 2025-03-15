@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,18 +41,16 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.DefaultSnackbar
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.CardItemContent
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.carditem.SwipeBox
-import com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData
-import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryItemData
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.DateDisplayUtil.getDayOfMonthSuffix
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.HistoryDetails
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.SnackBar
-import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
+import com.dgnt.quickScoreboardCreator.feature.history.domain.model.CategorizedHistoryItemData
+import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 @Composable
@@ -58,17 +58,13 @@ fun HistoryListContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: HistoryListViewModel = hiltViewModel()
 ) {
-    val categorizedHistoryList = viewModel.categorizedHistoryList.collectAsStateWithLifecycle(initialValue = emptyList())
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     HistoryListInnerContent(
         uiEvent = viewModel.uiEvent,
         onUiEvent = onUiEvent,
-        categorizedHistoryList = categorizedHistoryList.value,
-        onLaunch = viewModel::onLaunch,
-        onEdit = viewModel::onEdit,
-        onDelete = { viewModel.onDelete(it) },
-        onUndoDelete = viewModel::onUndoDelete,
-        onClearDeletedHistoryList = viewModel::onClearDeletedHistoryList
+        state = state,
+        onAction = viewModel::onAction
     )
 
 }
@@ -77,47 +73,43 @@ fun HistoryListContent(
 private fun HistoryListInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    categorizedHistoryList: List<CategorizedHistoryItemData>,
-    onLaunch: (id: Int) -> Unit,
-    onEdit: (id: Int) -> Unit,
-    onDelete: (id: Int) -> Unit,
-    onUndoDelete: () -> Unit,
-    onClearDeletedHistoryList: () -> Unit,
+    state: HistoryListState,
+    onAction: (HistoryListAction) -> Unit,
 ) {
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     var mustClearDeletedHistoryList by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = true) {
 
-        fun dismissSnackbar(clear: Boolean) {
+        fun dismissSnackBar(clear: Boolean) {
             mustClearDeletedHistoryList = clear
-            snackbarHostState.currentSnackbarData?.dismiss()
+            snackBarHostState.currentSnackbarData?.dismiss()
         }
         uiEvent.collect { event ->
             when (event) {
                 is SnackBar.QuantitySnackBar -> {
-                    dismissSnackbar(false)
+                    dismissSnackBar(false)
                     scope.launch {
-                        val result = snackbarHostState.showSnackbar(
+                        val result = snackBarHostState.showSnackbar(
                             message = context.resources.getQuantityString(event.message, event.quantity, event.quantity),
                             actionLabel = context.getString(event.action),
                             withDismissAction = true
                         )
                         when (result) {
-                            SnackbarResult.ActionPerformed -> onUndoDelete()
+                            SnackbarResult.ActionPerformed -> onAction(HistoryListAction.UndoDelete)
                             SnackbarResult.Dismissed -> {
                                 if (mustClearDeletedHistoryList)
-                                    onClearDeletedHistoryList()
+                                    onAction(HistoryListAction.ClearDeleteHistoryList)
                             }
                         }
                     }
                 }
 
                 is HistoryDetails -> {
-                    dismissSnackbar(true)
+                    dismissSnackBar(true)
                 }
 
                 else -> Unit
@@ -127,13 +119,13 @@ private fun HistoryListInnerContent(
     }
     Scaffold(
         snackbarHost = {
-            SnackbarHost(snackbarHostState) { snackbarData ->
+            SnackbarHost(snackBarHostState) { snackbarData ->
                 DefaultSnackbar(snackbarData = snackbarData, onSnackbarDismissed = { mustClearDeletedHistoryList = true })
             }
         }
     ) { padding ->
 
-        if (categorizedHistoryList.isEmpty())
+        if (state.categorizedHistoryList.isEmpty())
             Text(
                 modifier = Modifier
                     .fillMaxSize()
@@ -146,10 +138,10 @@ private fun HistoryListInnerContent(
                 modifier = Modifier
                     .padding(padding)
                     .padding(bottom = 100.dp),
-                onLaunch = onLaunch,
-                onEdit = onEdit,
-                onDelete = onDelete,
-                categorizedHistoryList = categorizedHistoryList
+                onLaunch = { onAction(HistoryListAction.Launch(it)) },
+                onEdit = { onAction(HistoryListAction.Edit(it)) },
+                onDelete = { onAction(HistoryListAction.Delete(it)) },
+                categorizedHistoryList = state.categorizedHistoryList
             )
     }
 }
@@ -224,52 +216,15 @@ private fun CategorizedHistoryListContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun `Empty history`() =
-    HistoryListInnerContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        categorizedHistoryList = emptyList(),
-        onLaunch = {},
-        onEdit = {},
-        onDelete = {},
-        onUndoDelete = {},
-        onClearDeletedHistoryList = {},
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `Some histories`() =
-    HistoryListInnerContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        categorizedHistoryList = listOf(
-            CategorizedHistoryItemData(
-                DateTime(2024, 6, 1, 0, 0),
-                listOf(
-                    HistoryItemData(1, "Tennis", "tennis_description", SportIcon.TENNIS, DateTime(2024, 6, 2, 10, 0), DateTime(2024, 6, 2, 10, 0)),
-                    HistoryItemData(2, "Tennis", "another banger", SportIcon.TENNIS, DateTime(2024, 6, 1, 9, 0), DateTime(2024, 6, 1, 9, 0)),
-                )
-            ),
-            CategorizedHistoryItemData(
-                DateTime(2024, 5, 1, 0, 0),
-                listOf(
-                    HistoryItemData(4, "Basketball NBA", "cool", SportIcon.BASKETBALL, DateTime(2024, 5, 2, 14, 0), DateTime(2024, 5, 2, 14, 0)),
-                    HistoryItemData(7, "Hockey NHL", "", SportIcon.HOCKEY, DateTime(2024, 5, 2, 10, 0), DateTime(2024, 5, 2, 10, 0)),
-                )
-            ),
-            CategorizedHistoryItemData(
-                DateTime(2024, 1, 1, 0, 0),
-                listOf(
-                    HistoryItemData(8, "Pick up bball", "f", SportIcon.BASKETBALL, DateTime(2024, 1, 31, 16, 14), DateTime(2024, 1, 31, 16, 14)),
-                    HistoryItemData(55, "Pick up bball", "f2", SportIcon.BASKETBALL, DateTime(2024, 1, 22, 16, 14), DateTime(2024, 1, 22, 16, 14)),
-                    HistoryItemData(83, "Pick up bball", "f", SportIcon.BASKETBALL, DateTime(2024, 1, 21, 16, 14), DateTime(2024, 1, 21, 16, 14)),
-                )
-            )
-
-        ),
-        onLaunch = {},
-        onEdit = {},
-        onDelete = {},
-        onUndoDelete = {},
-        onClearDeletedHistoryList = {},
-    )
+private fun HistoryListContentPreview(
+    @PreviewParameter(HistoryListPreviewStateProvider::class) state: HistoryListState
+) = QuickScoreboardCreatorTheme {
+    Surface {
+        HistoryListInnerContent(
+            uiEvent = emptyFlow(),
+            onUiEvent = {},
+            state = state,
+            onAction = {}
+        )
+    }
+}

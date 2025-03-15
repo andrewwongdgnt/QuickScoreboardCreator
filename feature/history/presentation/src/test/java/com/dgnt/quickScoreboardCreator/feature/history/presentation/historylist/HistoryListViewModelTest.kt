@@ -114,7 +114,7 @@ class HistoryListViewModelTest {
 
     @Test
     fun testOnEdit() = runTest {
-        sut.onEdit(1)
+        sut.onAction(HistoryListAction.Edit(1))
         verify(exactly = 1) {
             sut.sendUiEvent(HistoryDetails(1))
         }
@@ -122,7 +122,7 @@ class HistoryListViewModelTest {
 
     @Test
     fun testOnDeleteAndUndo() = runTest {
-        sut.onDelete(1)
+        sut.onAction(HistoryListAction.Delete(1))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -132,7 +132,7 @@ class HistoryListViewModelTest {
                 )
             )
         }
-        sut.onDelete(2)
+        sut.onAction(HistoryListAction.Delete(2))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -142,7 +142,7 @@ class HistoryListViewModelTest {
                 )
             )
         }
-        sut.onUndoDelete()
+        sut.onAction(HistoryListAction.UndoDelete)
         coVerify(exactly = 1) { deleteHistoryUseCase(mockHistoryList[0]) }
         coVerify(exactly = 1) { deleteHistoryUseCase(mockHistoryList[1]) }
         coVerify(exactly = 1) { insertHistoryListUseCase(mockHistoryList) }
@@ -150,7 +150,7 @@ class HistoryListViewModelTest {
 
     @Test
     fun testNoUndo() = runTest {
-        sut.onDelete(1)
+        sut.onAction(HistoryListAction.Delete(1))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -160,7 +160,7 @@ class HistoryListViewModelTest {
                 )
             )
         }
-        sut.onDelete(2)
+        sut.onAction(HistoryListAction.Delete(2))
         verify(exactly = 1) {
             sut.sendUiEvent(
                 SnackBar.QuantitySnackBar(
@@ -170,8 +170,8 @@ class HistoryListViewModelTest {
                 )
             )
         }
-        sut.onClearDeletedHistoryList()
-        sut.onUndoDelete()
+        sut.onAction(HistoryListAction.ClearDeleteHistoryList)
+        sut.onAction(HistoryListAction.UndoDelete)
         coVerify(exactly = 1) { deleteHistoryUseCase(mockHistoryList[0]) }
         coVerify(exactly = 1) { deleteHistoryUseCase(mockHistoryList[1]) }
         coVerify(exactly = 0) { insertHistoryListUseCase(any()) }
@@ -179,7 +179,7 @@ class HistoryListViewModelTest {
 
     @Test
     fun testOnLaunch() = runTest {
-        sut.onLaunch(1)
+        sut.onAction(HistoryListAction.Launch(1))
         verify(exactly = 1) {
             sut.sendUiEvent(TimelineViewer(1, 0))
         }
