@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.dgnt.quickScoreboardCreator.feature.history.presentation.timelineviewer
 
 
@@ -10,12 +8,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -74,8 +72,6 @@ private fun TimelineViewerInnerContent(
     ) {
         when (val historicalIntervalState = state.historicalIntervalState) {
             is HistoricalIntervalState.Loaded -> {
-
-
                 TimelineViewerChart(
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp, top = 30.dp)
@@ -134,7 +130,7 @@ private fun TimelineViewerInnerContent(
                 }
             }
 
-            else ->
+            is HistoricalIntervalState.Initial ->
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(72.dp)
@@ -143,6 +139,17 @@ private fun TimelineViewerInnerContent(
                     color = MaterialTheme.colorScheme.secondary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
+
+            is HistoricalIntervalState.None ->
+                Text(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize(Alignment.Center),
+                    text = stringResource(R.string.noTimelineContentMsg),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+
+
         }
 
     }

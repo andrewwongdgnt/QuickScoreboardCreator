@@ -103,6 +103,7 @@
     <!-- Timeline Viewer -->
     <string name="nextInterval">Next %1$s</string>
     <string name="prevInterval">Prev %1$s</string>
+    <string name="noTimelineContentMsg">Nothing to show yet</string>
     <!-- History Details -->
     <string name="historyDetailsTitle">Session details</string>
     <!-- Team Picker -->
