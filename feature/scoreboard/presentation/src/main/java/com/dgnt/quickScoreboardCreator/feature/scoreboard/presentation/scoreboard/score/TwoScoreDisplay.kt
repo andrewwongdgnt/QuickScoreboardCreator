@@ -33,7 +33,7 @@ fun TwoScoreDisplay(
     secondaryDisplayedScoreInfo: DisplayedScoreInfo,
     secondaryIncrementList: List<List<Int>>,
     secondaryScoreLabel: Label,
-    onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
+    onSecondaryScoreChange: (Int, Int, Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxHeight(),
@@ -95,7 +95,7 @@ fun TwoScoreDisplay(
                     simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
                     onIncrement = { index, main ->
-                        onScoreChange(false, 0, index, main)
+                        onSecondaryScoreChange(0, index, main)
                     }
                 )
                 ScoreValueContent(
@@ -120,7 +120,7 @@ fun TwoScoreDisplay(
                     simpleMode = simpleMode,
                     incrementList = secondaryIncrementList[0],
                     onIncrement = { index, main ->
-                        onScoreChange(false, 1, index, main)
+                        onSecondaryScoreChange(1, index, main)
                     }
                 )
             }
@@ -177,7 +177,7 @@ private fun `Normal scores`() =
             listOf(1),
         ),
         secondaryScoreLabel = Label.Resource(R.string.fouls),
-        onScoreChange = { _, _, _, _ -> }
+        onSecondaryScoreChange = { _, _, _ -> }
     )
 
 @PreviewLandscape
@@ -198,5 +198,5 @@ private fun `Deuce`() =
         ),
         secondaryIncrementList = listOf(),
         secondaryScoreLabel = Label.Resource(R.string.blank),
-        onScoreChange = { _, _, _, _ -> }
+        onSecondaryScoreChange = { _, _, _ -> }
     )

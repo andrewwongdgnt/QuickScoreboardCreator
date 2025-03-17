@@ -15,7 +15,6 @@ import com.dgnt.quickScoreboardCreator.feature.history.domain.model.IntervalLabe
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.TeamLabel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.manager.ScoreboardManager
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.uievent.IntervalEditor
@@ -23,7 +22,6 @@ import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIdentifier
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportType
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalEndSound
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.GetSportUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.usecase.TimeConversionUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.intervalLabelRes
@@ -54,73 +52,58 @@ class ScoreboardViewModel @Inject constructor(
     private val uiEventHandler: UiEventHandler
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
-    /**
-     * Primary Display score
-     */
-    private val _primaryDisplayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
-    val primaryDisplayedScoreInfo: StateFlow<DisplayedScoreInfo> = _primaryDisplayedScoreInfo.asStateFlow()
+    private val _state = MutableStateFlow(ScoreboardState())
+    val state: StateFlow<ScoreboardState> = _state.asStateFlow()
+
     private val primaryScoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
-        _primaryDisplayedScoreInfo.value = it
+        _state.value = state.value.copy(
+            primaryDisplayedScoreInfo = it
+        )
     }
 
-    /**
-     * Secondary Display score
-     */
-    private val _secondaryDisplayedScoreInfo = MutableStateFlow(DisplayedScoreInfo(listOf(), DisplayedScore.Blank))
-    val secondaryDisplayedScoreInfo: StateFlow<DisplayedScoreInfo> = _secondaryDisplayedScoreInfo.asStateFlow()
     private val secondaryScoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
-        _secondaryDisplayedScoreInfo.value = it
+        _state.value = state.value.copy(
+            secondaryDisplayedScoreInfo = it
+        )
     }
 
-    /**
-     * Primary Display increment list
-     */
-    private val _primaryIncrementList = MutableStateFlow(emptyList<List<Int>>())
-    val primaryIncrementList: StateFlow<List<List<Int>>> = _primaryIncrementList.asStateFlow()
     private val primaryIncrementListUpdateListener: (List<List<Int>>) -> Unit = {
-        _primaryIncrementList.value = it
+        _state.value = state.value.copy(
+            primaryIncrementList = it
+        )
     }
 
-    /**
-     * Secondary Display increment list
-     */
-    private val _secondaryIncrementList = MutableStateFlow(emptyList<List<Int>>())
-    val secondaryIncrementList: StateFlow<List<List<Int>>> = _secondaryIncrementList.asStateFlow()
     private val secondaryIncrementListUpdateListener: (List<List<Int>>) -> Unit = {
-        _secondaryIncrementList.value = it
+        _state.value = state.value.copy(
+            secondaryIncrementList = it
+        )
     }
 
-    /**
-     * Display interval number
-     */
-    private val _currentInterval = MutableStateFlow(1)
-    val currentInterval: StateFlow<Int> = _currentInterval.asStateFlow()
     private val intervalIndexUpdateListener: (Int) -> Unit = {
-        _currentInterval.value = it + 1
+        _state.value = state.value.copy(
+            currentInterval = it + 1,
+        )
         secondaryScoreLabelList.getOrNull(it)?.let { secondaryScoreLabelInfo ->
-            _secondaryScoreLabel.value = secondaryScoreLabelInfo
+            _state.value = state.value.copy(
+                secondaryScoreLabel = secondaryScoreLabelInfo,
+            )
         }
         onTimerPause(true)
     }
 
-    /**
-     * Display team list
-     */
-    private val _teamList = MutableStateFlow(emptyList<TeamDisplay>())
-    val teamList: StateFlow<List<TeamDisplay>> = _teamList.asStateFlow()
+
     private val teamSizeUpdateListener: (Int) -> Unit = {
-        _teamList.value = (0 until it).map { index ->
-            teamList.value.getOrNull(index) ?: TeamDisplay.UnSelected
-        }
+        _state.value = state.value.copy(
+            teamList = (0 until it).map { index ->
+                state.value.teamList.getOrNull(index) ?: TeamDisplay.UnSelected
+            },
+        )
     }
 
-    /**
-     * Display time
-     */
-    private val _timeData = MutableStateFlow(TimeData(0, 0, 0))
-    val timeData: StateFlow<TimeData> = _timeData.asStateFlow()
     private val timeUpdateListener: (Long) -> Unit = {
-        _timeData.value = timeConversionUseCase.toTimeData(it)
+        _state.value = state.value.copy(
+            timeData = timeConversionUseCase.toTimeData(it)
+        )
         if (it <= 0L) {
             stopTimerJob()
         }
@@ -147,12 +130,6 @@ class ScoreboardViewModel @Inject constructor(
         }
     }
 
-    private val _simpleMode = MutableStateFlow(true)
-    val simpleMode: StateFlow<Boolean> = _simpleMode.asStateFlow()
-
-    private val _timerInProgress = MutableStateFlow(false)
-    val timerInProgress: StateFlow<Boolean> = _timerInProgress.asStateFlow()
-
     private var timerJob: Job? = null
 
     private var sportIdentifier: SportIdentifier? = null
@@ -162,12 +139,6 @@ class ScoreboardViewModel @Inject constructor(
 
     private var historyEntityId: Int? = null
     private var isHistoryTemporary = true
-
-    private val _intervalLabel = MutableStateFlow<Label>(Label.Custom(""))
-    val intervalLabel = _intervalLabel.asStateFlow()
-
-    private val _secondaryScoreLabel = MutableStateFlow<Label>(Label.Custom(""))
-    val secondaryScoreLabel = _secondaryScoreLabel.asStateFlow()
 
     private var secondaryScoreLabelList = listOf<Label>()
 
@@ -180,17 +151,19 @@ class ScoreboardViewModel @Inject constructor(
             sportIdentifier = sId
         }
 
-        scoreboardManager.primaryScoresUpdateListener = primaryScoresUpdateListener
-        scoreboardManager.secondaryScoresUpdateListener = secondaryScoresUpdateListener
-        scoreboardManager.timeUpdateListener = timeUpdateListener
-        scoreboardManager.intervalIndexUpdateListener = intervalIndexUpdateListener
-        scoreboardManager.primaryIncrementListUpdateListener = primaryIncrementListUpdateListener
-        scoreboardManager.secondaryIncrementListUpdateListener = secondaryIncrementListUpdateListener
-        scoreboardManager.teamSizeUpdateListener = teamSizeUpdateListener
-        scoreboardManager.winnersUpdateListener = winnersUpdateListener
-        scoreboardManager.intervalOnEndListener = intervalOnEndListener
+        scoreboardManager.let {
+            it.primaryScoresUpdateListener = primaryScoresUpdateListener
+            it.secondaryScoresUpdateListener = secondaryScoresUpdateListener
+            it.timeUpdateListener = timeUpdateListener
+            it.intervalIndexUpdateListener = intervalIndexUpdateListener
+            it.primaryIncrementListUpdateListener = primaryIncrementListUpdateListener
+            it.secondaryIncrementListUpdateListener = secondaryIncrementListUpdateListener
+            it.teamSizeUpdateListener = teamSizeUpdateListener
+            it.winnersUpdateListener = winnersUpdateListener
+            it.intervalOnEndListener = intervalOnEndListener
+            it.triggerUpdateListeners()
+        }
 
-        scoreboardManager.triggerUpdateListeners()
     }
 
     private fun initWithId(id: Int) {
@@ -204,7 +177,9 @@ class ScoreboardViewModel @Inject constructor(
 
     private fun initWithSportType(sportType: SportType) {
         this.sportType = sportType
-        _intervalLabel.value = Label.Resource(sportType.intervalLabelRes())
+        _state.value = state.value.copy(
+            intervalLabel = Label.Resource(sportType.intervalLabelRes())
+        )
         timelineViewerTitle = resources.getString(sportType.titleRes())
         timelineViewerIcon = sportType.icon
         getSportUseCase(resources.openRawResource(sportType.rawRes()))?.let { sportModel ->
@@ -219,38 +194,56 @@ class ScoreboardViewModel @Inject constructor(
 
     }
 
-    fun onScoreChange(
+    fun onAction(action: ScoreboardAction) {
+        when (action) {
+            is ScoreboardAction.IntervalEdit -> onIntervalEdit(action.updatedIntervalData)
+            is ScoreboardAction.ScoreChange -> onScoreChange(action.isPrimary, action.scoreIndex, action.incrementIndex, action.main)
+            is ScoreboardAction.TeamPick -> onTeamPick(action.updatedTeamData)
+            is ScoreboardAction.TimerPause -> onTimerPause(action.reset)
+            ScoreboardAction.TimerStart -> onTimerStart()
+            ScoreboardAction.ToIntervalEditor -> toIntervalEditor()
+            is ScoreboardAction.ToTeamPicker -> toTeamPicker(action.index)
+            ScoreboardAction.ToTimelineViewer -> toTimelineViewer()
+            is ScoreboardAction.ToggleModeChange -> onToggleModeChange(action.isSimpleMode)
+        }
+    }
+
+    private fun onScoreChange(
         isPrimary: Boolean,
         scoreIndex: Int,
         incrementIndex: Int,
         main: Boolean,
     ) = scoreboardManager.updateScore(isPrimary, scoreIndex, incrementIndex, main)
 
-    fun toTeamPicker(index: Int) = sendUiEvent(TeamPicker(index))
+    private fun toTeamPicker(index: Int) = sendUiEvent(TeamPicker(index))
 
-    fun onTeamPick(updatedTeamData: UpdatedTeamData) = viewModelScope.launch {
-        _teamList.value = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
-            if (updatedTeamData.scoreIndex == index) {
-                getTeamUseCase(updatedTeamData.teamId)?.let {
-                    TeamDisplay.Selected(it.title, it.icon)
+    private fun onTeamPick(updatedTeamData: UpdatedTeamData) = viewModelScope.launch {
+        _state.value = state.value.copy(
+            teamList = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
+                if (updatedTeamData.scoreIndex == index) {
+                    getTeamUseCase(updatedTeamData.teamId)?.let {
+                        TeamDisplay.Selected(it.title, it.icon)
+                    }
+                } else {
+                    state.value.teamList.getOrNull(index)
                 }
-            } else {
-                teamList.value.getOrNull(index)
             }
-        }
+        )
     }
 
-    fun onTimerPause(reset: Boolean) {
+    private fun onTimerPause(reset: Boolean) {
         stopTimerJob()
         if (reset) {
             scoreboardManager.resetTime()
         }
     }
 
-    fun onTimerStart() {
+    private fun onTimerStart() {
         stopTimerJob()
         if (!scoreboardManager.canTimeAdvance()) {
-            _timerInProgress.value = false
+            _state.value = state.value.copy(
+                timerInProgress = false
+            )
             return
         }
 
@@ -261,22 +254,27 @@ class ScoreboardViewModel @Inject constructor(
 
             }
         }
-        _timerInProgress.value = true
-
+        _state.value = state.value.copy(
+            timerInProgress = true
+        )
     }
 
-    fun onToggleModeChange(isSimpleMode: Boolean) {
-        _simpleMode.value = !isSimpleMode
+    private fun onToggleModeChange(isSimpleMode: Boolean) {
+        _state.value = state.value.copy(
+            simpleMode = !isSimpleMode
+        )
     }
 
-    fun toIntervalEditor() {
+    private fun toIntervalEditor() {
         stopTimerJob()
-        sportIdentifier?.let { sId ->
-            sendUiEvent(IntervalEditor(timeConversionUseCase.fromTimeData(timeData.value), currentInterval.value - 1, sId))
+        state.value.run {
+            sportIdentifier?.let { sId ->
+                sendUiEvent(IntervalEditor(timeConversionUseCase.fromTimeData(timeData), currentInterval - 1, sId))
+            }
         }
     }
 
-    fun onIntervalEdit(updatedIntervalData: UpdatedIntervalData) {
+    private fun onIntervalEdit(updatedIntervalData: UpdatedIntervalData) {
         updatedIntervalData.takeUnless { it.timeValue < 0 || it.intervalIndex < 0 }?.let {
             stopTimerJob()
             scoreboardManager.updateInterval(it.intervalIndex)
@@ -285,21 +283,21 @@ class ScoreboardViewModel @Inject constructor(
         }
     }
 
-    fun toTimelineViewer() = viewModelScope.launch {
+    private fun toTimelineViewer() = viewModelScope.launch {
         insertHistory().let {
             historyEntityId = it
-            sendUiEvent(TimelineViewer(it, currentInterval.value - 1))
+            sendUiEvent(TimelineViewer(it, state.value.currentInterval - 1))
         }
     }
 
     private suspend fun insertHistory(): Int {
-        val intervalLabel = when (val l = intervalLabel.value) {
+        val intervalLabel = when (val l = state.value.intervalLabel) {
             is Label.Custom -> IntervalLabel.Custom(l.value)
             else -> sportType?.let {
                 IntervalLabel.DefaultSport(it)
             } ?: IntervalLabel.Custom("")
         }
-        val teamList = teamList.value.map {
+        val teamList = state.value.teamList.map {
             when (it) {
                 is TeamDisplay.UnSelected -> TeamLabel.None
                 is TeamDisplay.Selected -> TeamLabel.Custom(it.name, it.icon)
@@ -327,6 +325,8 @@ class ScoreboardViewModel @Inject constructor(
 
     private fun stopTimerJob() {
         timerJob?.cancel()
-        _timerInProgress.value = false
+        _state.value = state.value.copy(
+            timerInProgress = false
+        )
     }
 }

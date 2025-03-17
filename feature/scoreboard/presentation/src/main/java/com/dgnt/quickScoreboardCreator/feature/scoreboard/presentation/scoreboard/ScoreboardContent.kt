@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,27 +20,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScore
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.domain.model.state.DisplayedScoreInfo
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.R
-import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.Label
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.util.PreviewLandscape
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.rememberTimeline
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.PlaySound
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.mode.ModeControlContent
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.score.ScoreControl
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.score.TwoScoreDisplay
-import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.teamdisplay.TeamDisplay
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.teamdisplay.TeamDisplayContent
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.time.IntervalDisplayContent
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.time.TimerControlContent
 import com.dgnt.quickScoreboardCreator.feature.scoreboard.presentation.scoreboard.time.TimerDisplayContent
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.time.TimeData
-import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamIcon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -51,8 +48,8 @@ fun ScoreboardContent(
     viewModel: ScoreboardViewModel = hiltViewModel()
 ) {
 
-    updatedTeamData?.let { viewModel.onTeamPick(it) }
-    updatedIntervalData?.let { viewModel.onIntervalEdit(it) }
+    updatedTeamData?.let { viewModel.onAction(ScoreboardAction.TeamPick(it)) }
+    updatedIntervalData?.let { viewModel.onAction(ScoreboardAction.IntervalEdit(it)) }
 
     ScoreboardVMDataContent(
         onUiEvent = onUiEvent,
@@ -65,39 +62,13 @@ private fun ScoreboardVMDataContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: ScoreboardViewModel
 ) {
-    val primaryDisplayedScoreInfo by viewModel.primaryDisplayedScoreInfo.collectAsStateWithLifecycle()
-    val primaryIncrementList by viewModel.primaryIncrementList.collectAsStateWithLifecycle()
-    val secondaryDisplayedScoreInfo by viewModel.secondaryDisplayedScoreInfo.collectAsStateWithLifecycle()
-    val secondaryIncrementList by viewModel.secondaryIncrementList.collectAsStateWithLifecycle()
-    val secondaryScoreLabelInfo by viewModel.secondaryScoreLabel.collectAsStateWithLifecycle()
-    val teamList by viewModel.teamList.collectAsStateWithLifecycle()
-    val timeData by viewModel.timeData.collectAsStateWithLifecycle()
-    val timerInProgress by viewModel.timerInProgress.collectAsStateWithLifecycle()
-    val simpleMode by viewModel.simpleMode.collectAsStateWithLifecycle()
-    val intervalLabelInfo by viewModel.intervalLabel.collectAsStateWithLifecycle()
-    val currentInterval by viewModel.currentInterval.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ScoreboardInnerContent(
         uiEvent = viewModel.uiEvent,
         onUiEvent = onUiEvent,
-        primaryDisplayedScoreInfo = primaryDisplayedScoreInfo,
-        primaryIncrementList = primaryIncrementList,
-        secondaryDisplayedScoreInfo = secondaryDisplayedScoreInfo,
-        secondaryIncrementList = secondaryIncrementList,
-        secondaryScoreLabel = secondaryScoreLabelInfo,
-        onScoreChange = viewModel::onScoreChange,
-        teamList = teamList,
-        toTeamPicker = viewModel::toTeamPicker,
-        timeData = timeData,
-        timerInProgress = timerInProgress,
-        onTimerPause = viewModel::onTimerPause,
-        onTimerStart = viewModel::onTimerStart,
-        simpleMode = simpleMode,
-        onToggleModeChange = viewModel::onToggleModeChange,
-        intervalLabel = intervalLabelInfo,
-        currentInterval = currentInterval,
-        toIntervalEditor = viewModel::toIntervalEditor,
-        toTimelineViewer = viewModel::toTimelineViewer
+        state = state,
+        onAction = viewModel::onAction
     )
 }
 
@@ -105,25 +76,9 @@ private fun ScoreboardVMDataContent(
 private fun ScoreboardInnerContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    primaryDisplayedScoreInfo: DisplayedScoreInfo,
-    primaryIncrementList: List<List<Int>>,
-    secondaryDisplayedScoreInfo: DisplayedScoreInfo,
-    secondaryIncrementList: List<List<Int>>,
-    secondaryScoreLabel: Label,
-    onScoreChange: (Boolean, Int, Int, Boolean) -> Unit,
-    teamList: List<TeamDisplay>,
-    toTeamPicker: (Int) -> Unit,
-    timeData: TimeData,
-    timerInProgress: Boolean,
-    onTimerPause: (Boolean) -> Unit,
-    onTimerStart: () -> Unit,
-    simpleMode: Boolean,
-    onToggleModeChange: (Boolean) -> Unit,
-    intervalLabel: Label,
-    currentInterval: Int,
-    toIntervalEditor: () -> Unit,
-    toTimelineViewer: () -> Unit,
-) {
+    state: ScoreboardState,
+    onAction: (ScoreboardAction) -> Unit,
+) = state.run {
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         uiEvent.collect { event ->
@@ -150,7 +105,7 @@ private fun ScoreboardInnerContent(
                 simpleMode = simpleMode,
                 incrementList = primaryIncrementList[0],
                 onIncrement = { index, main ->
-                    onScoreChange(true, 0, index, main)
+                    onAction(ScoreboardAction.ScoreChange(true, 0, index, main))
                 }
             )
             Spacer(modifier = Modifier.width(spacerWidth))
@@ -161,7 +116,9 @@ private fun ScoreboardInnerContent(
                 secondaryDisplayedScoreInfo = secondaryDisplayedScoreInfo,
                 secondaryIncrementList = secondaryIncrementList,
                 secondaryScoreLabel = secondaryScoreLabel,
-                onScoreChange = onScoreChange
+                onSecondaryScoreChange = { scoreIndex, incrementIndex, main ->
+                    onAction(ScoreboardAction.ScoreChange(false, scoreIndex, incrementIndex, main))
+                }
             )
             Spacer(modifier = Modifier.width(spacerWidth))
             ScoreControl(
@@ -169,7 +126,7 @@ private fun ScoreboardInnerContent(
                 simpleMode = simpleMode,
                 incrementList = primaryIncrementList[1],
                 onIncrement = { index, main ->
-                    onScoreChange(true, 1, index, main)
+                    onAction(ScoreboardAction.ScoreChange(true, 1, index, main))
                 }
             )
         }
@@ -183,8 +140,8 @@ private fun ScoreboardInnerContent(
             modifier = Modifier
                 .align(Alignment.TopStart),
             timerInProgress = timerInProgress,
-            onTimerPause = onTimerPause,
-            onTimerStart = onTimerStart,
+            onTimerPause = { onAction(ScoreboardAction.TimerPause(it)) },
+            onTimerStart = { onAction(ScoreboardAction.TimerStart) },
         )
         Column(
             modifier = Modifier
@@ -194,7 +151,7 @@ private fun ScoreboardInnerContent(
             TimerDisplayContent(
                 simpleMode = simpleMode,
                 timeData = timeData,
-                toIntervalEditor = toIntervalEditor,
+                toIntervalEditor = { onAction(ScoreboardAction.ToIntervalEditor) },
             )
             IntervalDisplayContent(
                 modifier = Modifier,
@@ -211,12 +168,12 @@ private fun ScoreboardInnerContent(
                 imageVector = rememberTimeline(),
                 contentDescription = stringResource(id = R.string.timeline),
                 modifier = Modifier
-                    .clickable(onClick = toTimelineViewer)
+                    .clickable(onClick = { onAction(ScoreboardAction.ToTimelineViewer) })
             )
             Spacer(modifier = Modifier.width(5.dp))
             ModeControlContent(
                 simpleMode = simpleMode,
-                onToggleModeChange = onToggleModeChange,
+                onToggleModeChange = { onAction(ScoreboardAction.ToggleModeChange(it)) },
             )
         }
 
@@ -229,7 +186,7 @@ private fun ScoreboardInnerContent(
                 simpleMode = simpleMode,
                 teamDisplay = teamList[0],
                 teamNumber = 1,
-                onEditClick = { toTeamPicker(0) },
+                onEditClick = { onAction(ScoreboardAction.ToTeamPicker(0)) },
                 modifier = Modifier
                     .weight(1f)
             )
@@ -238,189 +195,25 @@ private fun ScoreboardInnerContent(
                 simpleMode = simpleMode,
                 teamDisplay = teamList[1],
                 teamNumber = 2,
-                onEditClick = { toTeamPicker(1) },
+                onEditClick = { onAction(ScoreboardAction.ToTeamPicker(1)) },
                 modifier = Modifier
                     .weight(1f)
             )
         }
-
     }
-
-
 }
 
 @PreviewLandscape
 @Composable
-private fun `2 Teams with long names`() =
-    ScoreboardInnerContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(
-                DisplayedScore.Custom("10"),
-                DisplayedScore.Custom("21"),
-            ),
-            DisplayedScore.Blank
-        ),
-        primaryIncrementList = listOf(
-            listOf(1, 2, 2),
-            listOf(1, 2, 3),
-        ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(
-                DisplayedScore.Custom("1"),
-                DisplayedScore.Custom("0"),
-            ),
-            DisplayedScore.Blank
-        ),
-        secondaryIncrementList = listOf(
-            listOf(1),
-            listOf(1),
-        ),
-        secondaryScoreLabel = Label.Custom("S"),
-        onScoreChange = { _, _, _, _ -> },
-        teamList = listOf(
-            TeamDisplay.Selected("Gorillas Gorillas Gorillas Gorilla Gorillas Gorill", TeamIcon.GORILLA),
-            TeamDisplay.Selected("Tigers Tigers Tigers Tigers Tigers", TeamIcon.TIGER)
-        ),
-        toTeamPicker = { _ -> },
-        timeData = TimeData(12, 2, 4),
-        timerInProgress = false,
-        onTimerPause = { _ -> },
-        onTimerStart = {},
-        simpleMode = false,
-        onToggleModeChange = { _ -> },
-        intervalLabel = Label.Custom("P"),
-        currentInterval = 1,
-        toIntervalEditor = {},
-        toTimelineViewer = {},
-    )
-
-@PreviewLandscape
-@Composable
-private fun `2 Teams with short names`() =
-    ScoreboardInnerContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(
-                DisplayedScore.Custom("10"),
-                DisplayedScore.Custom("261"),
-            ),
-            DisplayedScore.Blank
-        ),
-        primaryIncrementList = listOf(
-            listOf(1, 2, 23),
-            listOf(1, 2, 3),
-        ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(
-                DisplayedScore.Custom("1"),
-                DisplayedScore.Custom("0"),
-            ),
-            DisplayedScore.Blank
-        ),
-        secondaryIncrementList = listOf(
-            listOf(1),
-            listOf(1),
-        ),
-        secondaryScoreLabel = Label.Resource(R.string.fouls),
-        onScoreChange = { _, _, _, _ -> },
-        teamList = listOf(
-            TeamDisplay.Selected("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.Selected("Tigers", TeamIcon.TIGER)
-        ),
-        toTeamPicker = { _ -> },
-        timeData = TimeData(12, 2, 4),
-        timerInProgress = false,
-        onTimerPause = { _ -> },
-        onTimerStart = {},
-        simpleMode = true,
-        onToggleModeChange = { _ -> },
-        intervalLabel = Label.Resource(R.string.quarter),
-        currentInterval = 1,
-        toIntervalEditor = {},
-        toTimelineViewer = {},
-    )
-
-@PreviewLandscape
-@Composable
-private fun `Adv`() =
-    ScoreboardInnerContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(
-                DisplayedScore.Advantage,
-                DisplayedScore.Blank,
-            ),
-            DisplayedScore.Blank
-        ),
-        primaryIncrementList = listOf(
-            listOf(1, 2, 23),
-            listOf(1, 2, 3),
-        ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(),
-            DisplayedScore.Blank
-        ),
-        secondaryIncrementList = listOf(),
-        secondaryScoreLabel = Label.Resource(R.string.blank),
-        onScoreChange = { _, _, _, _ -> },
-        teamList = listOf(
-            TeamDisplay.Selected("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.Selected("Tigers", TeamIcon.TIGER)
-        ),
-        toTeamPicker = { _ -> },
-        timeData = TimeData(12, 2, 4),
-        timerInProgress = false,
-        onTimerPause = { _ -> },
-        onTimerStart = {},
-        simpleMode = true,
-        onToggleModeChange = { _ -> },
-        intervalLabel = Label.Resource(R.string.set),
-        currentInterval = 2,
-        toIntervalEditor = {},
-        toTimelineViewer = {},
-    )
-
-@PreviewLandscape
-@Composable
-private fun `Deuce`() =
-    ScoreboardInnerContent(
-        uiEvent = emptyFlow(),
-        onUiEvent = {},
-        primaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(
-                DisplayedScore.Blank,
-                DisplayedScore.Blank,
-            ),
-            DisplayedScore.Deuce
-        ),
-        primaryIncrementList = listOf(
-            listOf(1, 2, 23),
-            listOf(1, 2, 3),
-        ),
-        secondaryDisplayedScoreInfo = DisplayedScoreInfo(
-            listOf(),
-            DisplayedScore.Blank
-        ),
-        secondaryIncrementList = listOf(),
-        secondaryScoreLabel = Label.Resource(R.string.blank),
-        onScoreChange = { _, _, _, _ -> },
-        teamList = listOf(
-            TeamDisplay.Selected("Gorillas", TeamIcon.GORILLA),
-            TeamDisplay.Selected("Tigers", TeamIcon.TIGER)
-        ),
-        toTeamPicker = { _ -> },
-        timeData = TimeData(12, 2, 4),
-        timerInProgress = false,
-        onTimerPause = { _ -> },
-        onTimerStart = {},
-        simpleMode = false,
-        onToggleModeChange = { _ -> },
-        intervalLabel = Label.Resource(R.string.game),
-        currentInterval = 3,
-        toIntervalEditor = {},
-        toTimelineViewer = {},
-    )
+private fun ScoreboardContentPreview(
+    @PreviewParameter(ScoreboardPreviewStateProvider::class) state: ScoreboardState
+) = QuickScoreboardCreatorTheme {
+    Surface {
+        ScoreboardInnerContent(
+            uiEvent = emptyFlow(),
+            onUiEvent = {},
+            state = state,
+            onAction = {}
+        )
+    }
+}
