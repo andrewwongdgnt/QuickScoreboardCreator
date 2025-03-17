@@ -99,7 +99,7 @@ class TeamPickerViewModelTest {
 
     @Test
     fun testOnDismiss() = runTest {
-        sut.onDismiss()
+        sut.onAction(TeamPickerAction.Dismiss)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -107,7 +107,7 @@ class TeamPickerViewModelTest {
 
     @Test
     fun testTeamPicked() = runTest {
-        sut.onTeamPicked(2)
+        sut.onAction(TeamPickerAction.TeamPicked(2))
         verify(exactly = 1) {
             sut.sendUiEvent(TeamUpdated(1, 2))
         }
