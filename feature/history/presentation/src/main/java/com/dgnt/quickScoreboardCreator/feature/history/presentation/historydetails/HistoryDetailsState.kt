@@ -17,5 +17,4 @@ sealed interface HistoryIconState {
         class Changing(sportIcon: SportIcon) : Picked(sportIcon)
         class Displaying(sportIcon: SportIcon) : Picked(sportIcon)
     }
-
 }

@@ -49,7 +49,7 @@ class SportDetailsViewModelTest {
 
     @MockK
     private lateinit var resources: Resources
-    
+
     @MockK
     private lateinit var insertSportUseCase: InsertSportUseCase
 
@@ -108,12 +108,14 @@ class SportDetailsViewModelTest {
         }
         initSut()
 
-        Assert.assertEquals("sport name", sut.title.value)
-        Assert.assertEquals("sport desc", sut.description.value)
-        Assert.assertEquals(WinRule.Count, sut.winRule.value)
-        Assert.assertEquals(SportIcon.TENNIS, sut.icon.value)
-        Assert.assertEquals("sport interval", sut.intervalLabel.value)
-        Assert.assertFalse(sut.valid.value)
+        sut.state.value.run {
+            Assert.assertEquals("sport name", title)
+            Assert.assertEquals("sport desc", description)
+            Assert.assertEquals(WinRule.Count, winRule)
+            Assert.assertEquals(SportIcon.TENNIS, (iconState as SportIconState.Picked).sportIcon)
+            Assert.assertEquals("sport interval", intervalLabel)
+            Assert.assertFalse(valid)
+        }
     }
 
     @Test
@@ -133,58 +135,63 @@ class SportDetailsViewModelTest {
         every { sportModel.intervalList } returns listOf()
         initSut()
 
-        Assert.assertEquals("Basketball", sut.title.value)
-        Assert.assertEquals("Basketball Desc", sut.description.value)
-        Assert.assertEquals(SportIcon.BASKETBALL, sut.icon.value)
-        Assert.assertEquals("Basketball Interval Label", sut.intervalLabel.value)
-        Assert.assertEquals(WinRule.Count, sut.winRule.value)
-        Assert.assertTrue(sut.valid.value)
+        sut.state.value.run {
+            Assert.assertEquals("Basketball", title)
+            Assert.assertEquals("Basketball Desc", description)
+            Assert.assertEquals(SportIcon.BASKETBALL, (iconState as SportIconState.Picked).sportIcon)
+            Assert.assertEquals("Basketball Interval Label", intervalLabel)
+            Assert.assertEquals(WinRule.Count, winRule)
+            Assert.assertTrue(valid)
+        }
     }
 
     @Test
     fun testInitializingNoSport() = runTest {
         initSut()
 
-        Assert.assertTrue(sut.title.value.isEmpty())
-        Assert.assertTrue(sut.description.value.isEmpty())
-        Assert.assertNotNull(sut.icon.value)
-        Assert.assertEquals(WinRule.Final, sut.winRule.value)
-        Assert.assertFalse(sut.valid.value)
+        sut.state.value.run {
+            Assert.assertTrue(title.isEmpty())
+            Assert.assertTrue(description.isEmpty())
+            Assert.assertFalse(iconState is SportIconState.Initial)
+            Assert.assertEquals(WinRule.Final, winRule)
+            Assert.assertFalse(valid)
+        }
     }
 
     @Test
     fun testValidation() = runTest {
         initSut()
 
-        Assert.assertFalse(sut.valid.value)
-        sut.onDescriptionChange("Some value")
-        Assert.assertFalse(sut.valid.value)
-        sut.onTitleChange("Some value")
-        Assert.assertFalse(sut.valid.value)
-        sut.onIntervalLabelChange("Some value")
-        Assert.assertFalse(sut.valid.value)
-        sut.onIntervalEditForMinute(0, "10")
-        Assert.assertTrue(sut.valid.value)
-        sut.onIntervalEditForInitialScoreInput(0, "")
-        Assert.assertFalse(sut.valid.value)
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(SportDetailsAction.DescriptionChange("Some value"))
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(SportDetailsAction.TitleChange("Some value"))
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(SportDetailsAction.IntervalLabelChange("Some value"))
+        Assert.assertFalse(sut.state.value.valid)
+        sut.onAction(SportDetailsAction.IntervalEditForMinute(0, "10"))
+        Assert.assertTrue(sut.state.value.valid)
+        sut.onAction(SportDetailsAction.IntervalEditForInitialScoreInput(0, ""))
+        Assert.assertFalse(sut.state.value.valid)
+
     }
 
     @Test
     fun testSportIconChange() = runTest {
         initSut()
 
-        sut.onIconEdit()
-        Assert.assertTrue(sut.iconChanging.value)
-        sut.onIconChange(SportIcon.VOLLEYBALL)
-        Assert.assertEquals(SportIcon.VOLLEYBALL, sut.icon.value)
-        Assert.assertFalse(sut.iconChanging.value)
+        sut.onAction(SportDetailsAction.IconEdit(true))
+        Assert.assertTrue(sut.state.value.iconState is SportIconState.Picked.Changing)
+        sut.onAction(SportDetailsAction.IconChange(SportIcon.VOLLEYBALL))
+        Assert.assertEquals(SportIcon.VOLLEYBALL, (sut.state.value.iconState as SportIconState.Picked.Displaying).sportIcon)
+
     }
 
     @Test
     fun testOnDismiss() = runTest {
         initSut()
 
-        sut.onDismiss()
+        sut.onAction(SportDetailsAction.Dismiss)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -194,14 +201,14 @@ class SportDetailsViewModelTest {
     fun testInsertingNewSport() = runTest {
         initSut()
 
-        sut.onTitleChange("new sport")
-        sut.onDescriptionChange("new sport desc")
-        sut.onWinRuleChange(WinRule.Sum)
-        sut.onIconChange(SportIcon.SOCCER)
-        sut.onIntervalLabelChange("new interval label")
-        sut.onIntervalEditForMinute(0, "10")
-        sut.onIntervalEditForInitialScoreInput(0, "0")
-        sut.onConfirm()
+        sut.onAction(SportDetailsAction.TitleChange("new sport"))
+        sut.onAction(SportDetailsAction.DescriptionChange("new sport desc"))
+        sut.onAction(SportDetailsAction.WinRuleChange(WinRule.Sum))
+        sut.onAction(SportDetailsAction.IconChange(SportIcon.SOCCER))
+        sut.onAction(SportDetailsAction.IntervalLabelChange("new interval label"))
+        sut.onAction(SportDetailsAction.IntervalEditForMinute(0, "10"))
+        sut.onAction(SportDetailsAction.IntervalEditForInitialScoreInput(0, "0"))
+        sut.onAction(SportDetailsAction.Confirm)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -236,14 +243,14 @@ class SportDetailsViewModelTest {
         }
         initSut()
 
-        sut.onTitleChange("new sport")
-        sut.onDescriptionChange("new sport desc")
-        sut.onWinRuleChange(WinRule.Final)
-        sut.onIconChange(SportIcon.BOXING)
-        sut.onIntervalLabelChange("new interval label")
-        sut.onIntervalEditForMinute(0, "10")
-        sut.onIntervalEditForInitialScoreInput(0, "0")
-        sut.onConfirm()
+        sut.onAction(SportDetailsAction.TitleChange("new sport"))
+        sut.onAction(SportDetailsAction.DescriptionChange("new sport desc"))
+        sut.onAction(SportDetailsAction.WinRuleChange(WinRule.Final))
+        sut.onAction(SportDetailsAction.IconChange(SportIcon.BOXING))
+        sut.onAction(SportDetailsAction.IntervalLabelChange("new interval label"))
+        sut.onAction(SportDetailsAction.IntervalEditForMinute(0, "10"))
+        sut.onAction(SportDetailsAction.IntervalEditForInitialScoreInput(0, "0"))
+        sut.onAction(SportDetailsAction.Confirm)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -278,7 +285,7 @@ class SportDetailsViewModelTest {
         }
         initSut()
 
-        sut.onDelete()
+        sut.onAction(SportDetailsAction.Delete)
         verify(exactly = 1) {
             sut.sendUiEvent(Done)
         }
@@ -341,7 +348,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
     }
 
@@ -349,7 +356,7 @@ class SportDetailsViewModelTest {
     fun testAddingAnInterval() = runTest {
         initSut()
 
-        sut.onIntervalAdd()
+        sut.onAction(SportDetailsAction.IntervalAdd())
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -426,7 +433,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 )
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
     }
 
@@ -434,7 +441,7 @@ class SportDetailsViewModelTest {
     fun testRemovingAnInterval() = runTest {
         initSut()
 
-        sut.onIntervalRemove(0)
+        sut.onAction(SportDetailsAction.IntervalRemove(0))
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -474,11 +481,11 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
 
-        sut.onIntervalAdd()
-        sut.onIntervalRemove(1)
+        sut.onAction(SportDetailsAction.IntervalAdd())
+        sut.onAction(SportDetailsAction.IntervalRemove(1))
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -518,7 +525,7 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
     }
 
@@ -526,10 +533,10 @@ class SportDetailsViewModelTest {
     fun testMovingAnInterval() = runTest {
         initSut()
 
-        sut.onIntervalAdd()
-        sut.onIntervalEditForTimeIsIncreasing(0, true)
-        sut.onIntervalEditForTimeIsIncreasing(1, false)
-        sut.onIntervalMove(true, 1)
+        sut.onAction(SportDetailsAction.IntervalAdd())
+        sut.onAction(SportDetailsAction.IntervalEditForTimeIsIncreasing(0, true))
+        sut.onAction(SportDetailsAction.IntervalEditForTimeIsIncreasing(1, false))
+        sut.onAction(SportDetailsAction.IntervalMove(true, 1))
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -606,10 +613,10 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
 
-        sut.onIntervalMove(false, 0)
+        sut.onAction(SportDetailsAction.IntervalMove(false, 0))
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -686,10 +693,10 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
 
-        sut.onIntervalMove(true, 0)
+        sut.onAction(SportDetailsAction.IntervalMove(true, 0))
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -766,10 +773,10 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
 
-        sut.onIntervalMove(false, 1)
+        sut.onAction(SportDetailsAction.IntervalMove(false, 1))
         Assert.assertEquals(
             listOf(
                 IntervalEditingInfo(
@@ -846,77 +853,83 @@ class SportDetailsViewModelTest {
                     primaryMappingInputList = listOf("0" to "0"),
                     allowSecondaryScore = false
                 ),
-            ), sut.intervalList.value
+            ), sut.state.value.intervalList
         )
     }
 
     @Test
     fun testEditingSoundEffect() = runTest {
         initSut()
-        sut.onIntervalEditForSoundEffect(0, IntervalEndSound.LowBuzzer)
+        sut.onAction(SportDetailsAction.IntervalEditForSoundEffect(0, IntervalEndSound.LowBuzzer))
         Assert.assertEquals(
-            IntervalEndSound.LowBuzzer, sut.intervalList.value[0].intervalData.soundEffect
+            IntervalEndSound.LowBuzzer, sut.state.value.intervalList[0].intervalData.soundEffect
         )
     }
 
     @Test
     fun testEditingIsTimeIncreasing() = runTest {
         initSut()
-        sut.onIntervalEditForTimeIsIncreasing(0, true)
-        Assert.assertTrue(sut.intervalList.value[0].intervalData.increasing)
+        sut.onAction(SportDetailsAction.IntervalEditForTimeIsIncreasing(0, true))
+        Assert.assertTrue(sut.state.value.intervalList[0].intervalData.increasing)
     }
 
     @Test
     fun testEditingMinute() = runTest {
         initSut()
-        sut.onIntervalEditForMinute(0, "8")
-        Assert.assertEquals(Pair("8", "0"), sut.intervalList.value[0].timeRepresentationPair)
+        sut.onAction(SportDetailsAction.IntervalEditForMinute(0, "8"))
+        Assert.assertEquals(Pair("8", "0"), sut.state.value.intervalList[0].timeRepresentationPair)
     }
 
     @Test
     fun testEditingSecond() = runTest {
         initSut()
-        sut.onIntervalEditForSecond(0, "9")
-        Assert.assertEquals(Pair("0", "9"), sut.intervalList.value[0].timeRepresentationPair)
+        sut.onAction(SportDetailsAction.IntervalEditForSecond(0, "9"))
+        Assert.assertEquals(Pair("0", "9"), sut.state.value.intervalList[0].timeRepresentationPair)
     }
 
     @Test
     fun testEditingForAllowDeuceAdv() = runTest {
         initSut()
-        sut.onIntervalEditForAllowDeuceAdv(0, true)
-        Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(10), sut.intervalList.value[0].scoreInfo.scoreRule)
+        sut.onAction(SportDetailsAction.IntervalEditForAllowDeuceAdv(0, true))
+        Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(10), sut.state.value.intervalList[0].scoreInfo.scoreRule)
     }
 
     @Test
     fun testEditingForMaxScoreInput() = runTest {
         initSut()
-        sut.onIntervalEditForMaxScoreInput(0, "77")
-        Assert.assertEquals("77", sut.intervalList.value[0].maxScoreInput)
+        sut.onAction(SportDetailsAction.IntervalEditForMaxScoreInput(0, "77"))
+        Assert.assertEquals("77", sut.state.value.intervalList[0].maxScoreInput)
     }
 
     @Test
     fun testEditingForMaxScoreInputWithDeuce() = runTest {
         initSut()
-        sut.onIntervalEditForMaxScoreInput(0, "77")
-        sut.onIntervalEditForAllowDeuceAdv(0, true)
-        Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(77), sut.intervalList.value[0].scoreInfo.scoreRule)
-        Assert.assertEquals("77", sut.intervalList.value[0].maxScoreInput)
+        sut.onAction(SportDetailsAction.IntervalEditForMaxScoreInput(0, "77"))
+        sut.onAction(SportDetailsAction.IntervalEditForAllowDeuceAdv(0, true))
+        sut.state.value.run {
+            Assert.assertEquals(ScoreRule.Trigger.DeuceAdvantage(77), intervalList[0].scoreInfo.scoreRule)
+            Assert.assertEquals("77", intervalList[0].maxScoreInput)
+        }
     }
 
     @Test
     fun testEditingForMaxScoreInputWithJustMax() = runTest {
         initSut()
-        sut.onIntervalEditForMaxScoreInput(0, "20")
-        sut.onIntervalEditForAllowDeuceAdv(0, false)
-        Assert.assertEquals(ScoreRule.Trigger.Max(20), sut.intervalList.value[0].scoreInfo.scoreRule)
-        Assert.assertEquals("20", sut.intervalList.value[0].maxScoreInput)
+        sut.onAction(SportDetailsAction.IntervalEditForMaxScoreInput(0, "20"))
+        sut.onAction(SportDetailsAction.IntervalEditForAllowDeuceAdv(0, false))
+        sut.state.value.run {
+            Assert.assertEquals(ScoreRule.Trigger.Max(20), intervalList[0].scoreInfo.scoreRule)
+            Assert.assertEquals("20", intervalList[0].maxScoreInput)
+        }
     }
 
     @Test
     fun testEditingForTeamCount() = runTest {
         initSut()
+
+
         // already has 1 team
-        sut.onIntervalEditForTeamCount(0, 4)
+        sut.onAction(SportDetailsAction.IntervalEditForTeamCount(0, 4))
         Assert.assertEquals(
             listOf(
                 ScoreGroup(
@@ -951,9 +964,9 @@ class SportDetailsViewModelTest {
                     ),
                     secondary = null
                 )
-            ), sut.intervalList.value[0].scoreInfo.dataList
+            ), sut.state.value.intervalList[0].scoreInfo.dataList
         )
-        sut.onIntervalEditForTeamCount(0, 2)
+        sut.onAction(SportDetailsAction.IntervalEditForTeamCount(0, 2))
         Assert.assertEquals(
             listOf(
                 ScoreGroup(
@@ -972,9 +985,9 @@ class SportDetailsViewModelTest {
                     ),
                     secondary = null
                 )
-            ), sut.intervalList.value[0].scoreInfo.dataList
+            ), sut.state.value.intervalList[0].scoreInfo.dataList
         )
-        sut.onIntervalEditForTeamCount(0, 2)
+        sut.onAction(SportDetailsAction.IntervalEditForTeamCount(0, 2))
         Assert.assertEquals(
             listOf(
                 ScoreGroup(
@@ -993,107 +1006,112 @@ class SportDetailsViewModelTest {
                     ),
                     secondary = null
                 )
-            ), sut.intervalList.value[0].scoreInfo.dataList
+            ), sut.state.value.intervalList[0].scoreInfo.dataList
         )
+
     }
 
     @Test
     fun testEditingForPrimaryIncrementAdd() = runTest {
         initSut()
-        val list1 = sut.intervalList.value[0].primaryIncrementInputList
+        val list1 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1"), list1)
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        val list2 = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        val list2 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1", "+1"), list2)
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        val list3 = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        val list3 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1", "+1", "+1"), list3)
+
     }
 
     @Test
     fun testEditingForInitialScoreInput() = runTest {
         initSut()
-        sut.onIntervalEditForInitialScoreInput(0, "50")
-        val initialScoreInput = sut.intervalList.value[0].initialScoreInput
+        sut.onAction(SportDetailsAction.IntervalEditForInitialScoreInput(0, "50"))
+        val initialScoreInput = sut.state.value.intervalList[0].initialScoreInput
         Assert.assertEquals("50", initialScoreInput)
     }
 
     @Test
     fun testEditingForPrimaryIncrement() = runTest {
         initSut()
-        val list1 = sut.intervalList.value[0].primaryIncrementInputList
+
+        val list1 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1"), list1)
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        val list2 = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        val list2 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1", "+1"), list2)
-        sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
-        val list3 = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(0, 1, "2"))
+        val list3 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1", "2"), list3)
-        sut.onIntervalEditForPrimaryIncrement(0, 0, "-1")
-        val list4 = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(0, 0, "-1"))
+        val list4 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("-1", "2"), list4)
     }
 
     @Test
     fun testEditingForPrimaryIncrementMove() = runTest {
         initSut()
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
-        sut.onIntervalEditForPrimaryIncrementMove(0, 0, false)
-        val list = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(0, 1, "2"))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementMove(0, 0, false))
+        val list = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("2", "+1", "+1"), list)
     }
 
     @Test
     fun testEditingForPrimaryIncrementRemove() = runTest {
         initSut()
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
-        sut.onIntervalEditForPrimaryIncrement(0, 2, "3")
-        sut.onIntervalEditForPrimaryIncrementRemove(0, 1)
-        val list = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(0, 1, "2"))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(0, 2, "3"))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementRemove(0, 1))
+        val list = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1", "3"), list)
     }
 
     @Test
     fun testEditingForPrimaryIncrementRefresh() = runTest {
         initSut()
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        sut.onIntervalEditForPrimaryIncrement(0, 1, "2")
-        sut.onIntervalEditForPrimaryIncrementRefresh(0, 1)
-        val list = sut.intervalList.value[0].primaryIncrementInputList
+
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(0, 1, "2"))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementRefresh(0, 1))
+        val list = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1", "+2"), list)
-        sut.onIntervalEditForPrimaryIncrementAdd(0)
-        sut.onIntervalEditForPrimaryIncrement(0, 2, "-2")
-        sut.onIntervalEditForPrimaryIncrementRefresh(0, 2)
-        val list2 = sut.intervalList.value[0].primaryIncrementInputList
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(0, 2, "-2"))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryIncrementRefresh(0, 2))
+        val list2 = sut.state.value.intervalList[0].primaryIncrementInputList
         Assert.assertEquals(listOf("+1", "+2", "-2"), list2)
     }
 
     @Test
     fun testEditingForPrimaryMappingAllowed() = runTest {
         initSut()
-        sut.intervalList.value[0].allowPrimaryMapping.let {
+        sut.state.value.intervalList[0].allowPrimaryMapping.let {
             Assert.assertFalse(it)
         }
-        sut.onIntervalEditForPrimaryMappingAllowed(0, true)
-        sut.intervalList.value[0].allowPrimaryMapping.let {
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAllowed(0, true))
+        sut.state.value.intervalList[0].allowPrimaryMapping.let {
             Assert.assertTrue(it)
         }
-        sut.onIntervalEditForPrimaryMappingAllowed(0, false)
-        sut.intervalList.value[0].allowPrimaryMapping.let {
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAllowed(0, false))
+        sut.state.value.intervalList[0].allowPrimaryMapping.let {
             Assert.assertFalse(it)
         }
+
     }
 
     @Test
     fun testEditingForPrimaryMappingAdd() = runTest {
         initSut()
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.intervalList.value[0].primaryMappingInputList.let {
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.state.value.intervalList[0].primaryMappingInputList.let {
             Assert.assertEquals(
                 listOf(
                     "0" to "0",
@@ -1107,11 +1125,11 @@ class SportDetailsViewModelTest {
     @Test
     fun testEditingForPrimaryMappingOriginalScore() = runTest {
         initSut()
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 0, "3")
-        sut.onIntervalEditForPrimaryMappingOriginalScore(0, 1, "4")
-        sut.intervalList.value[0].primaryMappingInputList.let {
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingOriginalScore(0, 0, "3"))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingOriginalScore(0, 1, "4"))
+        sut.state.value.intervalList[0].primaryMappingInputList.let {
             Assert.assertEquals(
                 listOf(
                     "3" to "0",
@@ -1125,11 +1143,11 @@ class SportDetailsViewModelTest {
     @Test
     fun testEditingForPrimaryMappingDisplayScore() = runTest {
         initSut()
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.onIntervalEditForPrimaryMappingDisplayScore(0, 0, "0")
-        sut.onIntervalEditForPrimaryMappingDisplayScore(0, 1, "15")
-        sut.intervalList.value[0].primaryMappingInputList.let {
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingDisplayScore(0, 0, "0"))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingDisplayScore(0, 1, "15"))
+        sut.state.value.intervalList[0].primaryMappingInputList.let {
             Assert.assertEquals(
                 listOf(
                     "0" to "0",
@@ -1143,10 +1161,10 @@ class SportDetailsViewModelTest {
     @Test
     fun testEditingForPrimaryMappingRemove() = runTest {
         initSut()
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.onIntervalEditForPrimaryMappingAdd(0)
-        sut.onIntervalEditForPrimaryMappingRemove(0, 1)
-        sut.intervalList.value[0].primaryMappingInputList.let {
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(0))
+        sut.onAction(SportDetailsAction.IntervalEditForPrimaryMappingRemove(0, 1))
+        sut.state.value.intervalList[0].primaryMappingInputList.let {
             Assert.assertEquals(
                 listOf(
                     "0" to "0",
@@ -1159,29 +1177,30 @@ class SportDetailsViewModelTest {
     @Test
     fun testEditingForSecondaryScoreAllowed() = runTest {
         initSut()
-        sut.intervalList.value[0].allowSecondaryScore.let {
+        sut.state.value.intervalList[0].allowSecondaryScore.let {
             Assert.assertFalse(it)
         }
-        sut.onIntervalEditForSecondaryScoreAllowed(0, true)
-        sut.intervalList.value[0].allowSecondaryScore.let {
+        sut.onAction(SportDetailsAction.IntervalEditForSecondaryScoreAllowed(0, true))
+        sut.state.value.intervalList[0].allowSecondaryScore.let {
             Assert.assertTrue(it)
         }
-        sut.onIntervalEditForSecondaryScoreAllowed(0, false)
-        sut.intervalList.value[0].allowSecondaryScore.let {
+        sut.onAction(SportDetailsAction.IntervalEditForSecondaryScoreAllowed(0, false))
+        sut.state.value.intervalList[0].allowSecondaryScore.let {
             Assert.assertFalse(it)
         }
+
     }
 
     @Test
     fun testEditingForSecondaryScoreLabel() = runTest {
         initSut()
-        sut.intervalList.value[0].scoreInfo.secondaryScoreLabel.let {
+
+        sut.state.value.intervalList[0].scoreInfo.secondaryScoreLabel.let {
             Assert.assertTrue(it.isEmpty())
         }
-        sut.onIntervalEditForSecondaryScoreLabel(0, "Fouls")
-        sut.intervalList.value[0].scoreInfo.secondaryScoreLabel.let {
+        sut.onAction(SportDetailsAction.IntervalEditForSecondaryScoreLabel(0, "Fouls"))
+        sut.state.value.intervalList[0].scoreInfo.secondaryScoreLabel.let {
             Assert.assertEquals("Fouls", it)
         }
-
     }
 }

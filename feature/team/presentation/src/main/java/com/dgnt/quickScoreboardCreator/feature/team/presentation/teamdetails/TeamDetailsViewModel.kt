@@ -55,9 +55,7 @@ class TeamDetailsViewModel @Inject constructor(
                 iconState = TeamIconState.Picked.Displaying(it.icon),
                 isNewEntity = false,
             )
-
         }
-
     }
 
     fun onAction(action: TeamDetailsAction) {
@@ -73,7 +71,7 @@ class TeamDetailsViewModel @Inject constructor(
     }
 
     private fun onConfirm() {
-        with(state.value) {
+        state.value.run {
             if (valid) {
                 viewModelScope.launch {
                     insertTeamUseCase(
@@ -93,7 +91,6 @@ class TeamDetailsViewModel @Inject constructor(
     private fun onDismiss() = sendUiEvent(Done)
 
     private fun onDelete() = viewModelScope.launch {
-
         originalModel?.let {
             deleteTeamUseCase(it)
         }
@@ -113,14 +110,13 @@ class TeamDetailsViewModel @Inject constructor(
     }
 
     private fun onIconEdit(changing: Boolean) {
-        (state.value.iconState as? TeamIconState.Picked)?.teamIcon?.let { originalTeamIcon->
+        (state.value.iconState as? TeamIconState.Picked)?.teamIcon?.let { originalTeamIcon ->
             _state.value = state.value.copy(
                 iconState = if (changing)
                     TeamIconState.Picked.Changing(originalTeamIcon)
                 else
                     TeamIconState.Picked.Displaying(originalTeamIcon)
             )
-
         }
     }
 

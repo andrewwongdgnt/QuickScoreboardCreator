@@ -102,7 +102,7 @@ class HistoryDetailsViewModel @Inject constructor(
     }
 
     private fun onConfirm() {
-        with(state.value) {
+        state.value.run {
             if (valid) {
                 viewModelScope.launch {
                     insertHistoryUseCase(

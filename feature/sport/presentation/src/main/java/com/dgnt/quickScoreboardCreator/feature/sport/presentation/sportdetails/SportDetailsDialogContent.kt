@@ -27,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,11 +58,10 @@ import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconGroupStringResHolder
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.composable.iconpicker.IconPicker
 import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.imagevector.Speaker
+import com.dgnt.quickScoreboardCreator.core.presentation.designsystem.theme.QuickScoreboardCreatorTheme
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEvent
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalData
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.interval.IntervalEndSound
-import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreInfo
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.ScoreRule
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.score.WinRule
 import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemapping.iconRes
@@ -77,61 +78,13 @@ fun SportDetailsDialogContent(
     onUiEvent: (UiEvent) -> Unit,
     viewModel: SportDetailsViewModel = hiltViewModel()
 ) {
-    val valid by viewModel.valid.collectAsStateWithLifecycle()
-    val title by viewModel.title.collectAsStateWithLifecycle()
-    val description by viewModel.description.collectAsStateWithLifecycle()
-    val winRule by viewModel.winRule.collectAsStateWithLifecycle()
-    val icon by viewModel.icon.collectAsStateWithLifecycle()
-    val iconChanging by viewModel.iconChanging.collectAsStateWithLifecycle()
-    val intervalLabel by viewModel.intervalLabel.collectAsStateWithLifecycle()
-    val isNewEntity by viewModel.isNewEntity.collectAsStateWithLifecycle()
-    val intervalList by viewModel.intervalList.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     SportDetailsInnerDialogContent(
         uiEvent = viewModel.uiEvent,
         onUiEvent = onUiEvent,
-        title = title,
-        onTitleChange = viewModel::onTitleChange,
-        description = description,
-        onDescriptionChange = viewModel::onDescriptionChange,
-        winRule = winRule,
-        onWinRuleChange = viewModel::onWinRuleChange,
-        icon = icon,
-        onIconChange = viewModel::onIconChange,
-        iconChanging = iconChanging,
-        onIconEdit = viewModel::onIconEdit,
-        intervalLabel = intervalLabel,
-        onIntervalLabelChange = viewModel::onIntervalLabelChange,
-        intervalList = intervalList,
-        onIntervalEditForSoundEffect = viewModel::onIntervalEditForSoundEffect,
-        onIntervalEditForTimeIsIncreasing = viewModel::onIntervalEditForTimeIsIncreasing,
-        onIntervalEditForMinute = viewModel::onIntervalEditForMinute,
-        onIntervalEditForSecond = viewModel::onIntervalEditForSecond,
-        onIntervalEditForAllowDeuceAdv = viewModel::onIntervalEditForAllowDeuceAdv,
-        onIntervalEditForMaxScoreInput = viewModel::onIntervalEditForMaxScoreInput,
-        onIntervalEditForTeamCount = viewModel::onIntervalEditForTeamCount,
-        onIntervalEditForPrimaryIncrementAdd = viewModel::onIntervalEditForPrimaryIncrementAdd,
-        onIntervalEditForInitialScoreInput = viewModel::onIntervalEditForInitialScoreInput,
-        onIntervalEditForPrimaryIncrement = viewModel::onIntervalEditForPrimaryIncrement,
-        onIntervalEditForPrimaryIncrementMove = viewModel::onIntervalEditForPrimaryIncrementMove,
-        onIntervalEditForPrimaryIncrementRemove = viewModel::onIntervalEditForPrimaryIncrementRemove,
-        onIntervalEditForPrimaryIncrementRefresh = viewModel::onIntervalEditForPrimaryIncrementRefresh,
-        onIntervalEditForPrimaryMappingAllowed = viewModel::onIntervalEditForPrimaryMappingAllowed,
-        onIntervalEditForPrimaryMappingAdd = viewModel::onIntervalEditForPrimaryMappingAdd,
-        onIntervalEditForPrimaryMappingOriginalScore = viewModel::onIntervalEditForPrimaryMappingOriginalScore,
-        onIntervalEditForPrimaryMappingDisplayScore = viewModel::onIntervalEditForPrimaryMappingDisplayScore,
-        onIntervalEditForPrimaryMappingMove = viewModel::onIntervalEditForPrimaryMappingMove,
-        onIntervalEditForPrimaryMappingRemove = viewModel::onIntervalEditForPrimaryMappingRemove,
-        onIntervalEditForSecondaryScoreAllowed = viewModel::onIntervalEditForSecondaryScoreAllowed,
-        onIntervalEditForSecondaryScoreLabel = viewModel::onIntervalEditForSecondaryScoreLabel,
-        onIntervalAdd = viewModel::onIntervalAdd,
-        onIntervalRemove = viewModel::onIntervalRemove,
-        onIntervalMove = viewModel::onIntervalMove,
-        valid = valid,
-        isNewEntity = isNewEntity,
-        onDelete = viewModel::onDelete,
-        onDismiss = viewModel::onDismiss,
-        onConfirm = viewModel::onConfirm,
+        state = state,
+        onAction = viewModel::onAction,
     )
 }
 
@@ -139,49 +92,9 @@ fun SportDetailsDialogContent(
 private fun SportDetailsInnerDialogContent(
     uiEvent: Flow<UiEvent>,
     onUiEvent: (UiEvent) -> Unit,
-    title: String,
-    onTitleChange: (String) -> Unit,
-    description: String,
-    onDescriptionChange: (String) -> Unit,
-    winRule: WinRule,
-    onWinRuleChange: (WinRule) -> Unit,
-    icon: SportIcon?,
-    onIconChange: (SportIcon) -> Unit,
-    iconChanging: Boolean,
-    onIconEdit: (Boolean) -> Unit,
-    intervalLabel: String,
-    onIntervalLabelChange: (String) -> Unit,
-    onIntervalEditForSoundEffect: (Int, IntervalEndSound) -> Unit,
-    onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
-    onIntervalEditForMinute: (Int, String) -> Unit,
-    onIntervalEditForSecond: (Int, String) -> Unit,
-    onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
-    onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
-    onIntervalEditForTeamCount: (Int, Int) -> Unit,
-    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
-    onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
-    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
-    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
-    onIntervalEditForPrimaryMappingAllowed: (Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
-    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit,
-    onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit,
-    onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit,
-    onIntervalAdd: (Int?) -> Unit,
-    onIntervalRemove: (Int) -> Unit,
-    onIntervalMove: (Boolean, Int) -> Unit,
-    valid: Boolean,
-    isNewEntity: Boolean,
-    intervalList: List<IntervalEditingInfo>,
-    onDelete: () -> Unit,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-) {
+    state: SportDetailsState,
+    onAction: (SportDetailsAction) -> Unit
+) = state.run {
 
     LaunchedEffect(key1 = true) {
         uiEvent.collect(collector = onUiEvent)
@@ -195,14 +108,14 @@ private fun SportDetailsInnerDialogContent(
         actionOnClick = {
             Toast.makeText(context, R.string.longClickDeleteMsg, Toast.LENGTH_LONG).show()
         },
-        actionOnLongClick = onDelete,
+        actionOnLongClick = { onAction(SportDetailsAction.Delete) },
         confirmText = stringResource(id = android.R.string.ok),
         confirmEnabled = valid,
-        onConfirm = onConfirm,
+        onConfirm = { onAction(SportDetailsAction.Confirm) },
         dismissText = stringResource(id = android.R.string.cancel),
-        onDismiss = onDismiss
+        onDismiss = { onAction(SportDetailsAction.Dismiss) }
     ) {
-        if (iconChanging)
+        if (iconState is SportIconState.Picked.Changing)
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -210,8 +123,8 @@ private fun SportDetailsInnerDialogContent(
             ) {
                 IconPicker(
                     iconGroups = mapOf(IconGroupStringResHolder(R.string.pickIconMsg) to SportIcon.entries.map { IconDrawableResHolder(it, it.iconRes()) }),
-                    onCancel = { onIconEdit(false) },
-                    onIconChange = { onIconChange(it.originalIcon) }
+                    onCancel = { onAction(SportDetailsAction.IconEdit(false)) },
+                    onIconChange = { onAction(SportDetailsAction.IconChange(it.originalIcon)) }
                 )
             }
         else
@@ -223,54 +136,30 @@ private fun SportDetailsInnerDialogContent(
             ) {
                 TitleAndDescription(
                     title = title,
-                    onTitleChange = onTitleChange,
+                    onTitleChange = { onAction(SportDetailsAction.TitleChange(it)) },
                     description = description,
-                    onDescriptionChange = onDescriptionChange,
+                    onDescriptionChange = { onAction(SportDetailsAction.DescriptionChange(it)) },
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IconDisplay(
-                    iconRes = icon?.iconRes(),
-                    onClick = { onIconEdit(true) }
+                    iconRes = (iconState as? SportIconState.Picked)?.sportIcon?.iconRes(),
+                    onClick = { onAction(SportDetailsAction.IconEdit(true)) }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 WinRulePicker(
                     winRule = winRule,
-                    onWinRuleChange = onWinRuleChange
+                    onWinRuleChange = { onAction(SportDetailsAction.WinRuleChange(it)) }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalLabelEditor(
                     intervalLabel = intervalLabel,
-                    onIntervalLabelChange = onIntervalLabelChange
+                    onIntervalLabelChange = { onAction(SportDetailsAction.IntervalLabelChange(it))}
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 IntervalList(
                     modifier = Modifier.heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp * 10 * intervalList.size),
-                    intervalLabel = intervalLabel,
-                    intervalList = intervalList,
-                    onIntervalEditForSoundEffect = onIntervalEditForSoundEffect,
-                    onIntervalEditForTimeIsIncreasing = onIntervalEditForTimeIsIncreasing,
-                    onIntervalEditForMinute = onIntervalEditForMinute,
-                    onIntervalEditForSecond = onIntervalEditForSecond,
-                    onIntervalEditForAllowDeuceAdv = onIntervalEditForAllowDeuceAdv,
-                    onIntervalEditForMaxScoreInput = onIntervalEditForMaxScoreInput,
-                    onIntervalEditForTeamCount = onIntervalEditForTeamCount,
-                    onIntervalEditForPrimaryIncrementAdd = onIntervalEditForPrimaryIncrementAdd,
-                    onIntervalEditForInitialScoreInput = onIntervalEditForInitialScoreInput,
-                    onIntervalEditForPrimaryIncrement = onIntervalEditForPrimaryIncrement,
-                    onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
-                    onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove,
-                    onIntervalEditForPrimaryIncrementRefresh = onIntervalEditForPrimaryIncrementRefresh,
-                    onIntervalEditForPrimaryMappingAllowed = onIntervalEditForPrimaryMappingAllowed,
-                    onIntervalEditForPrimaryMappingAdd = onIntervalEditForPrimaryMappingAdd,
-                    onIntervalEditForPrimaryMappingOriginalScore = onIntervalEditForPrimaryMappingOriginalScore,
-                    onIntervalEditForPrimaryMappingDisplayScore = onIntervalEditForPrimaryMappingDisplayScore,
-                    onIntervalEditForPrimaryMappingRemove = onIntervalEditForPrimaryMappingRemove,
-                    onIntervalEditForPrimaryMappingMove = onIntervalEditForPrimaryMappingMove,
-                    onIntervalEditForSecondaryScoreAllowed = onIntervalEditForSecondaryScoreAllowed,
-                    onIntervalEditForSecondaryScoreLabel = onIntervalEditForSecondaryScoreLabel,
-                    onIntervalAdd = onIntervalAdd,
-                    onIntervalRemove = onIntervalRemove,
-                    onIntervalMove = onIntervalMove
+                    state = state,
+                    onAction = onAction
                 )
             }
     }
@@ -343,33 +232,9 @@ private fun IntervalLabelEditor(
 @Composable
 private fun IntervalList(
     modifier: Modifier = Modifier,
-    intervalLabel: String,
-    intervalList: List<IntervalEditingInfo>,
-    onIntervalEditForSoundEffect: (Int, IntervalEndSound) -> Unit,
-    onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit,
-    onIntervalEditForMinute: (Int, String) -> Unit,
-    onIntervalEditForSecond: (Int, String) -> Unit,
-    onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit,
-    onIntervalEditForMaxScoreInput: (Int, String) -> Unit,
-    onIntervalEditForTeamCount: (Int, Int) -> Unit,
-    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
-    onIntervalEditForInitialScoreInput: (Int, String) -> Unit,
-    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
-    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
-    onIntervalEditForPrimaryMappingAllowed: (Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
-    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit,
-    onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit,
-    onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit,
-    onIntervalAdd: (Int?) -> Unit,
-    onIntervalRemove: (Int) -> Unit,
-    onIntervalMove: (Boolean, Int) -> Unit,
-) {
+    state: SportDetailsState,
+    onAction: (SportDetailsAction) -> Unit
+) =state.run{
 
     val context = LocalContext.current
     val defaultIntervalLabel = stringResource(id = R.string.defaultIntervalLabel)
@@ -405,9 +270,9 @@ private fun IntervalList(
                 size = intervalList.size,
                 currentIndex = intervalIndex,
                 lastIndex = intervalList.lastIndex,
-                onMoveUp = { onIntervalMove(true, intervalIndex) },
-                onMoveDown = { onIntervalMove(false, intervalIndex) },
-                onDelete = { onIntervalRemove(intervalIndex) },
+                onMoveUp = { onAction(SportDetailsAction.IntervalMove(true, intervalIndex)) },
+                onMoveDown = { onAction(SportDetailsAction.IntervalMove(false, intervalIndex)) },
+                onDelete = { onAction(SportDetailsAction.IntervalRemove(intervalIndex)) },
             )
 
             // Sound Effect
@@ -464,7 +329,7 @@ private fun IntervalList(
                     ),
                 ),
                 selectedOption = intervalData.soundEffect,
-                onOptionSelected = { onIntervalEditForSoundEffect(intervalIndex, it) }
+                onOptionSelected = { onAction(SportDetailsAction.IntervalEditForSoundEffect(intervalIndex, it)) }
             )
 
             //Time and Max Score
@@ -474,7 +339,7 @@ private fun IntervalList(
                 label = stringResource(id = R.string.hasTimeLimit),
                 checked = !intervalData.increasing,
                 onCheckedChange = {
-                    onIntervalEditForTimeIsIncreasing(intervalIndex, !it)
+                    onAction(SportDetailsAction.IntervalEditForTimeIsIncreasing(intervalIndex, !it))
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -488,9 +353,9 @@ private fun IntervalList(
                     Text(text = stringResource(id = R.string.decreasingTimeMsg))
                     TimeLimitPicker(
                         minuteString = intervalEditingInfo.timeRepresentationPair.first,
-                        onMinuteChange = { onIntervalEditForMinute(intervalIndex, it) },
+                        onMinuteChange = { onAction(SportDetailsAction.IntervalEditForMinute(intervalIndex, it)) },
                         secondString = intervalEditingInfo.timeRepresentationPair.second,
-                        onSecondChange = { onIntervalEditForSecond(intervalIndex, it) },
+                        onSecondChange = { onAction(SportDetailsAction.IntervalEditForSecond(intervalIndex, it)) },
                         numberFieldWidth = numberFieldWidth
                     )
                 }
@@ -500,7 +365,7 @@ private fun IntervalList(
                     label = stringResource(id = R.string.allowDeuceAdvantage),
                     checked = scoreInfo.scoreRule is ScoreRule.Trigger.DeuceAdvantage,
                     onCheckedChange = {
-                        onIntervalEditForAllowDeuceAdv(intervalIndex, it)
+                        onAction(SportDetailsAction.IntervalEditForAllowDeuceAdv(intervalIndex, it))
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -516,7 +381,7 @@ private fun IntervalList(
                     TextField(
                         value = intervalEditingInfo.maxScoreInput,
                         onValueChange = {
-                            onIntervalEditForMaxScoreInput(intervalIndex, it)
+                            onAction(SportDetailsAction.IntervalEditForMaxScoreInput(intervalIndex, it))
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
@@ -539,7 +404,7 @@ private fun IntervalList(
                 },
 
                 selectedOption = scoreInfo.dataList.size,
-                onOptionSelected = { onIntervalEditForTeamCount(intervalIndex, it) }
+                onOptionSelected = { onAction(SportDetailsAction.IntervalEditForTeamCount(intervalIndex, it)) }
             )
 
             //Primary Scoring
@@ -553,7 +418,7 @@ private fun IntervalList(
                 value = intervalEditingInfo.initialScoreInput,
                 onValueChange = {
                     if (it.length <= 3)
-                        onIntervalEditForInitialScoreInput(intervalIndex, it)
+                        onAction(SportDetailsAction.IntervalEditForInitialScoreInput(intervalIndex, it))
                 },
                 placeholder = { Text(text = stringResource(R.string.initialScorePlaceHolder)) },
                 modifier = Modifier.fillMaxWidth(),
@@ -571,11 +436,7 @@ private fun IntervalList(
                     numberFieldWidth = numberFieldWidth,
                     intervalIndex = intervalIndex,
                     increments = increments,
-                    onIntervalEditForPrimaryIncrementAdd = onIntervalEditForPrimaryIncrementAdd,
-                    onIntervalEditForPrimaryIncrement = onIntervalEditForPrimaryIncrement,
-                    onIntervalEditForPrimaryIncrementMove = onIntervalEditForPrimaryIncrementMove,
-                    onIntervalEditForPrimaryIncrementRemove = onIntervalEditForPrimaryIncrementRemove,
-                    onIntervalEditForPrimaryIncrementRefresh = onIntervalEditForPrimaryIncrementRefresh,
+                    onAction = onAction,
                 )
             }
 
@@ -584,7 +445,7 @@ private fun IntervalList(
                 label = stringResource(id = R.string.hasPrimaryScoreToDisplayMapping),
                 checked = intervalEditingInfo.allowPrimaryMapping,
                 onCheckedChange = {
-                    onIntervalEditForPrimaryMappingAllowed(intervalIndex, it)
+                    onAction(SportDetailsAction.IntervalEditForPrimaryMappingAllowed(intervalIndex, it))
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -597,11 +458,7 @@ private fun IntervalList(
                         numberFieldWidth = numberFieldWidth,
                         intervalIndex = intervalIndex,
                         mappings = mappings,
-                        onIntervalEditForPrimaryMappingAdd = onIntervalEditForPrimaryMappingAdd,
-                        onIntervalEditForPrimaryMappingOriginalScore = onIntervalEditForPrimaryMappingOriginalScore,
-                        onIntervalEditForPrimaryMappingDisplayScore = onIntervalEditForPrimaryMappingDisplayScore,
-                        onIntervalEditForPrimaryMappingMove = onIntervalEditForPrimaryMappingMove,
-                        onIntervalEditForPrimaryMappingRemove = onIntervalEditForPrimaryMappingRemove,
+                        onAction = onAction,
                     )
                 }
             }
@@ -612,14 +469,14 @@ private fun IntervalList(
                 label = stringResource(id = R.string.hasSecondaryScoring),
                 checked = intervalEditingInfo.allowSecondaryScore,
                 onCheckedChange = {
-                    onIntervalEditForSecondaryScoreAllowed(intervalIndex, it)
+                    onAction(SportDetailsAction.IntervalEditForSecondaryScoreAllowed(intervalIndex, it))
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
             if (intervalEditingInfo.allowSecondaryScore)
                 TextField(
                     value = intervalEditingInfo.scoreInfo.secondaryScoreLabel,
-                    onValueChange = { onIntervalEditForSecondaryScoreLabel(intervalIndex, it) },
+                    onValueChange = { onAction(SportDetailsAction.IntervalEditForSecondaryScoreLabel(intervalIndex, it)) },
                     placeholder = { Text(text = stringResource(R.string.secondaryScorePlaceholder)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -633,7 +490,7 @@ private fun IntervalList(
         modifier = Modifier.fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = { onIntervalAdd(null) }) {
+        Button(onClick = { onAction(SportDetailsAction.IntervalAdd()) }) {
             Text(text = stringResource(R.string.addAnotherInterval, resolvedIntervalLabel))
         }
     }
@@ -646,11 +503,7 @@ private fun IncrementList(
     numberFieldWidth: Dp,
     intervalIndex: Int,
     increments: List<String>,
-    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit,
-    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit,
-    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit,
+    onAction: (SportDetailsAction) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -679,7 +532,7 @@ private fun IncrementList(
                             value = increment,
                             onValueChange = {
                                 if (it.length <= 4)
-                                    onIntervalEditForPrimaryIncrement(intervalIndex, index, it)
+                                    onAction(SportDetailsAction.IntervalEditForPrimaryIncrement(intervalIndex, index, it))
 
                             },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -688,7 +541,7 @@ private fun IncrementList(
                                 .width(numberFieldWidth)
                                 .onFocusChanged { focusState ->
                                     if (!focusState.isFocused)
-                                        onIntervalEditForPrimaryIncrementRefresh(intervalIndex, index)
+                                        onAction(SportDetailsAction.IntervalEditForPrimaryIncrementRefresh(intervalIndex, index))
 
                                 }
                         )
@@ -697,9 +550,9 @@ private fun IncrementList(
                 size = increments.size,
                 currentIndex = index,
                 lastIndex = increments.lastIndex,
-                onMoveUp = { onIntervalEditForPrimaryIncrementMove(intervalIndex, index, true) },
-                onMoveDown = { onIntervalEditForPrimaryIncrementMove(intervalIndex, index, false) },
-                onDelete = { onIntervalEditForPrimaryIncrementRemove(intervalIndex, index) },
+                onMoveUp = { onAction(SportDetailsAction.IntervalEditForPrimaryIncrementMove(intervalIndex, index, true)) },
+                onMoveDown = { onAction(SportDetailsAction.IntervalEditForPrimaryIncrementMove(intervalIndex, index, false)) },
+                onDelete = { onAction(SportDetailsAction.IntervalEditForPrimaryIncrementRemove(intervalIndex, index)) },
             )
 
 
@@ -710,7 +563,7 @@ private fun IncrementList(
     if (increments.size < MAX_INCREMENTS_COUNT) {
         Row {
             Spacer(modifier = Modifier.weight(1f))
-            Button(onClick = { onIntervalEditForPrimaryIncrementAdd(intervalIndex) }) {
+            Button(onClick = { onAction(SportDetailsAction.IntervalEditForPrimaryIncrementAdd(intervalIndex)) }) {
                 Text(text = stringResource(R.string.addScoringMethod))
             }
         }
@@ -724,11 +577,7 @@ fun ScoreMappingList(
     numberFieldWidth: Dp,
     intervalIndex: Int,
     mappings: List<Pair<String, String>>,
-    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit,
-    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit,
-    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit,
-    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit
+    onAction: (SportDetailsAction) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -747,7 +596,7 @@ fun ScoreMappingList(
                             value = originalScore,
                             onValueChange = {
                                 if (it.length <= 3)
-                                    onIntervalEditForPrimaryMappingOriginalScore(intervalIndex, index, it)
+                                    onAction(SportDetailsAction.IntervalEditForPrimaryMappingOriginalScore(intervalIndex, index, it))
 
                             },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -763,7 +612,7 @@ fun ScoreMappingList(
                             value = displayedScore,
                             onValueChange = {
                                 if (it.length <= 5)
-                                    onIntervalEditForPrimaryMappingDisplayScore(intervalIndex, index, it)
+                                    onAction(SportDetailsAction.IntervalEditForPrimaryMappingDisplayScore(intervalIndex, index, it))
 
                             },
                             singleLine = true,
@@ -775,172 +624,30 @@ fun ScoreMappingList(
                 size = mappings.size,
                 currentIndex = index,
                 lastIndex = mappings.lastIndex,
-                onMoveUp = { onIntervalEditForPrimaryMappingMove(intervalIndex, index, true) },
-                onMoveDown = { onIntervalEditForPrimaryMappingMove(intervalIndex, index, false) },
-                onDelete = { onIntervalEditForPrimaryMappingRemove(intervalIndex, index) },
+                onMoveUp = { onAction(SportDetailsAction.IntervalEditForPrimaryMappingMove(intervalIndex, index, true)) },
+                onMoveDown = { onAction(SportDetailsAction.IntervalEditForPrimaryMappingMove(intervalIndex, index, false)) },
+                onDelete = { onAction(SportDetailsAction.IntervalEditForPrimaryMappingRemove(intervalIndex, index)) },
             )
         }
     }
     Row {
         Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = { onIntervalEditForPrimaryMappingAdd(intervalIndex) }) {
+        Button(onClick = { onAction(SportDetailsAction.IntervalEditForPrimaryMappingAdd(intervalIndex)) }) {
             Text(text = stringResource(R.string.addScoreMapping))
         }
     }
 }
-
-@Composable
-private fun SportDetailsInnerDialogContentForPreview(
-    uiEvent: Flow<UiEvent> = emptyFlow(),
-    onUiEvent: (UiEvent) -> Unit = {},
-    title: String = "",
-    onTitleChange: (String) -> Unit = {},
-    description: String = "",
-    onDescriptionChange: (String) -> Unit = {},
-    winRule: WinRule = WinRule.Final,
-    onWinRuleChange: (WinRule) -> Unit = {},
-    icon: SportIcon? = SportIcon.HOCKEY,
-    onIconChange: (SportIcon) -> Unit = {},
-    iconChanging: Boolean = false,
-    onIconEdit: (Boolean) -> Unit = {},
-    intervalLabel: String = "Period",
-    onIntervalLabelChange: (String) -> Unit = {},
-    onIntervalEditForSoundEffect: (Int, IntervalEndSound) -> Unit = { _, _ -> },
-    onIntervalEditForTimeIsIncreasing: (Int, Boolean) -> Unit = { _, _ -> },
-    onIntervalEditForMinute: (Int, String) -> Unit = { _, _ -> },
-    onIntervalEditForSecond: (Int, String) -> Unit = { _, _ -> },
-    onIntervalEditForAllowDeuceAdv: (Int, Boolean) -> Unit = { _, _ -> },
-    onIntervalEditForMaxScoreInput: (Int, String) -> Unit = { _, _ -> },
-    onIntervalEditForTeamCount: (Int, Int) -> Unit = { _, _ -> },
-    onIntervalEditForPrimaryIncrementAdd: (Int) -> Unit = { _ -> },
-    onIntervalEditForInitialScoreInput: (Int, String) -> Unit = { _, _ -> },
-    onIntervalEditForPrimaryIncrement: (Int, Int, String) -> Unit = { _, _, _ -> },
-    onIntervalEditForPrimaryIncrementMove: (Int, Int, Boolean) -> Unit = { _, _, _ -> },
-    onIntervalEditForPrimaryIncrementRemove: (Int, Int) -> Unit = { _, _ -> },
-    onIntervalEditForPrimaryIncrementRefresh: (Int, Int) -> Unit = { _, _ -> },
-    onIntervalEditForPrimaryMappingAllowed: (Int, Boolean) -> Unit = { _, _ -> },
-    onIntervalEditForPrimaryMappingAdd: (Int) -> Unit = { _ -> },
-    onIntervalEditForPrimaryMappingOriginalScore: (Int, Int, String) -> Unit = { _, _, _ -> },
-    onIntervalEditForPrimaryMappingDisplayScore: (Int, Int, String) -> Unit = { _, _, _ -> },
-    onIntervalEditForPrimaryMappingMove: (Int, Int, Boolean) -> Unit = { _, _, _ -> },
-    onIntervalEditForPrimaryMappingRemove: (Int, Int) -> Unit = { _, _ -> },
-    onIntervalEditForSecondaryScoreAllowed: (Int, Boolean) -> Unit = { _, _ -> },
-    onIntervalEditForSecondaryScoreLabel: (Int, String) -> Unit = { _, _ -> },
-    onIntervalAdd: (Int?) -> Unit = { _ -> },
-    onIntervalRemove: (Int) -> Unit = { _ -> },
-    onIntervalMove: (Boolean, Int) -> Unit = { _, _ -> },
-    valid: Boolean = true,
-    isNewEntity: Boolean = true,
-    intervalList: List<IntervalEditingInfo> = listOf(),
-    onDelete: () -> Unit = {},
-    onDismiss: () -> Unit = {},
-    onConfirm: () -> Unit = {},
-) {
-    SportDetailsInnerDialogContent(
-        uiEvent,
-        onUiEvent,
-        title,
-        onTitleChange,
-        description,
-        onDescriptionChange,
-        winRule,
-        onWinRuleChange,
-        icon,
-        onIconChange,
-        iconChanging,
-        onIconEdit,
-        intervalLabel,
-        onIntervalLabelChange,
-        onIntervalEditForSoundEffect,
-        onIntervalEditForTimeIsIncreasing,
-        onIntervalEditForMinute,
-        onIntervalEditForSecond,
-        onIntervalEditForAllowDeuceAdv,
-        onIntervalEditForMaxScoreInput,
-        onIntervalEditForTeamCount,
-        onIntervalEditForPrimaryIncrementAdd,
-        onIntervalEditForInitialScoreInput,
-        onIntervalEditForPrimaryIncrement,
-        onIntervalEditForPrimaryIncrementMove,
-        onIntervalEditForPrimaryIncrementRemove,
-        onIntervalEditForPrimaryIncrementRefresh,
-        onIntervalEditForPrimaryMappingAllowed,
-        onIntervalEditForPrimaryMappingAdd,
-        onIntervalEditForPrimaryMappingOriginalScore,
-        onIntervalEditForPrimaryMappingDisplayScore,
-        onIntervalEditForPrimaryMappingMove,
-        onIntervalEditForPrimaryMappingRemove,
-        onIntervalEditForSecondaryScoreAllowed,
-        onIntervalEditForSecondaryScoreLabel,
-        onIntervalAdd,
-        onIntervalRemove,
-        onIntervalMove,
-        valid,
-        isNewEntity,
-        intervalList,
-        onDelete,
-        onDismiss,
-        onConfirm,
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
-private fun `New Icon Selection`() =
-    SportDetailsInnerDialogContentForPreview(
-        iconChanging = true,
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `Basketball`() =
-    SportDetailsInnerDialogContentForPreview(
-        icon = SportIcon.BASKETBALL,
-        intervalLabel = "Quarter",
-        isNewEntity = false,
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `Hockey`() =
-    SportDetailsInnerDialogContentForPreview(
-        icon = SportIcon.HOCKEY,
-        intervalLabel = "Period",
-    )
-
-@Preview(showBackground = true)
-@Composable
-private fun `Loading Icon`() =
-    SportDetailsInnerDialogContentForPreview(
-        icon = null,
-    )
-
-
-@Preview(showBackground = true)
-@Composable
-private fun `One default interval`() =
-    SportDetailsInnerDialogContentForPreview(
-        intervalLabel = "Round",
-        intervalList = listOf(
-            IntervalEditingInfo(
-                scoreInfo = ScoreInfo(
-                    scoreRule = ScoreRule.None,
-                    scoreToDisplayScoreMap = mapOf(),
-                    secondaryScoreLabel = "",
-                    dataList = listOf()
-                ),
-                intervalData = IntervalData(
-                    current = 0,
-                    initial = 0,
-                    increasing = false
-                ),
-                timeRepresentationPair = Pair("9", "24"),
-                maxScoreInput = "33",
-                initialScoreInput = "10",
-                primaryIncrementInputList = listOf("+1"),
-                allowPrimaryMapping = false,
-                primaryMappingInputList = listOf(),
-                allowSecondaryScore = false
-            ),
+private fun SportDetailsDialogContentPreview(
+    @PreviewParameter(SportDetailsPreviewStateProvider::class) state: SportDetailsState
+) = QuickScoreboardCreatorTheme {
+    Surface {
+        SportDetailsInnerDialogContent(
+            uiEvent = emptyFlow(),
+            onUiEvent = {},
+            state = state,
+            onAction = {}
         )
-    )
+    }
+}
