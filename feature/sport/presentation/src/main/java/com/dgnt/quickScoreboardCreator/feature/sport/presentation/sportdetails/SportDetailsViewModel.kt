@@ -33,6 +33,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
@@ -67,58 +68,65 @@ class SportDetailsViewModel @Inject constructor(
                 is SportIdentifier.Default -> initWithSportType(sId.sportType)
             }
         } ?: run {
-            _state.value = state.value.copy(
-                iconState = SportIconState.Picked.Displaying(
-                    SportIcon.entries.toTypedArray().let {
-                        it[Random.nextInt(it.size)]
-                    }
+            _state.update { state ->
+                state.copy(
+                    iconState = SportIconState.Picked.Displaying(
+                        SportIcon.entries.toTypedArray().let {
+                            it[Random.nextInt(it.size)]
+                        }
+                    )
                 )
-            )
+            }
+
         }
 
     }
 
     private fun initWithId(id: Int) = viewModelScope.launch {
         originalModel = getSportUseCase(id)?.also {
-            _state.value = state.value.copy(
-                title = it.title,
-                description = it.description,
-                winRule = it.winRule,
-                iconState = SportIconState.Picked.Displaying(it.icon),
-                intervalLabel = it.intervalLabel,
-                isNewEntity = false
-            )
+            _state.update { state ->
+                state.copy(
+                    title = it.title,
+                    description = it.description,
+                    winRule = it.winRule,
+                    iconState = SportIconState.Picked.Displaying(it.icon),
+                    intervalLabel = it.intervalLabel,
+                    isNewEntity = false
+                )
+            }
         }
     }
 
     private fun initWithSportType(sportType: SportType) {
         getSportUseCase(resources.openRawResource(sportType.rawRes()))?.let {
-            _state.value = state.value.copy(
-                title = resources.getString(sportType.titleRes()),
-                description = resources.getString(sportType.descriptionRes()),
-                intervalLabel = resources.getString(sportType.intervalLabelRes()),
-                isNewEntity = true,
-                winRule = it.winRule,
-                iconState = SportIconState.Picked.Displaying(it.icon),
-                intervalList = it.intervalList.map { interval ->
-                    //TODO should make a mapper for this
-                    val scoreInfo = interval.first.copy(secondaryScoreLabel = resources.getString(sportType.secondaryScoreLabelRes()))
-                    val intervalData = interval.second
-                    IntervalEditingInfo(
-                        scoreInfo = scoreInfo,
-                        intervalData = intervalData,
-                        timeRepresentationPair = timeConversionUseCase.toTimeData(intervalData.initial).run {
-                            Pair(minute.toString(), second.toString())
-                        },
-                        maxScoreInput = (scoreInfo.scoreRule as? ScoreRule.Trigger)?.trigger?.toString() ?: "",
-                        initialScoreInput = scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: "",
-                        primaryIncrementInputList = scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.asIncrementDisplay() } ?: listOf("+1"),
-                        allowPrimaryMapping = scoreInfo.scoreToDisplayScoreMap.isNotEmpty(),
-                        primaryMappingInputList = scoreInfo.scoreToDisplayScoreMap.map { it.key.toString() to it.value },
-                        allowSecondaryScore = scoreInfo.dataList.firstOrNull()?.secondary != null
-                    )
-                }
-            )
+            _state.update { state ->
+                state.copy(
+                    title = resources.getString(sportType.titleRes()),
+                    description = resources.getString(sportType.descriptionRes()),
+                    intervalLabel = resources.getString(sportType.intervalLabelRes()),
+                    isNewEntity = true,
+                    winRule = it.winRule,
+                    iconState = SportIconState.Picked.Displaying(it.icon),
+                    intervalList = it.intervalList.map { interval ->
+                        //TODO should make a mapper for this
+                        val scoreInfo = interval.first.copy(secondaryScoreLabel = resources.getString(sportType.secondaryScoreLabelRes()))
+                        val intervalData = interval.second
+                        IntervalEditingInfo(
+                            scoreInfo = scoreInfo,
+                            intervalData = intervalData,
+                            timeRepresentationPair = timeConversionUseCase.toTimeData(intervalData.initial).run {
+                                Pair(minute.toString(), second.toString())
+                            },
+                            maxScoreInput = (scoreInfo.scoreRule as? ScoreRule.Trigger)?.trigger?.toString() ?: "",
+                            initialScoreInput = scoreInfo.dataList.firstOrNull()?.primary?.initial?.toString() ?: "",
+                            primaryIncrementInputList = scoreInfo.dataList.firstOrNull()?.primary?.increments?.map { it.asIncrementDisplay() } ?: listOf("+1"),
+                            allowPrimaryMapping = scoreInfo.scoreToDisplayScoreMap.isNotEmpty(),
+                            primaryMappingInputList = scoreInfo.scoreToDisplayScoreMap.map { it.key.toString() to it.value },
+                            allowSecondaryScore = scoreInfo.dataList.firstOrNull()?.secondary != null
+                        )
+                    }
+                )
+            }
         }
     }
 
@@ -191,44 +199,56 @@ class SportDetailsViewModel @Inject constructor(
     }
 
     private fun onTitleChange(title: String) {
-        _state.value = state.value.copy(
-            title = title
-        )
-    }
-
-    private fun onDescriptionChange(description: String) {
-        _state.value = state.value.copy(
-            description = description
-        )
-    }
-
-    private fun onWinRuleChange(winRule: WinRule) {
-        _state.value = state.value.copy(
-            winRule = winRule
-        )
-    }
-
-    private fun onIconEdit(changing: Boolean) {
-        (state.value.iconState as? SportIconState.Picked)?.sportIcon?.let { originalSportIcon ->
-            _state.value = state.value.copy(
-                iconState = if (changing)
-                    SportIconState.Picked.Changing(originalSportIcon)
-                else
-                    SportIconState.Picked.Displaying(originalSportIcon)
+        _state.update { state ->
+            state.copy(
+                title = title
             )
         }
     }
 
+    private fun onDescriptionChange(description: String) {
+        _state.update { state ->
+            state.copy(
+                description = description
+            )
+        }
+    }
+
+    private fun onWinRuleChange(winRule: WinRule) {
+        _state.update { state ->
+            state.copy(
+                winRule = winRule
+            )
+        }
+    }
+
+    private fun onIconEdit(changing: Boolean) {
+        (state.value.iconState as? SportIconState.Picked)?.sportIcon?.let { originalSportIcon ->
+            _state.update { state ->
+                state.copy(
+                    iconState = if (changing)
+                        SportIconState.Picked.Changing(originalSportIcon)
+                    else
+                        SportIconState.Picked.Displaying(originalSportIcon)
+                )
+            }
+        }
+    }
+
     private fun onIconChange(icon: SportIcon) {
-        _state.value = state.value.copy(
-            iconState = SportIconState.Picked.Displaying(icon)
-        )
+        _state.update { state ->
+            state.copy(
+                iconState = SportIconState.Picked.Displaying(icon)
+            )
+        }
     }
 
     private fun onIntervalLabelChange(intervalLabel: String) {
-        _state.value = state.value.copy(
-            intervalLabel = intervalLabel
-        )
+        _state.update { state ->
+            state.copy(
+                intervalLabel = intervalLabel
+            )
+        }
     }
 
     private fun onIntervalAdd(index: Int? = null) {
@@ -238,9 +258,11 @@ class SportDetailsViewModel @Inject constructor(
         } else if (index in 0..intervalListValue.size) {
             intervalListValue.add(index, generateGenericIntervalInfo())
         }
-        _state.value = state.value.copy(
-            intervalList = intervalListValue
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = intervalListValue
+            )
+        }
     }
 
     private fun onIntervalRemove(index: Int) {
@@ -249,9 +271,11 @@ class SportDetailsViewModel @Inject constructor(
             return
         if (index in 0 until intervalListValue.size) {
             intervalListValue.removeAt(index)
-            _state.value = state.value.copy(
-                intervalList = intervalListValue
-            )
+            _state.update { state ->
+                state.copy(
+                    intervalList = intervalListValue
+                )
+            }
         }
 
     }
@@ -266,9 +290,11 @@ class SportDetailsViewModel @Inject constructor(
         if (index in 0 until intervalListValue.size) {
             val otherIndex = if (up) index - 1 else index + 1
             intervalListValue.swap(index, otherIndex)
-            _state.value = state.value.copy(
-                intervalList = intervalListValue
-            )
+            _state.update { state ->
+                state.copy(
+                    intervalList = intervalListValue
+                )
+            }
         }
     }
 
@@ -512,81 +538,99 @@ class SportDetailsViewModel @Inject constructor(
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(scoreInfo = scoreInfo)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updateIntervalData(index: Int, intervalData: IntervalData) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(intervalData = intervalData)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updateTimeRepresentationPair(index: Int, timeRepresentationPair: Pair<String, String>) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(timeRepresentationPair = timeRepresentationPair)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updateMaxScoreInput(index: Int, maxScore: String) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(maxScoreInput = maxScore)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updateInitialScoreInput(index: Int, initialScore: String) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(initialScoreInput = initialScore)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updatePrimaryIncrementList(index: Int, increments: List<String>) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(primaryIncrementInputList = increments)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updatePrimaryMappingAllowed(index: Int, allowed: Boolean) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(allowPrimaryMapping = allowed)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updatePrimaryMappingList(index: Int, mapping: List<Pair<String, String>>) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(primaryMappingInputList = mapping)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun updateSecondaryScoreAllowed(index: Int, allowed: Boolean) {
         val newList = state.value.intervalList.toMutableList()
         if (index in 0 until newList.size)
             newList[index] = newList[index].copy(allowSecondaryScore = allowed)
-        _state.value = state.value.copy(
-            intervalList = newList
-        )
+        _state.update { state ->
+            state.copy(
+                intervalList = newList
+            )
+        }
     }
 
     private fun getFilteredValue(value: String) = if (value.isEmpty())

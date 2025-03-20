@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.TreeSet
 import javax.inject.Inject
@@ -83,10 +84,12 @@ class TimelineViewerViewModel @Inject constructor(
 
     private fun setTimeline(intervalIndex: Int, historicalScoreboard: HistoricalScoreboard) {
         this.intervalIndex = intervalIndex
-        _state.value = state.value.copy(
-            historicalIntervalState = historicalScoreboard.historicalIntervalMap[intervalIndex]?.let {
-                HistoricalIntervalState.Loaded(it)
-            } ?: HistoricalIntervalState.None
-        )
+        _state.update { state ->
+            state.copy(
+                historicalIntervalState = historicalScoreboard.historicalIntervalMap[intervalIndex]?.let {
+                    HistoricalIntervalState.Loaded(it)
+                } ?: HistoricalIntervalState.None
+            )
+        }
     }
 }

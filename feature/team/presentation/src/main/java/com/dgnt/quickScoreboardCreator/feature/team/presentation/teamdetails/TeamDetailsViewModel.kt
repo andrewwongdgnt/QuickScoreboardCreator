@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -40,21 +41,25 @@ class TeamDetailsViewModel @Inject constructor(
             TeamIcon.entries.toTypedArray().let {
                 it[Random.nextInt(it.size)]
             }.let { icon ->
-                _state.value = state.value.copy(
-                    iconState = TeamIconState.Picked.Displaying(icon)
-                )
+                _state.update { state ->
+                    state.copy(
+                        iconState = TeamIconState.Picked.Displaying(icon)
+                    )
+                }
             }
         }
     }
 
     private fun initWithId(id: Int) = viewModelScope.launch {
         originalModel = getTeamUseCase(id)?.also {
-            _state.value = state.value.copy(
-                title = it.title,
-                description = it.description,
-                iconState = TeamIconState.Picked.Displaying(it.icon),
-                isNewEntity = false,
-            )
+            _state.update { state ->
+                state.copy(
+                    title = it.title,
+                    description = it.description,
+                    iconState = TeamIconState.Picked.Displaying(it.icon),
+                    isNewEntity = false,
+                )
+            }
         }
     }
 
@@ -98,32 +103,40 @@ class TeamDetailsViewModel @Inject constructor(
     }
 
     private fun onTitleChange(title: String) {
-        _state.value = state.value.copy(
-            title = title
-        )
-    }
-
-    private fun onDescriptionChange(description: String) {
-        _state.value = state.value.copy(
-            description = description
-        )
-    }
-
-    private fun onIconEdit(changing: Boolean) {
-        (state.value.iconState as? TeamIconState.Picked)?.teamIcon?.let { originalTeamIcon ->
-            _state.value = state.value.copy(
-                iconState = if (changing)
-                    TeamIconState.Picked.Changing(originalTeamIcon)
-                else
-                    TeamIconState.Picked.Displaying(originalTeamIcon)
+        _state.update { state ->
+            state.copy(
+                title = title
             )
         }
     }
 
+    private fun onDescriptionChange(description: String) {
+        _state.update { state ->
+            state.copy(
+                description = description
+            )
+        }
+    }
+
+    private fun onIconEdit(changing: Boolean) {
+        (state.value.iconState as? TeamIconState.Picked)?.teamIcon?.let { originalTeamIcon ->
+            _state.update { state ->
+                state.copy(
+                    iconState = if (changing)
+                        TeamIconState.Picked.Changing(originalTeamIcon)
+                    else
+                        TeamIconState.Picked.Displaying(originalTeamIcon)
+                )
+            }
+        }
+    }
+
     private fun onIconChange(icon: TeamIcon) {
-        _state.value = state.value.copy(
-            iconState = TeamIconState.Picked.Displaying(icon)
-        )
+        _state.update { state ->
+            state.copy(
+                iconState = TeamIconState.Picked.Displaying(icon)
+            )
+        }
     }
 
 }

@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -56,54 +57,70 @@ class ScoreboardViewModel @Inject constructor(
     val state: StateFlow<ScoreboardState> = _state.asStateFlow()
 
     private val primaryScoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
-        _state.value = state.value.copy(
-            primaryDisplayedScoreInfo = it
-        )
+        _state.update { state ->
+            state.copy(
+                primaryDisplayedScoreInfo = it
+            )
+        }
     }
 
     private val secondaryScoresUpdateListener: (DisplayedScoreInfo) -> Unit = {
-        _state.value = state.value.copy(
-            secondaryDisplayedScoreInfo = it
-        )
+        _state.update { state ->
+            state.copy(
+                secondaryDisplayedScoreInfo = it
+            )
+        }
     }
 
     private val primaryIncrementListUpdateListener: (List<List<Int>>) -> Unit = {
-        _state.value = state.value.copy(
-            primaryIncrementList = it
-        )
+        _state.update { state ->
+            state.copy(
+                primaryIncrementList = it
+            )
+        }
     }
 
     private val secondaryIncrementListUpdateListener: (List<List<Int>>) -> Unit = {
-        _state.value = state.value.copy(
-            secondaryIncrementList = it
-        )
+        _state.update { state ->
+            state.copy(
+                secondaryIncrementList = it
+            )
+        }
     }
 
     private val intervalIndexUpdateListener: (Int) -> Unit = {
-        _state.value = state.value.copy(
-            currentInterval = it + 1,
-        )
-        secondaryScoreLabelList.getOrNull(it)?.let { secondaryScoreLabelInfo ->
-            _state.value = state.value.copy(
-                secondaryScoreLabel = secondaryScoreLabelInfo,
+        _state.update { state ->
+            state.copy(
+                currentInterval = it + 1,
             )
+        }
+        secondaryScoreLabelList.getOrNull(it)?.let { secondaryScoreLabelInfo ->
+            _state.update { state ->
+                state.copy(
+                    secondaryScoreLabel = secondaryScoreLabelInfo,
+                )
+            }
         }
         onTimerPause(true)
     }
 
 
     private val teamSizeUpdateListener: (Int) -> Unit = {
-        _state.value = state.value.copy(
-            teamList = (0 until it).map { index ->
-                state.value.teamList.getOrNull(index) ?: TeamDisplay.UnSelected
-            },
-        )
+        _state.update { state ->
+            state.copy(
+                teamList = (0 until it).map { index ->
+                    state.teamList.getOrNull(index) ?: TeamDisplay.UnSelected
+                }
+            )
+        }
     }
 
     private val timeUpdateListener: (Long) -> Unit = {
-        _state.value = state.value.copy(
-            timeData = timeConversionUseCase.toTimeData(it)
-        )
+        _state.update { state ->
+            state.copy(
+                timeData = timeConversionUseCase.toTimeData(it)
+            )
+        }
         if (it <= 0L) {
             stopTimerJob()
         }
@@ -177,9 +194,11 @@ class ScoreboardViewModel @Inject constructor(
 
     private fun initWithSportType(sportType: SportType) {
         this.sportType = sportType
-        _state.value = state.value.copy(
-            intervalLabel = Label.Resource(sportType.intervalLabelRes())
-        )
+        _state.update { state ->
+            state.copy(
+                intervalLabel = Label.Resource(sportType.intervalLabelRes())
+            )
+        }
         timelineViewerTitle = resources.getString(sportType.titleRes())
         timelineViewerIcon = sportType.icon
         getSportUseCase(resources.openRawResource(sportType.rawRes()))?.let { sportModel ->
@@ -218,17 +237,19 @@ class ScoreboardViewModel @Inject constructor(
     private fun toTeamPicker(index: Int) = sendUiEvent(TeamPicker(index))
 
     private fun onTeamPick(updatedTeamData: UpdatedTeamData) = viewModelScope.launch {
-        _state.value = state.value.copy(
-            teamList = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
-                if (updatedTeamData.scoreIndex == index) {
-                    getTeamUseCase(updatedTeamData.teamId)?.let {
-                        TeamDisplay.Selected(it.title, it.icon)
+        _state.update { state ->
+            state.copy(
+                teamList = (0 until scoreboardManager.currentTeamSize).mapNotNull { index ->
+                    if (updatedTeamData.scoreIndex == index) {
+                        getTeamUseCase(updatedTeamData.teamId)?.let {
+                            TeamDisplay.Selected(it.title, it.icon)
+                        }
+                    } else {
+                        state.teamList.getOrNull(index)
                     }
-                } else {
-                    state.value.teamList.getOrNull(index)
                 }
-            }
-        )
+            )
+        }
     }
 
     private fun onTimerPause(reset: Boolean) {
@@ -241,9 +262,11 @@ class ScoreboardViewModel @Inject constructor(
     private fun onTimerStart() {
         stopTimerJob()
         if (!scoreboardManager.canTimeAdvance()) {
-            _state.value = state.value.copy(
-                timerInProgress = false
-            )
+            _state.update { state ->
+                state.copy(
+                    timerInProgress = false
+                )
+            }
             return
         }
 
@@ -254,15 +277,19 @@ class ScoreboardViewModel @Inject constructor(
 
             }
         }
-        _state.value = state.value.copy(
-            timerInProgress = true
-        )
+        _state.update { state ->
+            state.copy(
+                timerInProgress = true
+            )
+        }
     }
 
     private fun onToggleModeChange(isSimpleMode: Boolean) {
-        _state.value = state.value.copy(
-            simpleMode = !isSimpleMode
-        )
+        _state.update { state ->
+            state.copy(
+                simpleMode = !isSimpleMode
+            )
+        }
     }
 
     private fun toIntervalEditor() {
@@ -325,8 +352,10 @@ class ScoreboardViewModel @Inject constructor(
 
     private fun stopTimerJob() {
         timerJob?.cancel()
-        _state.value = state.value.copy(
-            timerInProgress = false
-        )
+        _state.update { state ->
+            state.copy(
+                timerInProgress = false
+            )
+        }
     }
 }

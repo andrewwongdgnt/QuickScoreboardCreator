@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -41,11 +42,13 @@ class HistoryDetailsViewModel @Inject constructor(
 
     private fun initWithId(it: Int) = viewModelScope.launch {
         originalModel = getHistoryUseCase(it)?.also {
-            _state.value = state.value.copy(
-                title = it.title,
-                description = it.description,
-                iconState = HistoryIconState.Picked.Displaying(it.icon),
-            )
+            _state.update { state ->
+                state.copy(
+                    title = it.title,
+                    description = it.description,
+                    iconState = HistoryIconState.Picked.Displaying(it.icon),
+                )
+            }
         }
     }
 
@@ -62,15 +65,19 @@ class HistoryDetailsViewModel @Inject constructor(
     }
 
     private fun onTitleChange(title: String) {
-        _state.value = state.value.copy(
-            title = title
-        )
+        _state.update { state ->
+            state.copy(
+                title = title
+            )
+        }
     }
 
     private fun onDescriptionChange(description: String) {
-        _state.value = state.value.copy(
-            description = description
-        )
+        _state.update { state ->
+            state.copy(
+                description = description
+            )
+        }
     }
 
     private fun onDismiss() = sendUiEvent(Done)
@@ -85,20 +92,23 @@ class HistoryDetailsViewModel @Inject constructor(
 
     private fun onIconEdit(changing: Boolean) {
         (state.value.iconState as? HistoryIconState.Picked)?.sportIcon?.let { originalSportIcon ->
-            _state.value = state.value.copy(
-                iconState = if (changing)
-                    HistoryIconState.Picked.Changing(originalSportIcon)
-                else
-                    HistoryIconState.Picked.Displaying(originalSportIcon)
-            )
-
+            _state.update { state ->
+                state.copy(
+                    iconState = if (changing)
+                        HistoryIconState.Picked.Changing(originalSportIcon)
+                    else
+                        HistoryIconState.Picked.Displaying(originalSportIcon)
+                )
+            }
         }
     }
 
     private fun onIconChange(icon: SportIcon) {
-        _state.value = state.value.copy(
-            iconState = HistoryIconState.Picked.Displaying(icon)
-        )
+        _state.update { state ->
+            state.copy(
+                iconState = HistoryIconState.Picked.Displaying(icon)
+            )
+        }
     }
 
     private fun onConfirm() {

@@ -21,6 +21,7 @@ import com.dgnt.quickScoreboardCreator.feature.sport.presentation.resourcemappin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
@@ -68,17 +69,21 @@ class IntervalEditorViewModel @Inject constructor(
         savedStateHandle.get<Long>(NavArguments.VALUE)?.let {
             currentTimeValue = it
             timeConversionUseCase.toTimeData(it).let { td ->
-                _state.value = state.value.copy(
-                    minuteString = td.minute.toString(),
-                    secondString = td.second.toString()
-                )
+                _state.update { state ->
+                    state.copy(
+                        minuteString = td.minute.toString(),
+                        secondString = td.second.toString()
+                    )
+                }
                 centiSecond = td.centiSecond
             }
         }
         savedStateHandle.get<Int>(NavArguments.INDEX)?.let {
-            _state.value = state.value.copy(
-                intervalString = (it + 1).toString()
-            )
+            _state.update { state ->
+                state.copy(
+                    intervalString = (it + 1).toString()
+                )
+            }
             intervalValue = it + 1
         }
     }
@@ -92,9 +97,11 @@ class IntervalEditorViewModel @Inject constructor(
     }
 
     private fun initWithSportType(sportType: SportType) {
-        _state.value = state.value.copy(
-            label = Label.Resource(sportType.intervalLabelRes())
-        )
+        _state.update { state ->
+            state.copy(
+                label = Label.Resource(sportType.intervalLabelRes())
+            )
+        }
         getSportUseCase(resources.openRawResource(sportType.rawRes()))?.let {
             intervalList = it.intervalList
             maxInterval = it.intervalList.size
@@ -129,9 +136,11 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun onMinuteChange(value: String) {
         getFilteredValue(value)?.let { min ->
-            _state.value = state.value.copy(
-                minuteString = min
-            )
+            _state.update { state ->
+                state.copy(
+                    minuteString = min
+                )
+            }
             centiSecond = 0
             currentTimeValue = TimeData(
                 (min.toIntOrNull() ?: 0).coerceAtLeast(0),
@@ -145,9 +154,11 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun onSecondChange(value: String) {
         getFilteredValue(value)?.let { second ->
-            _state.value = state.value.copy(
-                secondString = second
-            )
+            _state.update { state ->
+                state.copy(
+                    secondString = second
+                )
+            }
             centiSecond = 0
             currentTimeValue = TimeData(
                 (state.value.minuteString.toIntOrNull() ?: 0).coerceAtLeast(0),
@@ -161,9 +172,11 @@ class IntervalEditorViewModel @Inject constructor(
 
     private fun onIntervalChange(value: String) {
         getFilteredValue(value)?.let { interval ->
-            _state.value = state.value.copy(
-                intervalString = interval
-            )
+            _state.update { state ->
+                state.copy(
+                    intervalString = interval
+                )
+            }
             intervalValue = interval.toIntOrNull() ?: 0
         }
     }
