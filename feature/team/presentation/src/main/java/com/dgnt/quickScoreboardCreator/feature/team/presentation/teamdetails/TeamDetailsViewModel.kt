@@ -11,6 +11,7 @@ import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.ValidateTeamDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,7 @@ class TeamDetailsViewModel @Inject constructor(
     private val insertTeamUseCase: InsertTeamUseCase,
     private val getTeamUseCase: GetTeamUseCase,
     private val deleteTeamUseCase: DeleteTeamUseCase,
+    private val validateTeamDetailsUseCase: ValidateTeamDetailsUseCase,
     uiEventHandler: UiEventHandler,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), UiEventHandler by uiEventHandler {
@@ -35,8 +37,9 @@ class TeamDetailsViewModel @Inject constructor(
     val state: StateFlow<TeamDetailsState> = _state.asStateFlow()
 
     init {
-        savedStateHandle.get<Int>(ID)?.takeUnless { it < 0 }?.let { id ->
-            initWithId(id)
+        val id: Int? = savedStateHandle[ID]
+        id?.takeUnless { it < 0 }?.let {
+            initWithId(it)
         } ?: run {
             TeamIcon.entries.toTypedArray().let {
                 it[Random.nextInt(it.size)]
@@ -58,6 +61,7 @@ class TeamDetailsViewModel @Inject constructor(
                     description = it.description,
                     iconState = TeamIconState.Picked.Displaying(it.icon),
                     isNewEntity = false,
+                    valid = validateTeamDetailsUseCase(it.title)
                 )
             }
         }
@@ -105,7 +109,8 @@ class TeamDetailsViewModel @Inject constructor(
     private fun onTitleChange(title: String) {
         _state.update { state ->
             state.copy(
-                title = title
+                title = title,
+                valid = validateTeamDetailsUseCase(title)
             )
         }
     }

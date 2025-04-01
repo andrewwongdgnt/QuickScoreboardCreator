@@ -7,10 +7,8 @@ data class TeamDetailsState(
     val description: String = "",
     val iconState: TeamIconState = TeamIconState.Initial,
     val isNewEntity: Boolean = true,
-) {
-    val valid
-        get() = title.isNotBlank()
-}
+    val valid: Boolean = false
+)
 
 sealed interface TeamIconState {
     data object Initial : TeamIconState

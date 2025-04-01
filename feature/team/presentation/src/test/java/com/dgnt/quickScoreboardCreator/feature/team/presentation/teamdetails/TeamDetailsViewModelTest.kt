@@ -9,6 +9,7 @@ import com.dgnt.quickScoreboardCreator.feature.team.domain.model.TeamModel
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.DeleteTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.GetTeamUseCase
 import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.InsertTeamUseCase
+import com.dgnt.quickScoreboardCreator.feature.team.domain.usecase.ValidateTeamDetailsUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -39,6 +40,9 @@ class TeamDetailsViewModelTest {
     private lateinit var deleteTeamUseCase: DeleteTeamUseCase
 
     @MockK
+    private lateinit var validateTeamDetailsUseCase: ValidateTeamDetailsUseCase
+
+    @MockK
     private lateinit var savedStateHandle: SavedStateHandle
 
     @MockK
@@ -51,6 +55,7 @@ class TeamDetailsViewModelTest {
             insertTeamUseCase,
             getTeamUseCase,
             deleteTeamUseCase,
+            validateTeamDetailsUseCase,
             uiEventHandler,
             savedStateHandle,
         )
@@ -65,6 +70,7 @@ class TeamDetailsViewModelTest {
 
     @Test
     fun testInitializingATeam() = runTest {
+        every { validateTeamDetailsUseCase(any()) } returns true
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 1
         coEvery { getTeamUseCase(1) } coAnswers { TeamModel(1, "team name", "team desc", TeamIcon.ALIEN) }
         initSut()
@@ -89,13 +95,16 @@ class TeamDetailsViewModelTest {
     @Test
     fun testValidation() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns -1
+        every { validateTeamDetailsUseCase("") } returns false
+        every { validateTeamDetailsUseCase("Some value") } returns true
         initSut()
 
         Assert.assertFalse(sut.state.value.valid)
-        sut.onAction(TeamDetailsAction.DescriptionChange("Some value"))
-        Assert.assertFalse(sut.state.value.valid)
         sut.onAction(TeamDetailsAction.TitleChange("Some value"))
         Assert.assertTrue(sut.state.value.valid)
+        sut.onAction(TeamDetailsAction.TitleChange(""))
+        Assert.assertFalse(sut.state.value.valid)
+        verify(exactly = 2) { validateTeamDetailsUseCase(any()) }
     }
 
     @Test
@@ -122,6 +131,7 @@ class TeamDetailsViewModelTest {
 
     @Test
     fun testInsertingNewTeam() = runTest {
+        every { validateTeamDetailsUseCase(any()) } returns true
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns -1
         initSut()
 
@@ -147,6 +157,7 @@ class TeamDetailsViewModelTest {
     @Test
     fun testEditingATeam() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 2
+        every { validateTeamDetailsUseCase(any()) } returns true
         coEvery { getTeamUseCase(2) } coAnswers { TeamModel(2, "team name 2", "team desc 2", TeamIcon.TREE) }
         initSut()
 
@@ -172,6 +183,7 @@ class TeamDetailsViewModelTest {
     @Test
     fun testDeletingATeam() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 2
+        every { validateTeamDetailsUseCase(any()) } returns true
         coEvery { getTeamUseCase(2) } coAnswers { TeamModel(2, "team name 2", "team desc 2", TeamIcon.TREE) }
         initSut()
 

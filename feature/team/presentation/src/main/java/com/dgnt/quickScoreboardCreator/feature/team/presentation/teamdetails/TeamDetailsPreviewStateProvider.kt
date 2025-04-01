@@ -16,19 +16,22 @@ class TeamDetailsPreviewStateProvider : CollectionPreviewParameterProvider<TeamD
             title = "Gorilla",
             description = "Big Ape",
             iconState = TeamIconState.Picked.Displaying(TeamIcon.GORILLA),
-            isNewEntity = false
+            isNewEntity = false,
+            valid = true
         ),
         TeamDetailsState(
             title = "Tiger",
             description = "",
             iconState = TeamIconState.Picked.Displaying(TeamIcon.TIGER),
-            isNewEntity = true
+            isNewEntity = true,
+            valid = true
         ),
         TeamDetailsState(
             title = "",
             description = "From planet X",
             iconState = TeamIconState.Picked.Displaying(TeamIcon.ALIEN),
-            isNewEntity = false
+            isNewEntity = false,
+            valid = true
         ),
         TeamDetailsState(
             title = "",
