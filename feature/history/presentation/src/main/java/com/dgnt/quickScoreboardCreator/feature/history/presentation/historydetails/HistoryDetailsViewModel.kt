@@ -3,13 +3,14 @@ package com.dgnt.quickScoreboardCreator.feature.history.presentation.historydeta
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments
+import com.dgnt.quickScoreboardCreator.core.presentation.ui.NavArguments.ID
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.Done
 import com.dgnt.quickScoreboardCreator.core.presentation.ui.uievent.UiEventHandler
 import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.ValidateHistoryDetailsUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,8 @@ class HistoryDetailsViewModel @Inject constructor(
     private val insertHistoryUseCase: InsertHistoryUseCase,
     private val getHistoryUseCase: GetHistoryUseCase,
     private val deleteHistoryUseCase: DeleteHistoryUseCase,
-    private val uiEventHandler: UiEventHandler,
+    private val validateHistoryDetailsUseCase: ValidateHistoryDetailsUseCase,
+    uiEventHandler: UiEventHandler,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), UiEventHandler by uiEventHandler {
 
@@ -35,7 +37,8 @@ class HistoryDetailsViewModel @Inject constructor(
     val state: StateFlow<HistoryDetailsState> = _state.asStateFlow()
 
     init {
-        savedStateHandle.get<Int>(NavArguments.ID)?.let {
+        val id: Int? = savedStateHandle[ID]
+        id?.let {
             initWithId(it)
         }
     }
@@ -47,6 +50,7 @@ class HistoryDetailsViewModel @Inject constructor(
                     title = it.title,
                     description = it.description,
                     iconState = HistoryIconState.Picked.Displaying(it.icon),
+                    valid = validateHistoryDetailsUseCase(it.title)
                 )
             }
         }
@@ -67,7 +71,8 @@ class HistoryDetailsViewModel @Inject constructor(
     private fun onTitleChange(title: String) {
         _state.update { state ->
             state.copy(
-                title = title
+                title = title,
+                valid = validateHistoryDetailsUseCase(title)
             )
         }
     }

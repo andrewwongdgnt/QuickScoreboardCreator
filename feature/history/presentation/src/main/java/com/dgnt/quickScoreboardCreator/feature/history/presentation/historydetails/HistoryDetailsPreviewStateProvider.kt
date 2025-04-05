@@ -9,6 +9,7 @@ class HistoryDetailsPreviewStateProvider : CollectionPreviewParameterProvider<Hi
             title = "my title",
             description = "description 222",
             iconState = HistoryIconState.Picked.Changing(SportIcon.HOCKEY),
+            valid = true
         ),
         HistoryDetailsState(
             iconState = HistoryIconState.Picked.Displaying(SportIcon.HOCKEY),
@@ -16,6 +17,7 @@ class HistoryDetailsPreviewStateProvider : CollectionPreviewParameterProvider<Hi
         HistoryDetailsState(
             title = "my title 333",
             iconState = HistoryIconState.Initial,
+            valid = true
         )
     )
 )

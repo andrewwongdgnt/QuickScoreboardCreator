@@ -9,6 +9,7 @@ import com.dgnt.quickScoreboardCreator.feature.history.domain.model.HistoryModel
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.DeleteHistoryUseCase
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.GetHistoryUseCase
 import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.InsertHistoryUseCase
+import com.dgnt.quickScoreboardCreator.feature.history.domain.usecase.ValidateHistoryDetailsUseCase
 import com.dgnt.quickScoreboardCreator.feature.sport.domain.model.SportIcon
 import io.mockk.MockKAnnotations
 import io.mockk.awaits
@@ -44,6 +45,9 @@ class HistoryDetailsViewModelTest {
     private lateinit var deleteHistoryUseCase: DeleteHistoryUseCase
 
     @MockK
+    private lateinit var validateHistoryDetailsUseCase: ValidateHistoryDetailsUseCase
+
+    @MockK
     private lateinit var savedStateHandle: SavedStateHandle
 
     @MockK
@@ -56,6 +60,7 @@ class HistoryDetailsViewModelTest {
             insertHistoryUseCase,
             getHistoryUseCase,
             deleteHistoryUseCase,
+            validateHistoryDetailsUseCase,
             uiEventHandler,
             savedStateHandle,
         )
@@ -70,6 +75,7 @@ class HistoryDetailsViewModelTest {
 
     @Test
     fun testInitializingAHistory() = runTest {
+        every { validateHistoryDetailsUseCase(any()) } returns true
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 1
         coEvery { getHistoryUseCase(1) } coAnswers {
             HistoryModel(
@@ -94,6 +100,9 @@ class HistoryDetailsViewModelTest {
     @Test
     fun testValidation() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 1
+        every { validateHistoryDetailsUseCase("history name") } returns true
+        every { validateHistoryDetailsUseCase("") } returns false
+        every { validateHistoryDetailsUseCase("Some value") } returns true
         coEvery { getHistoryUseCase(1) } coAnswers {
             HistoryModel(
                 id = 1,
@@ -110,15 +119,15 @@ class HistoryDetailsViewModelTest {
 
         sut.onAction(HistoryDetailsAction.TitleChange(""))
         Assert.assertFalse(sut.state.value.valid)
-        sut.onAction(HistoryDetailsAction.DescriptionChange("Some value"))
-        Assert.assertFalse(sut.state.value.valid)
         sut.onAction(HistoryDetailsAction.TitleChange("Some value"))
         Assert.assertTrue(sut.state.value.valid)
+        verify(exactly = 3) { validateHistoryDetailsUseCase(any()) }
     }
 
     @Test
     fun testHistoryIconChange() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 1
+        every { validateHistoryDetailsUseCase(any()) } returns true
         coEvery { getHistoryUseCase(1) } coAnswers {
             HistoryModel(
                 id = 1,
@@ -142,6 +151,7 @@ class HistoryDetailsViewModelTest {
     @Test
     fun testOnDismiss() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 1
+        every { validateHistoryDetailsUseCase(any()) } returns true
         coEvery { getHistoryUseCase(1) } coAnswers {
             HistoryModel(
                 id = 1,
@@ -165,6 +175,7 @@ class HistoryDetailsViewModelTest {
     @Test
     fun testEditingAHistory() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 2
+        every { validateHistoryDetailsUseCase(any()) } returns true
         coEvery { getHistoryUseCase(2) } coAnswers {
             HistoryModel(
                 id = 2,
@@ -204,6 +215,7 @@ class HistoryDetailsViewModelTest {
     @Test
     fun testDeletingAHistory() = runTest {
         every { savedStateHandle.get<Int>(NavArguments.ID) } returns 2
+        every { validateHistoryDetailsUseCase(any()) } returns true
         coEvery { getHistoryUseCase(2) } coAnswers {
             HistoryModel(
                 id = 2,

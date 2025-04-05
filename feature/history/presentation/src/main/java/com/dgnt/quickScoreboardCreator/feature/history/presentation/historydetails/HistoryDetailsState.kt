@@ -6,9 +6,8 @@ data class HistoryDetailsState(
     val title: String = "",
     val description: String = "",
     val iconState: HistoryIconState = HistoryIconState.Initial,
+    val valid: Boolean = false
 ) {
-    val valid
-        get() = title.isNotBlank()
 }
 
 sealed interface HistoryIconState {
